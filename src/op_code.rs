@@ -327,7 +327,17 @@ pub mod op_code {
         let clone_frame = &frame.clone();
         let target_class_id = get_class_for_invoke(&frame.clone());
         let method = get_method_for_invoke(&clone_frame);
-        let new_frame = init_stack_frame(frame, method.unwrap(), target_class_id);
+        let mut new_frame = init_stack_frame(frame, method.unwrap(), target_class_id);
+        let v = frame.op_stack.pop();
+        match v {
+            Some(obj) =>{
+                new_frame.local[0] = frame.op_stack.pop().unwrap();
+            }
+            None => {
+                panic!("error");
+            }
+        }
+        //new_frame.local[0] = frame.op_stack.pop().unwrap();
         push_stack_frame(new_frame);
         frame.pc += 3;
     }

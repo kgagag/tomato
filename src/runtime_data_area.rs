@@ -25,5 +25,6 @@ pub mod runtime_data_area{
     
         //虚拟机栈
         pub static ref VM_STACKS: Mutex<UnsafeCell<HashMap<u32, Vec<StackFrame>>>> = Mutex::new(UnsafeCell::new(HashMap::new()));
+        
     }
 }

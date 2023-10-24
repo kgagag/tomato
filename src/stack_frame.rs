@@ -21,7 +21,7 @@ pub struct StackFrame {
     //程序计数器
     pub pc: usize,
     // //局部变量表
-    pub local: Vec<u32>,
+    pub local: Vec<u64>,
     // //操作数栈
     pub op_stack: Vec<u64>,
     // //类

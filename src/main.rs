@@ -70,13 +70,14 @@ pub fn execute(){
     unsafe {
         // 从 UnsafeCell 中获取 HashMap 的可变引用
         let map = &mut *data.get();
+        drop(data);
         for (vm_stack_id, stack_frames) in map {
             //这里可以启动一个线程
             for i in 0 .. stack_frames.len() as usize{
-                do_opcode(stack_frames.get_mut(i).unwrap());
+                do_opcode(stack_frames);
             }
         }
-        drop(data);
+        
     }
 }
 

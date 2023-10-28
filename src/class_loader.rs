@@ -19,10 +19,12 @@ pub mod class_loader {
         let mut index = 0;
         let descriptor_length = descriptor.len();
         let mut parameters: Vec<MethodParameter> = Vec::new();
-        let string = String::from_utf8_lossy(&descriptor);
         while index < descriptor_length {
             let descriptor_char = descriptor[index] as char;
-
+            if(descriptor_char == '(' || descriptor_char == ')'){
+                index += 1;
+                continue;
+            }
             match descriptor_char {
                 'B' => parameters.push(MethodParameter::Byte),
                 'C' => parameters.push(MethodParameter::Char),
@@ -47,12 +49,9 @@ pub mod class_loader {
                 '[' => {
                     // Handle array type parameters
                     let mut array_depth = 1;
-                    while index < descriptor_length && descriptor[index] as char == '[' {
+                    while index + 1 < descriptor_length && descriptor[index + 1] as char == '[' {
                         array_depth += 1;
                         index += 1;
-                    }
-                    if index >= descriptor_length {
-                        return Err("Invalid array parameter descriptor".to_string());
                     }
                     let element_type = match descriptor[index] as char {
                         'B' => MethodParameter::Byte,
@@ -62,7 +61,6 @@ pub mod class_loader {
                         'I' => MethodParameter::Int,
                         'J' => MethodParameter::Long,
                         'L' => {
-                            // Handle reference type array parameters
                             let mut class_name = String::new();
                             while index < descriptor_length {
                                 index += 1;
@@ -82,15 +80,12 @@ pub mod class_loader {
                         depth: array_depth,
                     });
                 }
-                // _ => return Err(format!("Unknown parameter descriptor: {}", descriptor_char)),
                 _ => {}
             }
-
             index += 1;
         }
-
         if parameters.is_empty() {
-            Ok(None) // No parameters, return None
+            Ok(None) 
         } else {
             Ok(Some(parameters))
         }
@@ -144,9 +139,7 @@ pub mod class_loader {
                 .unwrap();
             let len = u8s_to_u16(&descriptor[1..3]);
             let bytes = &descriptor[3..(3 + len as usize)];
-
             let result = parse_method_descriptor(&bytes.to_vec());
-
             match result {
                 Ok(Some(parameters)) => {
                     for param in parameters {

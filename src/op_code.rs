@@ -331,13 +331,12 @@ pub mod op_code {
         let v = frame.op_stack.pop();
         match v {
             Some(obj) =>{
-                new_frame.local[0] = frame.op_stack.pop().unwrap();
+                new_frame.local[0] = obj;
             }
             None => {
                 panic!("error");
             }
         }
-        //new_frame.local[0] = frame.op_stack.pop().unwrap();
         push_stack_frame(new_frame);
         frame.pc += 3;
     }
@@ -398,9 +397,9 @@ pub mod op_code {
         new_stack_frame.vm_stack_id = frame.vm_stack_id;
         let mut i: usize = 0;
         if method_info.param.len() > 0 {
-            for j in 0..&method_info.param.len() - 1 {
+            for j in 0..method_info.param.len() {
                 let v = frame.op_stack.pop().unwrap();
-                let param = method_info.param.get(j).unwrap();
+                let param: &MethodParameter = method_info.param.get(j).unwrap();
                 match param {
                     MethodParameter::Byte => {
                         new_stack_frame.local[i + 1] = v;
@@ -423,8 +422,8 @@ pub mod op_code {
                     }
                     MethodParameter::Double => {
                         let bytes: [u8; 8] = unsafe { mem::transmute(v) };
-                        new_stack_frame.local[i + 1] = v;
-                        new_stack_frame.local[i + 2] = v;
+                        new_stack_frame.local[i + 1] = u8s_to_u32(&bytes[0..4]) as u64;
+                        new_stack_frame.local[i + 2] = u8s_to_u32(&bytes[4..8]) as u64;
                         i += 2;
                     }
                     MethodParameter::Float => {
@@ -438,8 +437,8 @@ pub mod op_code {
                     }
                     MethodParameter::Long => {
                         let bytes: [u8; 8] = unsafe { mem::transmute(v) };
-                        new_stack_frame.local[i + 1] = (u8s_to_u32(&bytes[0..4]) as u64);
-                        new_stack_frame.local[i + 2] = (u8s_to_u32(&bytes[4..8]) as u64);
+                        new_stack_frame.local[i + 1] = u8s_to_u32(&bytes[0..4]) as u64;
+                        new_stack_frame.local[i + 2] = u8s_to_u32(&bytes[4..8]) as u64;
                         i += 2;
                     }
                     MethodParameter::Reference(string) => {

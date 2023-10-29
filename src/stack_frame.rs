@@ -11,6 +11,7 @@ use crate::class::class::Class;
 use crate::class::class::MethodInfo;
 use crate::class::class::MethodParameter;
 use crate::class::class::CodeAttribute;
+use crate::value::value::StackFrameValue;
 /**
  * 栈桢
  */
@@ -21,13 +22,12 @@ pub struct StackFrame {
     //程序计数器
     pub pc: usize,
     // //局部变量表
-    pub local: Vec<u64>,
+    pub local: Vec<StackFrameValue>,
     // //操作数栈
-    pub op_stack: Vec<u64>,
+    pub op_stack: Vec<StackFrameValue>,
     // //类
     pub class: usize,
-    // //code 属性
-    // pub code_attribute: CodeAttribute,
+   
     pub max_stack: u16,
 
     pub max_locals: u16,
@@ -39,6 +39,7 @@ pub struct StackFrame {
 }
 
 impl StackFrame {
+   
    pub fn new(class: usize, max_stack: u16, max_locals: u16, code: Vec<u8>) -> StackFrame {
        let mut stake_frame =  StackFrame {
             pc: 0,
@@ -51,10 +52,10 @@ impl StackFrame {
             vm_stack_id:0
         };
         for i in 0 .. stake_frame.max_locals as usize{
-            stake_frame.local.push(0);
+            stake_frame.local.push(StackFrameValue::Byte(0));
         }
         return stake_frame;
-    }
+    }   
 }
 
 }

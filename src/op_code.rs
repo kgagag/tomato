@@ -22,6 +22,7 @@ pub mod op_code {
     use std::collections::HashMap;
     use std::mem;
     use std::sync::Mutex;
+    use crate::value::value::StackFrameValue;
 
     pub fn class_exists(class_name: Vec<u8>) -> bool {
         // 获取全局变量的Mutex锁
@@ -43,7 +44,7 @@ pub mod op_code {
 
         // 通过UnsafeCell获取可变引用，并修改全局变量的值
         let obj;
-        let obj_id: &mut u64;
+        let obj_id: &mut u32;
         unsafe {
             let map = &mut *data.get();
             obj_id = &mut *obj_id_data.get();
@@ -56,7 +57,7 @@ pub mod op_code {
         }
     }
 
-    pub fn get_object<'a>(id: &u64) -> &'a mut Object {
+    pub fn get_object<'a>(id: &u32) -> &'a mut Object {
         // 获取全局变量的Mutex锁
         let data = OBJECT_DATA.lock().unwrap();
         // 通过UnsafeCell获取可变引用，并修改全局变量的值
@@ -74,7 +75,7 @@ pub mod op_code {
             // 从 UnsafeCell 中获取 HashMap 的可变引用
             let map = &mut *data.get();
             // 释放Mutex锁
-            if (!map.contains_key(class_name)) {
+            if  !map.contains_key(class_name)  {
                 let mut class = load_class(&(String::from_utf8(class_name.clone()).unwrap()));
                 class.id = map.len() + 1 as usize;
                 map.insert(class_name.clone(), class);
@@ -166,67 +167,81 @@ pub mod op_code {
 
     pub fn bipush(frame: &mut StackFrame) {
         let u = frame.code[frame.pc + 1];
-        frame.op_stack.push(u as u64);
+        frame.op_stack.push(StackFrameValue::Byte(u));
         frame.pc += 2;
     }
 
     pub fn sipush(frame: &mut StackFrame) {
         frame
             .op_stack
-            .push(u8s_to_u16(&frame.code[frame.pc + 1..frame.pc + 3]) as u64);
+            .push(StackFrameValue::Short(u8s_to_u16(&frame.code[frame.pc + 1..frame.pc + 3]) as i16));
         frame.pc += 3;
     }
 
     pub fn istore_1(frame: &mut StackFrame) {
-        let i = frame.op_stack.pop().unwrap() as u64;
+        let i = frame.op_stack.pop().unwrap();
         frame.local[1] = i;
         frame.pc += 1;
     }
 
     pub fn istore_2(frame: &mut StackFrame) {
         let i = frame.op_stack.pop().unwrap();
-        frame.local[2] = i as u64;
+        frame.local[2] = i;
         frame.pc += 1;
     }
 
     pub fn istore_3(frame: &mut StackFrame) {
-        let i = frame.op_stack.pop().unwrap() as u64;
+        let i = frame.op_stack.pop().unwrap();
         frame.local[3] = i;
         frame.pc += 1;
     }
 
     pub fn astore_1(frame: &mut StackFrame) {
-        let v = frame.op_stack.pop().unwrap();
-        frame.local[1] = v;
+        let i = frame.op_stack.pop().unwrap();
+        frame.local[1] = i;
         frame.pc += 1;
     }
 
     pub fn aload_1(frame: &mut StackFrame) {
-        frame.op_stack.push(frame.local[1]);
+        frame.op_stack.push(frame.local.get(1).unwrap().clone());
         frame.pc += 1;
     }
 
     pub fn aload_0(frame: &mut StackFrame) {
-        frame.op_stack.push(frame.local[0]);
+        frame.op_stack.push(frame.local.get(0).unwrap().clone());
         frame.pc += 1;
     }
 
     pub fn iload_1(frame: &mut StackFrame) {
-        frame.op_stack.push(frame.local[1]);
+        frame.op_stack.push(frame.local.get(1).unwrap().clone());
         frame.pc += 1;
     }
 
     pub fn iload_2(frame: &mut StackFrame) {
-        frame.op_stack.push(frame.local[2]);
+        frame.op_stack.push(frame.local.get(2).unwrap().clone());
         frame.pc += 1;
     }
 
     pub fn iadd(frame: &mut StackFrame) {
-        let i1 = frame.op_stack.pop().unwrap() as i32;
-        let i2 = frame.op_stack.pop().unwrap() as i32;
-        let result = i1 + i2;
-        println!("add result: {}", &result);
-        frame.op_stack.push(result as u64);
+        let i1 = frame.op_stack.pop().unwrap();
+        let i2 = frame.op_stack.pop().unwrap();
+        let mut  v1 = 0;
+        let  mut v2 = 0;
+        match i1 {
+            StackFrameValue::Int(value)=>{ v1 = value;} 
+            _ => {
+                panic!("wrong value type");
+            }
+        }
+        match i2 {
+            StackFrameValue::Int(value)=>{ v2 = value;} 
+            _ => {
+                panic!("wrong value type");
+            }
+        }
+        let result = v1 + v2;
+        println!("execute add result: {}", &result);
+        frame.op_stack.push(StackFrameValue::Int(result));
         frame.pc += 1;
     }
 
@@ -263,7 +278,7 @@ pub mod op_code {
         let len = u8s_to_u16(&class_name_utf8[1..3]);
         let class = get_or_load_class(&class_name_utf8[3..(len as usize + 3)].to_vec());
         let obj = create_object(class.id);
-        frame.op_stack.push(obj.id);
+        frame.op_stack.push(StackFrameValue::Reference(obj.id));
         frame.pc += 3;
     }
 
@@ -376,7 +391,7 @@ pub mod op_code {
         drop(data);
     }
 
-    pub fn push_frame_data(vm_stack_id: u32, value: u64) {
+    pub fn push_frame_data(vm_stack_id: u32, value:StackFrameValue) {
         let data: std::sync::MutexGuard<'_, UnsafeCell<HashMap<u32, Vec<StackFrame>>>> =
             VM_STACKS.lock().unwrap();
         unsafe {
@@ -421,13 +436,24 @@ pub mod op_code {
                         i += 1;
                     }
                     MethodParameter::Double => {
-                        let bytes: [u8; 8] = unsafe { mem::transmute(v) };
-                        new_stack_frame.local[i + 1] = u8s_to_u32(&bytes[0..4]) as u64;
-                        new_stack_frame.local[i + 2] = u8s_to_u32(&bytes[4..8]) as u64;
+                        let bytes: [u8; 8] = unsafe { 
+                            let mut bytes: [u8; 8] = [0,0,0,0,0,0,0,0];
+                            let f:f64 = 0.0;
+                            match v {
+                                StackFrameValue::Double(value)=>{ 
+                                    bytes = mem::transmute(value) ;
+                                } 
+                                _ => {
+                                    panic!("wrong value type");
+                                }
+                            }
+                            bytes 
+                        };
+                        new_stack_frame.local[i + 1] = StackFrameValue::Int(u8s_to_u32(&bytes[0..4]) as i32);
+                        new_stack_frame.local[i + 2] = StackFrameValue::Int(u8s_to_u32(&bytes[4..8]) as i32);
                         i += 2;
                     }
                     MethodParameter::Float => {
-                        new_stack_frame.local.push(v);
                         new_stack_frame.local[i + 1] = v;
                         i += 1;
                     }
@@ -436,9 +462,21 @@ pub mod op_code {
                         i += 1;
                     }
                     MethodParameter::Long => {
-                        let bytes: [u8; 8] = unsafe { mem::transmute(v) };
-                        new_stack_frame.local[i + 1] = u8s_to_u32(&bytes[0..4]) as u64;
-                        new_stack_frame.local[i + 2] = u8s_to_u32(&bytes[4..8]) as u64;
+                        let bytes: [u8; 8] = unsafe { 
+                            let mut bytes: [u8; 8] = [0,0,0,0,0,0,0,0];
+                            let d:i64 = 0;
+                            match v {
+                                StackFrameValue::Long(value)=>{ 
+                                    bytes = mem::transmute(value) ;
+                                } 
+                                _ => {
+                                    panic!("wrong value type");
+                                }
+                            }
+                            bytes 
+                        };
+                        new_stack_frame.local[i + 1] = StackFrameValue::Int(u8s_to_u32(&bytes[0..4]) as i32);
+                        new_stack_frame.local[i + 2] = StackFrameValue::Int(u8s_to_u32(&bytes[4..8]) as i32);
                         i += 2;
                     }
                     MethodParameter::Reference(string) => {
@@ -467,7 +505,7 @@ pub mod op_code {
 
     pub fn ireturn(frame: &mut StackFrame) {
         let v = frame.op_stack.pop().unwrap();
-        println!("ireturn result: {}", &v);
+        //println!("ireturn result: {}", &v);
         pop_stack_frame(frame.vm_stack_id);
         push_frame_data(frame.vm_stack_id, v);
         //将返回值传给上一个栈帧

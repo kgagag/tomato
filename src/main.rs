@@ -5,6 +5,7 @@ pub mod stack_frame;
 pub mod op_code;
 pub mod object;
 pub mod runtime_data_area;
+pub mod value;
 use std::mem;
 use std::cell::UnsafeCell;
 use std::sync::Mutex;

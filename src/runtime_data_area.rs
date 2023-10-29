@@ -15,13 +15,13 @@ pub mod runtime_data_area{
         pub static ref CLASS_ID_DATA: Mutex<UnsafeCell<HashMap<usize, Vec<u8>>>> = Mutex::new(UnsafeCell::new(HashMap::new()));
     
         //字符串常量池
-        pub static ref STR_POOL: Mutex<UnsafeCell<HashMap<Vec<u8>, u64>>> = Mutex::new(UnsafeCell::new(HashMap::new()));
+        pub static ref STR_POOL: Mutex<UnsafeCell<HashMap<Vec<u8>, u32>>> = Mutex::new(UnsafeCell::new(HashMap::new()));
     
         //对象存储
-        pub static ref OBJECT_DATA: Mutex<UnsafeCell<HashMap<u64, Object>>> = Mutex::new(UnsafeCell::new(HashMap::new()));
+        pub static ref OBJECT_DATA: Mutex<UnsafeCell<HashMap<u32, Object>>> = Mutex::new(UnsafeCell::new(HashMap::new()));
     
         //对象ID游标
-        pub static ref OBJECT_ID: Mutex<UnsafeCell<u64>> = Mutex::new(UnsafeCell::new(0));
+        pub static ref OBJECT_ID: Mutex<UnsafeCell<u32>> = Mutex::new(UnsafeCell::new(0));
     
         //虚拟机栈
         pub static ref VM_STACKS: Mutex<UnsafeCell<HashMap<u32, Vec<StackFrame>>>> = Mutex::new(UnsafeCell::new(HashMap::new()));

@@ -96,7 +96,7 @@ pub mod class_loader {
      */
     pub fn load_class(name: &String) -> Class {
         //设置class_path
-        let class_path = String::from("E:/tomato/test/");
+        let class_path = String::from("E:/test/");
         let appendix = String::from(".class");
         let mut path = class_path + &name + &appendix;
         let rt_path = String::from("E:/tomato/rt/") + &name + &appendix;

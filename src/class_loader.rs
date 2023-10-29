@@ -21,9 +21,12 @@ pub mod class_loader {
         let mut parameters: Vec<MethodParameter> = Vec::new();
         while index < descriptor_length {
             let descriptor_char = descriptor[index] as char;
-            if(descriptor_char == '(' || descriptor_char == ')'){
+            if descriptor_char == '('{
                 index += 1;
                 continue;
+            }
+            if descriptor_char == ')'{
+                break;
             }
             match descriptor_char {
                 'B' => parameters.push(MethodParameter::Byte),
@@ -96,7 +99,7 @@ pub mod class_loader {
      */
     pub fn load_class(name: &String) -> Class {
         //设置class_path
-        let class_path = String::from("E:/test/");
+        let class_path = String::from("E:/tomato/test/");
         let appendix = String::from(".class");
         let mut path = class_path + &name + &appendix;
         let rt_path = String::from("E:/tomato/rt/") + &name + &appendix;

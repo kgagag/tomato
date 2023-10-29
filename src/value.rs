@@ -1,7 +1,7 @@
 pub mod value {
     #[derive(Debug, Clone)]
     pub enum StackFrameValue {
-        Byte(u8),
+        Byte(i8),
         Char(u16),
         Double(f64),
         Float(f32),

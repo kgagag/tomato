@@ -85,7 +85,7 @@ pub fn execute(){
 
 
 fn main() {
-    run(String::from("Test3"));
+    run(String::from("Test2"));
 }
 
 

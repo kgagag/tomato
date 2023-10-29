@@ -23,7 +23,6 @@ pub mod op_code {
     use std::mem;
     use std::sync::Mutex;
     use crate::value::value::StackFrameValue;
-
     pub fn class_exists(class_name: Vec<u8>) -> bool {
         // 获取全局变量的Mutex锁
         let data: std::sync::MutexGuard<'_, UnsafeCell<HashMap<Vec<u8>, Class>>> =
@@ -121,6 +120,9 @@ pub mod op_code {
             let mut stack_frame = vm_stack.get_mut(len - 1).unwrap();
             while stack_frame.pc < stack_frame.code.len() {
                 let code = stack_frame.code[stack_frame.pc];
+                //println!("op code:{}{:X},{:?}",stack_frame.vm_stack_id,&code,stack_frame.op_stack.get(0));
+                println!("frame:{:?}",&stack_frame);
+               // println!("vm_stack:{:?}",&vm_stack.clone());
                 if code == 0x10 {
                     bipush(stack_frame);
                 } else if code == 0x3c {
@@ -157,7 +159,7 @@ pub mod op_code {
                     astore_1(stack_frame);
                 }
                 len = (&vm_stack).len();
-                if (len == 0) {
+                if len == 0 {
                     break;
                 }
                 stack_frame = vm_stack.get_mut(len - 1).unwrap();
@@ -167,7 +169,7 @@ pub mod op_code {
 
     pub fn bipush(frame: &mut StackFrame) {
         let u = frame.code[frame.pc + 1];
-        frame.op_stack.push(StackFrameValue::Byte(u));
+        frame.op_stack.push(StackFrameValue::Byte(u as i8));
         frame.pc += 2;
     }
 
@@ -223,23 +225,9 @@ pub mod op_code {
     }
 
     pub fn iadd(frame: &mut StackFrame) {
-        let i1 = frame.op_stack.pop().unwrap();
-        let i2 = frame.op_stack.pop().unwrap();
-        let mut  v1 = 0;
-        let  mut v2 = 0;
-        match i1 {
-            StackFrameValue::Int(value)=>{ v1 = value;} 
-            _ => {
-                panic!("wrong value type");
-            }
-        }
-        match i2 {
-            StackFrameValue::Int(value)=>{ v2 = value;} 
-            _ => {
-                panic!("wrong value type");
-            }
-        }
-        let result = v1 + v2;
+        let i1 = frame.popu64() as i32;
+        let i2 = frame.popu64() as i32;
+        let result = i1 + i2;
         println!("execute add result: {}", &result);
         frame.op_stack.push(StackFrameValue::Int(result));
         frame.pc += 1;
@@ -396,9 +384,11 @@ pub mod op_code {
             VM_STACKS.lock().unwrap();
         unsafe {
             let map = &mut *data.get();
+            println!("before push_frame_data：{:?}",&map);
             let l = map.get_mut(&vm_stack_id).unwrap();
-            let len = l.len();
-            l.get_mut(len - 1).unwrap().op_stack.push(value);
+            //let len = l.len();
+            l.get_mut(0).unwrap().op_stack.push(value);
+            println!("after push_frame_data：{:?}",&map);
         }
         drop(data);
     }
@@ -504,8 +494,8 @@ pub mod op_code {
     }
 
     pub fn ireturn(frame: &mut StackFrame) {
-        let v = frame.op_stack.pop().unwrap();
-        //println!("ireturn result: {}", &v);
+        let v: StackFrameValue = frame.op_stack.pop().unwrap();
+        println!("ireturn result: {:?}", &v);
         pop_stack_frame(frame.vm_stack_id);
         push_frame_data(frame.vm_stack_id, v);
         //将返回值传给上一个栈帧

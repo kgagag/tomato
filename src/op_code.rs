@@ -1,118 +1,17 @@
 pub mod op_code {
     use crate::class::class::Class;
-    use crate::class::class::CodeAttribute;
     use crate::class::class::MethodInfo;
-    use crate::class::class::MethodParameter;
-    use crate::class_loader::class_loader::load_class;
-    use crate::create_stack_frame;
-    use crate::object::object::Object;
-    use crate::runtime_data_area::runtime_data_area::CLASS_DATA;
-    use crate::runtime_data_area::runtime_data_area::CLASS_ID_DATA;
-    use crate::runtime_data_area::runtime_data_area::OBJECT_DATA;
-    use crate::runtime_data_area::runtime_data_area::OBJECT_ID;
-    use crate::runtime_data_area::runtime_data_area::STR_POOL;
     use crate::runtime_data_area::runtime_data_area::VM_STACKS;
-    use crate::stack_frame;
     use crate::stack_frame::stack_frame::StackFrame;
+    use crate::stack_frame::stack_frame::init_stack_frame;
+
     use crate::u8c::u8c::u8s_to_u16;
-    use crate::u8c::u8c::u8s_to_u32;
-    use crate::u8c::u8c::u8s_to_u64;
-    use lazy_static::lazy_static;
     use std::cell::UnsafeCell;
     use std::collections::HashMap;
-    use std::mem;
-    use std::sync::Mutex;
     use crate::value::value::StackFrameValue;
-    pub fn class_exists(class_name: Vec<u8>) -> bool {
-        // 获取全局变量的Mutex锁
-        let data: std::sync::MutexGuard<'_, UnsafeCell<HashMap<Vec<u8>, Class>>> =
-            CLASS_DATA.lock().unwrap();
-        unsafe {
-            // 从 UnsafeCell 中获取 HashMap 的可变引用
-            let map = &mut *data.get();
-            // 释放Mutex锁
-            drop(data);
-            return map.contains_key(&class_name);
-        }
-    }
-
-    pub fn create_object<'a>(class: usize) -> &'a mut Object {
-        // 获取全局变量的Mutex锁
-        let data = OBJECT_DATA.lock().unwrap();
-        let obj_id_data = OBJECT_ID.lock().unwrap();
-
-        // 通过UnsafeCell获取可变引用，并修改全局变量的值
-        let obj;
-        let obj_id: &mut u32;
-        unsafe {
-            let map = &mut *data.get();
-            obj_id = &mut *obj_id_data.get();
-            obj = Object::new(*obj_id + 1, class);
-            map.insert(obj.id, obj.clone());
-            drop(data);
-            drop(obj_id_data);
-            *obj_id += 1;
-            return map.get_mut(&obj.id).unwrap();
-        }
-    }
-
-    pub fn get_object<'a>(id: &u32) -> &'a mut Object {
-        // 获取全局变量的Mutex锁
-        let data = OBJECT_DATA.lock().unwrap();
-        // 通过UnsafeCell获取可变引用，并修改全局变量的值
-        unsafe {
-            let map = &mut *data.get();
-            return map.get_mut(id).unwrap();
-        }
-    }
-    pub fn get_or_load_class<'a>(class_name: &Vec<u8>) -> &'a mut Class {
-        // 获取全局变量的Mutex锁
-        let data: std::sync::MutexGuard<'_, UnsafeCell<HashMap<Vec<u8>, Class>>> =
-            CLASS_DATA.lock().unwrap();
-        // 通过UnsafeCell获取可变引用，并修改全局变量的值
-        unsafe {
-            // 从 UnsafeCell 中获取 HashMap 的可变引用
-            let map = &mut *data.get();
-            // 释放Mutex锁
-            if  !map.contains_key(class_name)  {
-                let mut class = load_class(&(String::from_utf8(class_name.clone()).unwrap()));
-                class.id = map.len() + 1 as usize;
-                map.insert(class_name.clone(), class);
-                add_id_class(map.len(), class_name.clone());
-            }
-            drop(data);
-            return map.get_mut(class_name).unwrap();
-        }
-    }
-
-    pub fn add_id_class(class_id: usize, class_name: Vec<u8>) {
-        // 获取全局变量的Mutex锁
-        let data: std::sync::MutexGuard<'_, UnsafeCell<HashMap<usize, Vec<u8>>>> =
-            CLASS_ID_DATA.lock().unwrap();
-        // 通过UnsafeCell获取可变引用，并修改全局变量的值
-        unsafe {
-            // 从 UnsafeCell 中获取 HashMap 的可变引用
-            let map = &mut *data.get();
-            // 添加或修改键值对
-            map.insert(class_id, class_name);
-        }
-        // 释放Mutex锁
-        drop(data);
-    }
-
-    pub fn get_class_name(class_id: &usize) -> Vec<u8> {
-        // 获取全局变量的Mutex锁
-        let data: std::sync::MutexGuard<'_, UnsafeCell<HashMap<usize, Vec<u8>>>> =
-            CLASS_ID_DATA.lock().unwrap();
-        // 通过UnsafeCell获取可变引用，并修改全局变量的值
-        unsafe {
-            // 从 UnsafeCell 中获取 HashMap 的可变引用
-            let map = &mut *data.get();
-            // 释放Mutex锁
-            drop(data);
-            return map.get(class_id).unwrap().clone();
-        }
-    }
+    use crate::runtime_data_area::runtime_data_area::get_class_name;
+    use crate::runtime_data_area::runtime_data_area::get_or_load_class;
+    use crate::runtime_data_area::runtime_data_area::create_object;
 
     pub fn do_opcode(vm_stack: &mut Vec<StackFrame>) {
         while vm_stack.len() > 0 {
@@ -391,96 +290,6 @@ pub mod op_code {
             println!("after push_frame_data：{:?}",&map);
         }
         drop(data);
-    }
-
-    pub fn init_stack_frame(
-        frame: &mut StackFrame,
-        method_info: &MethodInfo,
-        class_id: usize,
-    ) -> StackFrame {
-        let mut new_stack_frame: StackFrame = create_stack_frame(&method_info, class_id).unwrap();
-        new_stack_frame.vm_stack_id = frame.vm_stack_id;
-        let mut i: usize = 0;
-        if method_info.param.len() > 0 {
-            for j in 0..method_info.param.len() {
-                let v = frame.op_stack.pop().unwrap();
-                let param: &MethodParameter = method_info.param.get(j).unwrap();
-                match param {
-                    MethodParameter::Byte => {
-                        new_stack_frame.local[i + 1] = v;
-                        i += 1;
-                    }
-                    MethodParameter::Char => {
-                        new_stack_frame.local[i + 1] = v;
-                        i += 1;
-                    }
-                    MethodParameter::Array {
-                        element_type,
-                        depth,
-                    } => {
-                        new_stack_frame.local[i + 1] = v;
-                        i += 1;
-                    }
-                    MethodParameter::Boolean => {
-                        new_stack_frame.local[i + 1] = v;
-                        i += 1;
-                    }
-                    MethodParameter::Double => {
-                        let bytes: [u8; 8] = unsafe { 
-                            let mut bytes: [u8; 8] = [0,0,0,0,0,0,0,0];
-                            let f:f64 = 0.0;
-                            match v {
-                                StackFrameValue::Double(value)=>{ 
-                                    bytes = mem::transmute(value) ;
-                                } 
-                                _ => {
-                                    panic!("wrong value type");
-                                }
-                            }
-                            bytes 
-                        };
-                        new_stack_frame.local[i + 1] = StackFrameValue::Int(u8s_to_u32(&bytes[0..4]) as i32);
-                        new_stack_frame.local[i + 2] = StackFrameValue::Int(u8s_to_u32(&bytes[4..8]) as i32);
-                        i += 2;
-                    }
-                    MethodParameter::Float => {
-                        new_stack_frame.local[i + 1] = v;
-                        i += 1;
-                    }
-                    MethodParameter::Int => {
-                        new_stack_frame.local[i + 1] = v;
-                        i += 1;
-                    }
-                    MethodParameter::Long => {
-                        let bytes: [u8; 8] = unsafe { 
-                            let mut bytes: [u8; 8] = [0,0,0,0,0,0,0,0];
-                            let d:i64 = 0;
-                            match v {
-                                StackFrameValue::Long(value)=>{ 
-                                    bytes = mem::transmute(value) ;
-                                } 
-                                _ => {
-                                    panic!("wrong value type");
-                                }
-                            }
-                            bytes 
-                        };
-                        new_stack_frame.local[i + 1] = StackFrameValue::Int(u8s_to_u32(&bytes[0..4]) as i32);
-                        new_stack_frame.local[i + 2] = StackFrameValue::Int(u8s_to_u32(&bytes[4..8]) as i32);
-                        i += 2;
-                    }
-                    MethodParameter::Reference(string) => {
-                        new_stack_frame.local[i + 1] = v;
-                        i += 1;
-                    }
-                    MethodParameter::Short => {
-                        new_stack_frame.local[i + 1] = v;
-                        i += 1;
-                    }
-                }
-            }
-        }
-        return new_stack_frame;
     }
 
     pub fn dup(frame: &mut StackFrame) {

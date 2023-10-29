@@ -1,7 +1,5 @@
 pub mod class {
-    use std::fs::{self, File};
-    use std::io::{prelude::*, Bytes};
-    use std::thread::panicking;
+    use crate::param::param::MethodParameter;
     #[derive(Debug, Clone)]
     pub struct Class {
         pub magic: u32,
@@ -211,26 +209,6 @@ pub mod class {
 
     #[derive(Debug)]
     pub struct Exception {}
-
-  
-
-    #[derive(Debug, Clone)]
-    pub enum MethodParameter {
-        Byte,
-        Char,
-        Double,
-        Float,
-        Int,
-        Long,
-        Reference(String),
-        Short,
-        Boolean,
-        Array {
-            element_type: Box<MethodParameter>,
-            depth: u32,
-        },
-    }
-
     /*
     fn parse_method_descriptor(descriptor: &Vec<u8>) -> Result<Option<Vec<MethodParameter>>, String> {
         let mut index = 0;

@@ -9,10 +9,6 @@ pub mod value {
         Long(i64),
         Reference(u32),
         Short(i16),
-        Boolean(bool),
-        Array {
-            element_type: Box<StackFrameValue>,
-            depth: u32,
-        },
+        Boolean(bool)
     }
 }

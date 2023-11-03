@@ -1,4 +1,5 @@
 pub mod stack_frame {
+    use crate::class::class::ConstantPoolInfo;
     use crate::value::value::StackFrameValue;
     use crate::class::class::MethodInfo;
     use crate::class::class::CodeAttribute;
@@ -120,9 +121,8 @@ pub mod stack_frame {
     pub fn init_stack_frame(
             frame: &mut StackFrame,
             method_info: &MethodInfo,
-            class_id: usize,
         ) -> StackFrame {
-            let mut new_stack_frame: StackFrame = create_stack_frame(&method_info, class_id).unwrap();
+            let mut new_stack_frame: StackFrame = create_stack_frame(&method_info).unwrap();
             new_stack_frame.vm_stack_id = frame.vm_stack_id;
             let mut i: usize = 0;
             if method_info.param.len() > 0 {
@@ -210,38 +210,37 @@ pub mod stack_frame {
 
         pub fn create_stack_frame(
             method_info: &MethodInfo,
-            class_id: usize,
         ) -> Option<StackFrame> {
-            let class_name = get_class_name(&class_id);
-            let class = get_or_load_class(&class_name);
+            let class = get_or_load_class(&method_info.class_name);
             for attr in &method_info.attributes {
                 let attr_index = (attr.attribute_name_index as usize) - 1;
                 let u8_vec = &class.constant_pool[attr_index];
-                let slice = &u8_vec[3..u8_vec.len()];
-                let name = String::from_utf8(slice.to_vec()).expect("Found invalid UTF-8");
-                if "Code" == name {
-                    //读取Code属性
-                    //读取 max_stack
-                    let max_stack = u8s_to_u16(&attr.info[0..2]);
-                    let max_locals: u16 = u8s_to_u16(&attr.info[2..4]);
-                    let code_length: u32 = u8s_to_u32(&attr.info[4..8]);
-                    let mut code: Vec<u8> = Vec::new();
-                    for c in 0..code_length {
-                        code.push(attr.info[(c + 8) as usize]);
+                match u8_vec {
+                    ConstantPoolInfo::Utf8(name)=>{
+                        if "Code" == name {
+                            let max_stack = u8s_to_u16(&attr.info[0..2]);
+                            let max_locals: u16 = u8s_to_u16(&attr.info[2..4]);
+                            let code_length: u32 = u8s_to_u32(&attr.info[4..8]);
+                            let mut code: Vec<u8> = Vec::new();
+                            for c in 0..code_length {
+                                code.push(attr.info[(c + 8) as usize]);
+                            }
+                            let code_attr: CodeAttribute =
+                                CodeAttribute::new(max_stack, max_locals, code_length, code);
+                            let mut local: Vec<u32> = Vec::new();
+                            for _i in 0..max_locals {
+                                local.push(0);
+                            }
+                            return Some( StackFrame::new(
+                                class.id,
+                                code_attr.max_stack,
+                                code_attr.max_locals,
+                                code_attr.code,
+                            )
+                        )
+                        }
                     }
-                    let code_attr: CodeAttribute =
-                        CodeAttribute::new(max_stack, max_locals, code_length, code);
-                    let mut local: Vec<u32> = Vec::new();
-                    for _i in 0..max_locals {
-                        local.push(0);
-                    }
-                    return Some( StackFrame::new(
-                        class_id,
-                        code_attr.max_stack,
-                        code_attr.max_locals,
-                        code_attr.code,
-                    )
-                )
+                    _=> panic!("Found invalid UTF-8")
                 }
             }
             return None;

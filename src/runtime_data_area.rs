@@ -3,17 +3,20 @@ pub mod runtime_data_area{
     use std::sync::Mutex;
     use lazy_static::lazy_static;
     use std::collections::HashMap;
-    use crate::class::class::Class;
+    use crate::class::class::{Class, MethodInfo};
     use crate::object::object::Object;
     use crate::stack_frame::stack_frame::StackFrame;
     use crate::class_loader::class_loader::load_class;
     lazy_static! {
         // 创建一个包含UnsafeCell的Mutex，用于包装全局变量
         //类常量池
-        pub static ref CLASS_DATA: Mutex<UnsafeCell<HashMap<Vec<u8>, Class>>> = Mutex::new(UnsafeCell::new(HashMap::new()));
-    
-        pub static ref CLASS_ID_DATA: Mutex<UnsafeCell<HashMap<usize, Vec<u8>>>> = Mutex::new(UnsafeCell::new(HashMap::new()));
-    
+        pub static ref CLASS_DATA: Mutex<UnsafeCell<HashMap<String, Class>>> = Mutex::new(UnsafeCell::new(HashMap::new()));
+        
+        pub static ref CLASS_ID_DATA: Mutex<UnsafeCell<HashMap<usize,String>>> = Mutex::new(UnsafeCell::new(HashMap::new()));
+        
+        //方法数据，便于调用方法时快速查找
+        pub static ref METHOD_DATA: Mutex<UnsafeCell<HashMap<String,MethodInfo>>> = Mutex::new(UnsafeCell::new(HashMap::new()));
+        
         //字符串常量池
         pub static ref STR_POOL: Mutex<UnsafeCell<HashMap<Vec<u8>, u32>>> = Mutex::new(UnsafeCell::new(HashMap::new()));
     
@@ -28,9 +31,9 @@ pub mod runtime_data_area{
         
     }
 
-    pub fn class_exists(class_name: Vec<u8>) -> bool {
+    pub fn class_exists(class_name:String) -> bool {
         // 获取全局变量的Mutex锁
-        let data: std::sync::MutexGuard<'_, UnsafeCell<HashMap<Vec<u8>, Class>>> =
+        let data: std::sync::MutexGuard<'_, UnsafeCell<HashMap<String, Class>>> =
             CLASS_DATA.lock().unwrap();
         unsafe {
             // 从 UnsafeCell 中获取 HashMap 的可变引用
@@ -70,9 +73,9 @@ pub mod runtime_data_area{
             return map.get_mut(id).unwrap();
         }
     }
-    pub fn get_or_load_class<'a>(class_name: &Vec<u8>) -> &'a mut Class {
+    pub fn get_or_load_class<'a>(class_name: &String) -> &'a mut Class {
         // 获取全局变量的Mutex锁
-        let data: std::sync::MutexGuard<'_, UnsafeCell<HashMap<Vec<u8>, Class>>> =
+        let data: std::sync::MutexGuard<'_, UnsafeCell<HashMap<String, Class>>> =
             CLASS_DATA.lock().unwrap();
         // 通过UnsafeCell获取可变引用，并修改全局变量的值
         unsafe {
@@ -80,7 +83,7 @@ pub mod runtime_data_area{
             let map = &mut *data.get();
             // 释放Mutex锁
             if  !map.contains_key(class_name)  {
-                let mut class = load_class(&(String::from_utf8(class_name.clone()).unwrap()));
+                let mut class = load_class(class_name);
                 class.id = map.len() + 1 as usize;
                 map.insert(class_name.clone(), class);
                 add_id_class(map.len(), class_name.clone());
@@ -90,9 +93,9 @@ pub mod runtime_data_area{
         }
     }
 
-    pub fn add_id_class(class_id: usize, class_name: Vec<u8>) {
+    pub fn add_id_class(class_id: usize, class_name: String) {
         // 获取全局变量的Mutex锁
-        let data: std::sync::MutexGuard<'_, UnsafeCell<HashMap<usize, Vec<u8>>>> =
+        let data: std::sync::MutexGuard<'_, UnsafeCell<HashMap<usize, String>>> =
             CLASS_ID_DATA.lock().unwrap();
         // 通过UnsafeCell获取可变引用，并修改全局变量的值
         unsafe {
@@ -105,9 +108,9 @@ pub mod runtime_data_area{
         drop(data);
     }
 
-    pub fn get_class_name(class_id: &usize) -> Vec<u8> {
+    pub fn get_class_name(class_id: &usize) -> String {
         // 获取全局变量的Mutex锁
-        let data: std::sync::MutexGuard<'_, UnsafeCell<HashMap<usize, Vec<u8>>>> =
+        let data: std::sync::MutexGuard<'_, UnsafeCell<HashMap<usize, String>>> =
             CLASS_ID_DATA.lock().unwrap();
         // 通过UnsafeCell获取可变引用，并修改全局变量的值
         unsafe {
@@ -120,4 +123,34 @@ pub mod runtime_data_area{
     }
 
 
+    pub fn add_method(method_info :MethodInfo) {
+        // 获取全局变量的Mutex锁
+        let data: std::sync::MutexGuard<'_, UnsafeCell<HashMap<String, MethodInfo>>> =
+        METHOD_DATA.lock().unwrap();
+        // 通过UnsafeCell获取可变引用，并修改全局变量的值
+        unsafe {
+            let key = format!("{}{}{}{}{}", method_info.class_name,".", method_info.method_name,".", method_info.descriptor);
+            // 从 UnsafeCell 中获取 HashMap 的可变引用
+            let map = &mut *data.get();
+            // 添加或修改键值对
+            map.insert(key, method_info);
+        }
+        // 释放Mutex锁
+        drop(data);
+    }
+
+    pub fn get_method_from_pool<'a>(class_name: String,method_name:String,descriptor :String) ->&'a MethodInfo {
+        // 获取全局变量的Mutex锁
+        let data: std::sync::MutexGuard<'_, UnsafeCell<HashMap<String, MethodInfo>>> =
+        METHOD_DATA.lock().unwrap();
+        // 通过UnsafeCell获取可变引用，并修改全局变量的值
+        unsafe {
+            let key = format!("{}{}{}{}{}", class_name,".", method_name,".", descriptor);
+            // 从 UnsafeCell 中获取 HashMap 的可变引用
+            let map = &mut *data.get();
+            drop(data);
+            //print!("{:?}",map);
+            return  map.get(&key).unwrap();
+        }
+    }
 }

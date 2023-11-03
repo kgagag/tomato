@@ -6,7 +6,7 @@ pub mod class {
         pub minor_version: u16,
         pub major_version: u16,
         pub constant_pool_count: u16,
-        pub constant_pool: Vec<Vec<u8>>,
+        pub constant_pool: Vec<ConstantPoolInfo>,
         pub access_flags: u16,
         pub this_class: u16,
         pub super_class: u16,
@@ -19,6 +19,7 @@ pub mod class {
         pub attributes_count: u16,
         pub attribute_info: Vec<AttributeInfo>,
         pub id: usize,
+        pub class_name:String
     }
 
     impl Class {
@@ -41,6 +42,7 @@ pub mod class {
                 attributes_count: 0,
                 attribute_info: Vec::new(),
                 id: 0,
+                class_name:String::new()
             }
         }
     }
@@ -53,6 +55,9 @@ pub mod class {
         pub attributes_count: u16,
         pub param: Vec<MethodParameter>,
         pub attributes: Vec<AttributeInfo>,
+        pub class_name:String,
+        pub method_name:String,
+        pub descriptor:String
     }
 
     #[derive(Debug, Clone)]
@@ -167,11 +172,7 @@ pub mod class {
                 max_stack,
                 max_locals,
                 code_length,
-                code,
-                // exception_table_length,
-                // exception_table,
-                // attributes_count,
-                // attribute_info
+                code
             }
         }
     }
@@ -209,156 +210,30 @@ pub mod class {
 
     #[derive(Debug)]
     pub struct Exception {}
-    /*
-    fn parse_method_descriptor(descriptor: &Vec<u8>) -> Result<Option<Vec<MethodParameter>>, String> {
-        let mut index = 0;
-        let descriptor_length = descriptor.len();
-        let mut parameters: Vec<MethodParameter> = Vec::new();
-        let string = String::from_utf8_lossy(&descriptor);
-        while index < descriptor_length {
-            let descriptor_char = descriptor[index] as char;
-
-            match descriptor_char {
-                'B' => parameters.push(MethodParameter::Byte),
-                'C' => parameters.push(MethodParameter::Char),
-                'D' => parameters.push(MethodParameter::Double),
-                'F' => parameters.push(MethodParameter::Float),
-                'I' => parameters.push(MethodParameter::Int),
-                'J' => parameters.push(MethodParameter::Long),
-                'L' => {
-                    // Handle reference type parameters
-                    let mut class_name = String::new();
-                    while index < descriptor_length {
-                        index += 1;
-                        if descriptor[index] as char == ';' {
-                            break;
-                        }
-                        class_name.push(descriptor[index] as char);
-                    }
-                    parameters.push(MethodParameter::Reference(class_name));
-                }
-                'S' => parameters.push(MethodParameter::Short),
-                'Z' => parameters.push(MethodParameter::Boolean),
-                '[' => {
-                    // Handle array type parameters
-                    let mut array_depth = 1;
-                    while index < descriptor_length && descriptor[index] as char == '[' {
-                        array_depth += 1;
-                        index += 1;
-                    }
-                    if index >= descriptor_length {
-                        return Err("Invalid array parameter descriptor".to_string());
-                    }
-                    let element_type = match descriptor[index] as char {
-                        'B' => MethodParameter::Byte,
-                        'C' => MethodParameter::Char,
-                        'D' => MethodParameter::Double,
-                        'F' => MethodParameter::Float,
-                        'I' => MethodParameter::Int,
-                        'J' => MethodParameter::Long,
-                        'L' => {
-                            // Handle reference type array parameters
-                            let mut class_name = String::new();
-                            while index < descriptor_length {
-                                index += 1;
-                                if descriptor[index] as char == ';' {
-                                    break;
-                                }
-                                class_name.push(descriptor[index] as char);
-                            }
-                            MethodParameter::Reference(class_name)
-                        }
-                        'S' => MethodParameter::Short,
-                        'Z' => MethodParameter::Boolean,
-                        _ => return Err("Unknown array element type".to_string()),
-                    };
-                    parameters.push(MethodParameter::Array {
-                        element_type: Box::new(element_type),
-                        depth: array_depth,
-                    });
-                }
-               // _ => return Err(format!("Unknown parameter descriptor: {}", descriptor_char)),
-               _ =>{
-
-               }
-            }
-
-            index += 1;
-        }
-
-        if parameters.is_empty() {
-            Ok(None) // No parameters, return None
-        } else {
-            Ok(Some(parameters))
-        }
+   
+    #[derive(Debug, Clone)]
+    pub enum ConstantPoolInfo {
+        Utf8(String),
+        Integer(i32),
+        Float(f32),
+        Long(i64),
+        Double(f64),
+        Class(u16),
+        String(u16),
+        Fieldref(u16, u16),
+        Methodref(u16, u16),
+        InterfaceMethodref(u16, u16),
+        NameAndType(u16, u16),
+        MethodHandle(u8, u16),
+        MethodType(u16),
+        InvokeDynamic(u16, u16),
+        Module(u16),
+        Package(u16),
+        MethodPointer(u8, u16),
+        InvokeStaticDynamic(u16, u16),
+        BootstrapMethod(u16, u16),
+        MethodTypeReference(u16),
+        // 添加更多可能的常量类型
     }
 
-    /***
-     * 类加载
-     */
-    pub fn load_class(name: &String) -> Class {
-        //设置class_path
-        let class_path = String::from("E:/rustwork/tomato/test/");
-        let appendix = String::from(".class");
-        let mut path = class_path + &name + &appendix;
-        let rt_path =  String::from("E:/rustwork/tomato/rt/") + &name+&appendix;
-        match fs::metadata(&path) {
-            Ok(metadata) => {
-                if !metadata.is_file(){
-                    path = rt_path;
-                }
-            }
-            Err(_) => {
-                path = rt_path;
-            }
-        }
-        let mut file = fs::File::open(path).unwrap();
-        let mut class: Class = Class::new();
-        class.magic = get_magic(&mut file);
-        class.minor_version = get_minor_version(&mut file);
-        class.major_version = get_major_version(&mut file);
-        class.constant_pool_count = get_constant_pool_count(&mut file);
-        class.constant_pool = get_constant_pool(class.constant_pool_count, &mut file);
-        class.access_flags = get_access_flag(&mut file);
-        class.this_class = get_this_class(&mut file);
-        class.super_class = get_super_class(&mut file);
-        class.interface_count = get_interface_count(&mut file);
-        class.interfaces = get_interface(class.interface_count, &mut file);
-        class.fields_count = get_field_count(&mut file);
-        class.field_info = get_field(class.fields_count, &mut file);
-        class.methods_count = get_method_count(&mut file);
-        class.method_info = get_method(class.methods_count, &mut file);
-        class.attributes_count = get_attribute_count(&mut file);
-        class.attribute_info = get_attribute(class.attributes_count, &mut file);
-
-        //补充方法方法参数解析后信息
-        for i in 0..class.methods_count {
-            let method_info = class.method_info.get_mut(i as usize).unwrap();
-            //let index = method_info.descriptor_index as usize - 1;
-            let descriptor = class
-                .constant_pool
-                .get(method_info.descriptor_index as usize - 1)
-                .unwrap();
-            let len = u8s_to_u16(&descriptor[1..3]);
-            let bytes = &descriptor[3..(3 + len as usize)];
-
-            let result = parse_method_descriptor(&bytes.to_vec());
-
-            match result {
-                Ok(Some(parameters)) => {
-                    for param in parameters {
-                        method_info.param.push(param);
-                    }
-                }
-                Ok(None) => {
-                    println!("No parameters");
-                }
-                Err(error) => {
-                    println!("Error: {}", error);
-                }
-            }
-        }
-        return class;
-    }
-    */
 }

@@ -72,6 +72,37 @@ pub fn newarray(frame: &mut StackFrame) {
 }
 
 pub fn iastore(frame: &mut StackFrame){
+    xastore(frame);
+}
+
+pub fn lastore(frame: &mut StackFrame){
+    xastore(frame);
+}
+pub fn fastore(frame: &mut StackFrame){
+    xastore(frame);
+}
+
+pub fn dastore(frame: &mut StackFrame){
+    xastore(frame);
+}
+
+pub fn aastore(frame: &mut StackFrame){
+    xastore(frame);
+}
+
+pub fn bastore(frame: &mut StackFrame){
+    xastore(frame);
+}
+
+pub fn castore(frame: &mut StackFrame){
+    xastore(frame);
+}
+
+pub fn sastore(frame: &mut StackFrame){
+    xastore(frame);
+}
+
+fn xastore(frame: &mut StackFrame){
     let v: StackFrameValue = frame.op_stack.pop().unwrap();
     let index = frame.op_stack.pop().unwrap();
     let array = frame.op_stack.pop().unwrap();
@@ -100,6 +131,38 @@ pub fn iastore(frame: &mut StackFrame){
 }
 
 pub fn iaload(frame: &mut StackFrame){
+    xaload(frame);
+}
+
+pub fn laload(frame: &mut StackFrame){
+    xaload(frame);
+}
+
+pub fn faload(frame: &mut StackFrame){
+    xaload(frame);
+}
+
+pub fn daload(frame: &mut StackFrame){
+    xaload(frame);
+}
+
+pub fn aaload(frame: &mut StackFrame){
+    xaload(frame);
+}
+
+pub fn baload(frame: &mut StackFrame){
+    xaload(frame);
+}
+
+pub fn caload(frame: &mut StackFrame){
+    xaload(frame);
+}
+
+pub fn saload(frame: &mut StackFrame){
+    xaload(frame);
+}
+
+fn xaload(frame: &mut StackFrame){
     let index = frame.op_stack.pop().unwrap();
     let array = frame.op_stack.pop().unwrap();
     let i;
@@ -124,5 +187,5 @@ pub fn iaload(frame: &mut StackFrame){
         _=> panic!()
     }
     frame.pc += 1;
-
 }
+

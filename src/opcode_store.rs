@@ -9,6 +9,7 @@
     use crate::stack_frame::init_stack_frame;
     use crate::u8c::f64_to_u32_vec;
     use crate::u8c::i64_to_u32_vec;
+    use crate::u8c::u8s_to_u32;
     use std::cell::UnsafeCell;
     use std::collections::HashMap;
     use crate::value::value::StackFrameValue;
@@ -22,6 +23,54 @@
     use log::{error, info, warn};
     use std::env;
 
+
+    pub fn fstore(frame: &mut StackFrame) {
+        let v = frame.op_stack.pop().unwrap();
+        let index = frame.code[frame.pc + 1] as usize;
+        frame.local[index] = v;
+        frame.pc += 2;
+    }
+
+    pub fn astore(frame: &mut StackFrame) {
+        let v = frame.op_stack.pop().unwrap();
+        let index = frame.code[frame.pc + 1] as usize;
+        frame.local[index] = v;
+        frame.pc += 2;
+    }
+
+    pub fn istore(frame: &mut StackFrame) {
+        let v = frame.op_stack.pop().unwrap();
+        let index = frame.code[frame.pc + 1] as usize;
+        frame.local[index] = v;
+        frame.pc += 2;
+    }
+
+    
+    pub fn lstore(frame: &mut StackFrame) {
+        xstore(frame);
+    }
+
+    fn xstore(frame: &mut StackFrame){
+        let v: StackFrameValue = frame.op_stack.pop().unwrap();
+        let index = frame.code[frame.pc + 1] as usize;
+        let value:i64;
+        match v {
+            StackFrameValue::Byte(l) => value = l as i64,
+            StackFrameValue::Char(l) => value = l as i64,
+            StackFrameValue::Int(l) => value = l as i64,
+            StackFrameValue::Short(l) => value = l as i64,
+            _=> panic!()
+        }
+        let bytes: [u8; 8] = value.to_le_bytes();
+        let a =  u8s_to_u32(&bytes[0..4]);
+        frame.local[index] = StackFrameValue::U32(u8s_to_u32(&bytes[0..4])) ;
+        frame.local[index + 1] = StackFrameValue::U32(u8s_to_u32(&bytes[4..8])) ;
+        frame.pc += 2;
+    }
+
+    pub fn dstore(frame: &mut StackFrame) {
+        xstore(frame);
+    }
 
     pub fn istore_0(frame: &mut StackFrame) {
         let i = frame.op_stack.pop().unwrap();

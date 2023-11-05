@@ -44,11 +44,75 @@ pub fn aload_0(frame: &mut StackFrame) {
 }
 
 pub fn iload(frame: &mut StackFrame) {
-    frame.op_stack.push(frame.local.get(0).unwrap().clone());
-    frame.pc += 1;
+    let index = frame.code[frame.pc + 1] as usize;
+    frame.op_stack.push(frame.local.get(index).unwrap().clone());
+    frame.pc += 2;
 }
 
 
+pub fn fload(frame: &mut StackFrame) {
+    let index = frame.code[frame.pc + 1] as usize;
+    frame.op_stack.push(frame.local.get(index).unwrap().clone());
+    frame.pc += 2;
+}
+
+pub fn aload(frame: &mut StackFrame) {
+    let index = frame.code[frame.pc + 1] as usize;
+    frame.op_stack.push(frame.local.get(index).unwrap().clone());
+    frame.pc += 2;
+}
+
+
+pub fn dload(frame: &mut StackFrame) {
+    let index = frame.code[frame.pc + 1] as usize;
+    let u1 = frame.local.get(index).unwrap().clone();
+    let u2  =  frame.local.get(index + 1).unwrap().clone();
+    let mut bytes1:[u8;4]=[0,0,0,0];
+    let mut bytes2:[u8;4]=[0,0,0,0];
+    match u1 {
+        StackFrameValue::Byte(l) => bytes1 = (l as u32).to_be_bytes(),
+        StackFrameValue::Char(l) => bytes1 = (l as u32).to_be_bytes(),
+        StackFrameValue::Int(l) =>  bytes1 = (l as u32).to_be_bytes(),
+        StackFrameValue::Short(l) => bytes1 = (l as u32).to_be_bytes(),
+        _=> panic!()
+    }
+    match u2 {
+        StackFrameValue::Byte(l) => bytes2 = (l as u32).to_be_bytes(),
+        StackFrameValue::Char(l) => bytes2 = (l as u32).to_be_bytes(),
+        StackFrameValue::Int(l) =>  bytes2 = (l as u32).to_be_bytes(),
+        StackFrameValue::Short(l) => bytes2 = (l as u32).to_be_bytes(),
+        _=> panic!()
+    }
+    let bytes3 = [bytes1[0],bytes1[1],bytes1[2],bytes1[3],bytes2[0],bytes2[1],bytes2[2],bytes2[3]];
+    frame.op_stack.push(StackFrameValue::Double(u8s_to_u64(&bytes3) as f64));
+    frame.pc += 2;
+}
+
+pub fn lload(frame: &mut StackFrame) {
+    let index = frame.code[frame.pc + 1] as usize;
+    let u1 = frame.local.get(index).unwrap().clone();
+    let u2  =  frame.local.get(index + 1).unwrap().clone();
+    let mut bytes1:[u8;4]=[0,0,0,0];
+    let mut bytes2:[u8;4]=[0,0,0,0];
+    match u1 {
+        StackFrameValue::Byte(l) => bytes1 = (l as u32).to_be_bytes(),
+        StackFrameValue::Char(l) => bytes1 = (l as u32).to_be_bytes(),
+        StackFrameValue::Int(l) =>  bytes1 = (l as u32).to_be_bytes(),
+        StackFrameValue::Short(l) => bytes1 = (l as u32).to_be_bytes(),
+        _=> panic!()
+    }
+    match u2 {
+        StackFrameValue::Byte(l) => bytes2 = (l as u32).to_be_bytes(),
+        StackFrameValue::Char(l) => bytes2 = (l as u32).to_be_bytes(),
+        StackFrameValue::Int(l) =>  bytes2 = (l as u32).to_be_bytes(),
+        StackFrameValue::Short(l) => bytes2 = (l as u32).to_be_bytes(),
+        _=> panic!()
+    }
+    let bytes3 = [bytes1[0],bytes1[1],bytes1[2],bytes1[3],bytes2[0],bytes2[1],bytes2[2],bytes2[3]];
+    frame.op_stack.push(StackFrameValue::Long(u8s_to_u64(&bytes3) as i64));
+    frame.pc += 2;
+
+}
 pub fn iload_0(frame: &mut StackFrame) {
     frame.op_stack.push(frame.local.get(0).unwrap().clone());
     frame.pc += 1;

@@ -1,3 +1,5 @@
+use log::info;
+
 use crate::class::CodeAttribute;
 use crate::class::ConstantPoolInfo;
 use crate::class::MethodInfo;
@@ -178,10 +180,11 @@ pub fn init_stack_frame(frame: &mut StackFrame, method_info: &MethodInfo) -> Sta
 }
 
 pub fn create_stack_frame(method_info: &MethodInfo) -> Option<StackFrame> {
+    //info!("{:?}",method_info);
     let class = get_or_load_class(&method_info.class_name);
+    //info!("{:?}",class.constant_pool);
     for attr in &method_info.attributes {
-        let attr_index = (attr.attribute_name_index as usize) - 1;
-        let u8_vec = &class.constant_pool[attr_index];
+        let u8_vec = class.constant_pool.get(&attr.attribute_name_index).unwrap();
         match u8_vec {
             ConstantPoolInfo::Utf8(name) => {
                 if "Code" == name {

@@ -28,7 +28,8 @@ pub mod op_code {
     use crate::opcode_dup::*;
     use crate::opcode_return::*;
     use crate::opcode_math::*;
-
+    use crate::opcode_pop::*;
+    use crate::opcode_swap::*;
     use crate::param::param::MethodParameter;
     use log::{error, info, warn};
     use std::env;
@@ -62,10 +63,10 @@ pub mod op_code {
                     0x13 => ldc_w(stack_frame),
                     0x14 => ldc2_w(stack_frame),
                     0x15 => iload(stack_frame),
-                    // 0x16 => lload(stack_frame),
-                    // 0x17 => fload(stack_frame),
-                    // 0x18 => dload(stack_frame),
-                    // 0x19 => aload(stack_frame),
+                    0x16 => lload(stack_frame),
+                    0x17 => fload(stack_frame),
+                    0x18 => dload(stack_frame),
+                    0x19 => aload(stack_frame),
                     0x1a => iload_0(stack_frame),
                     0x1b => iload_1(stack_frame),
                     0x1c => iload_2(stack_frame),
@@ -87,18 +88,18 @@ pub mod op_code {
                     0x2c => aload_2(stack_frame),
                     0x2d => aload_3(stack_frame),
                     0x2e => iaload(stack_frame),
-                    // 0x2f => laload(stack_frame),
-                    // 0x30 => faload(stack_frame),
-                    // 0x31 => daload(stack_frame),
-                    // 0x32 => aaload(stack_frame),
-                    // 0x33 => baload(stack_frame),
-                    // 0x34 => caload(stack_frame),
-                    // 0x35 => saload(stack_frame),
-                    // 0x36 => istore(stack_frame),
-                    // 0x37 => lstore(stack_frame),
-                    // 0x38 => fstore(stack_frame),
-                    // 0x39 => dstore(stack_frame),
-                    // 0x3a => astore(stack_frame),
+                    0x2f => laload(stack_frame),
+                    0x30 => faload(stack_frame),
+                    0x31 => daload(stack_frame),
+                    0x32 => aaload(stack_frame),
+                    0x33 => baload(stack_frame),
+                    0x34 => caload(stack_frame),
+                    0x35 => saload(stack_frame),
+                    0x36 => istore(stack_frame),
+                    0x37 => lstore(stack_frame),
+                    0x38 => fstore(stack_frame),
+                    0x39 => dstore(stack_frame),
+                    0x3a => astore(stack_frame),
                     0x3b => istore_0(stack_frame),
                     0x3c => istore_1(stack_frame),
                     0x3d => istore_2(stack_frame),
@@ -120,38 +121,38 @@ pub mod op_code {
                     0x4d => astore_2(stack_frame),
                     0x4e => astore_3(stack_frame),
                     0x4f => iastore(stack_frame),
-                    // 0x50 => lastore(stack_frame),
-                    // 0x51 => fastore(stack_frame),
-                    // 0x52 => dastore(stack_frame),
-                    // 0x53 => aastore(stack_frame),
-                    // 0x54 => bastore(stack_frame),
-                    // 0x55 => castore(stack_frame),
-                    // 0x56 => sastore(stack_frame),
-                    // 0x57 => pop(stack_frame),
-                    // 0x58 => pop2(stack_frame),
+                    0x50 => lastore(stack_frame),
+                    0x51 => fastore(stack_frame),
+                    0x52 => dastore(stack_frame),
+                    0x53 => aastore(stack_frame),
+                    0x54 => bastore(stack_frame),
+                    0x55 => castore(stack_frame),
+                    0x56 => sastore(stack_frame),
+                    0x57 => pop(stack_frame),
+                    0x58 => pop2(stack_frame),
                     0x59 => dup(stack_frame),
                     0x5a => dup_x1(stack_frame),
                     0x5b => dup_x2(stack_frame),
                     0x5c => dup2(stack_frame),
                     0x5d => dup2_x1(stack_frame),
                     0x5e => dup2_x2(stack_frame),
-                    // 0x5f => swap(stack_frame),
+                    0x5f => swap(stack_frame),
                     0x60 => iadd(stack_frame),
-                    // 0x61 => ladd(stack_frame),
-                    // 0x62 => fadd(stack_frame),
-                    // 0x63 => dadd(stack_frame),
-                    // 0x64 => isub(stack_frame),
-                    // 0x65 => lsub(stack_frame),
-                    // 0x66 => fsub(stack_frame),
-                    // 0x67 => dsub(stack_frame),
-                    // 0x68 => imul(stack_frame),
-                    // 0x69 => lmul(stack_frame),
-                    // 0x6a => fmul(stack_frame),
-                    // 0x6b => dmul(stack_frame),
-                    // 0x6c => idiv(stack_frame),
-                    // 0x6d => ldiv(stack_frame),
-                    // 0x6e => fdiv(stack_frame),
-                    // 0x6f => ddiv(stack_frame),
+                    0x61 => ladd(stack_frame),
+                    0x62 => fadd(stack_frame),
+                    0x63 => dadd(stack_frame),
+                    0x64 => isub(stack_frame),
+                    0x65 => lsub(stack_frame),
+                    0x66 => fsub(stack_frame),
+                    0x67 => dsub(stack_frame),
+                    0x68 => imul(stack_frame),
+                    0x69 => lmul(stack_frame),
+                    0x6a => fmul(stack_frame),
+                    0x6b => dmul(stack_frame),
+                    0x6c => idiv(stack_frame),
+                    0x6d => ldiv(stack_frame),
+                    0x6e => fdiv(stack_frame),
+                    0x6f => ddiv(stack_frame),
                     // 0x70 => irem(stack_frame),
                     // 0x71 => lrem(stack_frame),
                     // 0x72 => frem(stack_frame),
@@ -285,10 +286,10 @@ pub mod op_code {
         let class_name = get_class_name(&frame.class);
         let this_class = get_or_load_class(&class_name);
         let classfile_pool_index = u8s_to_u16(&frame.code[(frame.pc + 1)..(frame.pc + 3)]);
-        let classfile_pool_class = &this_class.constant_pool[(classfile_pool_index - 1) as usize];
+        let classfile_pool_class = &this_class.constant_pool.get(&classfile_pool_index).unwrap();
         match classfile_pool_class {
             ConstantPoolInfo::Class(name_index) => {
-                let class_name_utf8 = &this_class.constant_pool[(*name_index - 1) as usize];
+                let class_name_utf8 = &this_class.constant_pool.get(name_index).unwrap();
                 match class_name_utf8 {
                     ConstantPoolInfo::Utf8(class_name) => {
                         let target_class = get_or_load_class(class_name);
@@ -312,23 +313,23 @@ pub mod op_code {
         let class_name = get_class_name(&frame.class);
         let this_class = get_or_load_class(&class_name);
         if let ConstantPoolInfo::Methodref(class_index, name_and_type_index) = &this_class
-            .constant_pool[u8s_to_u16(&frame.code[(frame.pc + 1)..(frame.pc + 3)]) as usize - 1]
+            .constant_pool.get(&u8s_to_u16(&frame.code[(frame.pc + 1)..(frame.pc + 3)])).unwrap()
         {
             if let ConstantPoolInfo::Class(name_index) =
-                &this_class.constant_pool[*class_index as usize - 1]
+                &this_class.constant_pool.get(&class_index).unwrap()
             {
                 if let ConstantPoolInfo::Utf8(class_name) =
-                    &this_class.constant_pool[*name_index as usize - 1]
+                    &this_class.constant_pool.get(&name_index).unwrap()
                 {
                     let target_class = get_or_load_class(&class_name);
                     if let ConstantPoolInfo::NameAndType(name_index, descriptor_index) =
-                        &this_class.constant_pool[*name_and_type_index as usize - 1]
+                        &this_class.constant_pool.get(&name_and_type_index).unwrap()
                     {
                         if let ConstantPoolInfo::Utf8(method_name) =
-                            &this_class.constant_pool[*name_index as usize - 1]
+                            &this_class.constant_pool.get(&name_index).unwrap()
                         {
                             if let ConstantPoolInfo::Utf8(descriptor) =
-                                &this_class.constant_pool[*descriptor_index as usize - 1]
+                                &this_class.constant_pool.get(&descriptor_index).unwrap()
                             {
                                 return Some(get_method_from_pool(
                                     target_class.class_name.clone(),

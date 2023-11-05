@@ -19,6 +19,8 @@ pub mod opcode_ldc;
 pub mod opcode_math;
 pub mod opcode_return;
 pub mod opcode_dup;
+pub mod opcode_pop;
+pub mod opcode_swap;
 use std::cell::UnsafeCell;
 use crate::class::ConstantPoolInfo;
 use crate::stack_frame::StackFrame;
@@ -58,7 +60,7 @@ fn main() {
         .format_timestamp(Some(env_logger::TimestampPrecision::Millis))
         .format_module_path(true)
         .init();
-    run(String::from("Test5"));
+    run(String::from("Test6"));
 }
 
 
@@ -72,7 +74,7 @@ pub fn run(main_class_path: String) {
     for i in 0..* &class.method_info.len() {
         let method_info = &class.method_info[i];
         //let methond_index = (method_info.name_index as usize) - 1;
-        let u8_vec = &class.constant_pool[(method_info.name_index as usize) - 1];
+        let u8_vec = &class.constant_pool.get(&method_info.name_index).unwrap();
         match u8_vec {
             ConstantPoolInfo::Utf8(name) =>{
                 //println!("method:{}", &name);

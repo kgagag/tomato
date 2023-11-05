@@ -7,16 +7,32 @@ pub mod object;
 pub mod runtime_data_area;
 pub mod value;
 pub mod param;
+pub mod reference;
+pub mod array;
+pub mod opcode_store;
+pub mod opcode_array;
+pub mod opcode_const;
+pub mod opcode_push;
+pub mod opcode_nop;
+pub mod opcode_load;
+pub mod opcode_ldc;
+pub mod opcode_math;
+pub mod opcode_return;
+pub mod opcode_dup;
 use std::cell::UnsafeCell;
-use crate::class::class::ConstantPoolInfo;
-use crate::stack_frame::stack_frame::StackFrame;
-use crate::stack_frame::stack_frame::create_stack_frame;
-use crate::runtime_data_area::runtime_data_area::get_or_load_class;
+use crate::class::ConstantPoolInfo;
+use crate::stack_frame::StackFrame;
+use crate::stack_frame::create_stack_frame;
+use crate::runtime_data_area::get_or_load_class;
 use crate::op_code::op_code::push_stack_frame;
 use std::collections::HashMap;
 use crate::op_code::op_code::do_opcode;
-use crate::runtime_data_area::runtime_data_area::VM_STACKS;
+use crate::runtime_data_area::VM_STACKS;
+extern crate log;
+extern crate env_logger;
 
+use log::{error, info, warn};
+use std::env;
 
 pub fn execute(){
     let data: std::sync::MutexGuard<'_, UnsafeCell<HashMap<u32, Vec<StackFrame>>>> = VM_STACKS.lock().unwrap();
@@ -37,7 +53,12 @@ pub fn execute(){
 
 
 fn main() {
-    run(String::from("Test2"));
+    env::set_var("RUST_LOG", "DEBUG");
+    env_logger::Builder::from_default_env()
+        .format_timestamp(Some(env_logger::TimestampPrecision::Millis))
+        .format_module_path(true)
+        .init();
+    run(String::from("Test5"));
 }
 
 
@@ -54,7 +75,8 @@ pub fn run(main_class_path: String) {
         let u8_vec = &class.constant_pool[(method_info.name_index as usize) - 1];
         match u8_vec {
             ConstantPoolInfo::Utf8(name) =>{
-                println!("method:{}", &name);
+                //println!("method:{}", &name);
+                info!("{}", name);
                 //创建虚拟机栈，并创建第一个栈帧
                 if name == "main" {
                     let stack_frame = create_stack_frame(method_info).unwrap();

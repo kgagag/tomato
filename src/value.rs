@@ -9,6 +9,8 @@ pub mod value {
         Long(i64),
         Reference(u32),
         Short(i16),
-        Boolean(bool)
+        Boolean(bool),
+        U32(u32),
+        Null
     }
 }

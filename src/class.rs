@@ -1,4 +1,3 @@
-pub mod class {
     use crate::param::param::MethodParameter;
     #[derive(Debug, Clone)]
     pub struct Class {
@@ -70,78 +69,6 @@ pub mod class {
         pub value: Vec<u8>,
     }
 
-    pub struct ConstantMethod {
-        tag: u8,
-        class_index: u16,
-        name_and_type_index: u16,
-    }
-
-    pub struct ConstantField {
-        tag: u8,
-        class_index: u16,
-        name_and_type_index: u16,
-    }
-
-    pub struct ConstantClass {
-        tag: u8,
-        name_index: u16,
-    }
-
-    pub struct ConstantUtf8 {
-        tag: u8,
-        length: u16,
-        bytes: Vec<u8>,
-    }
-
-    pub struct ConstantString {
-        tag: u8,
-        string_index: u16,
-    }
-
-    pub struct ConstantNameAndType {
-        tag: u8,
-        name_index: u16,
-        descriptor_index: u16,
-    }
-
-    pub struct ConstantInterfaceMethod {
-        tag: u8,
-        class_index: u16,
-        name_and_type_index: u16,
-    }
-
-    pub struct ConstantInteger {
-        tag: u8,
-        bytes: i32,
-    }
-
-    pub struct ConstantFloat {
-        tag: u8,
-        bytes: f32,
-    }
-
-    pub struct ConstantLong {
-        tag: u8,
-        bytes: i64,
-    }
-
-    pub struct ConstantDouble {
-        tag: u8,
-        bytes: f64,
-    }
-
-    pub struct ConstantMethodHandle {
-        tag: u8,
-        reference_kind: u8,
-        reference_index: u16,
-    }
-
-    pub struct ConstantInvokeDynamic {
-        tag: u8,
-        bootstrap_method_attr_index: u16,
-        name_and_type_index: u16,
-    }
-
     #[derive(Debug, Clone)]
     pub struct AttributeInfo {
         pub attribute_name_index: u16,
@@ -177,36 +104,6 @@ pub mod class {
         }
     }
 
-    pub struct AttributeConstantValue {
-        attribute_name_index: u16,
-        attribute_length: u32,
-        constantvalue_index: u16,
-    }
-
-    #[derive(Debug)]
-    pub struct ExceptionTable {
-        start_pc: u16,
-        end_pc: u16,
-        handle_pc: u16,
-        catch_type: u16,
-    }
-
-    pub struct AttributeCode {
-        attribute_name_index: u16,
-        attribute_length: u32,
-        max_stack: u16,
-        max_locals: u16,
-        code_length: u32,
-        code: Vec<u8>,
-        exception_table_length: u16,
-        exception_table: Vec<ExceptionTable>,
-    }
-
-    pub struct StackMapTable {
-        attribute_name_index: u16,
-        attribute_length: u32,
-        number_of_entries: u16,
-    }
 
     #[derive(Debug)]
     pub struct Exception {}
@@ -236,4 +133,4 @@ pub mod class {
         // 添加更多可能的常量类型
     }
 
-}
+

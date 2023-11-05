@@ -1,19 +1,19 @@
 pub mod class_loader {
     //文件名（需要在main中先声明）+Mod名+引入对象()
     use crate::param::param::MethodParameter;
-    use crate::class::class::Class;
-    use crate::class::class::ConstantPoolInfo;
+    use crate::class::Class;
+    use crate::class::ConstantPoolInfo;
     use std::fs::{self, File};
     use std::io;
     use std::io::Cursor;
-    use crate::u8c::u8c::u8s_to_u16;
-    use crate::u8c::u8c::u8s_to_u32;
-    use crate::class::class::FieldInfo;
-    use crate::class::class::MethodInfo;
-    use crate::class::class::AttributeInfo;
+    use crate::u8c::u8s_to_u16;
+    use crate::u8c::u8s_to_u32;
+    use crate::class::FieldInfo;
+    use crate::class::MethodInfo;
+    use crate::class::AttributeInfo;
     use byteorder::{BigEndian, ReadBytesExt};
     use std::io::Read;
-    use crate::runtime_data_area::runtime_data_area::add_method;
+    use crate::runtime_data_area::add_method;
     fn parse_method_descriptor(
         descriptor: &Vec<u8>,
     ) -> Result<Option<Vec<MethodParameter>>, String> {
@@ -177,7 +177,7 @@ pub mod class_loader {
                             }
                         }
                         Ok(None) => {
-                            println!("No parameters");
+                            //println!("No parameters");
                         }
                         Err(error) => {
                             println!("Error: {}", error);

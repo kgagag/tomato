@@ -1,12 +1,15 @@
-pub mod runtime_data_area{
     use std::cell::UnsafeCell;
     use std::sync::Mutex;
     use lazy_static::lazy_static;
     use std::collections::HashMap;
-    use crate::class::class::{Class, MethodInfo};
-    use crate::object::object::Object;
-    use crate::stack_frame::stack_frame::StackFrame;
+    use crate::array::array::Array;
+    use crate::object::Object;
+    use crate::class::{Class, MethodInfo};
+    use crate::reference::reference::Reference;
+    use crate::stack_frame::StackFrame;
     use crate::class_loader::class_loader::load_class;
+    use crate::value::value::StackFrameValue;
+    use crate::param::param::MethodParameter;
     lazy_static! {
         // 创建一个包含UnsafeCell的Mutex，用于包装全局变量
         //类常量池
@@ -21,7 +24,7 @@ pub mod runtime_data_area{
         pub static ref STR_POOL: Mutex<UnsafeCell<HashMap<Vec<u8>, u32>>> = Mutex::new(UnsafeCell::new(HashMap::new()));
     
         //对象存储
-        pub static ref OBJECT_DATA: Mutex<UnsafeCell<HashMap<u32, Object>>> = Mutex::new(UnsafeCell::new(HashMap::new()));
+        pub static ref OBJECT_DATA: Mutex<UnsafeCell<HashMap<u32, Reference>>> = Mutex::new(UnsafeCell::new(HashMap::new()));
     
         //对象ID游标
         pub static ref OBJECT_ID: Mutex<UnsafeCell<u32>> = Mutex::new(UnsafeCell::new(0));
@@ -44,7 +47,7 @@ pub mod runtime_data_area{
         }
     }
 
-    pub fn create_object<'a>(class: usize) -> &'a mut Object {
+    pub fn create_object<'a>(class: usize) -> &'a mut Reference {
         // 获取全局变量的Mutex锁
         let data = OBJECT_DATA.lock().unwrap();
         let obj_id_data = OBJECT_ID.lock().unwrap();
@@ -56,15 +59,36 @@ pub mod runtime_data_area{
             let map = &mut *data.get();
             obj_id = &mut *obj_id_data.get();
             obj = Object::new(*obj_id + 1, class);
-            map.insert(obj.id, obj.clone());
+            map.insert(obj.id, Reference::Object(obj.clone()));
             drop(data);
             drop(obj_id_data);
             *obj_id += 1;
-            return map.get_mut(&obj.id).unwrap();
+            return  map.get_mut(&obj.id).unwrap();
         }
     }
 
-    pub fn get_object<'a>(id: &u32) -> &'a mut Object {
+    pub fn create_array<'a>(len:u32,array_type:MethodParameter) -> &'a mut Reference {
+        // 获取全局变量的Mutex锁
+        let data = OBJECT_DATA.lock().unwrap();
+        let obj_id_data = OBJECT_ID.lock().unwrap();
+        // 通过UnsafeCell获取可变引用，并修改全局变量的值
+        let array;
+        let obj_id: &mut u32;
+        let mut next_id:u32 = 0;
+        unsafe {
+            let map = &mut *data.get();
+            obj_id = &mut *obj_id_data.get();
+            next_id = *obj_id + 1;
+            array = Array::new(next_id, len,array_type);
+            map.insert(array.id, Reference::Array(array));
+            drop(data);
+            drop(obj_id_data);
+            *obj_id += 1;
+            return map.get_mut(&next_id).unwrap();
+        }
+    }
+
+    pub fn get_reference<'a>(id: &u32) -> &'a mut Reference {
         // 获取全局变量的Mutex锁
         let data = OBJECT_DATA.lock().unwrap();
         // 通过UnsafeCell获取可变引用，并修改全局变量的值
@@ -153,4 +177,29 @@ pub mod runtime_data_area{
             return  map.get(&key).unwrap();
         }
     }
-}
+
+
+    pub fn pop_stack_frame(vm_stack_id: u32) {
+        let data: std::sync::MutexGuard<'_, UnsafeCell<HashMap<u32, Vec<StackFrame>>>> =
+            VM_STACKS.lock().unwrap();
+        unsafe {
+            let map = &mut *data.get();
+            map.get_mut(&vm_stack_id).unwrap().pop();
+        }
+        drop(data);
+    }
+
+    pub fn push_frame_data(vm_stack_id: u32, value:StackFrameValue) {
+        let data: std::sync::MutexGuard<'_, UnsafeCell<HashMap<u32, Vec<StackFrame>>>> =
+            VM_STACKS.lock().unwrap();
+        unsafe {
+            let map = &mut *data.get();
+            //println!("before push_frame_data：{:?}",&map);
+            let l = map.get_mut(&vm_stack_id).unwrap();
+            //let len = l.len();
+            l.get_mut(0).unwrap().op_stack.push(value);
+            //println!("after push_frame_data：{:?}",&map);
+        }
+        drop(data);
+    }
+

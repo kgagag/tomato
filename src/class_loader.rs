@@ -13,7 +13,6 @@ pub mod class_loader {
     use crate::class::MethodInfo;
     use crate::class::AttributeInfo;
     use byteorder::{BigEndian, ReadBytesExt};
-    use clap::error;
     use log::info;
     use log::warn;
     use std::io::Read;
@@ -111,10 +110,10 @@ pub mod class_loader {
      */
     pub fn load_class(name: &String) -> Class {
         //设置class_path
-        let class_path = String::from("E:/tomato/test/");
+        let class_path = String::from("D:/tomato/test/");
         let appendix = String::from(".class");
         let mut path = class_path + &name + &appendix;
-        let rt_path = String::from("E:/tomato/rt/") + &name + &appendix;
+        let rt_path = String::from("D:/tomato/rt/") + &name + &appendix;
         match fs::metadata(&path) {
             Ok(metadata) => {
                 if !metadata.is_file() {
@@ -500,26 +499,45 @@ fn read_constant_pool_info<R: Read>(mut constant_pool_count:u16,reader: &mut R) 
                 reader.read_exact(&mut data).expect("Failed to read UTF-8 data");
                 let utf8_string = String::from_utf8(data).expect("Invalid UTF-8 string");
                 constant_pool.insert(index,ConstantPoolInfo::Utf8(utf8_string));
+                index += 1;
             }
-            3 =>{ constant_pool.insert(index,ConstantPoolInfo::Integer(reader.read_i32::<BigEndian>().expect("Failed to read integer")));}
-            4 =>{ constant_pool.insert(index,ConstantPoolInfo::Float(reader.read_f32::<BigEndian>().expect("Failed to read float")));}
-            5 => {constant_pool.insert(index,ConstantPoolInfo::Long(reader.read_i64::<BigEndian>().expect("Failed to read long")));}
+            3 =>{
+                 constant_pool.insert(index,ConstantPoolInfo::Integer(reader.read_i32::<BigEndian>().expect("Failed to read integer")));
+                index += 1;    
+            }
+            4 =>{
+                constant_pool.insert(index,ConstantPoolInfo::Float(reader.read_f32::<BigEndian>().expect("Failed to read float")));
+                index += 1;
+            }
+            5 => {
+                constant_pool.insert(index,ConstantPoolInfo::Long(reader.read_i64::<BigEndian>().expect("Failed to read long")));
+                constant_pool_count = constant_pool_count - 1;
+                index += 2;
+            }
             6 => {
                     constant_pool.insert(index,ConstantPoolInfo::Double(reader.read_f64::<BigEndian>().expect("Failed to read double")));
                     constant_pool_count = constant_pool_count - 1;
-                    index += 1;
+                    index += 2;
                 }
-            7 =>{ constant_pool.insert(index,ConstantPoolInfo::Class(reader.read_u16::<BigEndian>().expect("Failed to read class index")));}
-            8 =>{ constant_pool.insert(index,ConstantPoolInfo::String(reader.read_u16::<BigEndian>().expect("Failed to read string index")));}
+            7 =>{ 
+                constant_pool.insert(index,ConstantPoolInfo::Class(reader.read_u16::<BigEndian>().expect("Failed to read class index")));
+                index += 1;
+            }
+            8 =>{ 
+                constant_pool.insert(index,ConstantPoolInfo::String(reader.read_u16::<BigEndian>().expect("Failed to read string index")));
+                index += 1;
+            }
             9 => {
                 let class_index = reader.read_u16::<BigEndian>().expect("Failed to read fieldref class index");
                 let name_and_type_index = reader.read_u16::<BigEndian>().expect("Failed to read fieldref name and type index");
                 constant_pool.insert(index,ConstantPoolInfo::Fieldref(class_index, name_and_type_index));
+                index += 1;
             }
             10 => {
                 let class_index = reader.read_u16::<BigEndian>().expect("Failed to read methodref class index");
                 let name_and_type_index = reader.read_u16::<BigEndian>().expect("Failed to read methodref name and type index");
                 constant_pool.insert(index,ConstantPoolInfo::Methodref(class_index, name_and_type_index));
+                index += 1;
             }
             11 => {
                 let class_index = reader.read_u16::<BigEndian>().expect("Failed to read interface methodref class index");
@@ -530,43 +548,59 @@ fn read_constant_pool_info<R: Read>(mut constant_pool_count:u16,reader: &mut R) 
                 let name_index = reader.read_u16::<BigEndian>().expect("Failed to read name and type name index");
                 let descriptor_index = reader.read_u16::<BigEndian>().expect("Failed to read name and type descriptor index");
                 constant_pool.insert(index,ConstantPoolInfo::NameAndType(name_index, descriptor_index));
+                index += 1;
             }
             15 => {
                 let reference_kind = reader.read_u8().expect("Failed to read method handle reference kind");
                 let reference_index = reader.read_u16::<BigEndian>().expect("Failed to read method handle reference index");
                 constant_pool.insert(index,ConstantPoolInfo::MethodHandle(reference_kind, reference_index));
+                index += 1;
             }
-            16 => {constant_pool.insert(index,ConstantPoolInfo::MethodType(reader.read_u16::<BigEndian>().expect("Failed to read method type descriptor index")));}
+            16 => {
+                constant_pool.insert(index,ConstantPoolInfo::MethodType(reader.read_u16::<BigEndian>().expect("Failed to read method type descriptor index")));
+                index += 1;
+            }
             18 => {
                 let bootstrap_method_attr_index = reader.read_u16::<BigEndian>().expect("Failed to read invoke dynamic bootstrap method attribute index");
                 let name_and_type_index = reader.read_u16::<BigEndian>().expect("Failed to read invoke dynamic name and type index");
                 constant_pool.insert(index,ConstantPoolInfo::InvokeDynamic(bootstrap_method_attr_index, name_and_type_index));
+                index += 1;
             }
-            19 => {constant_pool.insert(index,ConstantPoolInfo::Module(reader.read_u16::<BigEndian>().expect("Failed to read module index")));}
-            20 => {constant_pool.insert(index,ConstantPoolInfo::Package(reader.read_u16::<BigEndian>().expect("Failed to read package index")));}
+            19 => {
+                constant_pool.insert(index,ConstantPoolInfo::Module(reader.read_u16::<BigEndian>().expect("Failed to read module index")));
+                index += 1;
+            }
+            20 => {
+                constant_pool.insert(index,ConstantPoolInfo::Package(reader.read_u16::<BigEndian>().expect("Failed to read package index")));
+                index += 1;
+            }
             21 => {
                 let method_handle_reference_kind = reader.read_u8().expect("Failed to read method handle reference kind");
                 let method_handle_reference_index = reader.read_u16::<BigEndian>().expect("Failed to read method handle reference index");
                 constant_pool.insert(index,ConstantPoolInfo::MethodPointer(method_handle_reference_kind, method_handle_reference_index));
+                index += 1;
             }
             22 => {
                 let invoke_static_dynamic_name_and_type_index = reader.read_u16::<BigEndian>().expect("Failed to read invoke static dynamic name and type index");
                 let invoke_static_dynamic_bootstrap_method_attr_index = reader.read_u16::<BigEndian>().expect("Failed to read invoke static dynamic bootstrap method attribute index");
                 constant_pool.insert(index,ConstantPoolInfo::InvokeStaticDynamic(invoke_static_dynamic_bootstrap_method_attr_index, invoke_static_dynamic_name_and_type_index));
+                index += 1;
             }
             23 => {
                 let bootstrap_method_attr_index = reader.read_u16::<BigEndian>().expect("Failed to read bootstrap method attribute index");
                 let name_and_type_index = reader.read_u16::<BigEndian>().expect("Failed to read bootstrap method name and type index");
                 constant_pool.insert(index,ConstantPoolInfo::BootstrapMethod(bootstrap_method_attr_index, name_and_type_index));
+                index += 1;
             }
             24 => {
                 let method_type_reference_index = reader.read_u16::<BigEndian>().expect("Failed to read method type reference index");
                 constant_pool.insert(index,ConstantPoolInfo::MethodTypeReference(method_type_reference_index));
+                index += 1;
             }
             // 添加更多常量类型的处理
             _ => panic!("Invalid constant pool tag: {}", tag)
         }
-        index += 1;
+        //index += 1;
         constant_pool_count = constant_pool_count - 1;
     }
 

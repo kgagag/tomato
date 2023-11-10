@@ -1,25 +1,9 @@
-    use crate::class::ConstantPoolInfo;
-    use crate::class::MethodInfo;
-    use crate::reference::reference::Reference;
-    use crate::runtime_data_area::VM_STACKS;
-    use crate::runtime_data_area::create_array;
-    use crate::runtime_data_area::pop_stack_frame;
-    use crate::runtime_data_area::push_frame_data;
+
     use crate::stack_frame::StackFrame;
-    use crate::stack_frame::init_stack_frame;
-    use crate::u8c::f64_to_u32_vec;
-    use crate::u8c::i64_to_u32_vec;
-    use crate::u8c::u8s_to_u32;
-    use std::cell::UnsafeCell;
-    use std::collections::HashMap;
+    use crate::u8c::*;
     use crate::value::value::StackFrameValue;
-    use crate::runtime_data_area::get_class_name;
-    use crate::runtime_data_area::get_or_load_class;
-    use crate::runtime_data_area::create_object;
-    use crate::runtime_data_area::get_method_from_pool;
     extern crate log;
     extern crate env_logger;
-    use crate::param::param::MethodParameter;
     use log::{error, info, warn};
     use std::env;
 
@@ -47,10 +31,10 @@
 
     
     pub fn lstore(frame: &mut StackFrame) {
-        xstore(frame);
+        xistore(frame);
     }
 
-    fn xstore(frame: &mut StackFrame){
+    fn xistore(frame: &mut StackFrame){
         let v: StackFrameValue = frame.op_stack.pop().unwrap();
         let index = frame.code[frame.pc + 1] as usize;
         let value:i64;
@@ -68,8 +52,24 @@
         frame.pc += 2;
     }
 
+
+    fn xfstore(frame: &mut StackFrame){
+        let v: StackFrameValue = frame.op_stack.pop().unwrap();
+        let index = frame.code[frame.pc + 1] as usize;
+        let value:f64;
+        match v {
+            StackFrameValue::Double(l) => value = l,
+            StackFrameValue::Float(l) => value = l as f64,
+            _=> panic!()
+        }
+        let u32_tuple = f64_to_u32_tuple(value);
+        frame.local[index] = StackFrameValue::U32(u32_tuple.0) ;
+        frame.local[index + 1] = StackFrameValue::U32(u32_tuple.1) ;
+        frame.pc += 2;
+    }
+
     pub fn dstore(frame: &mut StackFrame) {
-        xstore(frame);
+        xfstore(frame);
     }
 
     pub fn istore_0(frame: &mut StackFrame) {
@@ -126,9 +126,9 @@
         let v = frame.op_stack.pop().unwrap();
         match v {
             StackFrameValue::Double(d) =>{
-              let vs = f64_to_u32_vec(d);
-              frame.local[0] = StackFrameValue::U32(*vs.get(0).unwrap());
-              frame.local[1] = StackFrameValue::U32(*vs.get(1).unwrap());
+              let vs = f64_to_u32_tuple(d);
+              frame.local[0] = StackFrameValue::U32(vs.0);
+              frame.local[1] = StackFrameValue::U32(vs.1);
             }
             _=> panic!("wrong data type"),
         }
@@ -139,9 +139,9 @@
         let v = frame.op_stack.pop().unwrap();
         match v {
             StackFrameValue::Double(d) =>{
-              let vs = f64_to_u32_vec(d);
-              frame.local[1] = StackFrameValue::U32(*vs.get(0).unwrap());
-              frame.local[2] = StackFrameValue::U32(*vs.get(1).unwrap());
+                let vs = f64_to_u32_tuple(d);
+                frame.local[1] = StackFrameValue::U32(vs.0);
+                frame.local[2] = StackFrameValue::U32(vs.1);
             }
             _=> panic!("wrong data type"),
         }
@@ -152,9 +152,9 @@
         let v = frame.op_stack.pop().unwrap();
         match v {
             StackFrameValue::Double(d) =>{
-              let vs = f64_to_u32_vec(d);
-              frame.local[2] = StackFrameValue::U32(*vs.get(0).unwrap());
-              frame.local[3] = StackFrameValue::U32(*vs.get(1).unwrap());
+                let vs = f64_to_u32_tuple(d);
+                frame.local[2] = StackFrameValue::U32(vs.0);
+                frame.local[3] = StackFrameValue::U32(vs.1);
             }
             _=> panic!("wrong data type"),
         }
@@ -165,9 +165,9 @@
         let v = frame.op_stack.pop().unwrap();
         match v {
             StackFrameValue::Double(d) =>{
-              let vs = f64_to_u32_vec(d);
-              frame.local[3] = StackFrameValue::U32(*vs.get(0).unwrap());
-              frame.local[4] = StackFrameValue::U32(*vs.get(1).unwrap());
+                let vs = f64_to_u32_tuple(d);
+                frame.local[3] = StackFrameValue::U32(vs.0);
+                frame.local[4] = StackFrameValue::U32(vs.1);
             }
             _=> panic!("wrong data type"),
         }
@@ -179,9 +179,9 @@
         let v = frame.op_stack.pop().unwrap();
         match v {
             StackFrameValue::Long(d) =>{
-              let vs = i64_to_u32_vec(d);
-              frame.local[0] = StackFrameValue::U32(*vs.get(0).unwrap());
-              frame.local[1] = StackFrameValue::U32(*vs.get(1).unwrap());
+              let vs = i64_to_u32_tuple(d);
+              frame.local[0] = StackFrameValue::U32(vs.0);
+              frame.local[1] = StackFrameValue::U32(vs.1);
             }
             _=> panic!("wrong data type"),
         }
@@ -192,9 +192,9 @@
         let v = frame.op_stack.pop().unwrap();
         match v {
             StackFrameValue::Long(d) =>{
-              let vs = i64_to_u32_vec(d);
-              frame.local[1] = StackFrameValue::U32(*vs.get(0).unwrap());
-              frame.local[2] = StackFrameValue::U32(*vs.get(1).unwrap());
+                let vs = i64_to_u32_tuple(d);
+                frame.local[1] = StackFrameValue::U32(vs.0);
+                frame.local[2] = StackFrameValue::U32(vs.1);
             }
             _=> panic!("wrong data type"),
         }
@@ -205,9 +205,9 @@
         let v = frame.op_stack.pop().unwrap();
         match v {
             StackFrameValue::Long(d) =>{
-              let vs = i64_to_u32_vec(d);
-              frame.local[2] = StackFrameValue::U32(*vs.get(0).unwrap());
-              frame.local[3] = StackFrameValue::U32(*vs.get(1).unwrap());
+                let vs = i64_to_u32_tuple(d);
+                frame.local[2] = StackFrameValue::U32(vs.0);
+                frame.local[3] = StackFrameValue::U32(vs.1);
             }
             _=> panic!("wrong data type"),
         }
@@ -218,9 +218,9 @@
         let v = frame.op_stack.pop().unwrap();
         match v {
             StackFrameValue::Long(d) =>{
-              let vs = i64_to_u32_vec(d);
-              frame.local[3] = StackFrameValue::U32(*vs.get(0).unwrap());
-              frame.local[4] = StackFrameValue::U32(*vs.get(1).unwrap());
+                let vs = i64_to_u32_tuple(d);
+                frame.local[3] = StackFrameValue::U32(vs.0);
+                frame.local[4] = StackFrameValue::U32(vs.1);
             }
             _=> panic!("wrong data type"),
         }

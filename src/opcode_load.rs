@@ -1,26 +1,12 @@
-use crate::class::ConstantPoolInfo;
-use crate::class::MethodInfo;
-use crate::reference::reference::Reference;
-use crate::runtime_data_area::VM_STACKS;
-use crate::runtime_data_area::create_array;
-use crate::runtime_data_area::pop_stack_frame;
-use crate::runtime_data_area::push_frame_data;
-use crate::stack_frame::StackFrame;
-use crate::stack_frame::init_stack_frame;
-use crate::u8c::f64_to_u32_vec;
-use crate::u8c::i64_to_u32_vec;
-use crate::u8c::u8s_to_u64;
 
-use std::cell::UnsafeCell;
-use std::collections::HashMap;
+use crate::stack_frame::StackFrame;
+use crate::u8c::*;
+
+
 use crate::value::value::StackFrameValue;
-use crate::runtime_data_area::get_class_name;
-use crate::runtime_data_area::get_or_load_class;
-use crate::runtime_data_area::create_object;
-use crate::runtime_data_area::get_method_from_pool;
+
 extern crate log;
 extern crate env_logger;
-use crate::param::param::MethodParameter;
 use log::{error, info, warn};
 use std::env;
 pub fn aload_1(frame: &mut StackFrame) {
@@ -65,53 +51,63 @@ pub fn aload(frame: &mut StackFrame) {
 
 pub fn dload(frame: &mut StackFrame) {
     let index = frame.code[frame.pc + 1] as usize;
-    let u1 = frame.local.get(index).unwrap().clone();
-    let u2  =  frame.local.get(index + 1).unwrap().clone();
-    let mut bytes1:[u8;4]=[0,0,0,0];
-    let mut bytes2:[u8;4]=[0,0,0,0];
-    match u1 {
-        StackFrameValue::Byte(l) => bytes1 = (l as u32).to_be_bytes(),
-        StackFrameValue::Char(l) => bytes1 = (l as u32).to_be_bytes(),
-        StackFrameValue::Int(l) =>  bytes1 = (l as u32).to_be_bytes(),
-        StackFrameValue::Short(l) => bytes1 = (l as u32).to_be_bytes(),
+    let v1 = frame.local.get(index).unwrap().clone();
+    let v2: StackFrameValue  =  frame.local.get(index + 1).unwrap().clone();
+    let mut u1:u32 = 0;
+    let mut u2 : u32 = 0;
+
+    match v1 {
+        StackFrameValue::Byte(l) => u1 = l as u32,
+        StackFrameValue::Char(l) => u1 = l as u32,
+        StackFrameValue::Int(l) =>  u1 = l as u32,
+        StackFrameValue::Short(l) => u1 = l as u32,
+        StackFrameValue::U32(l) => u1 = l as u32,
+
         _=> panic!()
     }
-    match u2 {
-        StackFrameValue::Byte(l) => bytes2 = (l as u32).to_be_bytes(),
-        StackFrameValue::Char(l) => bytes2 = (l as u32).to_be_bytes(),
-        StackFrameValue::Int(l) =>  bytes2 = (l as u32).to_be_bytes(),
-        StackFrameValue::Short(l) => bytes2 = (l as u32).to_be_bytes(),
+    match v2 {
+        StackFrameValue::Byte(l) => u2 = l as u32,
+        StackFrameValue::Char(l) => u2 = l as u32,
+        StackFrameValue::Int(l) =>  u2 = l as u32,
+        StackFrameValue::Short(l) => u2 = l as u32,
+        StackFrameValue::U32(l) => u2 = l as u32,
         _=> panic!()
     }
-    let bytes3 = [bytes1[0],bytes1[1],bytes1[2],bytes1[3],bytes2[0],bytes2[1],bytes2[2],bytes2[3]];
-    frame.op_stack.push(StackFrameValue::Double(u8s_to_u64(&bytes3) as f64));
+
+    let d = StackFrameValue::Double(u32_tuple_to_f64((u1,u2)));
+    info!("{:?}",d);
+    frame.op_stack.push(d);
     frame.pc += 2;
 }
 
 pub fn lload(frame: &mut StackFrame) {
     let index = frame.code[frame.pc + 1] as usize;
-    let u1 = frame.local.get(index).unwrap().clone();
-    let u2  =  frame.local.get(index + 1).unwrap().clone();
-    let mut bytes1:[u8;4]=[0,0,0,0];
-    let mut bytes2:[u8;4]=[0,0,0,0];
-    match u1 {
-        StackFrameValue::Byte(l) => bytes1 = (l as u32).to_be_bytes(),
-        StackFrameValue::Char(l) => bytes1 = (l as u32).to_be_bytes(),
-        StackFrameValue::Int(l) =>  bytes1 = (l as u32).to_be_bytes(),
-        StackFrameValue::Short(l) => bytes1 = (l as u32).to_be_bytes(),
-        _=> panic!()
-    }
-    match u2 {
-        StackFrameValue::Byte(l) => bytes2 = (l as u32).to_be_bytes(),
-        StackFrameValue::Char(l) => bytes2 = (l as u32).to_be_bytes(),
-        StackFrameValue::Int(l) =>  bytes2 = (l as u32).to_be_bytes(),
-        StackFrameValue::Short(l) => bytes2 = (l as u32).to_be_bytes(),
-        _=> panic!()
-    }
-    let bytes3 = [bytes1[0],bytes1[1],bytes1[2],bytes1[3],bytes2[0],bytes2[1],bytes2[2],bytes2[3]];
-    frame.op_stack.push(StackFrameValue::Long(u8s_to_u64(&bytes3) as i64));
-    frame.pc += 2;
+    let v1 = frame.local.get(index).unwrap().clone();
+    let v2: StackFrameValue  =  frame.local.get(index + 1).unwrap().clone();
+    let mut u1:u32 = 0;
+    let mut u2 : u32 = 0;
 
+    match v1 {
+        StackFrameValue::Byte(l) => u1 = l as u32,
+        StackFrameValue::Char(l) => u1 = l as u32,
+        StackFrameValue::Int(l) =>  u1 = l as u32,
+        StackFrameValue::Short(l) => u1 = l as u32,
+        StackFrameValue::U32(l) => u1 = l as u32,
+
+        _=> panic!()
+    }
+    match v2 {
+        StackFrameValue::Byte(l) => u2 = l as u32,
+        StackFrameValue::Char(l) => u2 = l as u32,
+        StackFrameValue::Int(l) =>  u2 = l as u32,
+        StackFrameValue::Short(l) => u2 = l as u32,
+        StackFrameValue::U32(l) => u2 = l as u32,
+        _=> panic!()
+    }
+    let d = StackFrameValue::Double(u32_tuple_to_f64((u1,u2)));
+    info!("{:?}",d);
+    frame.op_stack.push(d);
+    frame.pc += 2;
 }
 pub fn iload_0(frame: &mut StackFrame) {
     frame.op_stack.push(frame.local.get(0).unwrap().clone());
@@ -163,10 +159,8 @@ pub fn lload_0(frame: &mut StackFrame) {
         StackFrameValue::U32(u1) =>{
             match v2 {
                 StackFrameValue::U32(u2) =>{
-                    let bytes1: [u8; 4] = unsafe { std::mem::transmute(u1) };
-                    let bytes2: [u8; 4] = unsafe { std::mem::transmute(u2) };
-                    let bytes3: [u8; 8] = [bytes1[0],bytes1[1],bytes1[2],bytes1[3],bytes2[0],bytes2[1],bytes2[2],bytes2[3]];
-                    frame.op_stack.push(StackFrameValue::Long(u8s_to_u64(&bytes3) as i64));
+                    frame.op_stack.push(StackFrameValue::Long(u32_tuple_to_i64((u1,u2))));
+
                 } ,
                 _=> panic!()
             }
@@ -185,16 +179,15 @@ pub fn lload_1(frame: &mut StackFrame) {
         StackFrameValue::U32(u1) =>{
             match v2 {
                 StackFrameValue::U32(u2) =>{
-                    let bytes1: [u8; 4] = unsafe { std::mem::transmute(u1) };
-                    let bytes2: [u8; 4] = unsafe { std::mem::transmute(u2) };
-                    let bytes3: [u8; 8] = [bytes1[0],bytes1[1],bytes1[2],bytes1[3],bytes2[0],bytes2[1],bytes2[2],bytes2[3]];
-                    frame.op_stack.push(StackFrameValue::Long(u8s_to_u64(&bytes3) as i64));
+                    frame.op_stack.push(StackFrameValue::Long(u32_tuple_to_i64((u1,u2))));
+
                 } ,
                 _=> panic!()
             }
         }
         _=> panic!()
     }
+    frame.pc += 1;
 }
 
 pub fn lload_2(frame: &mut StackFrame) {
@@ -204,10 +197,8 @@ pub fn lload_2(frame: &mut StackFrame) {
         StackFrameValue::U32(u1) =>{
             match v2 {
                 StackFrameValue::U32(u2) =>{
-                    let bytes1: [u8; 4] = unsafe { std::mem::transmute(u1) };
-                    let bytes2: [u8; 4] = unsafe { std::mem::transmute(u2) };
-                    let bytes3: [u8; 8] = [bytes1[0],bytes1[1],bytes1[2],bytes1[3],bytes2[0],bytes2[1],bytes2[2],bytes2[3]];
-                    frame.op_stack.push(StackFrameValue::Long(u8s_to_u64(&bytes3) as i64));
+                    frame.op_stack.push(StackFrameValue::Long(u32_tuple_to_i64((u1,u2))));
+
                 } ,
                 _=> panic!()
             }
@@ -223,16 +214,14 @@ pub fn lload_3(frame: &mut StackFrame) {
         StackFrameValue::U32(u1) =>{
             match v2 {
                 StackFrameValue::U32(u2) =>{
-                    let bytes1: [u8; 4] = unsafe { std::mem::transmute(u1) };
-                    let bytes2: [u8; 4] = unsafe { std::mem::transmute(u2) };
-                    let bytes3: [u8; 8] = [bytes1[0],bytes1[1],bytes1[2],bytes1[3],bytes2[0],bytes2[1],bytes2[2],bytes2[3]];
-                    frame.op_stack.push(StackFrameValue::Long(u8s_to_u64(&bytes3) as i64));
+                    frame.op_stack.push(StackFrameValue::Long(u32_tuple_to_i64((u1,u2))));
                 } ,
                 _=> panic!()
             }
         }
         _=> panic!()
     }
+    frame.pc += 1;
 }
 
 
@@ -243,10 +232,7 @@ pub fn dload_0(frame: &mut StackFrame) {
         StackFrameValue::U32(u1) =>{
             match v2 {
                 StackFrameValue::U32(u2) =>{
-                    let bytes1: [u8; 4] = unsafe { std::mem::transmute(u1) };
-                    let bytes2: [u8; 4] = unsafe { std::mem::transmute(u2) };
-                    let bytes3: [u8; 8] = [bytes1[0],bytes1[1],bytes1[2],bytes1[3],bytes2[0],bytes2[1],bytes2[2],bytes2[3]];
-                    frame.op_stack.push(StackFrameValue::Double(u8s_to_u64(&bytes3) as f64));
+                    frame.op_stack.push(StackFrameValue::Double(u32_tuple_to_f64((u1,u2))));
                 } ,
                 _=> panic!()
             }
@@ -265,10 +251,8 @@ pub fn dload_1(frame: &mut StackFrame) {
         StackFrameValue::U32(u1) =>{
             match v2 {
                 StackFrameValue::U32(u2) =>{
-                    let bytes1: [u8; 4] = unsafe { std::mem::transmute(u1) };
-                    let bytes2: [u8; 4] = unsafe { std::mem::transmute(u2) };
-                    let bytes3: [u8; 8] = [bytes1[0],bytes1[1],bytes1[2],bytes1[3],bytes2[0],bytes2[1],bytes2[2],bytes2[3]];
-                    frame.op_stack.push(StackFrameValue::Double(u8s_to_u64(&bytes3) as f64));
+                    frame.op_stack.push(StackFrameValue::Double(u32_tuple_to_f64((u1,u2))));
+
                 } ,
                 _=> panic!()
             }
@@ -284,10 +268,8 @@ pub fn dload_2(frame: &mut StackFrame) {
         StackFrameValue::U32(u1) =>{
             match v2 {
                 StackFrameValue::U32(u2) =>{
-                    let bytes1: [u8; 4] = unsafe { std::mem::transmute(u1) };
-                    let bytes2: [u8; 4] = unsafe { std::mem::transmute(u2) };
-                    let bytes3: [u8; 8] = [bytes1[0],bytes1[1],bytes1[2],bytes1[3],bytes2[0],bytes2[1],bytes2[2],bytes2[3]];
-                    frame.op_stack.push(StackFrameValue::Double(u8s_to_u64(&bytes3) as f64));
+                    frame.op_stack.push(StackFrameValue::Double(u32_tuple_to_f64((u1,u2))));
+
                 } ,
                 _=> panic!()
             }
@@ -303,10 +285,7 @@ pub fn dload_3(frame: &mut StackFrame) {
         StackFrameValue::U32(u1) =>{
             match v2 {
                 StackFrameValue::U32(u2) =>{
-                    let bytes1: [u8; 4] = unsafe { std::mem::transmute(u1) };
-                    let bytes2: [u8; 4] = unsafe { std::mem::transmute(u2) };
-                    let bytes3: [u8; 8] = [bytes1[0],bytes1[1],bytes1[2],bytes1[3],bytes2[0],bytes2[1],bytes2[2],bytes2[3]];
-                    frame.op_stack.push(StackFrameValue::Double(u8s_to_u64(&bytes3) as f64));
+                    frame.op_stack.push(StackFrameValue::Double(u32_tuple_to_f64((u1,u2))));
                 } ,
                 _=> panic!()
             }

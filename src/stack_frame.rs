@@ -1,5 +1,4 @@
-use log::info;
-
+use log::*;
 use crate::class::CodeAttribute;
 use crate::class::ConstantPoolInfo;
 use crate::class::MethodInfo;
@@ -50,6 +49,7 @@ impl StackFrame {
         for _i in 0..stake_frame.max_locals as usize {
             stake_frame.local.push(StackFrameValue::Byte(0));
         }
+        //info!("{:?}",stake_frame);
         return stake_frame;
     }
 
@@ -73,21 +73,32 @@ impl StackFrame {
         }
     }
 
-    pub fn popu64(&mut self) -> u64 {
+    pub fn popi64(&mut self) -> i64 {
         let value = self.op_stack.pop().unwrap();
         match value {
-            StackFrameValue::Int(data) => data as u64,
-            StackFrameValue::Byte(data) => data as u64,
-            StackFrameValue::Char(data) => data as u64,
-            StackFrameValue::Double(data) => data as u64,
-            StackFrameValue::Float(data) => data as u64,
-            StackFrameValue::Long(data) => data as u64,
-            StackFrameValue::Short(data) => data as u64,
+            StackFrameValue::Int(data) => data as i64,
+            StackFrameValue::Byte(data) => data as i64,
+            StackFrameValue::Char(data) => data as i64,
+            StackFrameValue::Long(data) => data as i64,
+            StackFrameValue::Short(data) => data as i64,
             _ => {
                 panic!("wrong value type");
             }
         }
     }
+
+
+    pub fn popf64(&mut self) -> f64 {
+        let value = self.op_stack.pop().unwrap();
+        match value {
+            StackFrameValue::Double(data) => data as f64,
+            StackFrameValue::Float(data) => data as f64,
+            _ => {
+                panic!("wrong value type");
+            }
+        }
+    }
+
 }
 
 pub fn init_stack_frame(frame: &mut StackFrame, method_info: &MethodInfo) -> StackFrame {

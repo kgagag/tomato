@@ -99,6 +99,17 @@ impl StackFrame {
         }
     }
 
+
+    pub fn pop_reference(&mut self) -> u32 {
+        let value = self.op_stack.pop().unwrap();
+        match value {
+            StackFrameValue::Reference(data) => data ,
+            _ => {
+                panic!("wrong value type");
+            }
+        }
+    }
+
 }
 
 pub fn init_stack_frame(frame: &mut StackFrame, method_info: &MethodInfo) -> StackFrame {

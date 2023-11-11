@@ -144,7 +144,7 @@ pub fn ifeq(frame: &mut StackFrame) {
 
 pub fn ifne(frame: &mut StackFrame) {
     let value = frame.popi64();
-    let branch_offset = u8s_to_u16(&frame.code[frame.pc + 1.. frame.pc + 3]);
+    let branch_offset = u8s_to_u16(&frame.code[frame.pc + 1.. frame.pc + 3]) as i16;
     if value != 0 {
         frame.pc = (frame.pc as i32 + branch_offset as i32) as usize;
     } else {

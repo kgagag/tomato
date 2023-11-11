@@ -89,7 +89,7 @@ pub fn lsub(frame: &mut StackFrame) {
 pub fn fmul(frame: &mut StackFrame) {
     let f2 = frame.popf64() as f32;
     let f1 = frame.popf64() as f32;
-    let result = f1 - f2;
+    let result = f1 * f2;
     warn!("{}", format!("{}{}", "fmul add result:", result));
     frame.op_stack.push(StackFrameValue::Float(result));
     frame.pc += 1;
@@ -98,7 +98,7 @@ pub fn fmul(frame: &mut StackFrame) {
 pub fn imul(frame: &mut StackFrame) {
     let i2 = frame.popi64() as i32;
     let i1 = frame.popi64() as i32;
-    let result = i1 - i2;
+    let result = i1 * i2;
     warn!("{}", format!("{}{}", "imul add result:", result));
     frame.op_stack.push(StackFrameValue::Int(result));
     frame.pc += 1;
@@ -107,7 +107,7 @@ pub fn imul(frame: &mut StackFrame) {
 pub fn lmul(frame: &mut StackFrame) {
     let l2 = frame.popi64() as i64;
     let l1 = frame.popi64() as i64;
-    let result = l1 - l2;
+    let result = l1 * l2;
     warn!("{}", format!("{}{}", "lmul add result:", result));
     frame.op_stack.push(StackFrameValue::Long(result));
     frame.pc += 1;
@@ -116,7 +116,7 @@ pub fn lmul(frame: &mut StackFrame) {
 pub fn dmul(frame: &mut StackFrame) {
     let d2 = frame.popf64() as f64;
     let d1 = frame.popf64() as f64;
-    let result = d1 - d2;
+    let result = d1 * d2;
     warn!("{}", format!("{}{}", "dmul add result:", result));
     frame.op_stack.push(StackFrameValue::Double(result));
     frame.pc += 1;

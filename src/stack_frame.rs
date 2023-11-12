@@ -1,6 +1,5 @@
 use log::*;
-use crate::class::CodeAttribute;
-use crate::class::ConstantPoolInfo;
+use crate::class::*;
 use crate::class::MethodInfo;
 use crate::param::param::MethodParameter;
 use crate::runtime_data_area::get_or_load_class;
@@ -30,12 +29,14 @@ pub struct StackFrame {
 
     pub code: Vec<u8>,
 
+    pub code_attr:CodeAttribute,
+
     //所属虚拟机栈id
     pub vm_stack_id: u32,
 }
 
 impl StackFrame {
-    pub fn new(class: usize, max_stack: u16, max_locals: u16, code: Vec<u8>) -> StackFrame {
+    pub fn new(class: usize, max_stack: u16, max_locals: u16, code: Vec<u8>,code_attr : CodeAttribute) -> StackFrame {
         let mut stake_frame = StackFrame {
             pc: 0,
             class,
@@ -44,6 +45,7 @@ impl StackFrame {
             max_stack,
             max_locals,
             code,
+            code_attr,
             vm_stack_id: 0,
         };
         for _i in 0..stake_frame.max_locals as usize {
@@ -202,36 +204,18 @@ pub fn init_stack_frame(frame: &mut StackFrame, method_info: &MethodInfo) -> Sta
 }
 
 pub fn create_stack_frame(method_info: &MethodInfo) -> Option<StackFrame> {
-    //info!("{:?}",method_info);
     let class = get_or_load_class(&method_info.class_name);
-    //info!("{:?}",class.constant_pool);
     for attr in &method_info.attributes {
-        let u8_vec = class.constant_pool.get(&attr.attribute_name_index).unwrap();
-        match u8_vec {
-            ConstantPoolInfo::Utf8(name) => {
-                if "Code" == name {
-                    let max_stack = u8s_to_u16(&attr.info[0..2]);
-                    let max_locals: u16 = u8s_to_u16(&attr.info[2..4]);
-                    let code_length: u32 = u8s_to_u32(&attr.info[4..8]);
-                    let mut code: Vec<u8> = Vec::new();
-                    for c in 0..code_length {
-                        code.push(attr.info[(c + 8) as usize]);
-                    }
-                    let code_attr: CodeAttribute =
-                        CodeAttribute::new(max_stack, max_locals, code_length, code);
-                    let mut local: Vec<u32> = Vec::new();
-                    for _i in 0..max_locals {
-                        local.push(0);
-                    }
+        match attr {
+            AttributeInfo::Code(code_attr) => {
                     return Some(StackFrame::new(
                         class.id,
                         code_attr.max_stack,
                         code_attr.max_locals,
-                        code_attr.code,
+                        code_attr.code.clone(),
+                        code_attr.clone()
                     ));
-                }
             }
-            _ => panic!("Found invalid UTF-8"),
         }
     }
     return None;

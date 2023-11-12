@@ -72,36 +72,56 @@ use crate::param::param::MethodParameter;
     }
 
     #[derive(Debug, Clone)]
-    pub struct AttributeInfo {
-        pub attribute_name_index: u16,
-        pub attribute_length: u32,
-        pub info: Vec<u8>,
-    }
+    pub enum AttributeInfo {
+        Code(CodeAttribute)
+    } 
 
-    #[derive(Debug)]
+    #[derive(Debug, Clone)]
     pub struct CodeAttribute {
         pub max_stack: u16,
         pub max_locals: u16,
         pub code_length: u32,
         pub code: Vec<u8>,
-        // pub exception_table_length: u16,
-        // pub exception_table: ExceptionTable,
-        // pub attributes_count: u16,
-        // pub attribute_info: AttributeInfo,
+        pub exception_table_length: u16,
+        pub exception_table: Vec<ExceptionTable>
     }
 
+   
     impl CodeAttribute {
         pub fn new(
             max_stack: u16,
             max_locals: u16,
             code_length: u32,
             code: Vec<u8>,
+            exception_table_length: u16,
+            exception_table:Vec<ExceptionTable>
         ) -> CodeAttribute {
             CodeAttribute {
                 max_stack,
                 max_locals,
                 code_length,
-                code
+                code,
+                exception_table_length,
+                exception_table
+            }
+        }
+    }
+
+    #[derive(Debug, Clone)]
+    pub struct ExceptionTable{
+       pub start_pc:u16,
+       pub  end_pc:u16,
+       pub handler_pc:u16,
+       pub catch_type:u16
+    }
+
+    impl ExceptionTable {
+        pub fn new(start_pc:u16,end_pc:u16,handler_pc:u16,catch_type:u16) ->ExceptionTable{
+            ExceptionTable{
+                start_pc,
+                end_pc,
+                handler_pc,
+                catch_type
             }
         }
     }

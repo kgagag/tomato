@@ -1,4 +1,6 @@
 pub mod class_loader {
+    use crate::class::CodeAttribute;
+    use crate::class::ExceptionTable;
     //文件名（需要在main中先声明）+Mod名+引入对象()
     use crate::param::param::MethodParameter;
     use crate::class::Class;
@@ -141,11 +143,11 @@ pub mod class_loader {
         class.interface_count = get_interface_count(&mut cursor);
         class.interfaces = get_interface(class.interface_count,&mut cursor);
         class.fields_count = get_field_count(&mut cursor);
-        class.field_info = get_field(class.fields_count,&mut cursor);
+        class.field_info = get_field(&class.constant_pool,class.fields_count,&mut cursor);
         class.methods_count = get_method_count(&mut cursor);
-        class.method_info = get_method(class.methods_count, &mut cursor);
+        class.method_info = get_method(&class.constant_pool,class.methods_count, &mut cursor);
         class.attributes_count = get_attribute_count(&mut cursor);
-        class.attribute_info = get_attribute(class.attributes_count,&mut cursor);
+        class.attribute_info = get_attribute(&class.constant_pool,class.attributes_count,&mut cursor);
         let this_class = class.constant_pool.get(&class.this_class).unwrap(); 
         info!("this_class:{:?}",this_class);
         match this_class {
@@ -423,7 +425,7 @@ pub mod class_loader {
         return cursor.read_u16::<BigEndian>().unwrap();
     }
 
-    pub fn get_field(cnt: u16,cursor:&mut Cursor<Vec<u8>>) -> Vec<FieldInfo> {
+    pub fn get_field(constant_pool:&HashMap<u16,ConstantPoolInfo>,cnt: u16,cursor:&mut Cursor<Vec<u8>>) -> Vec<FieldInfo> {
         let v: Vec<FieldInfo> = Vec::new();
         for j in 0..cnt {
             let mut f: FieldInfo = FieldInfo {
@@ -434,7 +436,7 @@ pub mod class_loader {
                 atrributes: Vec::new(),
                 value: Vec::new(),
             };
-            f.atrributes = get_attribute(f.attribute_count, cursor);
+            f.atrributes = get_attribute(constant_pool,f.attribute_count, cursor);
         }
         return v;
     }
@@ -443,7 +445,7 @@ pub mod class_loader {
         return cursor.read_u16::<BigEndian>().unwrap();
     }
 
-    pub fn get_method(cnt: u16, cursor:&mut Cursor<Vec<u8>>) -> Vec<MethodInfo> {
+    pub fn get_method(constant_pool:&HashMap<u16,ConstantPoolInfo>,cnt: u16, cursor:&mut Cursor<Vec<u8>>) -> Vec<MethodInfo> {
         let mut v: Vec<MethodInfo> = Vec::new();
         for j in 0..cnt {
             let mut m: MethodInfo = MethodInfo {
@@ -457,7 +459,7 @@ pub mod class_loader {
                 method_name:String::new(),
                 descriptor:String::new()
             };
-            m.attributes = get_attribute(m.attributes_count, cursor);
+            m.attributes = get_attribute(constant_pool,m.attributes_count, cursor);
             v.push(m);
         }
         return v;
@@ -467,18 +469,47 @@ pub mod class_loader {
         return cursor.read_u16::<BigEndian>().unwrap();
     }
 
-    pub fn get_attribute(cnt: u16, cursor:&mut Cursor<Vec<u8>>) -> Vec<AttributeInfo> {
+    pub fn get_attribute( constant_pool:&HashMap<u16,ConstantPoolInfo>,cnt: u16, cursor:&mut Cursor<Vec<u8>>) -> Vec<AttributeInfo> {
         let mut ans: Vec<AttributeInfo> = Vec::new();
         for i in 0..cnt {
-            let mut attribute_info: AttributeInfo = AttributeInfo {
-                attribute_name_index: cursor.read_u16::<BigEndian>().unwrap(),
-                attribute_length: cursor.read_u32::<BigEndian>().unwrap(),
-                info: Vec::new(),
-            };
-            for j in 0..attribute_info.attribute_length {
-                attribute_info.info.push(cursor.read_u8().unwrap());
-            }
-            ans.push(attribute_info);
+           let  attribute_name_index =  cursor.read_u16::<BigEndian>().unwrap();
+           let  attribute_length =  cursor.read_u32::<BigEndian>().unwrap();
+           let mut attr_info:Vec<u8> = Vec::new();
+           for j in 0..attribute_length {
+             attr_info.push(cursor.read_u8().unwrap());
+           }
+           let mut index:usize = 0;
+           let cons = constant_pool.get(&attribute_name_index).unwrap() ;
+           match cons {
+               ConstantPoolInfo::Utf8(attr_name) =>{
+                    if "Code" == attr_name {
+                        let max_stack = u8s_to_u16(&attr_info[0..2]);
+                        let max_locals: u16 = u8s_to_u16(&attr_info[2..4]);
+                        let code_length: u32 = u8s_to_u32(&attr_info[4..8]);
+                        index += 8;
+                        let mut code: Vec<u8> = Vec::new();
+                        for i in index..index + code_length as usize{
+                            code.push(attr_info[i as usize]);
+                        }
+                        index += code_length as usize;
+                        let exception_table_length = u8s_to_u16(&attr_info[index ..index + 2]);
+                        let mut exception_table = Vec::new();
+                        index += 2;
+                        for i in 0 .. exception_table_length{
+                            let start_pc =  u8s_to_u16(&attr_info[index ..index + 2]);
+                            index += 2;
+                            let end_pc =  u8s_to_u16(&attr_info[index ..index + 2]);
+                            index += 2;
+                            let handler_pc =  u8s_to_u16(&attr_info[index ..index + 2]);
+                            index += 2;
+                            let catch_type =  u8s_to_u16(&attr_info[index ..index + 2]);
+                            exception_table.push(ExceptionTable::new(start_pc, end_pc, handler_pc, catch_type));
+                        }
+                        ans.push(AttributeInfo::Code(CodeAttribute::new(max_stack, max_locals, code_length, code, exception_table_length, exception_table)));
+                    }
+               },
+               _=>panic!()
+           }
         }
         return ans;
     }

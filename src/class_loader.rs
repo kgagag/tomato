@@ -19,7 +19,9 @@ pub mod class_loader {
     use log::warn;
     use std::io::Read;
     use crate::runtime_data_area::add_method;
-
+    use std::env;
+    use std::io::prelude::*;
+    use zip::read::{ZipArchive, ZipFile};
 
     fn parse_method_descriptor(
         descriptor: &Vec<u8>,
@@ -107,29 +109,74 @@ pub mod class_loader {
         }
     }
 
+
+    fn read_class_from_jar(jar_path: &str, class_name: &str) -> Result<Vec<u8>, String> {
+        let file = File::open(jar_path).map_err(|e| format!("Error opening JAR file: {}", e))?;
+        let mut archive: ZipArchive<File> = ZipArchive::new(file).map_err(|e| format!("Error reading ZIP archive: {}", e))?;
+        for i in 0..archive.len() {
+            let mut entry = archive.by_index(i).map_err(|e| format!("Error reading entry {}: {}", i, e))?;
+            if entry.name().eq(class_name) {
+                let mut buffer = Vec::new();
+                entry.read_to_end(&mut buffer).map_err(|e| format!("Error reading class file: {}", e))?;
+                return Ok(buffer);
+            }
+        }
+        Err(format!("Class '{}' not found in the JAR file", class_name))
+    }
+    
+    
+    fn get_rt_class(name: &String) -> Result<Vec<u8>, String> {
+        match env::var("JAVA_HOME") {
+            Ok(mut home_path) => {
+                let path: String = name.clone() + ".class";
+                home_path.push_str(&String::from("/jre/lib/rt.jar"));
+                read_class_from_jar(&home_path, &path)
+            }
+            Err(_) => {
+                Err(format!("Class '{}' not found in the JAR file", name))
+            },
+        }
+    }
+
+    fn get_user_class(name: &String) -> Result<Vec<u8>, String>{
+        let mut user_class_path = String::from("D:/tomato/test/");
+        user_class_path.push_str(&name);
+        user_class_path.push_str(".class");
+        info!("user class path:{}", user_class_path);
+         let mut file = fs::File::open(user_class_path).unwrap();
+         let mut buffer = Vec::new();
+         let _ = file.read_to_end(&mut buffer);
+         return Ok(buffer);
+    }
+
+
+    /***
+     * 1、先从 rt.jar 中加载
+     * 2、从 user class 中加载
+     */
+    fn get_class(name: &String) ->Vec<u8>{
+       let result =  get_rt_class(name);
+       match result {
+           Ok(data) => {
+                data
+           }
+           _=>{
+            let result = get_user_class(name);
+            match result {
+                Ok(data) =>{
+                    data
+                }
+                _=> panic!()
+            }
+           }
+       }
+    }
+
     /***
      * 类加载
      */
     pub fn load_class(name: &String) -> Class {
-        //设置class_path
-        let class_path = String::from("D:/tomato/test/");
-        let appendix = String::from(".class");
-        let mut path = class_path + &name + &appendix;
-        let rt_path = String::from("D:/tomato/rt/") + &name + &appendix;
-        match fs::metadata(&path) {
-            Ok(metadata) => {
-                if !metadata.is_file() {
-                    path = rt_path;
-                }
-            }
-            Err(_) => {
-                path = rt_path;
-            }
-        }
-        let mut file = fs::File::open(path).unwrap();
-        let mut buffer = Vec::new();
-        // 从文件中读取数据并填充到 buffer 中
-        let _ = file.read_to_end(&mut buffer);
+        let buffer = get_class(name);
         let mut cursor = io::Cursor::new(buffer);
         let mut class: Class = Class::new();
         class.magic = get_magic(&mut cursor);
@@ -148,8 +195,17 @@ pub mod class_loader {
         class.method_info = get_method(&class.constant_pool,class.methods_count, &mut cursor);
         class.attributes_count = get_attribute_count(&mut cursor);
         class.attribute_info = get_attribute(&class.constant_pool,class.attributes_count,&mut cursor);
+
+        do_after_load(& mut class);
+        
+        return class;
+    }
+
+
+    fn do_after_load(class:& mut Class){
         let this_class = class.constant_pool.get(&class.this_class).unwrap(); 
         info!("this_class:{:?}",this_class);
+       // 设置 class_name
         match this_class {
             ConstantPoolInfo::Class(name_index) =>{
                 info!("name_index:{:?}",name_index);
@@ -204,17 +260,13 @@ pub mod class_loader {
                 _=> panic!("wrong constant data type")
             }            
         }
-        return class;
+
     }
 
       /**
      * 获取魔数
      */
     pub fn get_magic(cursor:&mut Cursor<Vec<u8>>) -> u32 {
-        // let mut buffer = [0u8; 4];
-        //file.read(&mut buffer).unwrap();
-        //let magic = cursor.read_u32::<BigEndian>().unwrap();
-        //return u8s_to_u32(&buffer);
         return  cursor.read_u32::<BigEndian>().unwrap();
     }
 
@@ -637,6 +689,7 @@ fn read_constant_pool_info<R: Read>(mut constant_pool_count:u16,reader: &mut R) 
 
     constant_pool
 }
+
 
 }
 

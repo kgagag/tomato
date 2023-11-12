@@ -3,9 +3,7 @@ use crate::stack_frame::StackFrame;
 use crate::value::value::StackFrameValue;
 extern crate log;
 extern crate env_logger;
-use log::{error, info, warn};
-use std::env;
-
+use log::*;
 
 pub fn iconst_m1(frame: &mut StackFrame) {
     frame.op_stack.push(StackFrameValue::Int(1));

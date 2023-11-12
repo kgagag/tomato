@@ -36,9 +36,8 @@ use crate::op_code::op_code::do_opcode;
 use crate::runtime_data_area::VM_STACKS;
 extern crate log;
 extern crate env_logger;
-
-use log::{error, info, warn};
 use std::env;
+use log::{error, info, warn};
 
 pub fn execute(){
     let data: std::sync::MutexGuard<'_, UnsafeCell<HashMap<u32, Vec<StackFrame>>>> = VM_STACKS.lock().unwrap();
@@ -72,7 +71,6 @@ fn main() {
 }
 
 
-
 /***
  * 虚拟机启动方法
  */
@@ -83,7 +81,7 @@ pub fn run(main_class_path: String) {
     for i in 0..* &class.method_info.len() {
         let method_info = &class.method_info[i];
         //let methond_index = (method_info.name_index as usize) - 1;
-        let u8_vec = &class.constant_pool.get(&method_info.name_index).unwrap();
+        let u8_vec = class.constant_pool.get(&method_info.name_index).unwrap();
         match u8_vec {
             ConstantPoolInfo::Utf8(name) =>{
                 //println!("method:{}", &name);

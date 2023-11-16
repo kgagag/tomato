@@ -22,7 +22,8 @@ pub mod class_loader {
     use std::env;
     use std::io::prelude::*;
     use zip::read::{ZipArchive, ZipFile};
-
+    use crate::stack_frame::*;
+    use crate::value::value::StackFrameValue;
     fn parse_method_descriptor(
         descriptor: &Vec<u8>,
     ) -> Result<Option<Vec<MethodParameter>>, String> {
@@ -486,7 +487,7 @@ pub mod class_loader {
                 descriptor_index: cursor.read_u16::<BigEndian>().unwrap(),
                 attribute_count:  cursor.read_u16::<BigEndian>().unwrap(),
                 atrributes: Vec::new(),
-                value: Vec::new(),
+                value: StackFrameValue::Null,
             };
             f.atrributes = get_attribute(constant_pool,f.attribute_count, cursor);
         }

@@ -1,10 +1,10 @@
 # Details
 
-Date : 2023-11-12 16:07:44
+Date : 2023-11-12 23:24:53
 
 Directory : ./src
 
-Total : 29 files,  3204 codes, 193 comments, 401 blanks, all 3798 lines, 5.68% comment rate
+Total : 29 files,  3246 codes, 192 comments, 411 blanks, all 3849 lines, 5.58% comment rate
 
 [summary](results.md)
 
@@ -13,9 +13,9 @@ Total : 29 files,  3204 codes, 193 comments, 401 blanks, all 3798 lines, 5.68% c
 | :--- | :--- | ---: | ---: | ---: | ---: | ---: |
 | [array.rs](../src\array.rs) | Rust | 24 | 0 | 2 | 26 | 0.00% |
 | [class.rs](../src\class.rs) | Rust | 142 | 1 | 16 | 159 | 0.70% |
-| [class_loader.rs](../src\class_loader.rs) | Rust | 560 | 50 | 33 | 643 | 8.20% |
+| [class_loader.rs](../src\class_loader.rs) | Rust | 602 | 49 | 45 | 696 | 7.53% |
 | [exception.rs](../src\exception.rs) | Rust | 0 | 0 | 1 | 1 | 0.00% |
-| [main.rs](../src\main.rs) | Rust | 77 | 14 | 10 | 101 | 15.38% |
+| [main.rs](../src\main.rs) | Rust | 77 | 14 | 8 | 99 | 15.38% |
 | [object.rs](../src\object.rs) | Rust | 18 | 0 | 2 | 20 | 0.00% |
 | [op_code.rs](../src\op_code.rs) | Rust | 343 | 50 | 11 | 404 | 12.72% |
 | [opcode_array.rs](../src\opcode_array.rs) | Rust | 151 | 2 | 23 | 176 | 1.31% |

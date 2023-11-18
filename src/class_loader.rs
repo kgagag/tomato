@@ -19,6 +19,7 @@ pub mod class_loader {
     use std::io::Read;
     use zip::read::{ZipArchive, ZipFile};
     use crate::value::value::*;
+    use crate::stack_frame::*;
     fn parse_method_descriptor(
         descriptor: &Vec<u8>,
     ) -> Result<Option<Vec<MethodParameter>>, String> {

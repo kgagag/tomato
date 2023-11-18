@@ -25,6 +25,7 @@ pub mod opcode_convert;
 pub mod opcode_compare;
 pub mod opcode_goto;
 pub mod opcode_static;
+pub mod opcode_field;
 use std::cell::UnsafeCell;
 use crate::class::ConstantPoolInfo;
 use crate::stack_frame::StackFrame;
@@ -63,12 +64,9 @@ fn main() {
         .format_timestamp(Some(env_logger::TimestampPrecision::Millis))
         .format_module_path(true)
         .init();
-    run(String::from("Test7"));
-    // let a:f32 = 0.01;
-    // let b = a as u64;
-    // let c = b as f32;
-    // print!("{}",c);
+    run(String::from("Test8"));
 }
+
 
 
 /***

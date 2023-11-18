@@ -31,6 +31,8 @@ pub mod op_code {
     use crate::opcode_compare::*;
     use crate::opcode_goto::*;
     use crate::opcode_static::*;
+    use crate::opcode_field::*;
+
     use log::{error, info, warn};
     use std::env;
 
@@ -221,8 +223,8 @@ pub mod op_code {
                     0xb1 => _return (stack_frame),
                     0xb2 => getstatic(stack_frame),
                     0xb3 => putstatic(stack_frame),
-                    // 0xb4 => getfield(stack_frame),
-                    // 0xb5 => putfield(stack_frame),
+                    0xb4 => getfield(stack_frame),
+                    0xb5 => putfield(stack_frame),
                     0xb6 => invokevirtual(stack_frame),
                     0xb7 => invokespecial(stack_frame),
                     // 0xb8 => invokestatic(stack_frame),
@@ -356,7 +358,6 @@ pub mod op_code {
 
     pub fn invokevirtual(frame: &mut StackFrame) {
         let clone_frame = &frame.clone();
-        // let target_class_id = get_class_for_invoke(&frame.clone());
         let method = get_method_for_invoke(&clone_frame);
         let mut new_frame = init_stack_frame(frame, method.unwrap());
         let v = frame.op_stack.pop();

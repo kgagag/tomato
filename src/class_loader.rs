@@ -472,7 +472,7 @@ pub mod class_loader {
         cnt: u16,
         cursor: &mut Cursor<Vec<u8>>,
     ) -> Vec<FieldInfo> {
-        let v: Vec<FieldInfo> = Vec::new();
+        let mut v: Vec<FieldInfo> = Vec::new();
         for j in 0..cnt {
             let mut f: FieldInfo = FieldInfo {
                 access_flag: cursor.read_u16::<BigEndian>().unwrap(),
@@ -494,6 +494,7 @@ pub mod class_loader {
             }
             f.field_name = field_name;
             f.atrributes = get_attribute(constant_pool, f.attribute_count, cursor);
+            v.push(f);
         }
         return v;
     }

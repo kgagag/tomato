@@ -5,7 +5,6 @@
     extern crate log;
     extern crate env_logger;
     use log::{error, info, warn};
-    use std::env;
 
 
     pub fn fstore(frame: &mut StackFrame) {

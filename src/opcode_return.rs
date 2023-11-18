@@ -6,9 +6,6 @@ use crate::value::value::StackFrameValue;
 extern crate log;
 extern crate env_logger;
 use log::{error, info, warn};
-use std::env;
-use crate::u8c::u8s_to_u16;
-
 pub fn _return(frame: &mut StackFrame) {
     pop_stack_frame(frame.vm_stack_id);
     frame.pc += 1;

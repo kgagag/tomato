@@ -8,7 +8,6 @@ use crate::value::value::StackFrameValue;
 extern crate log;
 extern crate env_logger;
 use log::{error, info, warn};
-use std::env;
 pub fn aload_1(frame: &mut StackFrame) {
     frame.op_stack.push(frame.local.get(1).unwrap().clone());
     frame.pc += 1;

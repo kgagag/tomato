@@ -6,7 +6,6 @@ extern crate env_logger;
 extern crate log;
 
 use log::{error, info, warn};
-use std::env;
 
 pub fn iadd(frame: &mut StackFrame) {
     let i1 = frame.popi64() as i32;
@@ -21,14 +20,9 @@ pub fn fadd(frame: &mut StackFrame) {
     info!("{:?}", frame);
     let i1 = frame.popf64() as f32;
     let i2 = frame.popf64() as f32;
-    //info!("{:?}",frame);
-    //info!("{}",i1);
-    //info!("{:?}",frame);
     let result = i1 + i2;
-    //info!("{}",result);
     warn!("{}", format!("{}{}", "fadd add result:", result));
     frame.op_stack.push(StackFrameValue::Float(result));
-    //info!("{:?}",frame);
     frame.pc += 1;
 }
 

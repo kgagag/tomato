@@ -3,7 +3,6 @@ use crate::stack_frame::StackFrame;
 extern crate log;
 extern crate env_logger;
 use log::{error, info, warn};
-use std::env;
 
 pub fn dup(frame: &mut StackFrame) {
     frame.op_stack.push(frame.op_stack[0].clone());

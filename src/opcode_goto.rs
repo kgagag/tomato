@@ -3,7 +3,6 @@ use crate::stack_frame::StackFrame;
 extern crate log;
 extern crate env_logger;
 use log::{error, info, warn};
-use std::env;
 use crate::u8c::*;
 
 pub fn goto(frame: &mut StackFrame) {

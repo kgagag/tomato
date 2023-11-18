@@ -1,7 +1,6 @@
 pub mod class_loader {
     use crate::class::CodeAttribute;
     use crate::class::ExceptionTable;
-    //文件名（需要在main中先声明）+Mod名+引入对象()
     use crate::class::*;
     use crate::param::param::MethodParameter;
     use crate::runtime_data_area::add_method;
@@ -19,7 +18,6 @@ pub mod class_loader {
     use std::io::Read;
     use zip::read::{ZipArchive, ZipFile};
     use crate::value::value::*;
-    use crate::stack_frame::*;
     fn parse_method_descriptor(
         descriptor: &Vec<u8>,
     ) -> Result<Option<Vec<MethodParameter>>, String> {
@@ -455,8 +453,7 @@ pub mod class_loader {
      */
     pub fn get_interface(cnt: u16, cursor: &mut Cursor<Vec<u8>>) -> Vec<u16> {
         let mut v: Vec<u16> = Vec::new();
-        for j in 0..cnt {
-            let mut buffer = [0u8; 2];
+        for _j in 0..cnt {
             let interface: u16 = cursor.read_u16::<BigEndian>().unwrap();
             v.push(interface);
         }
@@ -473,7 +470,7 @@ pub mod class_loader {
         cursor: &mut Cursor<Vec<u8>>,
     ) -> Vec<FieldInfo> {
         let mut v: Vec<FieldInfo> = Vec::new();
-        for j in 0..cnt {
+        for _j in 0..cnt {
             let mut f: FieldInfo = FieldInfo {
                 access_flag: cursor.read_u16::<BigEndian>().unwrap(),
                 name_index: cursor.read_u16::<BigEndian>().unwrap(),
@@ -537,7 +534,7 @@ pub mod class_loader {
         cursor: &mut Cursor<Vec<u8>>,
     ) -> Vec<AttributeInfo> {
         let mut ans: Vec<AttributeInfo> = Vec::new();
-        for i in 0..cnt {
+        for _i in 0..cnt {
             let attribute_name_index = cursor.read_u16::<BigEndian>().unwrap();
             let attribute_length = cursor.read_u32::<BigEndian>().unwrap();
             let mut attr_info: Vec<u8> = Vec::new();

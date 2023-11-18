@@ -1,13 +1,9 @@
-use crate::object;
-use crate::reference::*;
+
 use crate::reference::reference::Reference;
 use crate::stack_frame::StackFrame;
 use crate::value::value::StackFrameValue;
 extern crate env_logger;
 extern crate log;
-use log::{error, info, warn};
-use std::env;
-use crate::u8c::*;
 use crate::runtime_data_area::*;
 use crate::class::*;
 pub fn putfield(frame: &mut StackFrame) {
@@ -33,7 +29,6 @@ pub fn putfield(frame: &mut StackFrame) {
                                     let field_name_utf8: &ConstantPoolInfo =  this_class.constant_pool.get(& name_index ).unwrap() ;
                                     match field_name_utf8 {
                                         ConstantPoolInfo::Utf8(field_name) =>{
-                                            //error!("{:?}",target_class.field_info);
                                             for i in 0 .. target_class.field_info.len(){
                                                 if target_class.field_info.get(i).unwrap().field_name.clone() == field_name.clone() {
                                                   match object {

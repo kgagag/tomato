@@ -26,12 +26,13 @@ pub mod opcode_compare;
 pub mod opcode_goto;
 pub mod opcode_static;
 pub mod opcode_field;
+pub mod opcode_new;
+pub mod opcode_invoke;
 use std::cell::UnsafeCell;
 use crate::class::ConstantPoolInfo;
 use crate::stack_frame::StackFrame;
 use crate::stack_frame::create_stack_frame;
 use crate::runtime_data_area::get_or_load_class;
-use crate::op_code::op_code::push_stack_frame;
 use std::collections::HashMap;
 use crate::op_code::op_code::do_opcode;
 use crate::runtime_data_area::VM_STACKS;
@@ -39,7 +40,7 @@ extern crate log;
 extern crate env_logger;
 use std::env;
 use log::{error, info, warn};
-
+use crate::opcode_invoke::*;
 pub fn execute(){
     let data: std::sync::MutexGuard<'_, UnsafeCell<HashMap<u32, Vec<StackFrame>>>> = VM_STACKS.lock().unwrap();
     unsafe {

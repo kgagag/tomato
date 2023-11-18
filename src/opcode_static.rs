@@ -1,10 +1,7 @@
 use crate::stack_frame::StackFrame;
-use crate::value::value::StackFrameValue;
 extern crate env_logger;
 extern crate log;
 use log::{error, info, warn};
-use std::env;
-use crate::u8c::*;
 use crate::runtime_data_area::*;
 use crate::class::*;
 pub fn putstatic(frame: &mut StackFrame) {

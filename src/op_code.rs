@@ -2,13 +2,10 @@ pub mod op_code {
     use crate::class::ConstantPoolInfo;
     use crate::class::MethodInfo;
     use crate::reference::reference::Reference;
-    use crate::runtime_data_area::create_array;
     use crate::runtime_data_area::create_object;
     use crate::runtime_data_area::get_class_name;
     use crate::runtime_data_area::get_method_from_pool;
     use crate::runtime_data_area::get_or_load_class;
-    use crate::runtime_data_area::pop_stack_frame;
-    use crate::runtime_data_area::push_frame_data;
     use crate::runtime_data_area::VM_STACKS;
     use crate::stack_frame::init_stack_frame;
     use crate::stack_frame::StackFrame;
@@ -33,8 +30,6 @@ pub mod op_code {
     use crate::opcode_convert::*;
     use crate::opcode_compare::*;
     use crate::opcode_goto::*;
-
-    use crate::param::param::MethodParameter;
     use log::{error, info, warn};
     use std::env;
 
@@ -383,7 +378,7 @@ pub mod op_code {
             // 从 UnsafeCell 中获取 HashMap 的可变引用
             let map = &mut *data.get();
             if stack_frame.vm_stack_id == 0 {
-                for i in 1..0xFFFFFFF as u32 {
+                for i in 1..0xFFFFFFFF as u32 {
                     if !map.contains_key(&i) {
                         stack_frame.vm_stack_id = i;
                         let mut stack_frames: Vec<StackFrame> = Vec::new();

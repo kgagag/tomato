@@ -24,7 +24,7 @@ pub mod opcode_swap;
 pub mod opcode_convert;
 pub mod opcode_compare;
 pub mod opcode_goto;
-
+pub mod opcode_static;
 use std::cell::UnsafeCell;
 use crate::class::ConstantPoolInfo;
 use crate::stack_frame::StackFrame;

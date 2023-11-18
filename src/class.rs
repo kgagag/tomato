@@ -1,6 +1,6 @@
     use std::collections::HashMap;
 
-use crate::param::param::MethodParameter;
+use crate::{param::param::MethodParameter, value::value::StackFrameValue};
     #[derive(Debug, Clone)]
     pub struct Class {
         pub magic: u32,
@@ -68,7 +68,8 @@ use crate::param::param::MethodParameter;
         pub descriptor_index: u16,
         pub attribute_count: u16,
         pub atrributes: Vec<AttributeInfo>,
-        pub value: Vec<u8>,
+        pub field_name:String,
+        pub value: StackFrameValue,
     }
 
     #[derive(Debug, Clone)]

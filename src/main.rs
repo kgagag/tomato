@@ -63,7 +63,7 @@ fn main() {
         .format_timestamp(Some(env_logger::TimestampPrecision::Millis))
         .format_module_path(true)
         .init();
-    run(String::from("Test"));
+    run(String::from("Test7"));
     // let a:f32 = 0.01;
     // let b = a as u64;
     // let c = b as f32;

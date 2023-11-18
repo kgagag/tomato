@@ -30,6 +30,7 @@ pub mod op_code {
     use crate::opcode_convert::*;
     use crate::opcode_compare::*;
     use crate::opcode_goto::*;
+    use crate::opcode_static::*;
     use log::{error, info, warn};
     use std::env;
 
@@ -218,8 +219,8 @@ pub mod op_code {
                     0xaf => dreturn(stack_frame),
                     0xb0 => areturn(stack_frame),
                     0xb1 => _return (stack_frame),
-                    // 0xb2 => getstatic(stack_frame),
-                    // 0xb3 => putstatic(stack_frame),
+                    0xb2 => getstatic(stack_frame),
+                    0xb3 => putstatic(stack_frame),
                     // 0xb4 => getfield(stack_frame),
                     // 0xb5 => putfield(stack_frame),
                     0xb6 => invokevirtual(stack_frame),

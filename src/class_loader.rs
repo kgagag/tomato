@@ -137,7 +137,7 @@ pub mod class_loader {
     }
 
     fn get_user_class(name: &String) -> Result<Vec<u8>, String> {
-        let mut user_class_path = String::from("D:/tomato/test/");
+        let mut user_class_path = String::from("e:/tomato/test/");
         user_class_path.push_str(&name);
         user_class_path.push_str(".class");
         info!("user class path:{}", user_class_path);

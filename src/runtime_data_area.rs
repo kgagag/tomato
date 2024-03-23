@@ -9,7 +9,7 @@
     use crate::stack_frame::StackFrame;
     use crate::class_loader::class_loader::load_class;
     use crate::value::value::StackFrameValue;
-    use crate::param::param::MethodParameter;
+    use crate::param::param::DataType;
     lazy_static! {
         // 创建一个包含UnsafeCell的Mutex，用于包装全局变量
         //类常量池
@@ -48,11 +48,8 @@
     }
 
     pub fn create_object<'a>(class: usize) -> &'a mut Reference {
-        // 获取全局变量的Mutex锁
         let data = OBJECT_DATA.lock().unwrap();
         let obj_id_data = OBJECT_ID.lock().unwrap();
-
-        // 通过UnsafeCell获取可变引用，并修改全局变量的值
         let obj;
         let obj_id: &mut u32;
         unsafe {
@@ -67,11 +64,9 @@
         }
     }
 
-    pub fn create_array<'a>(len:u32,array_type:MethodParameter) -> &'a mut Reference {
-        // 获取全局变量的Mutex锁
+    pub fn create_array<'a>(len:u32,array_type:DataType) -> &'a mut Reference {
         let data = OBJECT_DATA.lock().unwrap();
         let obj_id_data = OBJECT_ID.lock().unwrap();
-        // 通过UnsafeCell获取可变引用，并修改全局变量的值
         let array;
         let obj_id: &mut u32;
         let mut next_id:u32 = 0;
@@ -88,24 +83,25 @@
         }
     }
 
+    /**
+     * @id java对象的id
+     * 返回引用类型数据
+     */
     pub fn get_reference<'a>(id: &u32) -> &'a mut Reference {
-        // 获取全局变量的Mutex锁
         let data = OBJECT_DATA.lock().unwrap();
-        // 通过UnsafeCell获取可变引用，并修改全局变量的值
         unsafe {
             let map = &mut *data.get();
             return map.get_mut(id).unwrap();
         }
     }
+    /**
+     * @class_name java类名称
+     */
     pub fn get_or_load_class<'a>(class_name: &String) -> &'a mut Class {
-        // 获取全局变量的Mutex锁
         let data: std::sync::MutexGuard<'_, UnsafeCell<HashMap<String, Class>>> =
             CLASS_DATA.lock().unwrap();
-        // 通过UnsafeCell获取可变引用，并修改全局变量的值
         unsafe {
-            // 从 UnsafeCell 中获取 HashMap 的可变引用
             let map = &mut *data.get();
-            // 释放Mutex锁
             if  !map.contains_key(class_name)  {
                 let mut class = load_class(class_name);
                 class.id = map.len() + 1 as usize;
@@ -118,29 +114,20 @@
     }
 
     pub fn add_id_class(class_id: usize, class_name: String) {
-        // 获取全局变量的Mutex锁
         let data: std::sync::MutexGuard<'_, UnsafeCell<HashMap<usize, String>>> =
             CLASS_ID_DATA.lock().unwrap();
-        // 通过UnsafeCell获取可变引用，并修改全局变量的值
         unsafe {
-            // 从 UnsafeCell 中获取 HashMap 的可变引用
             let map = &mut *data.get();
-            // 添加或修改键值对
             map.insert(class_id, class_name);
         }
-        // 释放Mutex锁
         drop(data);
     }
 
     pub fn get_class_name(class_id: &usize) -> String {
-        // 获取全局变量的Mutex锁
         let data: std::sync::MutexGuard<'_, UnsafeCell<HashMap<usize, String>>> =
             CLASS_ID_DATA.lock().unwrap();
-        // 通过UnsafeCell获取可变引用，并修改全局变量的值
         unsafe {
-            // 从 UnsafeCell 中获取 HashMap 的可变引用
             let map = &mut *data.get();
-            // 释放Mutex锁
             drop(data);
             return map.get(class_id).unwrap().clone();
         }
@@ -148,32 +135,23 @@
 
 
     pub fn add_method(method_info :MethodInfo) {
-        // 获取全局变量的Mutex锁
         let data: std::sync::MutexGuard<'_, UnsafeCell<HashMap<String, MethodInfo>>> =
         METHOD_DATA.lock().unwrap();
-        // 通过UnsafeCell获取可变引用，并修改全局变量的值
         unsafe {
             let key = format!("{}{}{}{}{}", method_info.class_name,".", method_info.method_name,".", method_info.descriptor);
-            // 从 UnsafeCell 中获取 HashMap 的可变引用
             let map = &mut *data.get();
-            // 添加或修改键值对
             map.insert(key, method_info);
         }
-        // 释放Mutex锁
         drop(data);
     }
 
     pub fn get_method_from_pool<'a>(class_name: String,method_name:String,descriptor :String) ->&'a MethodInfo {
-        // 获取全局变量的Mutex锁
         let data: std::sync::MutexGuard<'_, UnsafeCell<HashMap<String, MethodInfo>>> =
         METHOD_DATA.lock().unwrap();
-        // 通过UnsafeCell获取可变引用，并修改全局变量的值
         unsafe {
             let key = format!("{}{}{}{}{}", class_name,".", method_name,".", descriptor);
-            // 从 UnsafeCell 中获取 HashMap 的可变引用
             let map = &mut *data.get();
             drop(data);
-            //print!("{:?}",map);
             return  map.get(&key).unwrap();
         }
     }

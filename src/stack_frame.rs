@@ -1,7 +1,7 @@
 use log::*;
 use crate::class::*;
 use crate::class::MethodInfo;
-use crate::param::param::MethodParameter;
+use crate::param::param::DataType;
 use crate::runtime_data_area::get_or_load_class;
 use crate::u8c::u8s_to_u16;
 use crate::u8c::u8s_to_u32;
@@ -121,28 +121,28 @@ pub fn init_stack_frame(frame: &mut StackFrame, method_info: &MethodInfo) -> Sta
     if method_info.param.len() > 0 {
         for j in 0..method_info.param.len() {
             let v = frame.op_stack.pop().unwrap();
-            let param: &MethodParameter = method_info.param.get(j).unwrap();
+            let param: &DataType = method_info.param.get(j).unwrap();
             match param {
-                MethodParameter::Byte => {
+                DataType::Byte => {
                     new_stack_frame.local[i + 1] = v;
                     i += 1;
                 }
-                MethodParameter::Char => {
+                DataType::Char => {
                     new_stack_frame.local[i + 1] = v;
                     i += 1;
                 }
-                MethodParameter::Array {
+                DataType::Array {
                     element_type,
                     depth,
                 } => {
                     new_stack_frame.local[i + 1] = v;
                     i += 1;
                 }
-                MethodParameter::Boolean => {
+                DataType::Boolean => {
                     new_stack_frame.local[i + 1] = v;
                     i += 1;
                 }
-                MethodParameter::Double => {
+                DataType::Double => {
                     let bytes: [u8; 8] = unsafe {
                         let mut bytes: [u8; 8] = [0, 0, 0, 0, 0, 0, 0, 0];
                         let f: f64 = 0.0;
@@ -162,15 +162,15 @@ pub fn init_stack_frame(frame: &mut StackFrame, method_info: &MethodInfo) -> Sta
                         StackFrameValue::Int(u8s_to_u32(&bytes[4..8]) as i32);
                     i += 2;
                 }
-                MethodParameter::Float => {
+                DataType::Float => {
                     new_stack_frame.local[i + 1] = v;
                     i += 1;
                 }
-                MethodParameter::Int => {
+                DataType::Int => {
                     new_stack_frame.local[i + 1] = v;
                     i += 1;
                 }
-                MethodParameter::Long => {
+                DataType::Long => {
                     let bytes: [u8; 8] = unsafe {
                         let bytes: [u8; 8];
                         match v {
@@ -189,14 +189,15 @@ pub fn init_stack_frame(frame: &mut StackFrame, method_info: &MethodInfo) -> Sta
                         StackFrameValue::Int(u8s_to_u32(&bytes[4..8]) as i32);
                     i += 2;
                 }
-                MethodParameter::Reference(_string) => {
+                DataType::Reference(_string) => {
                     new_stack_frame.local[i + 1] = v;
                     i += 1;
                 }
-                MethodParameter::Short => {
+                DataType::Short => {
                     new_stack_frame.local[i + 1] = v;
                     i += 1;
                 }
+                _=> panic!()
             }
         }
     }

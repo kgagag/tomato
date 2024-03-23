@@ -3,24 +3,24 @@ pub mod op_code {
     extern crate env_logger;
     extern crate log;
     use crate::opcode_array::*;
-    use crate::opcode_load::*;
-    use crate::opcode_push::*;
-    use crate::opcode_store::*;
-    use crate::opcode_nop::*;
-    use crate::opcode_const::*;
-    use crate::opcode_ldc::*;
-    use crate::opcode_dup::*;
-    use crate::opcode_return::*;
-    use crate::opcode_math::*;
-    use crate::opcode_pop::*;
-    use crate::opcode_swap::*;
-    use crate::opcode_convert::*;
     use crate::opcode_compare::*;
-    use crate::opcode_goto::*;
-    use crate::opcode_static::*;
+    use crate::opcode_const::*;
+    use crate::opcode_convert::*;
+    use crate::opcode_dup::*;
     use crate::opcode_field::*;
-    use crate::opcode_new::*;
+    use crate::opcode_goto::*;
     use crate::opcode_invoke::*;
+    use crate::opcode_ldc::*;
+    use crate::opcode_load::*;
+    use crate::opcode_math::*;
+    use crate::opcode_new::*;
+    use crate::opcode_nop::*;
+    use crate::opcode_pop::*;
+    use crate::opcode_push::*;
+    use crate::opcode_return::*;
+    use crate::opcode_static::*;
+    use crate::opcode_store::*;
+    use crate::opcode_swap::*;
     use log::{error, info, warn};
 
     pub fn do_opcode(vm_stack: &mut Vec<StackFrame>) {
@@ -29,6 +29,7 @@ pub mod op_code {
             let mut stack_frame = vm_stack.get_mut(len - 1).unwrap();
             while stack_frame.pc < stack_frame.code.len() {
                 let code = stack_frame.code[stack_frame.pc];
+                error!("{:?}",stack_frame.op_stack);
                 match code {
                     0x00 => nop(stack_frame),
                     0x01 => aconst_null(stack_frame),
@@ -207,7 +208,7 @@ pub mod op_code {
                     0xae => freturn(stack_frame),
                     0xaf => dreturn(stack_frame),
                     0xb0 => areturn(stack_frame),
-                    0xb1 => _return (stack_frame),
+                    0xb1 => _return(stack_frame),
                     0xb2 => getstatic(stack_frame),
                     0xb3 => putstatic(stack_frame),
                     0xb4 => getfield(stack_frame),

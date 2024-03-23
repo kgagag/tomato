@@ -21,6 +21,7 @@ pub fn _new(frame: &mut StackFrame) {
                     let obj = create_object(target_class.id);
                     match obj {
                         Reference::Object(object) => {
+                            //初始化属性
                             frame.op_stack.push(StackFrameValue::Reference(object.id));
                             frame.pc += 3;
                         }

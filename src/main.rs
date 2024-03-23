@@ -57,18 +57,14 @@ pub fn execute(){
     }
 }
 
-
-
 fn main() {
     env::set_var("RUST_LOG", "DEBUG");
     env_logger::Builder::from_default_env()
         .format_timestamp(Some(env_logger::TimestampPrecision::Millis))
         .format_module_path(true)
         .init();
-    run(String::from("Test8"));
+    run(String::from("Test7"));
 }
-
-
 
 /***
  * 虚拟机启动方法

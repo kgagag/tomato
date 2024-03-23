@@ -1,10 +1,10 @@
 # Details
 
-Date : 2023-11-12 23:24:53
+Date : 2023-11-19 01:21:04
 
 Directory : ./src
 
-Total : 29 files,  3246 codes, 192 comments, 411 blanks, all 3849 lines, 5.58% comment rate
+Total : 32 files,  3639 codes, 155 comments, 405 blanks, all 4199 lines, 4.09% comment rate
 
 [summary](results.md)
 
@@ -12,28 +12,31 @@ Total : 29 files,  3246 codes, 192 comments, 411 blanks, all 3849 lines, 5.58% c
 | filename | language | code | comment | blank | total | comment rate |
 | :--- | :--- | ---: | ---: | ---: | ---: | ---: |
 | [array.rs](../src\array.rs) | Rust | 24 | 0 | 2 | 26 | 0.00% |
-| [class.rs](../src\class.rs) | Rust | 142 | 1 | 16 | 159 | 0.70% |
-| [class_loader.rs](../src\class_loader.rs) | Rust | 602 | 49 | 45 | 696 | 7.53% |
+| [class.rs](../src\class.rs) | Rust | 143 | 1 | 16 | 160 | 0.69% |
+| [class_loader.rs](../src\class_loader.rs) | Rust | 779 | 48 | 33 | 860 | 5.80% |
 | [exception.rs](../src\exception.rs) | Rust | 0 | 0 | 1 | 1 | 0.00% |
-| [main.rs](../src\main.rs) | Rust | 77 | 14 | 8 | 99 | 15.38% |
-| [object.rs](../src\object.rs) | Rust | 18 | 0 | 2 | 20 | 0.00% |
-| [op_code.rs](../src\op_code.rs) | Rust | 343 | 50 | 11 | 404 | 12.72% |
+| [main.rs](../src\main.rs) | Rust | 81 | 10 | 7 | 98 | 10.99% |
+| [object.rs](../src\object.rs) | Rust | 19 | 0 | 3 | 22 | 0.00% |
+| [op_code.rs](../src\op_code.rs) | Rust | 226 | 21 | 2 | 249 | 8.50% |
 | [opcode_array.rs](../src\opcode_array.rs) | Rust | 151 | 2 | 23 | 176 | 1.31% |
-| [opcode_compare.rs](../src\opcode_compare.rs) | Rust | 232 | 12 | 52 | 296 | 4.92% |
-| [opcode_const.rs](../src\opcode_const.rs) | Rust | 69 | 0 | 18 | 87 | 0.00% |
-| [opcode_convert.rs](../src\opcode_convert.rs) | Rust | 183 | 0 | 16 | 199 | 0.00% |
-| [opcode_dup.rs](../src\opcode_dup.rs) | Rust | 29 | 0 | 9 | 38 | 0.00% |
-| [opcode_goto.rs](../src\opcode_goto.rs) | Rust | 14 | 0 | 8 | 22 | 0.00% |
+| [opcode_compare.rs](../src\opcode_compare.rs) | Rust | 231 | 12 | 52 | 295 | 4.94% |
+| [opcode_const.rs](../src\opcode_const.rs) | Rust | 68 | 0 | 18 | 86 | 0.00% |
+| [opcode_convert.rs](../src\opcode_convert.rs) | Rust | 182 | 0 | 16 | 198 | 0.00% |
+| [opcode_dup.rs](../src\opcode_dup.rs) | Rust | 28 | 0 | 9 | 37 | 0.00% |
+| [opcode_field.rs](../src\opcode_field.rs) | Rust | 118 | 0 | 7 | 125 | 0.00% |
+| [opcode_goto.rs](../src\opcode_goto.rs) | Rust | 13 | 0 | 8 | 21 | 0.00% |
+| [opcode_invoke.rs](../src\opcode_invoke.rs) | Rust | 92 | 2 | 4 | 98 | 2.13% |
 | [opcode_ldc.rs](../src\opcode_ldc.rs) | Rust | 63 | 1 | 8 | 72 | 1.56% |
-| [opcode_load.rs](../src\opcode_load.rs) | Rust | 250 | 0 | 48 | 298 | 0.00% |
-| [opcode_math.rs](../src\opcode_math.rs) | Rust | 292 | 6 | 41 | 339 | 2.01% |
-| [opcode_new.rs](../src\opcode_new.rs) | Rust | 0 | 0 | 1 | 1 | 0.00% |
+| [opcode_load.rs](../src\opcode_load.rs) | Rust | 249 | 0 | 48 | 297 | 0.00% |
+| [opcode_math.rs](../src\opcode_math.rs) | Rust | 291 | 1 | 41 | 333 | 0.34% |
+| [opcode_new.rs](../src\opcode_new.rs) | Rust | 34 | 0 | 1 | 35 | 0.00% |
 | [opcode_nop.rs](../src\opcode_nop.rs) | Rust | 9 | 0 | 2 | 11 | 0.00% |
 | [opcode_pop.rs](../src\opcode_pop.rs) | Rust | 34 | 0 | 4 | 38 | 0.00% |
 | [opcode_push.rs](../src\opcode_push.rs) | Rust | 20 | 0 | 1 | 21 | 0.00% |
-| [opcode_return.rs](../src\opcode_return.rs) | Rust | 48 | 5 | 11 | 64 | 9.43% |
-| [opcode_store.rs](../src\opcode_store.rs) | Rust | 218 | 0 | 35 | 253 | 0.00% |
-| [opcode_swap.rs](../src\opcode_swap.rs) | Rust | 12 | 0 | 2 | 14 | 0.00% |
+| [opcode_return.rs](../src\opcode_return.rs) | Rust | 46 | 5 | 10 | 61 | 9.80% |
+| [opcode_static.rs](../src\opcode_static.rs) | Rust | 94 | 0 | 5 | 99 | 0.00% |
+| [opcode_store.rs](../src\opcode_store.rs) | Rust | 217 | 0 | 35 | 252 | 0.00% |
+| [opcode_swap.rs](../src\opcode_swap.rs) | Rust | 11 | 0 | 2 | 13 | 0.00% |
 | [param.rs](../src\param.rs) | Rust | 18 | 0 | 1 | 19 | 0.00% |
 | [reference.rs](../src\reference.rs) | Rust | 9 | 0 | 0 | 9 | 0.00% |
 | [runtime_data_area.rs](../src\runtime_data_area.rs) | Rust | 143 | 41 | 22 | 206 | 22.28% |

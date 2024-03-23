@@ -1,15 +1,15 @@
 pub mod array{
-    use crate::{param::param::MethodParameter, value::value::StackFrameValue};
+    use crate::{param::param::DataType, value::value::StackFrameValue};
     #[derive(Debug, Clone)]
     pub struct Array {
         pub id: u32,
         pub len: u32,
-        pub array_type: MethodParameter,
+        pub array_type: DataType,
         pub data:Vec<StackFrameValue> ,
     }
     
     impl Array {
-        pub fn new(id: u32, len: u32, array_type: MethodParameter) -> Array{
+        pub fn new(id: u32, len: u32, array_type: DataType) -> Array{
            let mut array =  Array {
                 id,
                 len,

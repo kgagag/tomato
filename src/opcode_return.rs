@@ -1,10 +1,9 @@
-
 use crate::runtime_data_area::pop_stack_frame;
 use crate::runtime_data_area::push_frame_data;
 use crate::stack_frame::StackFrame;
 use crate::value::value::StackFrameValue;
-extern crate log;
 extern crate env_logger;
+extern crate log;
 use log::{error, info, warn};
 pub fn _return(frame: &mut StackFrame) {
     pop_stack_frame(frame.vm_stack_id);
@@ -20,7 +19,6 @@ pub fn ireturn(frame: &mut StackFrame) {
     frame.pc += 1;
 }
 
-
 pub fn lreturn(frame: &mut StackFrame) {
     let v: StackFrameValue = frame.op_stack.pop().unwrap();
     warn!("ireturn result: {:?}", &v);
@@ -29,7 +27,6 @@ pub fn lreturn(frame: &mut StackFrame) {
     //将返回值传给上一个栈帧
     frame.pc += 1;
 }
-
 
 pub fn freturn(frame: &mut StackFrame) {
     let v: StackFrameValue = frame.op_stack.pop().unwrap();
@@ -40,7 +37,6 @@ pub fn freturn(frame: &mut StackFrame) {
     frame.pc += 1;
 }
 
-
 pub fn dreturn(frame: &mut StackFrame) {
     let v: StackFrameValue = frame.op_stack.pop().unwrap();
     warn!("ireturn result: {:?}", &v);
@@ -49,7 +45,6 @@ pub fn dreturn(frame: &mut StackFrame) {
     //将返回值传给上一个栈帧
     frame.pc += 1;
 }
-
 
 pub fn areturn(frame: &mut StackFrame) {
     let v: StackFrameValue = frame.op_stack.pop().unwrap();

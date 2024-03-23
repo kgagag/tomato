@@ -1,7 +1,5 @@
 use crate::class::ConstantPoolInfo;
 use crate::class::MethodInfo;
-use crate::reference::reference::Reference;
-use crate::runtime_data_area::create_object;
 use crate::runtime_data_area::get_class_name;
 use crate::runtime_data_area::get_method_from_pool;
 use crate::runtime_data_area::get_or_load_class;
@@ -9,7 +7,6 @@ use crate::runtime_data_area::VM_STACKS;
 use crate::stack_frame::init_stack_frame;
 use crate::stack_frame::StackFrame;
 use crate::u8c::u8s_to_u16;
-use crate::value::value::StackFrameValue;
 use std::cell::UnsafeCell;
 use std::collections::HashMap;
 
@@ -17,7 +14,9 @@ pub fn get_method_for_invoke(frame: &StackFrame) -> Option<&MethodInfo> {
     let class_name = get_class_name(&frame.class);
     let this_class = get_or_load_class(&class_name);
     if let ConstantPoolInfo::Methodref(class_index, name_and_type_index) = &this_class
-        .constant_pool.get(&u8s_to_u16(&frame.code[(frame.pc + 1)..(frame.pc + 3)])).unwrap()
+        .constant_pool
+        .get(&u8s_to_u16(&frame.code[(frame.pc + 1)..(frame.pc + 3)]))
+        .unwrap()
     {
         if let ConstantPoolInfo::Class(name_index) =
             &this_class.constant_pool.get(&class_index).unwrap()
@@ -98,4 +97,4 @@ pub fn push_stack_frame(mut stack_frame: StackFrame) {
         }
     }
     drop(data);
-}    
+}

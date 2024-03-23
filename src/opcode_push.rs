@@ -3,7 +3,7 @@ use crate::stack_frame::init_stack_frame;
 use crate::value::value::StackFrameValue;
 extern crate log;
 extern crate env_logger;
-use crate::param::param::MethodParameter;
+use crate::param::param::DataType;
 use log::{error, info, warn};
 use std::env;
 use crate::u8c::u8s_to_u16;

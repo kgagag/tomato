@@ -1,7 +1,7 @@
 pub mod param{
     
     #[derive(Debug, Clone)]
-    pub enum MethodParameter {
+    pub enum DataType {
         Byte,
         Char,
         Double,
@@ -12,8 +12,9 @@ pub mod param{
         Short,
         Boolean,
         Array {
-            element_type: Box<MethodParameter>,
+            element_type: Box<DataType>,
             depth: u32,
         },
+        Unknown
     }
 }

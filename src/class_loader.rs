@@ -2,7 +2,7 @@ pub mod class_loader {
     use crate::class::CodeAttribute;
     use crate::class::ExceptionTable;
     use crate::class::*;
-    use crate::param::param::MethodParameter;
+    use crate::param::param::DataType;
     use crate::runtime_data_area::add_method;
     use crate::u8c::u8s_to_u16;
     use crate::u8c::u8s_to_u32;
@@ -18,12 +18,12 @@ pub mod class_loader {
     use std::io::Read;
     use zip::read::{ZipArchive, ZipFile};
     use crate::value::value::*;
-    fn parse_method_descriptor(
+    fn parse_descriptor(
         descriptor: &Vec<u8>,
-    ) -> Result<Option<Vec<MethodParameter>>, String> {
+    ) -> Result<Option<Vec<DataType>>, String> {
         let mut index = 0;
         let descriptor_length = descriptor.len();
-        let mut parameters: Vec<MethodParameter> = Vec::new();
+        let mut parameters: Vec<DataType> = Vec::new();
         while index < descriptor_length {
             let descriptor_char = descriptor[index] as char;
             if descriptor_char == '(' {
@@ -35,12 +35,12 @@ pub mod class_loader {
             }
             info!("descriptor_char:{:?}", &descriptor_char);
             match descriptor_char {
-                'B' => parameters.push(MethodParameter::Byte),
-                'C' => parameters.push(MethodParameter::Char),
-                'D' => parameters.push(MethodParameter::Double),
-                'F' => parameters.push(MethodParameter::Float),
-                'I' => parameters.push(MethodParameter::Int),
-                'J' => parameters.push(MethodParameter::Long),
+                'B' => parameters.push(DataType::Byte),
+                'C' => parameters.push(DataType::Char),
+                'D' => parameters.push(DataType::Double),
+                'F' => parameters.push(DataType::Float),
+                'I' => parameters.push(DataType::Int),
+                'J' => parameters.push(DataType::Long),
                 'L' => {
                     // Handle reference type parameters
                     let mut class_name = String::new();
@@ -51,10 +51,10 @@ pub mod class_loader {
                         }
                         class_name.push(descriptor[index] as char);
                     }
-                    parameters.push(MethodParameter::Reference(class_name));
+                    parameters.push(DataType::Reference(class_name));
                 }
-                'S' => parameters.push(MethodParameter::Short),
-                'Z' => parameters.push(MethodParameter::Boolean),
+                'S' => parameters.push(DataType::Short),
+                'Z' => parameters.push(DataType::Boolean),
                 '[' => {
                     // Handle array type parameters
                     let mut array_depth = 1;
@@ -64,12 +64,12 @@ pub mod class_loader {
                     }
                     index = index + 1;
                     let element_type = match descriptor[index] as char {
-                        'B' => MethodParameter::Byte,
-                        'C' => MethodParameter::Char,
-                        'D' => MethodParameter::Double,
-                        'F' => MethodParameter::Float,
-                        'I' => MethodParameter::Int,
-                        'J' => MethodParameter::Long,
+                        'B' => DataType::Byte,
+                        'C' => DataType::Char,
+                        'D' => DataType::Double,
+                        'F' => DataType::Float,
+                        'I' => DataType::Int,
+                        'J' => DataType::Long,
                         'L' => {
                             let mut class_name = String::new();
                             while index < descriptor_length {
@@ -79,16 +79,16 @@ pub mod class_loader {
                                 }
                                 class_name.push(descriptor[index] as char);
                             }
-                            MethodParameter::Reference(class_name)
+                            DataType::Reference(class_name)
                         }
-                        'S' => MethodParameter::Short,
-                        'Z' => MethodParameter::Boolean,
+                        'S' => DataType::Short,
+                        'Z' => DataType::Boolean,
                         _ => {
                             warn!("Unknown array element type:{:?}", descriptor_char);
                             return Err("Unknown array element type".to_string());
                         }
                     };
-                    parameters.push(MethodParameter::Array {
+                    parameters.push(DataType::Array {
                         element_type: Box::new(element_type),
                         depth: array_depth,
                     });
@@ -230,8 +230,8 @@ pub mod class_loader {
                         _ => panic!("wrong constant data type"),
                     }
                     method_info.descriptor = str.clone();
-                    info!("method_info.descripto:{:?}", &method_info.descriptor);
-                    let result = parse_method_descriptor(&(str.clone().into_bytes()));
+                    //info!("method_info.descripto:{:?}", &method_info.descriptor);
+                    let result = parse_descriptor(&(str.clone().into_bytes()));
                     match result {
                         Ok(Some(parameters)) => {
                             for param in parameters {
@@ -250,6 +250,71 @@ pub mod class_loader {
                 _ => panic!("wrong constant data type"),
             }
         }
+
+
+        //补充方法方法参数解析后信息
+        for i in 0..class.fields_count {
+            let field_info = class.field_info.get_mut(i as usize).unwrap();
+            let descriptor = class
+                .constant_pool
+                .get(&field_info.descriptor_index)
+                .unwrap();
+            match descriptor {
+                ConstantPoolInfo::Utf8(str) => {
+                    field_info.descriptor = str.clone();
+                    let result: Result<Option<Vec<DataType>>, String> = parse_descriptor(&(str.clone().into_bytes()));
+                    match result {
+                        Ok(Some(parameters)) => {
+                            for param in parameters {
+                                field_info.data_type = param.clone();
+                                match param {
+                                    DataType::Array { element_type, depth } =>{
+                                        field_info.value = StackFrameValue::Null
+                                    },
+                                    DataType::Byte => {
+                                        field_info.value = StackFrameValue::Byte(0);
+                                    },
+                                    DataType::Char => {
+                                        field_info.value = StackFrameValue::Char(0);
+                                    },
+                                    DataType::Double =>  {
+                                        field_info.value = StackFrameValue::Double(0.0);
+                                    },
+                                    DataType::Float =>  {
+                                        field_info.value = StackFrameValue::Float(0.0);
+                                    },
+                                    DataType::Int => {
+                                        field_info.value = StackFrameValue::Int(0);
+                                    },
+                                    DataType::Long => {
+                                        field_info.value = StackFrameValue::Long(0);
+                                    },
+                                    DataType::Reference(s) => {
+                                        field_info.value = StackFrameValue::Null;
+                                    },
+                                    DataType::Short => {
+                                        field_info.value = StackFrameValue::Short(0);
+                                    },
+                                    DataType::Boolean => {
+                                        field_info.value = StackFrameValue::Boolean(false);
+                                    },
+                                    DataType::Unknown => panic!(),
+                                }
+                                break;
+                            }
+                        }
+                        Ok(None) => {
+                            //println!("No parameters");
+                        }
+                        Err(error) => {
+                            println!("Error: {}", error);
+                        }
+                    }
+                }
+                _ => panic!("wrong constant data type"),
+            }
+        }
+
     }
 
     /**
@@ -479,6 +544,8 @@ pub mod class_loader {
                 atrributes: Vec::new(),
                 value: StackFrameValue::Null,
                 field_name: String::from(""),
+                data_type:DataType::Unknown,
+                descriptor:String::from("")
             };
 
             let field_name: String;
@@ -595,7 +662,7 @@ pub mod class_loader {
         let mut index: u16 = 1;
         while constant_pool_count - 1 > 0 {
             let tag = reader.read_u8().expect("Failed to read constant tag");
-            info!("constant_pool_tag:{:?}", tag);
+            //info!("constant_pool_tag:{:?}", tag);
             match tag {
                 1 => {
                     let length = reader

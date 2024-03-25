@@ -65,7 +65,7 @@ fn main() {
         .format_timestamp(Some(env_logger::TimestampPrecision::Millis))
         .format_module_path(true)
         .init();
-    run(String::from("Test11"));
+    run(String::from("Test"));
 }
 
 /***

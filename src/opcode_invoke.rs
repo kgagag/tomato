@@ -1,3 +1,5 @@
+use log::info;
+
 use crate::class::ConstantPoolInfo;
 use crate::class::MethodInfo;
 use crate::runtime_data_area::get_class_name;
@@ -53,18 +55,15 @@ pub fn invokespecial(frame: &mut StackFrame) {
     let clone_frame = &frame.clone();
     let method = get_method_for_invoke(&clone_frame);
     //非native 方法
-    if(method.unwrap().access_flag & 0x0100 == 0){
-        let new_frame = init_stack_frame(frame, method.unwrap(),1);
-        push_stack_frame(new_frame);
-    }else {
-        
-    }
+    let new_frame = init_stack_frame(frame, method.unwrap(),1);
+    push_stack_frame(new_frame);
     frame.pc += 3;
 }
 
 pub fn invokevirtual(frame: &mut StackFrame) {
     let clone_frame = &frame.clone();
     let method = get_method_for_invoke(&clone_frame);
+    //info!("{:?}",method);
     let mut new_frame = init_stack_frame(frame, method.unwrap(),1);
     let v = frame.op_stack.pop();
     match v {

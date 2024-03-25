@@ -14,8 +14,10 @@ pub fn bipush(frame: &mut StackFrame) {
 }
 
 pub fn sipush(frame: &mut StackFrame) {
+    //info!("{:?}",frame);
+    let v = u8s_to_u16(&frame.code[frame.pc + 1..frame.pc + 3]) as i16;
     frame
         .op_stack
-        .push(StackFrameValue::Short(u8s_to_u16(&frame.code[frame.pc + 1..frame.pc + 3]) as i16));
+        .push(StackFrameValue::Short(v));
     frame.pc += 3;
 }

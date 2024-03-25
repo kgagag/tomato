@@ -1,18 +1,23 @@
-use crate::stack_frame::StackFrame;
+use crate::{stack_frame::StackFrame, value::value::number_u64};
 
 use crate::value::value::StackFrameValue;
-
+use crate::opcode_invoke::*;
+use crate::runtime_data_area::*;
 extern crate env_logger;
 extern crate log;
 
 use log::{error, info, warn};
+
+
 
 pub fn iadd(frame: &mut StackFrame) {
     let i1 = frame.popi64() as i32;
     let i2 = frame.popi64() as i32;
     let result = i1 + i2;
     warn!("{}", format!("{}{}", "iadd add result:", result));
-    frame.op_stack.push(StackFrameValue::Int(result));
+    let value = StackFrameValue::Int(result);
+    
+    frame.op_stack.push(value);
     frame.pc += 1;
 }
 

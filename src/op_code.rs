@@ -1,4 +1,6 @@
 pub mod op_code {
+    use std::f32::consts::E;
+
     use crate::stack_frame::StackFrame;
     extern crate env_logger;
     extern crate log;
@@ -25,11 +27,11 @@ pub mod op_code {
 
     pub fn do_opcode(vm_stack: &mut Vec<StackFrame>) {
         while vm_stack.len() > 0 {
-            let mut len = (&vm_stack).len();
-            let mut stack_frame = vm_stack.get_mut(len - 1).unwrap();
+            let mut stack_frame = vm_stack.last_mut().unwrap();
+            //info!("{:?}",stack_frame);
             while stack_frame.pc < stack_frame.code.len() {
                 let code = stack_frame.code[stack_frame.pc];
-                info!("{:#x}",code);
+                //info!("{:#x}",code);
                 match code {
                     0x00 => nop(stack_frame),
                     0x01 => aconst_null(stack_frame),
@@ -238,12 +240,14 @@ pub mod op_code {
                         panic!("Unknown instruction code: 0x{:02X}", code);
                     }
                 }
-                len = (&vm_stack).len();
-                if len == 0 {
+                if(!vm_stack.is_empty()){
+                    stack_frame = vm_stack.last_mut().unwrap()
+                }else {
                     break;
                 }
-                stack_frame = vm_stack.get_mut(len - 1).unwrap();
             }
+            //info!("{:?}",vm_stack);
+            //stack_frame = vm_stack.get_mut(0).unwrap();
         }
     }
 }

@@ -162,6 +162,7 @@
             VM_STACKS.lock().unwrap();
         unsafe {
             let map = &mut *data.get();
+            //println!("before pop_frame_data：{:?}",&map);
             map.get_mut(&vm_stack_id).unwrap().pop();
         }
         drop(data);
@@ -171,11 +172,11 @@
         let data: std::sync::MutexGuard<'_, UnsafeCell<HashMap<u32, Vec<StackFrame>>>> =
             VM_STACKS.lock().unwrap();
         unsafe {
-            let map = &mut *data.get();
+            let map: &mut HashMap<u32, Vec<StackFrame>> = &mut *data.get();
             //println!("before push_frame_data：{:?}",&map);
             let l = map.get_mut(&vm_stack_id).unwrap();
-            //let len = l.len();
-            l.get_mut(0).unwrap().op_stack.push(value);
+            let len = l.len();
+            l.get_mut(len - 1).unwrap().op_stack.push(value);
             //println!("after push_frame_data：{:?}",&map);
         }
         drop(data);

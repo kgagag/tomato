@@ -33,7 +33,7 @@ pub mod class_loader {
             if descriptor_char == ')' {
                 break;
             }
-            info!("descriptor_char:{:?}", &descriptor_char);
+            //info!("descriptor_char:{:?}", &descriptor_char);
             match descriptor_char {
                 'B' => parameters.push(DataType::Byte),
                 'C' => parameters.push(DataType::Char),
@@ -138,7 +138,7 @@ pub mod class_loader {
         let mut user_class_path = String::from("e:/tomato/test/");
         user_class_path.push_str(&name);
         user_class_path.push_str(".class");
-        info!("user class path:{}", user_class_path);
+        //info!("user class path:{}", user_class_path);
         let mut file = fs::File::open(user_class_path).unwrap();
         let mut buffer = Vec::new();
         let _ = file.read_to_end(&mut buffer);
@@ -195,13 +195,13 @@ pub mod class_loader {
 
     fn do_after_load(class: &mut Class) {
         let this_class = class.constant_pool.get(&class.this_class).unwrap();
-        info!("this_class:{:?}", this_class);
+        //info!("this_class:{:?}", this_class);
         // 设置 class_name
         match this_class {
             ConstantPoolInfo::Class(name_index) => {
-                info!("name_index:{:?}", name_index);
+                //info!("name_index:{:?}", name_index);
                 let class_name = class.constant_pool.get(name_index).unwrap();
-                info!("class_name:{:?}", class_name);
+                //info!("class_name:{:?}", class_name);
                 match class_name {
                     ConstantPoolInfo::Utf8(name) => {
                         class.class_name = name.clone();

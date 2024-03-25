@@ -167,7 +167,7 @@ pub mod class_loader {
      * 类加载
      */
     pub fn load_class(name: &String) -> Class {
-        let buffer = get_class(name);
+        let buffer: Vec<u8> = get_class(name);
         let mut cursor = io::Cursor::new(buffer);
         let mut class: Class = Class::new();
         class.magic = get_magic(&mut cursor);

@@ -1,4 +1,6 @@
 pub mod value {
+    use crate::u8c::*;
+
     #[derive(Debug, Clone)]
     pub enum StackFrameValue {
         Byte(i8),
@@ -11,6 +13,37 @@ pub mod value {
         Short(i16),
         Boolean(bool),
         U32(u32),
-        Null
+        Null,
+    }
+
+    pub fn number_to_u32tuple(v: &StackFrameValue) -> (u32, u32){
+        let mut fv: f64 = 0.0;
+        match v {
+            StackFrameValue::Int(data) => {
+                fv = *data as f64;
+            }
+            StackFrameValue::Byte(data) => {
+                fv = *data as f64;
+            }
+            StackFrameValue::Char(data) => {
+                fv = *data as f64;
+            }
+            StackFrameValue::Double(data) => {
+                fv = *data as f64;
+            }
+            StackFrameValue::Float(data) => {
+                fv = *data as f64;
+            }
+            StackFrameValue::Long(data) => {
+                fv = *data as f64;
+            }
+            StackFrameValue::Short(data) => {
+                fv = *data as f64;
+            }
+            _ => {
+                panic!("wrong value type");
+            }
+        }
+       return f64_to_u32_tuple(fv);
     }
 }

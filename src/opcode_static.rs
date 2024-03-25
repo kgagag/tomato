@@ -111,3 +111,4 @@ pub fn getstatic(frame: &mut StackFrame) {
     }
     frame.pc += 3;
 }
+

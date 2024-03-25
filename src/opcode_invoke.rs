@@ -52,15 +52,20 @@ pub fn get_method_for_invoke(frame: &StackFrame) -> Option<&MethodInfo> {
 pub fn invokespecial(frame: &mut StackFrame) {
     let clone_frame = &frame.clone();
     let method = get_method_for_invoke(&clone_frame);
-    let new_frame = init_stack_frame(frame, method.unwrap());
-    push_stack_frame(new_frame);
+    //非native 方法
+    if(method.unwrap().access_flag & 0x0100 == 0){
+        let new_frame = init_stack_frame(frame, method.unwrap(),1);
+        push_stack_frame(new_frame);
+    }else {
+        
+    }
     frame.pc += 3;
 }
 
 pub fn invokevirtual(frame: &mut StackFrame) {
     let clone_frame = &frame.clone();
     let method = get_method_for_invoke(&clone_frame);
-    let mut new_frame = init_stack_frame(frame, method.unwrap());
+    let mut new_frame = init_stack_frame(frame, method.unwrap(),1);
     let v = frame.op_stack.pop();
     match v {
         Some(obj) => {
@@ -78,8 +83,7 @@ pub fn push_stack_frame(mut stack_frame: StackFrame) {
     let data: std::sync::MutexGuard<'_, UnsafeCell<HashMap<u32, Vec<StackFrame>>>> =
         VM_STACKS.lock().unwrap();
     unsafe {
-        // 从 UnsafeCell 中获取 HashMap 的可变引用
-        let map = &mut *data.get();
+        let map: &mut HashMap<u32, Vec<StackFrame>> = &mut *data.get();
         if stack_frame.vm_stack_id == 0 {
             for i in 1..0xFFFFFFFF as u32 {
                 if !map.contains_key(&i) {
@@ -97,4 +101,14 @@ pub fn push_stack_frame(mut stack_frame: StackFrame) {
         }
     }
     drop(data);
+}
+
+
+pub fn invokestatic(frame: &mut StackFrame) {
+    let clone_frame = &frame.clone();
+    let method: Option<&MethodInfo> = get_method_for_invoke(&clone_frame);
+    let mut new_frame = init_stack_frame(frame, method.unwrap(),0);
+    let v = frame.op_stack.pop();
+    push_stack_frame(new_frame);
+    frame.pc += 3;
 }

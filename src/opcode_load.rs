@@ -238,7 +238,6 @@ pub fn dload_0(frame: &mut StackFrame) {
         }
         _=> panic!()
     }
-    frame.op_stack.push(frame.local.get(0).unwrap().clone());
     frame.pc += 1;
 }
 
@@ -258,11 +257,14 @@ pub fn dload_1(frame: &mut StackFrame) {
         }
         _=> panic!()
     }
+    frame.pc += 1;
+
 }
 
 pub fn dload_2(frame: &mut StackFrame) {
     let v1 = frame.local.get(2).unwrap().clone();
     let v2 = frame.local.get(3).unwrap().clone();
+    info!("{:?}",frame);
     match v1 {
         StackFrameValue::U32(u1) =>{
             match v2 {
@@ -275,6 +277,8 @@ pub fn dload_2(frame: &mut StackFrame) {
         }
         _=> panic!()
     }
+    info!("{:?}",frame);
+    frame.pc += 1;
 }
 
 pub fn dload_3(frame: &mut StackFrame) {
@@ -291,6 +295,7 @@ pub fn dload_3(frame: &mut StackFrame) {
         }
         _=> panic!()
     }
+    frame.pc += 1;
 }
 
 

@@ -1,11 +1,13 @@
-use log::*;
-use crate::class::*;
 use crate::class::MethodInfo;
+use crate::class::*;
 use crate::param::param::DataType;
 use crate::runtime_data_area::get_or_load_class;
 use crate::u8c::u8s_to_u16;
-use crate::u8c::u8s_to_u32;
+use crate::u8c::*;
+use crate::value::value::number_to_u32tuple;
+use crate::value::*;
 use crate::value::value::StackFrameValue;
+use log::*;
 use std::mem;
 /**
  * 栈桢
@@ -29,14 +31,20 @@ pub struct StackFrame {
 
     pub code: Vec<u8>,
 
-    pub code_attr:CodeAttribute,
+    pub code_attr: CodeAttribute,
 
     //所属虚拟机栈id
     pub vm_stack_id: u32,
 }
 
 impl StackFrame {
-    pub fn new(class: usize, max_stack: u16, max_locals: u16, code: Vec<u8>,code_attr : CodeAttribute) -> StackFrame {
+    pub fn new(
+        class: usize,
+        max_stack: u16,
+        max_locals: u16,
+        code: Vec<u8>,
+        code_attr: CodeAttribute,
+    ) -> StackFrame {
         let mut stake_frame = StackFrame {
             pc: 0,
             class,
@@ -89,7 +97,6 @@ impl StackFrame {
         }
     }
 
-
     pub fn popf64(&mut self) -> f64 {
         let value = self.op_stack.pop().unwrap();
         match value {
@@ -101,103 +108,84 @@ impl StackFrame {
         }
     }
 
-
     pub fn pop_reference(&mut self) -> u32 {
         let value = self.op_stack.pop().unwrap();
         match value {
-            StackFrameValue::Reference(data) => data ,
+            StackFrameValue::Reference(data) => data,
             _ => {
                 panic!("wrong value type");
             }
         }
     }
-
 }
 
-pub fn init_stack_frame(frame: &mut StackFrame, method_info: &MethodInfo) -> StackFrame {
+pub fn init_stack_frame(
+    frame: &mut StackFrame,
+    method_info: &MethodInfo,
+    start: usize,
+) -> StackFrame {
     let mut new_stack_frame: StackFrame = create_stack_frame(&method_info).unwrap();
     new_stack_frame.vm_stack_id = frame.vm_stack_id;
-    let mut i: usize = 0;
+    let mut i: usize = start;
     if method_info.param.len() > 0 {
         for j in 0..method_info.param.len() {
             let v = frame.op_stack.pop().unwrap();
             let param: &DataType = method_info.param.get(j).unwrap();
             match param {
                 DataType::Byte => {
-                    new_stack_frame.local[i + 1] = v;
+                    new_stack_frame.local[i] = v;
                     i += 1;
                 }
                 DataType::Char => {
-                    new_stack_frame.local[i + 1] = v;
+                    new_stack_frame.local[i] = v;
                     i += 1;
                 }
                 DataType::Array {
                     element_type,
                     depth,
                 } => {
-                    new_stack_frame.local[i + 1] = v;
+                    new_stack_frame.local[i] = v;
                     i += 1;
                 }
                 DataType::Boolean => {
-                    new_stack_frame.local[i + 1] = v;
+                    new_stack_frame.local[i] = v;
                     i += 1;
                 }
                 DataType::Double => {
-                    let bytes: [u8; 8] = unsafe {
-                        let mut bytes: [u8; 8] = [0, 0, 0, 0, 0, 0, 0, 0];
-                        let f: f64 = 0.0;
-                        match v {
-                            StackFrameValue::Double(value) => {
-                                bytes = mem::transmute(value);
-                            }
-                            _ => {
-                                panic!("wrong value type");
-                            }
-                        }
-                        bytes
-                    };
+                    info!("{:?}", v);
+                    let u32tuple = number_to_u32tuple(&v);
+                    new_stack_frame.local[i] =
+                        StackFrameValue::U32(u32tuple.0);
                     new_stack_frame.local[i + 1] =
-                        StackFrameValue::Int(u8s_to_u32(&bytes[0..4]) as i32);
-                    new_stack_frame.local[i + 2] =
-                        StackFrameValue::Int(u8s_to_u32(&bytes[4..8]) as i32);
+                        StackFrameValue::U32(u32tuple.1);
                     i += 2;
                 }
                 DataType::Float => {
-                    new_stack_frame.local[i + 1] = v;
+                    new_stack_frame.local[i] = v;
                     i += 1;
                 }
                 DataType::Int => {
-                    new_stack_frame.local[i + 1] = v;
+                    new_stack_frame.local[i] = v;
                     i += 1;
                 }
                 DataType::Long => {
-                    let bytes: [u8; 8] = unsafe {
-                        let bytes: [u8; 8];
-                        match v {
-                            StackFrameValue::Long(value) => {
-                                bytes = mem::transmute(value);
-                            }
-                            _ => {
-                                panic!("wrong value type");
-                            }
-                        }
-                        bytes
-                    };
+                    info!("{:?}", v);
+                    let u32tuple = number_to_u32tuple(&v);
+                    new_stack_frame.local[i] =
+                        StackFrameValue::U32(u32tuple.0);
                     new_stack_frame.local[i + 1] =
-                        StackFrameValue::Int(u8s_to_u32(&bytes[0..4]) as i32);
-                    new_stack_frame.local[i + 2] =
-                        StackFrameValue::Int(u8s_to_u32(&bytes[4..8]) as i32);
+                        StackFrameValue::U32(u32tuple.1);
                     i += 2;
                 }
                 DataType::Reference(_string) => {
-                    new_stack_frame.local[i + 1] = v;
+                    new_stack_frame.local[i] = v;
                     i += 1;
                 }
                 DataType::Short => {
-                    new_stack_frame.local[i + 1] = v;
+                    new_stack_frame.local[i] = v;
                     i += 1;
                 }
-                _=> panic!()
+                _ => panic!(),
             }
         }
     }
@@ -209,13 +197,13 @@ pub fn create_stack_frame(method_info: &MethodInfo) -> Option<StackFrame> {
     for attr in &method_info.attributes {
         match attr {
             AttributeInfo::Code(code_attr) => {
-                    return Some(StackFrame::new(
-                        class.id,
-                        code_attr.max_stack,
-                        code_attr.max_locals,
-                        code_attr.code.clone(),
-                        code_attr.clone()
-                    ));
+                return Some(StackFrame::new(
+                    class.id,
+                    code_attr.max_stack,
+                    code_attr.max_locals,
+                    code_attr.code.clone(),
+                    code_attr.clone(),
+                ));
             }
         }
     }

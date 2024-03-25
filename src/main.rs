@@ -28,6 +28,8 @@ pub mod opcode_static;
 pub mod opcode_field;
 pub mod opcode_new;
 pub mod opcode_invoke;
+pub mod native;
+pub mod native_io;
 use std::cell::UnsafeCell;
 use crate::class::ConstantPoolInfo;
 use crate::stack_frame::StackFrame;
@@ -63,7 +65,7 @@ fn main() {
         .format_timestamp(Some(env_logger::TimestampPrecision::Millis))
         .format_module_path(true)
         .init();
-    run(String::from("Test7"));
+    run(String::from("Test11"));
 }
 
 /***

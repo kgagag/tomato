@@ -8,7 +8,7 @@ use log::{error, info, warn};
 use std::env;
 use crate::u8c::u8s_to_u16;
 pub fn bipush(frame: &mut StackFrame) {
-    let u = frame.code[frame.pc + 1];
+    let u: u8 = frame.code[frame.pc + 1];
     frame.op_stack.push(StackFrameValue::Byte(u as i8));
     frame.pc += 2;
 }

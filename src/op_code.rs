@@ -29,7 +29,7 @@ pub mod op_code {
             let mut stack_frame = vm_stack.get_mut(len - 1).unwrap();
             while stack_frame.pc < stack_frame.code.len() {
                 let code = stack_frame.code[stack_frame.pc];
-                error!("{:?}",stack_frame.op_stack);
+                info!("{:#x}",code);
                 match code {
                     0x00 => nop(stack_frame),
                     0x01 => aconst_null(stack_frame),
@@ -215,7 +215,7 @@ pub mod op_code {
                     0xb5 => putfield(stack_frame),
                     0xb6 => invokevirtual(stack_frame),
                     0xb7 => invokespecial(stack_frame),
-                    // 0xb8 => invokestatic(stack_frame),
+                    0xb8 => invokestatic(stack_frame),
                     // 0xb9 => invokeinterface(stack_frame),
                     // 0xba => invokedynamic(stack_frame),
                     0xbb => _new(stack_frame),

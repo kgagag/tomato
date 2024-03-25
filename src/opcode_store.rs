@@ -4,7 +4,10 @@
     use crate::value::value::StackFrameValue;
     extern crate log;
     extern crate env_logger;
+    use crate::value::*;
     use log::{error, info, warn};
+
+    use self::value::number_to_u32tuple;
 
 
     pub fn fstore(frame: &mut StackFrame) {
@@ -122,107 +125,51 @@
 
 
     pub fn dstore_0(frame: &mut StackFrame) {
-        let v = frame.op_stack.pop().unwrap();
-        match v {
-            StackFrameValue::Double(d) =>{
-              let vs = f64_to_u32_tuple(d);
-              frame.local[0] = StackFrameValue::U32(vs.0);
-              frame.local[1] = StackFrameValue::U32(vs.1);
-            }
-            _=> panic!("wrong data type"),
-        }
+        set_u64_frame_local(frame,0);
         frame.pc += 1;
     }
 
     pub fn dstore_1(frame: &mut StackFrame) {
-        let v = frame.op_stack.pop().unwrap();
-        match v {
-            StackFrameValue::Double(d) =>{
-                let vs = f64_to_u32_tuple(d);
-                frame.local[1] = StackFrameValue::U32(vs.0);
-                frame.local[2] = StackFrameValue::U32(vs.1);
-            }
-            _=> panic!("wrong data type"),
-        }
+        set_u64_frame_local(frame,1);
         frame.pc += 1;
     }
 
     pub fn dstore_2(frame: &mut StackFrame) {
-        let v = frame.op_stack.pop().unwrap();
-        match v {
-            StackFrameValue::Double(d) =>{
-                let vs = f64_to_u32_tuple(d);
-                frame.local[2] = StackFrameValue::U32(vs.0);
-                frame.local[3] = StackFrameValue::U32(vs.1);
-            }
-            _=> panic!("wrong data type"),
-        }
+        set_u64_frame_local(frame,2);
         frame.pc += 1;
     }
 
     pub fn dstore_3(frame: &mut StackFrame) {
-        let v = frame.op_stack.pop().unwrap();
-        match v {
-            StackFrameValue::Double(d) =>{
-                let vs = f64_to_u32_tuple(d);
-                frame.local[3] = StackFrameValue::U32(vs.0);
-                frame.local[4] = StackFrameValue::U32(vs.1);
-            }
-            _=> panic!("wrong data type"),
-        }
+        set_u64_frame_local(frame,3);
         frame.pc += 1;
+    }
+
+
+    fn set_u64_frame_local(frame: &mut StackFrame,i:usize){
+        let v = frame.op_stack.pop().unwrap();
+        let u32tuple = number_to_u32tuple(&v);
+        frame.local[i] = StackFrameValue::U32(u32tuple.0);
+        frame.local[i  + 1] = StackFrameValue::U32(u32tuple.1);
     }
 
 
     pub fn lstore_0(frame: &mut StackFrame) {
-        let v = frame.op_stack.pop().unwrap();
-        match v {
-            StackFrameValue::Long(d) =>{
-              let vs = i64_to_u32_tuple(d);
-              frame.local[0] = StackFrameValue::U32(vs.0);
-              frame.local[1] = StackFrameValue::U32(vs.1);
-            }
-            _=> panic!("wrong data type"),
-        }
+        set_u64_frame_local(frame,0);
         frame.pc += 1;
     }
 
     pub fn lstore_1(frame: &mut StackFrame) {
-        let v = frame.op_stack.pop().unwrap();
-        match v {
-            StackFrameValue::Long(d) =>{
-                let vs = i64_to_u32_tuple(d);
-                frame.local[1] = StackFrameValue::U32(vs.0);
-                frame.local[2] = StackFrameValue::U32(vs.1);
-            }
-            _=> panic!("wrong data type"),
-        }
+        set_u64_frame_local(frame,1);
         frame.pc += 1;
     }
 
     pub fn lstore_2(frame: &mut StackFrame) {
-        let v = frame.op_stack.pop().unwrap();
-        match v {
-            StackFrameValue::Long(d) =>{
-                let vs = i64_to_u32_tuple(d);
-                frame.local[2] = StackFrameValue::U32(vs.0);
-                frame.local[3] = StackFrameValue::U32(vs.1);
-            }
-            _=> panic!("wrong data type"),
-        }
+        set_u64_frame_local(frame,2);
         frame.pc += 1;
     }
 
     pub fn lstore_3(frame: &mut StackFrame) {
-        let v = frame.op_stack.pop().unwrap();
-        match v {
-            StackFrameValue::Long(d) =>{
-                let vs = i64_to_u32_tuple(d);
-                frame.local[3] = StackFrameValue::U32(vs.0);
-                frame.local[4] = StackFrameValue::U32(vs.1);
-            }
-            _=> panic!("wrong data type"),
-        }
+        set_u64_frame_local(frame,3);
         frame.pc += 1;
     }
 

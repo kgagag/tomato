@@ -24,7 +24,8 @@ pub fn aload_3(frame: &mut StackFrame) {
 }
 
 pub fn aload_0(frame: &mut StackFrame) {
-    frame.op_stack.push(frame.local.get(0).unwrap().clone());
+    let v =  frame.local.get(0).unwrap().clone();
+    frame.op_stack.push(v);
     frame.pc += 1;
 }
 

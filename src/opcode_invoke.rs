@@ -55,7 +55,16 @@ pub fn invokespecial(frame: &mut StackFrame) {
     let clone_frame = &frame.clone();
     let method = get_method_for_invoke(&clone_frame);
     //非native 方法
-    let new_frame = init_stack_frame(frame, method.unwrap(),1);
+    let mut new_frame = init_stack_frame(frame, method.unwrap(),1);
+    let v = frame.op_stack.pop();
+    match v {
+        Some(obj) => {
+            new_frame.local[0] = obj;
+        }
+        None => {
+            panic!("error");
+        }
+    }
     push_stack_frame(new_frame);
     frame.pc += 3;
 }

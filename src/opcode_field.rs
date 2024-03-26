@@ -13,10 +13,7 @@ pub fn putfield(frame: &mut StackFrame) {
     let this_class = get_or_load_class(&class_name);
     let field_ref: &ConstantPoolInfo = this_class.constant_pool.get(&(index)).unwrap();
     let value: StackFrameValue = frame.op_stack.pop().unwrap();
-    info!("{:?}",value);
-
     let object: StackFrameValue = frame.op_stack.pop().unwrap();
-    info!("{:?}",object);
     match field_ref {
         ConstantPoolInfo::Fieldref(class_index, name_and_type_index) => {
             let class_ref: &ConstantPoolInfo = this_class.constant_pool.get(&class_index).unwrap();

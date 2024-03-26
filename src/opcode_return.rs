@@ -6,7 +6,7 @@ use crate::value::value::StackFrameValue;
 use crate::value::value::*;
 extern crate env_logger;
 extern crate log;
-use log::{error, info, warn};
+use log::{error, info,  warn};
 pub fn _return(frame: &mut StackFrame) {
     pop_stack_frame(frame.vm_stack_id);
     frame.pc += 1;
@@ -23,7 +23,7 @@ fn log(frame: &mut StackFrame,cursor : u64){
 
 pub fn ireturn(frame: &mut StackFrame) {
     let v: StackFrameValue = frame.op_stack.pop().unwrap();
-    warn!("ireturn result: {:?}", &v);
+     //warn!!("ireturn result: {:?}", &v);
     //日志埋点
     log(frame,number_u64(&v));
     pop_stack_frame(frame.vm_stack_id);
@@ -34,7 +34,7 @@ pub fn ireturn(frame: &mut StackFrame) {
 
 pub fn lreturn(frame: &mut StackFrame) {
     let v: StackFrameValue = frame.op_stack.pop().unwrap();
-    warn!("ireturn result: {:?}", &v);
+     //warn!!("ireturn result: {:?}", &v);
     pop_stack_frame(frame.vm_stack_id);
     push_frame_data(frame.vm_stack_id, v);
     //将返回值传给上一个栈帧
@@ -43,7 +43,7 @@ pub fn lreturn(frame: &mut StackFrame) {
 
 pub fn freturn(frame: &mut StackFrame) {
     let v: StackFrameValue = frame.op_stack.pop().unwrap();
-    warn!("ireturn result: {:?}", &v);
+     //warn!!("ireturn result: {:?}", &v);
     pop_stack_frame(frame.vm_stack_id);
     push_frame_data(frame.vm_stack_id, v);
     //将返回值传给上一个栈帧
@@ -52,7 +52,7 @@ pub fn freturn(frame: &mut StackFrame) {
 
 pub fn dreturn(frame: &mut StackFrame) {
     let v: StackFrameValue = frame.op_stack.pop().unwrap();
-    warn!("ireturn result: {:?}", &v);
+     //warn!!("ireturn result: {:?}", &v);
     pop_stack_frame(frame.vm_stack_id);
     push_frame_data(frame.vm_stack_id, v);
     //将返回值传给上一个栈帧
@@ -61,7 +61,7 @@ pub fn dreturn(frame: &mut StackFrame) {
 
 pub fn areturn(frame: &mut StackFrame) {
     let v: StackFrameValue = frame.op_stack.pop().unwrap();
-    warn!("ireturn result: {:?}", &v);
+     //warn!!("ireturn result: {:?}", &v);
     pop_stack_frame(frame.vm_stack_id);
     push_frame_data(frame.vm_stack_id, v);
     //将返回值传给上一个栈帧

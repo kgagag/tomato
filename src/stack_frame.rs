@@ -152,7 +152,7 @@ pub fn init_stack_frame(
                     i += 1;
                 }
                 DataType::Double => {
-                    info!("{:?}", v);
+                   // info!("{:?}", v);
                     let u32tuple = number_to_u32tuple(&v);
                     new_stack_frame.local[i] =
                         StackFrameValue::U32(u32tuple.0);
@@ -169,7 +169,7 @@ pub fn init_stack_frame(
                     i += 1;
                 }
                 DataType::Long => {
-                    info!("{:?}", v);
+                   // info!("{:?}", v);
                     let u32tuple = number_to_u32tuple(&v);
                     new_stack_frame.local[i] =
                         StackFrameValue::U32(u32tuple.0);

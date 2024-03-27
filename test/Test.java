@@ -6,9 +6,13 @@ public class Test {
         new Test2().test();
         // 两个double 相加
         new Test3().test();
+        // for 循环
         new Test4().test();
+        // while 循环
         new Test5().test();
-        new Test6().test();
+        // 修改成员变量
         new Test7().test();
+        // 递归
+        new Test6().test();
     }
 }

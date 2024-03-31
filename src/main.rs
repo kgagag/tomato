@@ -32,32 +32,19 @@ pub mod native;
 pub mod native_io;
 use std::cell::UnsafeCell;
 use crate::class::ConstantPoolInfo;
-use crate::stack_frame::StackFrame;
-use crate::stack_frame::create_stack_frame;
+use crate::stack_frame::*;
 use crate::runtime_data_area::get_or_load_class;
 use std::collections::HashMap;
 use crate::op_code::op_code::do_opcode;
 use crate::runtime_data_area::VM_STACKS;
 extern crate log;
 extern crate env_logger;
+use crate::op_code::op_code::*;
 use std::env;
 use log::{error, info, warn};
 use crate::opcode_invoke::*;
-pub fn execute(){
-    let data: std::sync::MutexGuard<'_, UnsafeCell<HashMap<u32, Vec<StackFrame>>>> = VM_STACKS.lock().unwrap();
-    unsafe {
-        // 从 UnsafeCell 中获取 HashMap 的可变引用
-        let map = &mut *data.get();
-        drop(data);
-        for (_vm_stack_id, stack_frames) in map {
-            //这里可以启动一个线程
-            for _i in 0 .. stack_frames.len() as usize{
-                do_opcode(stack_frames);
-            }
-        }
-        
-    }
-}
+
+
 
 fn main() {
     env::set_var("RUST_LOG", "DEBUG");

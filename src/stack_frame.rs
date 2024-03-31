@@ -8,7 +8,11 @@ use crate::value::value::number_to_u32tuple;
 use crate::value::*;
 use crate::value::value::StackFrameValue;
 use log::*;
+use std::collections::HashMap;
 use std::mem;
+use std::cell::UnsafeCell;
+use std::sync::Mutex;
+use crate::runtime_data_area::VM_STACKS;
 /**
  * 栈桢
  */
@@ -192,6 +196,7 @@ pub fn init_stack_frame(
     return new_stack_frame;
 }
 
+
 pub fn create_stack_frame(method_info: &MethodInfo) -> Option<StackFrame> {
     let class = get_or_load_class(&method_info.class_name);
     for attr in &method_info.attributes {
@@ -209,3 +214,47 @@ pub fn create_stack_frame(method_info: &MethodInfo) -> Option<StackFrame> {
     }
     return None;
 }
+
+pub fn create_stack_frame_with_class(method_info: &MethodInfo,class:&Class) -> Option<StackFrame> {
+    for attr in &method_info.attributes {
+        match attr {
+            AttributeInfo::Code(code_attr) => {
+                return Some(StackFrame::new(
+                    class.id,
+                    code_attr.max_stack,
+                    code_attr.max_locals,
+                    code_attr.code.clone(),
+                    code_attr.clone(),
+                ));
+            }
+        }
+    }
+    return None;
+}
+
+pub fn push_stack_frame(mut stack_frame: StackFrame) {
+    let data: std::sync::MutexGuard<'_, UnsafeCell<HashMap<u32, Vec<StackFrame>>>> =
+        VM_STACKS.lock().unwrap();
+    unsafe {
+        let map: &mut HashMap<u32, Vec<StackFrame>> = &mut *data.get();
+        if stack_frame.vm_stack_id == 0 {
+            for i in 0x1..0xFFFFFFFF as u32 {
+                if !map.contains_key(&i) {
+                    stack_frame.vm_stack_id = i;
+                    let mut stack_frames: Vec<StackFrame> = Vec::new();
+                    stack_frames.push(stack_frame);
+                    map.insert(i, stack_frames);
+                    break;
+                }
+            }
+        } else {
+            let frames = map.get_mut(&stack_frame.vm_stack_id).unwrap();
+            //info!("before:{:?}", frames);
+            frames.push(stack_frame);
+            //info!("after:{:?}", frames);
+        }
+    }
+    drop(data);
+}
+
+

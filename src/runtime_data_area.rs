@@ -114,6 +114,24 @@
         }
     }
 
+
+    pub fn init_class_id<'a>( class: &mut Class) -> &'a mut Class {
+        let data: std::sync::MutexGuard<'_, UnsafeCell<HashMap<String, Class>>> =
+            CLASS_DATA.lock().unwrap();
+        unsafe {
+            let map = &mut *data.get();
+            let class_name = class.class_name.clone();
+            if  !map.contains_key(&class.class_name)  {
+                class.id = map.len() + 1 as usize;
+                map.insert(class_name.clone(), class.clone());
+                add_id_class(map.len(), class_name.clone());
+            }
+            drop(data);
+            return map.get_mut(&class_name).unwrap();
+        }
+    }
+
+
     pub fn add_id_class(class_id: usize, class_name: String) {
         let data: std::sync::MutexGuard<'_, UnsafeCell<HashMap<usize, String>>> =
             CLASS_ID_DATA.lock().unwrap();
@@ -129,8 +147,9 @@
             CLASS_ID_DATA.lock().unwrap();
         unsafe {
             let map = &mut *data.get();
+            let class_name =  map.get(class_id).unwrap().clone();
             drop(data);
-            return map.get(class_id).unwrap().clone();
+            return class_name;
         }
     }
 
@@ -185,3 +204,4 @@
         drop(data);
     }
 
+   

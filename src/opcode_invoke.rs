@@ -6,8 +6,7 @@ use crate::runtime_data_area::get_class_name;
 use crate::runtime_data_area::get_method_from_pool;
 use crate::runtime_data_area::get_or_load_class;
 use crate::runtime_data_area::VM_STACKS;
-use crate::stack_frame::init_stack_frame;
-use crate::stack_frame::StackFrame;
+use crate::stack_frame::*;
 use crate::u8c::u8s_to_u16;
 use std::cell::UnsafeCell;
 use std::collections::HashMap;
@@ -53,6 +52,8 @@ pub fn get_method_for_invoke(frame: &StackFrame) -> Option<&MethodInfo> {
 //对象的初始化方法
 pub fn invokespecial(frame: &mut StackFrame) {
     let clone_frame = &frame.clone();
+        frame.pc += 3;
+
     let method = get_method_for_invoke(&clone_frame);
     //非native 方法
     let mut new_frame = init_stack_frame(frame, method.unwrap(), 1);
@@ -66,7 +67,6 @@ pub fn invokespecial(frame: &mut StackFrame) {
         }
     }
     push_stack_frame(new_frame);
-    frame.pc += 3;
 }
 
 pub fn invokevirtual(frame: &mut StackFrame) {
@@ -99,30 +99,7 @@ pub fn get_frames(vm_stack_id: &u32) -> &Vec<StackFrame> {
     }
 }
 
-pub fn push_stack_frame(mut stack_frame: StackFrame) {
-    let data: std::sync::MutexGuard<'_, UnsafeCell<HashMap<u32, Vec<StackFrame>>>> =
-        VM_STACKS.lock().unwrap();
-    unsafe {
-        let map: &mut HashMap<u32, Vec<StackFrame>> = &mut *data.get();
-        if stack_frame.vm_stack_id == 0 {
-            for i in 0x1..0xFFFFFFFF as u32 {
-                if !map.contains_key(&i) {
-                    stack_frame.vm_stack_id = i;
-                    let mut stack_frames: Vec<StackFrame> = Vec::new();
-                    stack_frames.push(stack_frame);
-                    map.insert(i, stack_frames);
-                    break;
-                }
-            }
-        } else {
-            let frames = map.get_mut(&stack_frame.vm_stack_id).unwrap();
-            //info!("before:{:?}", frames);
-            frames.push(stack_frame);
-            //info!("after:{:?}", frames);
-        }
-    }
-    drop(data);
-}
+
 
 pub fn invokestatic(frame: &mut StackFrame) {
     let clone_frame = &frame.clone();

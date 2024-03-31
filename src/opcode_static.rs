@@ -90,7 +90,7 @@ pub fn getstatic(frame: &mut StackFrame) {
                                                     .clone()
                                                     == field_name.clone()
                                                 {
-                                                    error!("{:?}",field);
+                                                    error!("{:?}",field.value);
                                                     frame.op_stack.push(field.value.clone());
                                                 }
                                             }

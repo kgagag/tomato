@@ -4,6 +4,8 @@ pub mod class_loader {
     use crate::class::*;
     use crate::param::param::DataType;
     use crate::runtime_data_area::add_method;
+    use crate::runtime_data_area::get_or_load_class;
+    use crate::runtime_data_area::init_class_id;
     use crate::u8c::u8s_to_u16;
     use crate::u8c::u8s_to_u32;
     use byteorder::{BigEndian, ReadBytesExt};
@@ -18,6 +20,8 @@ pub mod class_loader {
     use std::io::Read;
     use zip::read::{ZipArchive, ZipFile};
     use crate::value::value::*;
+    use crate::stack_frame::*;
+    use crate::op_code::op_code::*;
     fn parse_descriptor(
         descriptor: &Vec<u8>,
     ) -> Result<Option<Vec<DataType>>, String> {
@@ -186,12 +190,43 @@ pub mod class_loader {
         class.method_info = get_method(&class.constant_pool, class.methods_count, &mut cursor);
         class.attributes_count = get_attribute_count(&mut cursor);
         class.attribute_info =
-            get_attribute(&class.constant_pool, class.attributes_count, &mut cursor);
-
+        get_attribute(&class.constant_pool, class.attributes_count, &mut cursor);
         do_after_load(&mut class);
-
+       // init(&mut class,"<clinit>".to_string());
+        // init(&class,"<init>".to_string());
         return class;
     }
+
+    /**
+     * 类加载完成之后执行初始化静态方法
+     */
+    pub fn init(clazz:&mut Class,method_name: String) {
+        //let class= get_or_load_class(&clazz.class_name);
+        let class = init_class_id( clazz);
+        //创建VM
+        //找到main方法
+        for i in 0..* &class.method_info.len() {
+            let method_info = &class.method_info[i];
+            //let methond_index = (method_info.name_index as usize) - 1;
+            let u8_vec = class.constant_pool.get(&method_info.name_index).unwrap();
+            match u8_vec {
+                ConstantPoolInfo::Utf8(name) =>{
+                    //println!("method:{}", &name);
+                    //info!("{}", name);
+                    //创建虚拟机栈，并创建第一个栈帧
+                    if name == &method_name {
+                        let stack_frame = create_stack_frame_with_class(method_info,class).unwrap();
+                        info!("{:?}",stack_frame);
+                        push_stack_frame(stack_frame);
+                        execute();
+                    }
+                }
+                _=> panic!("wrong class data")
+            }
+        }
+    }
+
+
 
     fn do_after_load(class: &mut Class) {
         let this_class = class.constant_pool.get(&class.this_class).unwrap();

@@ -116,7 +116,8 @@ pub fn iload_0(frame: &mut StackFrame) {
 
 
 pub fn iload_1(frame: &mut StackFrame) {
-    frame.op_stack.push(frame.local.get(1).unwrap().clone());
+    let v = frame.local.get(1).unwrap().clone();
+    frame.op_stack.push(v);
     frame.pc += 1;
 }
 

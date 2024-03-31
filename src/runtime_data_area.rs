@@ -1,6 +1,7 @@
     use std::cell::UnsafeCell;
     use std::sync::Mutex;
     use lazy_static::lazy_static;
+    use log::info;
     use std::collections::HashMap;
     use crate::array::array::Array;
     use crate::object::Object;
@@ -162,8 +163,10 @@
             VM_STACKS.lock().unwrap();
         unsafe {
             let map = &mut *data.get();
-            //println!("before pop_frame_data：{:?}",&map);
+            //info!("{:#?}",map);
+           // println!("before pop_frame_data：{:?}",&map);
             map.get_mut(&vm_stack_id).unwrap().pop();
+          //   println!("before pop_frame_data：{:?}",&map);
         }
         drop(data);
     }

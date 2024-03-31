@@ -1,6 +1,4 @@
 pub mod op_code {
-    use std::f32::consts::E;
-
     use crate::stack_frame::StackFrame;
     extern crate env_logger;
     extern crate log;
@@ -26,6 +24,7 @@ pub mod op_code {
     use log::{error, info, warn};
 
     pub fn do_opcode(vm_stack: &mut Vec<StackFrame>) {
+
         while vm_stack.len() > 0 {
             let mut stack_frame = vm_stack.last_mut().unwrap();
             //info!("{:?}",stack_frame);

@@ -55,7 +55,7 @@ pub fn invokespecial(frame: &mut StackFrame) {
     let clone_frame = &frame.clone();
     let method = get_method_for_invoke(&clone_frame);
     //非native 方法
-    let mut new_frame = init_stack_frame(frame, method.unwrap(),1);
+    let mut new_frame = init_stack_frame(frame, method.unwrap(), 1);
     let v = frame.op_stack.pop();
     match v {
         Some(obj) => {
@@ -72,8 +72,8 @@ pub fn invokespecial(frame: &mut StackFrame) {
 pub fn invokevirtual(frame: &mut StackFrame) {
     let clone_frame = &frame.clone();
     let method = get_method_for_invoke(&clone_frame);
-    //info!("{:?}",method);
-    let mut new_frame = init_stack_frame(frame, method.unwrap(),1);
+    //info!("{:?}", method.unwrap().method_name);
+    let mut new_frame = init_stack_frame(frame, method.unwrap(), 1);
     let v = frame.op_stack.pop();
     match v {
         Some(obj) => {
@@ -83,8 +83,20 @@ pub fn invokevirtual(frame: &mut StackFrame) {
             panic!("error");
         }
     }
-    push_stack_frame(new_frame);
     frame.pc += 3;
+    push_stack_frame(new_frame);
+}
+
+pub fn get_frames(vm_stack_id: &u32) -> &Vec<StackFrame> {
+    let data: std::sync::MutexGuard<'_, UnsafeCell<HashMap<u32, Vec<StackFrame>>>> =
+        VM_STACKS.lock().unwrap();
+    unsafe {
+        let map: &mut HashMap<u32, Vec<StackFrame>> = &mut *data.get();
+
+        drop(data);
+
+        return map.get(vm_stack_id).unwrap();
+    }
 }
 
 pub fn push_stack_frame(mut stack_frame: StackFrame) {
@@ -93,7 +105,7 @@ pub fn push_stack_frame(mut stack_frame: StackFrame) {
     unsafe {
         let map: &mut HashMap<u32, Vec<StackFrame>> = &mut *data.get();
         if stack_frame.vm_stack_id == 0 {
-            for i in 1..0xFFFFFFFF as u32 {
+            for i in 0x1..0xFFFFFFFF as u32 {
                 if !map.contains_key(&i) {
                     stack_frame.vm_stack_id = i;
                     let mut stack_frames: Vec<StackFrame> = Vec::new();
@@ -103,20 +115,20 @@ pub fn push_stack_frame(mut stack_frame: StackFrame) {
                 }
             }
         } else {
-            map.get_mut(&stack_frame.vm_stack_id)
-                .unwrap()
-                .push(stack_frame);
+            let frames = map.get_mut(&stack_frame.vm_stack_id).unwrap();
+            //info!("before:{:?}", frames);
+            frames.push(stack_frame);
+            //info!("after:{:?}", frames);
         }
     }
     drop(data);
 }
 
-
 pub fn invokestatic(frame: &mut StackFrame) {
     let clone_frame = &frame.clone();
     let method: Option<&MethodInfo> = get_method_for_invoke(&clone_frame);
-    let mut new_frame = init_stack_frame(frame, method.unwrap(),0);
-    let v = frame.op_stack.pop();
+    let new_frame = init_stack_frame(frame, method.unwrap(), 0);
+    //let v = frame.op_stack.pop();
     push_stack_frame(new_frame);
     frame.pc += 3;
 }

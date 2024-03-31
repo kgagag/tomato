@@ -2,7 +2,7 @@ public class Test6 {
     int a = 0;
 
     public void add(int i){
-        if(i >= 100){
+        if(i >= 3){
             return;
         }
         a += i;

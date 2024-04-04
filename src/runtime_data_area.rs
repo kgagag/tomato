@@ -147,15 +147,15 @@
             CLASS_ID_DATA.lock().unwrap();
         unsafe {
             let map = &mut *data.get();
-            let class_name =  map.get(class_id).unwrap().clone();
             drop(data);
+            let class_name =  map.get(class_id).unwrap().clone();
             return class_name;
         }
     }
 
 
     pub fn add_method(method_info :MethodInfo) {
-        let data: std::sync::MutexGuard<'_, UnsafeCell<HashMap<String, MethodInfo>>> =
+        let data =
         METHOD_DATA.lock().unwrap();
         unsafe {
             let key = format!("{}{}{}{}{}", method_info.class_name,".", method_info.method_name,".", method_info.descriptor);
@@ -166,8 +166,7 @@
     }
 
     pub fn get_method_from_pool<'a>(class_name: String,method_name:String,descriptor :String) ->&'a MethodInfo {
-        let data: std::sync::MutexGuard<'_, UnsafeCell<HashMap<String, MethodInfo>>> =
-        METHOD_DATA.lock().unwrap();
+        let data =METHOD_DATA.lock().unwrap();
         unsafe {
             let key = format!("{}{}{}{}{}", class_name,".", method_name,".", descriptor);
             let map = &mut *data.get();
@@ -178,8 +177,7 @@
 
 
     pub fn pop_stack_frame(vm_stack_id: u32) {
-        let data: std::sync::MutexGuard<'_, UnsafeCell<HashMap<u32, Vec<StackFrame>>>> =
-            VM_STACKS.lock().unwrap();
+        let data= VM_STACKS.lock().unwrap();
         unsafe {
             let map = &mut *data.get();
             //info!("{:#?}",map);

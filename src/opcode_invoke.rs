@@ -14,40 +14,51 @@ use std::collections::HashMap;
 pub fn get_method_for_invoke(frame: &StackFrame) -> Option<&MethodInfo> {
     let class_name = get_class_name(&frame.class);
     let this_class = get_or_load_class(&class_name);
-    if let ConstantPoolInfo::Methodref(class_index, name_and_type_index) = &this_class
+
+    // 使用 match 代替 if let 以减少嵌套，并处理 unwrap 导致的潜在 panic
+    let (class_index, name_and_type_index) = match this_class
         .constant_pool
-        .get(&u8s_to_u16(&frame.code[(frame.pc + 1)..(frame.pc + 3)]))
-        .unwrap()
-    {
-        if let ConstantPoolInfo::Class(name_index) =
-            &this_class.constant_pool.get(&class_index).unwrap()
-        {
-            if let ConstantPoolInfo::Utf8(class_name) =
-                &this_class.constant_pool.get(&name_index).unwrap()
-            {
-                let target_class = get_or_load_class(&class_name);
-                if let ConstantPoolInfo::NameAndType(name_index, descriptor_index) =
-                    &this_class.constant_pool.get(&name_and_type_index).unwrap()
-                {
-                    if let ConstantPoolInfo::Utf8(method_name) =
-                        &this_class.constant_pool.get(&name_index).unwrap()
-                    {
-                        if let ConstantPoolInfo::Utf8(descriptor) =
-                            &this_class.constant_pool.get(&descriptor_index).unwrap()
-                        {
-                            return Some(get_method_from_pool(
-                                target_class.class_name.clone(),
-                                method_name.clone(),
-                                descriptor.clone(),
-                            ));
-                        }
-                    }
-                }
-            }
-        }
-    }
-    None
+        .get(&u8s_to_u16(&frame.code[(frame.pc + 1)..(frame.pc + 3)])) {
+            Some(ConstantPoolInfo::Methodref(class_index, name_and_type_index)) => (class_index, name_and_type_index),
+            _ => return None,
+        };
+
+    // 通过链式调用减少嵌套
+    let class_name = this_class.constant_pool.get(class_index)
+        .and_then(|cp_info| match cp_info {
+            ConstantPoolInfo::Class(name_index) => this_class.constant_pool.get(name_index),
+            _ => None,
+        })
+        .and_then(|name_info| match name_info {
+            ConstantPoolInfo::Utf8(class_name) => Some(class_name),
+            _ => None,
+        });
+
+    let target_class = match class_name {
+        Some(class_name) => get_or_load_class(class_name),
+        None => return None,
+    };
+
+    // 继续减少嵌套并简化逻辑
+    let (method_name, descriptor) = match this_class.constant_pool.get(name_and_type_index) {
+        Some(ConstantPoolInfo::NameAndType(name_index, descriptor_index)) => {
+            let method_name = match this_class.constant_pool.get(name_index) {
+                Some(ConstantPoolInfo::Utf8(name)) => name,
+                _ => return None,
+            };
+            let descriptor = match this_class.constant_pool.get(descriptor_index) {
+                Some(ConstantPoolInfo::Utf8(desc)) => desc,
+                _ => return None,
+            };
+            (method_name, descriptor)
+        },
+        _ => return None,
+    };
+
+    // 最终提取方法信息
+    Some(get_method_from_pool(target_class.class_name.clone(), method_name.clone(), descriptor.clone()))
 }
+
 
 //对象的初始化方法
 pub fn invokespecial(frame: &mut StackFrame) {
@@ -92,9 +103,6 @@ pub fn get_frames(vm_stack_id: &u32) -> &Vec<StackFrame> {
         VM_STACKS.lock().unwrap();
     unsafe {
         let map: &mut HashMap<u32, Vec<StackFrame>> = &mut *data.get();
-
-        drop(data);
-
         return map.get(vm_stack_id).unwrap();
     }
 }

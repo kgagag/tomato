@@ -27,7 +27,9 @@ pub fn putstatic(frame: &mut StackFrame) {
                 if let ConstantPoolInfo::Utf8(field_name) = field_name_utf8 {
                     for field in target_class.field_info.iter_mut() {
                         if &field.field_name == field_name {
+                           // info!("{:?}",field);
                             field.value = frame.op_stack.pop().expect("Stack underflow");
+                           // info!("{:?}",field);
                             break;
                         }
                     }
@@ -68,7 +70,7 @@ pub fn getstatic(frame: &mut StackFrame) {
                 if let ConstantPoolInfo::Utf8(field_name) = field_name_utf8 {
                     for field in &target_class.field_info {
                         if &field.field_name == field_name {
-                            error!("{:?}", field.value);
+                            //error!("{:?}", field.value);
                             frame.op_stack.push(field.value.clone());
                         }
                     }

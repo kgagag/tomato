@@ -232,15 +232,17 @@ pub fn create_stack_frame_with_class(method_info: &MethodInfo,class:&Class) -> O
     return None;
 }
 
-pub fn push_stack_frame(mut stack_frame: StackFrame) {
+pub fn push_stack_frame(mut stack_frame: StackFrame) -> u32 {
     let data: std::sync::MutexGuard<'_, UnsafeCell<HashMap<u32, Vec<StackFrame>>>> =
         VM_STACKS.lock().unwrap();
+        let mut vm_stack_id :u32= stack_frame.vm_stack_id;
     unsafe {
         let map: &mut HashMap<u32, Vec<StackFrame>> = &mut *data.get();
         if stack_frame.vm_stack_id == 0 {
             for i in 0x1..0xFFFFFFFF as u32 {
                 if !map.contains_key(&i) {
                     stack_frame.vm_stack_id = i;
+                    vm_stack_id = i;
                     let mut stack_frames: Vec<StackFrame> = Vec::new();
                     stack_frames.push(stack_frame);
                     map.insert(i, stack_frames);
@@ -253,8 +255,9 @@ pub fn push_stack_frame(mut stack_frame: StackFrame) {
             frames.push(stack_frame);
             //info!("after:{:?}", frames);
         }
+        drop(data);
     }
-    drop(data);
+    return vm_stack_id;
 }
 
 

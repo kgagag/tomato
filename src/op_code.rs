@@ -1,4 +1,5 @@
 pub mod op_code {
+    use crate::stack_frame;
     use crate::stack_frame::*;
     extern crate env_logger;
     extern crate log;
@@ -26,24 +27,31 @@ pub mod op_code {
     use std::collections::HashMap;
     use crate::runtime_data_area::VM_STACKS;
 
-    pub fn execute(){
+    pub fn execute(vm_stack_id : u32){
         let data: std::sync::MutexGuard<'_, UnsafeCell<HashMap<u32, Vec<StackFrame>>>> = VM_STACKS.lock().unwrap();
         unsafe {
             // 从 UnsafeCell 中获取 HashMap 的可变引用
             let map = &mut *data.get();
             drop(data);
-            for (_vm_stack_id, stack_frames) in map {
-                //这里可以启动一个线程
-                for _i in 0 .. stack_frames.len() as usize{
-                    do_opcode(stack_frames);
+            let stack_frames_op = map.get_mut(&vm_stack_id);
+            if !stack_frames_op.is_none() {
+                let stack_frames = stack_frames_op.unwrap();
+                if stack_frames.len() > 0 {
+                    do_opcode( stack_frames);
                 }
             }
+            
             
         }
     }
 
     pub fn do_opcode(vm_stack: &mut Vec<StackFrame>) {
-        while vm_stack.len() > 0 && vm_stack.last().unwrap().pc < vm_stack.last().unwrap().code.len() {
+        while true {
+            info!("{:?}",vm_stack);
+            let flag = !vm_stack.is_empty() && vm_stack.last().unwrap().pc < vm_stack.last().unwrap().code.len();
+            if(!flag){
+                break;
+            }
             let code = vm_stack.last().unwrap().code[vm_stack.last().unwrap().pc];
             //info!("{:#x}",code);
             let frame = vm_stack.last_mut().unwrap();

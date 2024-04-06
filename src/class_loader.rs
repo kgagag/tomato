@@ -5,7 +5,7 @@ pub mod class_loader {
     use crate::param::param::DataType;
     use crate::runtime_data_area::add_method;
     use crate::runtime_data_area::get_or_load_class;
-    use crate::runtime_data_area::init_class_id;
+    use crate::runtime_data_area::*;
     use crate::u8c::u8s_to_u16;
     use crate::u8c::u8s_to_u32;
     use byteorder::{BigEndian, ReadBytesExt};
@@ -182,6 +182,24 @@ pub mod class_loader {
         class.access_flags = get_access_flag(&mut cursor);
         class.this_class = get_this_class(&mut cursor);
         class.super_class = get_super_class(&mut cursor);
+        if class.super_class != 0x00 {
+           let class_constant =  class.constant_pool.get(&class.super_class).unwrap();
+           match class_constant {
+            ConstantPoolInfo::Class(index ) => {
+              let name_constant = class.constant_pool.get(index).unwrap();
+              match name_constant {
+                ConstantPoolInfo::Utf8(class_name) =>{
+                    if(!class_exists(class_name)){
+                        load_class(&class_name);
+                    }    
+                }
+                _=> panic!("wrong class data")
+              }
+            }
+            _=> panic!("wrong class data")
+           }
+           // load_class(name)
+        }
         class.interface_count = get_interface_count(&mut cursor);
         class.interfaces = get_interface(class.interface_count, &mut cursor);
         class.fields_count = get_field_count(&mut cursor);
@@ -192,17 +210,16 @@ pub mod class_loader {
         class.attribute_info =
         get_attribute(&class.constant_pool, class.attributes_count, &mut cursor);
         do_after_load(&mut class);
-       // init(&mut class,"<clinit>".to_string());
-        // init(&class,"<init>".to_string());
+        init_class_id(&mut class);
+        init(& mut class, "<clinit>".to_string());
         return class;
     }
 
     /**
      * 类加载完成之后执行初始化静态方法
      */
-    pub fn init(clazz:&mut Class,method_name: String) {
+    pub fn init(class:&mut Class,method_name: String) {
         //let class= get_or_load_class(&clazz.class_name);
-        let class = init_class_id( clazz);
         //创建VM
         //找到main方法
         for i in 0..* &class.method_info.len() {
@@ -216,9 +233,11 @@ pub mod class_loader {
                     //创建虚拟机栈，并创建第一个栈帧
                     if name == &method_name {
                         let stack_frame = create_stack_frame_with_class(method_info,class).unwrap();
-                        info!("{:?}",stack_frame);
-                        push_stack_frame(stack_frame);
-                        execute();
+                       // info!("{:?}",stack_frame);
+                       //let vm_stack_id = (&stack_frame).vm_stack_id;
+                    //    let stack_frame_clone = stack_frame.clone();
+                       let vm_stack_id =  push_stack_frame(stack_frame);
+                        execute(vm_stack_id);
                     }
                 }
                 _=> panic!("wrong class data")

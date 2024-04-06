@@ -35,7 +35,7 @@
         
     }
 
-    pub fn class_exists(class_name:String) -> bool {
+    pub fn class_exists(class_name:&String) -> bool {
         // 获取全局变量的Mutex锁
         let data: std::sync::MutexGuard<'_, UnsafeCell<HashMap<String, Class>>> =
             CLASS_DATA.lock().unwrap();
@@ -44,7 +44,7 @@
             let map = &mut *data.get();
             // 释放Mutex锁
             drop(data);
-            return map.contains_key(&class_name);
+            return map.contains_key(class_name);
         }
     }
 
@@ -103,17 +103,13 @@
             CLASS_DATA.lock().unwrap();
         unsafe {
             let map = &mut *data.get();
-            if  !map.contains_key(class_name)  {
-                let mut class = load_class(class_name);
-                class.id = map.len() + 1 as usize;
-                map.insert(class_name.clone(), class);
-                add_id_class(map.len(), class_name.clone());
-            }
             drop(data);
+            if !map.contains_key(class_name)  {
+                 load_class(class_name);
+            }
             return map.get_mut(class_name).unwrap();
         }
     }
-
 
     pub fn init_class_id<'a>( class: &mut Class) -> &'a mut Class {
         let data: std::sync::MutexGuard<'_, UnsafeCell<HashMap<String, Class>>> =

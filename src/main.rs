@@ -73,8 +73,9 @@ pub fn run(main_class_path: String) {
                 //创建虚拟机栈，并创建第一个栈帧
                 if name == "main" {
                     let stack_frame = create_stack_frame(method_info).unwrap();
-                    push_stack_frame(stack_frame);
-                    execute();
+                    let stack_frame_clone = stack_frame.clone();
+                    let vm_stack_id = push_stack_frame(stack_frame);
+                    execute(vm_stack_id);
                 }
             }
             _=> panic!("wrong class data")

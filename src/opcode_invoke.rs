@@ -13,7 +13,7 @@ use std::collections::HashMap;
 
 pub fn get_method_for_invoke(frame: &StackFrame) -> Option<&MethodInfo> {
     let class_name = get_class_name(&frame.class);
-    let this_class = get_or_load_class(&class_name);
+    let this_class = get_or_load_class(&class_name).clone();
 
     // 使用 match 代替 if let 以减少嵌套，并处理 unwrap 导致的潜在 panic
     let (class_index, name_and_type_index) = match this_class
@@ -24,18 +24,18 @@ pub fn get_method_for_invoke(frame: &StackFrame) -> Option<&MethodInfo> {
         };
 
     // 通过链式调用减少嵌套
-    let class_name = this_class.constant_pool.get(class_index)
+    let target_class_name = this_class.constant_pool.get(class_index)
         .and_then(|cp_info| match cp_info {
             ConstantPoolInfo::Class(name_index) => this_class.constant_pool.get(name_index),
             _ => None,
         })
         .and_then(|name_info| match name_info {
-            ConstantPoolInfo::Utf8(class_name) => Some(class_name),
+            ConstantPoolInfo::Utf8(target_class_name) => Some(target_class_name),
             _ => None,
         });
 
-    let target_class = match class_name {
-        Some(class_name) => get_or_load_class(class_name),
+    let target_class = match target_class_name {
+        Some(class_name_target) => get_or_load_class(class_name_target),
         None => return None,
     };
 
@@ -60,7 +60,7 @@ pub fn get_method_for_invoke(frame: &StackFrame) -> Option<&MethodInfo> {
 }
 
 
-//对象的初始化方法
+
 pub fn invokespecial(frame: &mut StackFrame) {
     let clone_frame = &frame.clone();
         frame.pc += 3;
@@ -111,9 +111,11 @@ pub fn get_frames(vm_stack_id: &u32) -> &Vec<StackFrame> {
 
 pub fn invokestatic(frame: &mut StackFrame) {
     let clone_frame = &frame.clone();
-    let method: Option<&MethodInfo> = get_method_for_invoke(&clone_frame);
-    let new_frame = init_stack_frame(frame, method.unwrap(), 0);
-    //let v = frame.op_stack.pop();
-    push_stack_frame(new_frame);
+    let method = get_method_for_invoke(&clone_frame).unwrap();
+    //info!("{:?}",method.access_flag);
+    if method.access_flag & 0x0100 == 0 {
+        let new_frame = init_stack_frame(frame, method, 0);
+        push_stack_frame(new_frame);
+    }
     frame.pc += 3;
 }

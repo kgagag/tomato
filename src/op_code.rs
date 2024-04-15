@@ -46,14 +46,8 @@ pub mod op_code {
     }
 
     pub fn do_opcode(vm_stack: &mut Vec<StackFrame>) {
-        while true {
-            info!("{:?}",vm_stack);
-            let flag = !vm_stack.is_empty() && vm_stack.last().unwrap().pc < vm_stack.last().unwrap().code.len();
-            if(!flag){
-                break;
-            }
+        while !vm_stack.is_empty() && vm_stack.last().unwrap().pc < vm_stack.last().unwrap().code.len() {
             let code = vm_stack.last().unwrap().code[vm_stack.last().unwrap().pc];
-            //info!("{:#x}",code);
             let frame = vm_stack.last_mut().unwrap();
             match code {
                 0x00 => nop(frame),
@@ -253,7 +247,7 @@ pub mod op_code {
                 // 0xc2 => monitorenter(frame),
                 // 0xc3 => monitorexit(frame),
                 // 0xc4 => wide(frame),
-                // 0xc5 => multianewarray(frame),
+                 0xc5 => multianewarray(frame),
                 // 0xc6 => ifnull(frame),
                 // 0xc7 => ifnonnull(frame),
                 // 0xc8 => goto_w(frame),

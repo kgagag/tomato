@@ -176,10 +176,12 @@
         let data= VM_STACKS.lock().unwrap();
         unsafe {
             let map = &mut *data.get();
-            //info!("{:#?}",map);
-           // println!("before pop_frame_data：{:?}",&map);
-            map.get_mut(&vm_stack_id).unwrap().pop();
-          //   println!("before pop_frame_data：{:?}",&map);
+            let frames= map.get_mut(&vm_stack_id).unwrap();
+            frames.pop();
+            // 如果过这个虚拟机栈已经被被清空就删除这个虚拟机栈
+            if frames.is_empty() {
+              map.remove(&vm_stack_id);
+            }
         }
         drop(data);
     }

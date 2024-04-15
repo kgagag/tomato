@@ -53,6 +53,54 @@ pub fn newarray(frame: &mut StackFrame) {
     frame.pc += 2;
 }
 
+
+pub fn multianewarray(frame: &mut StackFrame) {
+    let v = frame.op_stack.pop().unwrap();
+    info!("{:?}",frame);
+    let atype = frame.code.get(frame.pc + 1).unwrap();
+    //info!("{:?}",atype);
+    let reference;
+    let array_type;
+    let mut len: i32 = 0;
+    match v {
+        StackFrameValue::Byte(l) => len = l as i32,
+        StackFrameValue::Char(l) => len = l as i32,
+        StackFrameValue::Int(l) => len = l as i32,
+        StackFrameValue::Short(l) => len = l as i32,
+        _ => panic!(),
+    }
+    if *atype == 4 {
+        array_type = DataType::Boolean;
+    } else if *atype == 5 {
+        array_type = DataType::Char;
+    } else if *atype == 6 {
+        array_type = DataType::Float;
+    } else if *atype == 7 {
+        array_type = DataType::Double;
+    } else if *atype == 8 {
+        array_type = DataType::Byte;
+    } else if *atype == 9 {
+        array_type = DataType::Short;
+    } else if *atype == 10 {
+        array_type = DataType::Int;
+    } else if *atype == 11 {
+        array_type = DataType::Long;
+    } else {
+        panic!("wrong atype");
+    }
+    reference = create_array(len as u32, array_type);
+    match reference {
+        Reference::Array(arr) => {
+            frame.op_stack.push(StackFrameValue::Reference(arr.id));
+        }
+        _ => panic!(),
+    }
+
+    frame.pc += 2;
+}
+
+
+
 pub fn iastore(frame: &mut StackFrame) {
     xastore(frame);
 }
@@ -99,7 +147,7 @@ fn xastore(frame: &mut StackFrame) {
     match array {
         StackFrameValue::Reference(reference_id) => {
             let reference: &mut Reference = get_reference(&reference_id);
-            info!("{:?}", reference);
+           // info!("{:?}", reference);
             match reference {
                 Reference::Array(arr) => {
                     arr.data.insert(i, v);
@@ -158,7 +206,6 @@ fn xaload(frame: &mut StackFrame) {
     match array {
         StackFrameValue::Reference(reference_id) => {
             let reference = get_reference(&reference_id);
-            info!("{:?}", reference);
             match reference {
                 Reference::Array(arr) => {
                     frame

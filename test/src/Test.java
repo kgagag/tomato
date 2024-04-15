@@ -1,9 +1,6 @@
 public class Test {
     public static void main(String[] args) throws Exception{
-//        int a = 100;
-//        int b = 200;
-//        int c = a + b;
-      //   两个int相加
+//      //   两个int相加
 //        new Test1().test();
 //        // 两个 float 相加
 //        new Test2().test();
@@ -23,17 +20,21 @@ public class Test {
 //       new Test9().test();
 //
 //       Test10.test();
+//       Test11.test();
+//       Test12.test();
+//       Test13.test();
 //
-      Test11.test();
-//        Test11.test();
-//        Test11.test();
-//        Test11.test();
-//
-       Test12.test();
-
-       Test13.test();
-//        Test13.test();
-//        Test13.test();
-//        Test13.test();
+//       // 测试一维数组赋值读取
+//        new Test14().test();
+        // 测试多维数组赋值读取
+  //      new Test15().test();
+//        int[][][] arr = new int[10][10][10];
+//        arr[7][7][7] = 100;
+        Test16[][] test16s = new Test16[10][10];
+        int[][] is = new int[10][10];
+        float[][] fs = new float[10][10];
+        double[][] ds = new double[10][10];
+        long[][] ls = new long[10][10];
+        byte[][] bs = new byte[10][10];
     }
 }

@@ -208,11 +208,9 @@ pub fn if_icmpeq(frame: &mut StackFrame) {
 
 
 pub fn if_icmpne(frame: &mut StackFrame) {
-    //info!("{:?}",frame);
     let value2 = frame.popi64();
     let value1 = frame.popi64();
     let branch_offset = u8s_to_u16(&frame.code[frame.pc + 1.. frame.pc + 3]);
-
     if value1 != value2 {
         frame.pc = (frame.pc as i32 + branch_offset as i32) as usize;
     } else {

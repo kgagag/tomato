@@ -75,6 +75,7 @@ fn get_arr_type(atype:u8){
     
 }
 
+
 pub fn multianewarray(frame: &mut StackFrame) {
     //info!("{:?}", frame);
     let index = u8s_to_u16(&frame.code[frame.pc + 1..frame.pc + 3]);
@@ -273,6 +274,23 @@ pub fn caload(frame: &mut StackFrame) {
 
 pub fn saload(frame: &mut StackFrame) {
     xaload(frame);
+}
+
+pub fn arraylength(frame: &mut StackFrame){
+    let v = frame.op_stack.pop().unwrap();
+    match v {
+        StackFrameValue::Reference(reference) =>{
+            let aref = get_reference(&reference);
+            match aref {
+                Reference::Array(array) =>{
+                    frame.op_stack.push(StackFrameValue::U32(array.len))
+                }
+                _=> panic!()
+            }
+        }
+        _=> panic!()
+    }
+    frame.pc += 1;
 }
 
 fn xaload(frame: &mut StackFrame) {

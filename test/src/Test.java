@@ -1,6 +1,6 @@
 public class Test {
     public static void main(String[] args) throws Exception{
-      //   两个int相加
+     //    两个int相加
         new Test1().test();
         // 两个 float 相加
         new Test2().test();
@@ -28,7 +28,8 @@ public class Test {
         new Test14().test();
        //   测试多维数组赋值读取
         new Test15().test();
-
-        new Test16().test();
+       // new Test16().test();
+        // 测试计算数组长度
+        new Test18().test();
     }
 }

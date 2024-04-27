@@ -95,6 +95,7 @@ impl StackFrame {
             StackFrameValue::Char(data) => data as i64,
             StackFrameValue::Long(data) => data as i64,
             StackFrameValue::Short(data) => data as i64,
+            StackFrameValue::U32(data) => data as i64,
             _ => {
                 panic!("wrong value type");
             }

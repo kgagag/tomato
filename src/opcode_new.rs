@@ -25,14 +25,9 @@ pub fn _new(frame: &mut StackFrame) {
                 ConstantPoolInfo::Utf8(class_name) => {
                     let target_class = get_or_load_class(class_name);
                     let obj = create_object(target_class.id);
-                    match obj {
-                        Reference::Object(object) => {
-                            //初始化属性
-                            frame.op_stack.push(StackFrameValue::Reference(object.id));
-                            frame.pc += 3;
-                        }
-                        _ => panic!("wrong object data"),
-                    }
+                    //初始化属性
+                    frame.op_stack.push(StackFrameValue::Reference(obj));
+                    frame.pc += 3;
                 }
                 _ => panic!("wrong class data"),
             }

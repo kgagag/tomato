@@ -48,7 +48,7 @@
         }
     }
 
-    pub fn create_object<'a>(class: usize) -> &'a mut Reference {
+    pub fn create_object<'a>(class: usize) -> u32 {
         let data = OBJECT_DATA.lock().unwrap();
         let obj_id_data = OBJECT_ID.lock().unwrap();
         let obj;
@@ -61,7 +61,7 @@
             drop(data);
             drop(obj_id_data);
             *obj_id += 1;
-            return  map.get_mut(&obj.id).unwrap();
+            return obj.id;
         }
     }
 

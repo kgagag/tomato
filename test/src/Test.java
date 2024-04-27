@@ -29,6 +29,6 @@ public class Test {
        //   测试多维数组赋值读取
         new Test15().test();
 
-
+        new Test16().test();
     }
 }

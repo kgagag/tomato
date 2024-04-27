@@ -1,5 +1,5 @@
 pub fn u8s_to_u16(bytes: &[u8]) -> u16 {
-    let mut value = [0; 2];
+    let mut value: [u8; 2] = [0; 2];
     value.copy_from_slice(&bytes);
     return Some(u16::from_be_bytes(value)).unwrap();
 }

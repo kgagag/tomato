@@ -65,7 +65,7 @@
         }
     }
 
-    pub fn create_array<'a>(len:u32,array_type:DataType) -> &'a mut Reference {
+    pub fn create_array (len:u32,array_type:DataType) -> u32 {
         let data = OBJECT_DATA.lock().unwrap();
         let obj_id_data = OBJECT_ID.lock().unwrap();
         let array;
@@ -80,7 +80,7 @@
             drop(data);
             drop(obj_id_data);
             *obj_id += 1;
-            return map.get_mut(&next_id).unwrap();
+            return next_id;
         }
     }
 

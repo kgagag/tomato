@@ -13,7 +13,7 @@ public class Test16 {
     }
 
     public static void main(String[] args) {
-        Test16 test15 = new Test16();
-        System.out.println(test15.test());
+//        int[][] arr = new int[2][3];
+//        arr[1][2] = 100;
     }
 }

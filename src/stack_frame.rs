@@ -157,7 +157,7 @@ pub fn init_stack_frame(
                 }
                 DataType::Double => {
                    // info!("{:?}", v);
-                    let u32tuple = number_to_u32tuple(&v);
+                    let u32tuple: (u32, u32) = number_to_u32tuple(&v);
                     new_stack_frame.local[i] =
                         StackFrameValue::U32(u32tuple.0);
                     new_stack_frame.local[i + 1] =

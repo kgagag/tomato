@@ -80,6 +80,27 @@ pub fn invokespecial(frame: &mut StackFrame) {
     push_stack_frame(new_frame);
 }
 
+
+pub fn invokeinterface(frame: &mut StackFrame) {
+    let clone_frame = &frame.clone();
+        frame.pc += 3;
+
+    let method = get_method_for_invoke(&clone_frame);
+    //非native 方法
+    let mut new_frame = init_stack_frame(frame, method.unwrap(), 1);
+    let v = frame.op_stack.pop();
+    match v {
+        Some(obj) => {
+            new_frame.local[0] = obj;
+        }
+        None => {
+            panic!("error");
+        }
+    }
+    push_stack_frame(new_frame);
+}
+
+
 pub fn invokevirtual(frame: &mut StackFrame) {
     let clone_frame = &frame.clone();
     let method = get_method_for_invoke(&clone_frame);

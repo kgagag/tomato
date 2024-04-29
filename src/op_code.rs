@@ -236,7 +236,7 @@ pub mod op_code {
                 0xb6 => invokevirtual(frame),
                 0xb7 => invokespecial(frame),
                 0xb8 => invokestatic(frame),
-                // 0xb9 => invokeinterface(frame),
+                0xb9 => invokeinterface(frame),
                 // 0xba => invokedynamic(frame),
                 0xbb => _new(frame),
                 0xbc => newarray(frame),

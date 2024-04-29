@@ -49,6 +49,7 @@ pub mod op_code {
         while !vm_stack.is_empty() && vm_stack.last().unwrap().pc < vm_stack.last().unwrap().code.len() {
             let code = vm_stack.last().unwrap().code[vm_stack.last().unwrap().pc];
             let frame = vm_stack.last_mut().unwrap();
+           // info!("{:x}",code);
             match code {
                 0x00 => nop(frame),
                 0x01 => aconst_null(frame),

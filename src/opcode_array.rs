@@ -153,10 +153,8 @@ pub fn multianewarray(frame: &mut StackFrame) {
                             }
                             _ => panic!(),
                         }
-                        //上一个数组
-                        let a = v.pop().unwrap();
                         // 创建数组
-                        let b = create_muti_array(a,len,array_type.clone());
+                        let b = create_muti_array(v.pop().unwrap(),len,array_type.clone());
                         v.push(b);
                     }
                     frame.op_stack.push(StackFrameValue::Reference(reference));

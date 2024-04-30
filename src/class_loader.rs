@@ -716,7 +716,7 @@ pub mod class_loader {
         let mut index: u16 = 1;
         while constant_pool_count - 1 > 0 {
             let tag = reader.read_u8().expect("Failed to read constant tag");
-            //info!("constant_pool_tag:{:?}", tag);
+           // info!("constant_pool_tag:{:?}", tag);
             match tag {
                 1 => {
                     let length = reader
@@ -833,6 +833,7 @@ pub mod class_loader {
                         index,
                         ConstantPoolInfo::InterfaceMethodref(class_index, name_and_type_index),
                     );
+                    index += 1;
                 }
                 12 => {
                     let name_index = reader

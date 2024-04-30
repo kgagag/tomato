@@ -1,6 +1,6 @@
 public class Test {
     public static void main(String[] args) throws Exception{
-    /*
+
      //    两个int相加
         new Test1().test();
         // 两个 float 相加
@@ -38,8 +38,7 @@ public class Test {
         // 多维数组循环赋值
         new Test20().test();
 
-        *
-     */
+
 
         InterfaceTest interfaceTest = new Test22();
         interfaceTest.test(20240320,5);

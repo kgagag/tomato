@@ -16,17 +16,18 @@ use crate::u8c::u8s_to_u16;
 use log::*;
 
 pub fn newarray(frame: &mut StackFrame) {
-    let v = frame.op_stack.pop().unwrap();
+    let v: StackFrameValue = frame.op_stack.pop().unwrap();
     ////info!("{:?}",v);
     let atype = frame.code.get(frame.pc + 1).unwrap();
     ////info!("{:?}",atype);
     let array_type;
-    let mut len: i32 = 0;
+    let mut len: u32 = 0;
     match v {
-        StackFrameValue::Byte(l) => len = l as i32,
-        StackFrameValue::Char(l) => len = l as i32,
-        StackFrameValue::Int(l) => len = l as i32,
-        StackFrameValue::Short(l) => len = l as i32,
+        StackFrameValue::Byte(l) => len = l as u32,
+        StackFrameValue::Char(l) => len = l as u32,
+        StackFrameValue::Int(l) => len = l as u32,
+        StackFrameValue::Short(l) => len = l as u32,
+        StackFrameValue::U32(l) => len = l,
         _ => panic!(),
     }
     if *atype == 4 {
@@ -48,7 +49,7 @@ pub fn newarray(frame: &mut StackFrame) {
     } else {
         panic!("wrong atype");
     }
-    let reference = create_array(len as u32, array_type);
+    let reference = create_array(len, array_type);
     frame.op_stack.push(StackFrameValue::Reference(reference));
     frame.pc += 2;
 }
@@ -71,9 +72,25 @@ fn extract_array_base_type_code(descriptor: &str) -> Option<u8> {
 }
 
 
-fn get_arr_type(atype:u8){
-    
+pub fn anewarray(frame: &mut StackFrame){
+    let v: StackFrameValue = frame.op_stack.pop().unwrap();
+    let mut len: u32 = 0;
+    match v {
+        StackFrameValue::Byte(l) => len = l as u32,
+        StackFrameValue::Char(l) => len = l as u32,
+        StackFrameValue::Int(l) => len = l as u32,
+        StackFrameValue::Short(l) => len = l as u32,
+        StackFrameValue::U32(l) => len = l,
+        _ => panic!(),
+    }
+    let index = u8s_to_u16(&frame.code[frame.pc + 1..frame.pc + 3]);
+    let class_name = get_class_name(&frame.class);
+    let this_class = get_or_load_class(&class_name).clone();
+    let reference = create_array(len as u32, DataType::Reference(class_name));
+    frame.op_stack.push(StackFrameValue::Reference(reference));
+    frame.pc += 3;
 }
+
 
 
 pub fn multianewarray(frame: &mut StackFrame) {
@@ -308,6 +325,8 @@ fn xaload(frame: &mut StackFrame) {
             let reference = get_reference(&reference_id);
             match reference {
                 Reference::Array(arr) => {
+                  //  info!("{:?}",arr);
+                 //   info!("{:?}",arr.data.get(i ));
                     frame
                         .op_stack
                         .push(arr.data.get(i ).unwrap().clone());

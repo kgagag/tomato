@@ -1,5 +1,5 @@
 use crate::class::MethodInfo;
-use crate::class::*;
+use crate::{class::*, param};
 use crate::param::param::DataType;
 use crate::runtime_data_area::get_or_load_class;
 use crate::u8c::u8s_to_u16;
@@ -132,9 +132,14 @@ pub fn init_stack_frame(
     let mut new_stack_frame: StackFrame = create_stack_frame(&method_info).unwrap();
     new_stack_frame.vm_stack_id = frame.vm_stack_id;
     let mut i: usize = start;
+    let mut param:Vec<StackFrameValue> = Vec::new();
+    for j in 0..method_info.param.len(){
+        param.push(frame.op_stack.pop().unwrap());
+    }
+    //param.reverse();
     if method_info.param.len() > 0 {
         for j in 0..method_info.param.len() {
-            let v = frame.op_stack.pop().unwrap();
+            let v = param.pop().unwrap();
             let param: &DataType = method_info.param.get(j).unwrap();
             match param {
                 DataType::Byte => {

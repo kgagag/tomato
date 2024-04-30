@@ -240,7 +240,7 @@ pub mod op_code {
                 // 0xba => invokedynamic(frame),
                 0xbb => _new(frame),
                 0xbc => newarray(frame),
-                // 0xbd => anewarray(frame),
+                0xbd => anewarray(frame),
                  0xbe => arraylength(frame),
                 // 0xbf => athrow(frame),
                 // 0xc0 => checkcast(frame),

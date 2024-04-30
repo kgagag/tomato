@@ -13,6 +13,7 @@ use crate::runtime_data_area::VM_STACKS;
 use crate::stack_frame::*;
 use crate::u8c::u8s_to_u16;
 use crate::value::value::StackFrameValue;
+use std::array;
 use std::cell::Ref;
 use std::cell::UnsafeCell;
 use std::collections::HashMap;
@@ -159,6 +160,24 @@ pub fn invokevirtual(frame: &mut StackFrame) {
     let method = get_method_for_invoke(&clone_frame);
     //info!("{:?}", method.unwrap().method_name);
     let mut new_frame = init_stack_frame(frame, method.unwrap(), 1);
+
+
+    // info!("{:?}",new_frame);
+    // let a = new_frame.local.get(1).unwrap();
+    // match a {
+    //     StackFrameValue::Reference(id) =>{
+    //        let f =  get_reference(id);
+    //        match f {
+    //            Reference::Array(array) =>{
+    //                 info!("{:?}",array);
+    //            }
+    //            _=> panic!()
+    //        }
+    //     }
+    //     _=> panic!()
+    // }
+
+
     let v = frame.op_stack.pop();
     match v {
         Some(obj) => {

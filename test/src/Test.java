@@ -1,7 +1,7 @@
 public class Test {
     public static void main(String[] args) throws Exception{
-
-     //    两个int相加
+//
+       //  两个int相加
         new Test1().test();
         // 两个 float 相加
         new Test2().test();
@@ -38,10 +38,21 @@ public class Test {
         // 多维数组循环赋值
         new Test20().test();
 
-
-
         InterfaceTest interfaceTest = new Test22();
         interfaceTest.test(20240320,5);
+        new Test23().test();
 
+        //测试数组作为参数
+        new Test24().test(new int[20240320],new long[5]);
+        new Test25().test(new int[]{0,20240320},new int[]{0,0,5});
+        // 减法
+        new Test26().test(20240325,0);
+
+        new Test27().test(new int[100][100],new int[50][50]);
+
+        new Test28().test(new int[100][100],new int[50][50]);
+
+        //测试二维数组作为参数
+        new Test29().test(new int[][]{{1}},new int[][]{{2}});
     }
 }

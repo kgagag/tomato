@@ -5,23 +5,20 @@ pub mod class_loader {
     use crate::op_code::op_code::*;
     use crate::param::param::DataType;
     use crate::runtime_data_area::add_method;
-    use crate::runtime_data_area::get_or_load_class;
     use crate::runtime_data_area::*;
     use crate::stack_frame::*;
     use crate::u8c::u8s_to_u16;
     use crate::u8c::u8s_to_u32;
     use crate::value::value::*;
     use byteorder::{BigEndian, ReadBytesExt};
-    use log::info;
     use log::warn;
     use std::collections::HashMap;
     use std::env;
     use std::fs::{self, File};
     use std::io;
-    use std::io::prelude::*;
     use std::io::Cursor;
     use std::io::Read;
-    use zip::read::{ZipArchive, ZipFile};
+    use zip::read::ZipArchive;
     fn parse_descriptor(descriptor: &Vec<u8>) -> Result<Option<Vec<DataType>>, String> {
         let mut index = 0;
         let descriptor_length = descriptor.len();
@@ -337,8 +334,8 @@ pub mod class_loader {
                                 field_info.data_type = param.clone();
                                 match param {
                                     DataType::Array {
-                                        element_type,
-                                        depth,
+                                        element_type: _,
+                                        depth: _,
                                     } => field_info.value = StackFrameValue::Null,
                                     DataType::Byte => {
                                         field_info.value = StackFrameValue::Byte(0);

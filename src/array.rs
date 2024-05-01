@@ -16,7 +16,7 @@ pub mod array{
                 array_type,
                 data: Vec::new(),
             };
-            for i in 0.. len {
+            for _i in 0.. len {
                 array.data.push(StackFrameValue::Byte(0));
             }
             return array;

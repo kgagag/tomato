@@ -1,6 +1,5 @@
 public class Test {
-    public static void main(String[] args) throws Exception{
-////
+    public static void main(String[] args) {
        //  两个int相加
         new Test1().test();
         // 两个 float 相加
@@ -22,12 +21,20 @@ public class Test {
 
        //测试递归
        Test10.test();
+
+       //测试 invokestatic 和 putstatic 指令
        Test11.test();
-       Test12.test();
+
+        //测试 invokevirtual
+
+        Test12.test();
+
+        // 测试 getfield 指令
        Test13.test();
 
        // 测试一维数组赋值读取
         new Test14().test();
+
        //   测试多维数组赋值读取
         new Test15().test();
 
@@ -39,6 +46,7 @@ public class Test {
         // 多维数组循环赋值
         new Test20().test();
 
+        // 测试 invikeinterface
         InterfaceTest interfaceTest = new Test22();
         interfaceTest.test(20240320,5);
         new Test23().test();
@@ -46,14 +54,13 @@ public class Test {
         //测试数组作为参数
         new Test24().test(new int[20240320],new long[5]);
         new Test25().test(new int[]{0,20240320},new int[]{0,0,5});
+
         // 减法
         new Test26().test(20240325,0);
 
-        new Test27().test(new int[100][100],new int[50][50]);
-
-        new Test28().test(new int[100][100],new int[50][50]);
-
         //测试二维数组作为参数
+        new Test27().test(new int[100][100],new int[50][50]);
+        new Test28().test(new int[100][100],new int[50][50]);
         new Test29().test(new int[][]{{1}},new int[][]{{2}});
 
         //普通继承
@@ -65,5 +72,7 @@ public class Test {
         //继承抽象类
         new Test34().test(20240320,5);
 
+        // 力扣 第33 题
+        new Solution_33().test();
     }
 }

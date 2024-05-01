@@ -1,3 +1,3 @@
-public interface InterfaceTest {
+public interface InterfaceTest  {
     int test(int a , int b );
 }

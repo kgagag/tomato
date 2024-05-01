@@ -2,12 +2,15 @@ pub mod class_loader {
     use crate::class::CodeAttribute;
     use crate::class::ExceptionTable;
     use crate::class::*;
+    use crate::op_code::op_code::*;
     use crate::param::param::DataType;
     use crate::runtime_data_area::add_method;
     use crate::runtime_data_area::get_or_load_class;
     use crate::runtime_data_area::*;
+    use crate::stack_frame::*;
     use crate::u8c::u8s_to_u16;
     use crate::u8c::u8s_to_u32;
+    use crate::value::value::*;
     use byteorder::{BigEndian, ReadBytesExt};
     use log::info;
     use log::warn;
@@ -19,12 +22,7 @@ pub mod class_loader {
     use std::io::Cursor;
     use std::io::Read;
     use zip::read::{ZipArchive, ZipFile};
-    use crate::value::value::*;
-    use crate::stack_frame::*;
-    use crate::op_code::op_code::*;
-    fn parse_descriptor(
-        descriptor: &Vec<u8>,
-    ) -> Result<Option<Vec<DataType>>, String> {
+    fn parse_descriptor(descriptor: &Vec<u8>) -> Result<Option<Vec<DataType>>, String> {
         let mut index = 0;
         let descriptor_length = descriptor.len();
         let mut parameters: Vec<DataType> = Vec::new();
@@ -183,22 +181,22 @@ pub mod class_loader {
         class.this_class = get_this_class(&mut cursor);
         class.super_class = get_super_class(&mut cursor);
         if class.super_class != 0x00 {
-           let class_constant =  class.constant_pool.get(&class.super_class).unwrap();
-           match class_constant {
-            ConstantPoolInfo::Class(index ) => {
-              let name_constant = class.constant_pool.get(index).unwrap();
-              match name_constant {
-                ConstantPoolInfo::Utf8(class_name) =>{
-                    if(!class_exists(class_name)){
-                        load_class(&class_name);
-                    }    
+            let class_constant = class.constant_pool.get(&class.super_class).unwrap();
+            match class_constant {
+                ConstantPoolInfo::Class(index) => {
+                    let name_constant = class.constant_pool.get(index).unwrap();
+                    match name_constant {
+                        ConstantPoolInfo::Utf8(class_name) => {
+                            if (!class_exists(class_name)) {
+                                load_class(&class_name);
+                            }
+                        }
+                        _ => panic!("wrong class data"),
+                    }
                 }
-                _=> panic!("wrong class data")
-              }
+                _ => panic!("wrong class data"),
             }
-            _=> panic!("wrong class data")
-           }
-           // load_class(name)
+            // load_class(name)
         }
         class.interface_count = get_interface_count(&mut cursor);
         class.interfaces = get_interface(class.interface_count, &mut cursor);
@@ -208,47 +206,47 @@ pub mod class_loader {
         class.method_info = get_method(&class.constant_pool, class.methods_count, &mut cursor);
         class.attributes_count = get_attribute_count(&mut cursor);
         class.attribute_info =
-        get_attribute(&class.constant_pool, class.attributes_count, &mut cursor);
+            get_attribute(&class.constant_pool, class.attributes_count, &mut cursor);
         do_after_load(&mut class);
         init_class_id(&mut class);
-        init(& mut class, "<clinit>".to_string());
+        init(&mut class, "<clinit>".to_string());
         return class;
     }
 
     /**
      * 类加载完成之后执行初始化静态方法
      */
-    pub fn init(class:&mut Class,method_name: String) {
+    pub fn init(class: &mut Class, method_name: String) {
         //let class= get_or_load_class(&clazz.class_name);
         //创建VM
         //找到main方法
-        for i in 0..* &class.method_info.len() {
+        for i in 0..*&class.method_info.len() {
             let method_info = &class.method_info[i];
             //let methond_index = (method_info.name_index as usize) - 1;
             let u8_vec = class.constant_pool.get(&method_info.name_index).unwrap();
             match u8_vec {
-                ConstantPoolInfo::Utf8(name) =>{
+                ConstantPoolInfo::Utf8(name) => {
                     //println!("method:{}", &name);
                     //info!("{}", name);
                     //创建虚拟机栈，并创建第一个栈帧
                     if name == &method_name {
-                        let stack_frame = create_stack_frame_with_class(method_info,class).unwrap();
-                       // info!("{:?}",stack_frame);
-                       //let vm_stack_id = (&stack_frame).vm_stack_id;
-                    //    let stack_frame_clone = stack_frame.clone();
-                       let vm_stack_id =  push_stack_frame(stack_frame);
+                        let stack_frame =
+                            create_stack_frame_with_class(method_info, class).unwrap();
+                        // info!("{:?}",stack_frame);
+                        //let vm_stack_id = (&stack_frame).vm_stack_id;
+                        //    let stack_frame_clone = stack_frame.clone();
+                        let vm_stack_id = push_stack_frame(stack_frame);
                         execute(vm_stack_id);
                     }
                 }
-                _=> panic!("wrong class data")
+                _ => panic!("wrong class data"),
             }
         }
     }
 
-
-
     fn do_after_load(class: &mut Class) {
         let this_class = class.constant_pool.get(&class.this_class).unwrap();
+
         //info!("this_class:{:?}", this_class);
         // 设置 class_name
         match this_class {
@@ -266,6 +264,22 @@ pub mod class_loader {
             _ => panic!("wrong constant data type"),
         }
 
+        // java.lang.Object 没有父类
+        if class.super_class != 0 {
+            let super_class = class.constant_pool.get(&class.super_class).unwrap();
+            match super_class {
+                ConstantPoolInfo::Class(name_index) => {
+                    let class_name = class.constant_pool.get(name_index).unwrap();
+                    match class_name {
+                        ConstantPoolInfo::Utf8(name) => {
+                            class.super_class_name = name.clone();
+                        }
+                        _ => panic!("wrong constant data type"),
+                    }
+                }
+                _ => panic!("wrong constant data type"),
+            }
+        }
         //补充方法方法参数解析后信息
         for i in 0..class.methods_count {
             let method_info = class.method_info.get_mut(i as usize).unwrap();
@@ -305,7 +319,6 @@ pub mod class_loader {
             }
         }
 
-
         //补充方法方法参数解析后信息
         for i in 0..class.fields_count {
             let field_info = class.field_info.get_mut(i as usize).unwrap();
@@ -316,42 +329,44 @@ pub mod class_loader {
             match descriptor {
                 ConstantPoolInfo::Utf8(str) => {
                     field_info.descriptor = str.clone();
-                    let result: Result<Option<Vec<DataType>>, String> = parse_descriptor(&(str.clone().into_bytes()));
+                    let result: Result<Option<Vec<DataType>>, String> =
+                        parse_descriptor(&(str.clone().into_bytes()));
                     match result {
                         Ok(Some(parameters)) => {
                             for param in parameters {
                                 field_info.data_type = param.clone();
                                 match param {
-                                    DataType::Array { element_type, depth } =>{
-                                        field_info.value = StackFrameValue::Null
-                                    },
+                                    DataType::Array {
+                                        element_type,
+                                        depth,
+                                    } => field_info.value = StackFrameValue::Null,
                                     DataType::Byte => {
                                         field_info.value = StackFrameValue::Byte(0);
-                                    },
+                                    }
                                     DataType::Char => {
                                         field_info.value = StackFrameValue::Char(0);
-                                    },
-                                    DataType::Double =>  {
+                                    }
+                                    DataType::Double => {
                                         field_info.value = StackFrameValue::Double(0.0);
-                                    },
-                                    DataType::Float =>  {
+                                    }
+                                    DataType::Float => {
                                         field_info.value = StackFrameValue::Float(0.0);
-                                    },
+                                    }
                                     DataType::Int => {
                                         field_info.value = StackFrameValue::Int(0);
-                                    },
+                                    }
                                     DataType::Long => {
                                         field_info.value = StackFrameValue::Long(0);
-                                    },
+                                    }
                                     DataType::Reference(s) => {
                                         field_info.value = StackFrameValue::Null;
-                                    },
+                                    }
                                     DataType::Short => {
                                         field_info.value = StackFrameValue::Short(0);
-                                    },
+                                    }
                                     DataType::Boolean => {
                                         field_info.value = StackFrameValue::Boolean(false);
-                                    },
+                                    }
                                     DataType::Unknown => panic!(),
                                 }
                                 break;
@@ -368,7 +383,6 @@ pub mod class_loader {
                 _ => panic!("wrong constant data type"),
             }
         }
-
     }
 
     /**
@@ -598,8 +612,8 @@ pub mod class_loader {
                 atrributes: Vec::new(),
                 value: StackFrameValue::Null,
                 field_name: String::from(""),
-                data_type:DataType::Unknown,
-                descriptor:String::from("")
+                data_type: DataType::Unknown,
+                descriptor: String::from(""),
             };
 
             let field_name: String;
@@ -716,7 +730,7 @@ pub mod class_loader {
         let mut index: u16 = 1;
         while constant_pool_count - 1 > 0 {
             let tag = reader.read_u8().expect("Failed to read constant tag");
-           // info!("constant_pool_tag:{:?}", tag);
+            // info!("constant_pool_tag:{:?}", tag);
             match tag {
                 1 => {
                     let length = reader

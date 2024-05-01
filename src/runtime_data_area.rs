@@ -161,13 +161,13 @@
         drop(data);
     }
 
-    pub fn get_method_from_pool<'a>(class_name: String,method_name:String,descriptor :String) ->&'a MethodInfo {
+    pub fn get_method_from_pool<'a>(class_name: String,method_name:String,descriptor :String) ->Option<&'a MethodInfo> {
         let data =METHOD_DATA.lock().unwrap();
         unsafe {
             let key = format!("{}{}{}{}{}", class_name,".", method_name,".", descriptor);
             let map = &mut *data.get();
             drop(data);
-            return  map.get(&key).unwrap();
+            return  map.get(&key);
         }
     }
 

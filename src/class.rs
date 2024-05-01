@@ -21,6 +21,7 @@ pub struct Class {
     pub attribute_info: Vec<AttributeInfo>,
     pub id: usize,
     pub class_name: String,
+    pub super_class_name:String
 }
 
 impl Class {
@@ -44,6 +45,7 @@ impl Class {
             attribute_info: Vec::new(),
             id: 0,
             class_name: String::new(),
+            super_class_name:String::new(),
         }
     }
 }

@@ -1,6 +1,6 @@
 public class Test {
     public static void main(String[] args) throws Exception{
-//
+////
        //  两个int相加
         new Test1().test();
         // 两个 float 相加
@@ -20,6 +20,7 @@ public class Test {
           // 7层方法调用栈
        new Test9().test();
 
+       //测试递归
        Test10.test();
        Test11.test();
        Test12.test();
@@ -54,5 +55,15 @@ public class Test {
 
         //测试二维数组作为参数
         new Test29().test(new int[][]{{1}},new int[][]{{2}});
+
+        //普通继承
+        new Test31().test();
+
+        // 先实现接口后继承
+        new Test33().test(20240320,5);
+
+        //继承抽象类
+        new Test34().test(20240320,5);
+
     }
 }

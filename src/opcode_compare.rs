@@ -2,7 +2,6 @@ use crate::stack_frame::StackFrame;
 use crate::value::value::StackFrameValue;
 extern crate env_logger;
 extern crate log;
-use log::{error, info, warn};
 use crate::u8c::*;
 
 

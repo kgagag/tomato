@@ -28,22 +28,8 @@
 4. **运行虚拟机**: 你可以使用以下命令运行Java虚拟机并指定要执行的Java类文件：
 
    ```sh
-   cargo run yourfile.class
+   cargo run 
    ```
-
-   替换 `yourfile.class` 为你自己的Java类文件。
-
-## 示例
-
-以下是一个简单的示例，演示如何使用这个Java虚拟机来运行一个Hello World程序：
-
-```sh
-cargo run HelloWorld.class
-```
-
-## 贡献
-
-如果你对这个项目感兴趣，欢迎贡献代码或报告问题。在贡献之前，请确保阅读我们的[贡献指南](CONTRIBUTING.md)。
 
 ## 许可
 

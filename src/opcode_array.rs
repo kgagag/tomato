@@ -1,5 +1,3 @@
-use crate::array;
-use crate::reference;
 use crate::reference::reference::Reference;
 use crate::runtime_data_area::create_array;
 use crate::stack_frame::StackFrame;
@@ -9,11 +7,9 @@ extern crate log;
 use crate::class::*;
 use crate::param::param::DataType;
 use crate::runtime_data_area::get_class_name;
-use crate::runtime_data_area::get_method_from_pool;
 use crate::runtime_data_area::get_or_load_class;
 use crate::runtime_data_area::get_reference;
 use crate::u8c::u8s_to_u16;
-use log::*;
 
 pub fn newarray(frame: &mut StackFrame) {
     let v: StackFrameValue = frame.op_stack.pop().unwrap();
@@ -83,9 +79,7 @@ pub fn anewarray(frame: &mut StackFrame){
         StackFrameValue::U32(l) => len = l,
         _ => panic!(),
     }
-    let index = u8s_to_u16(&frame.code[frame.pc + 1..frame.pc + 3]);
     let class_name = get_class_name(&frame.class);
-    let this_class = get_or_load_class(&class_name).clone();
     let reference = create_array(len as u32, DataType::Reference(class_name));
     frame.op_stack.push(StackFrameValue::Reference(reference));
     frame.pc += 3;
@@ -148,11 +142,11 @@ pub fn multianewarray(frame: &mut StackFrame) {
                         _ => panic!(),
                     }
                     
-                    let mut reference = create_array(len as u32, array_type.clone());
+                    let reference = create_array(len as u32, array_type.clone());
                     let mut v :Vec<u32>  = Vec::new();
                     v.push(reference);
                     //info!("{:?}", frame.op_stack);
-                    for i in 1 .. dimenssion{
+                    for _i in 1 .. dimenssion{
                         //info!("{:?}",i);
                         let len_value: StackFrameValue = frame.op_stack.pop().unwrap();
                         match len_value {

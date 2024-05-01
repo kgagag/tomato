@@ -1,5 +1,5 @@
 use crate::class::ConstantPoolInfo;
-use crate::reference::reference::Reference;
+
 use crate::runtime_data_area::create_object;
 use crate::runtime_data_area::get_class_name;
 use crate::runtime_data_area::get_or_load_class;

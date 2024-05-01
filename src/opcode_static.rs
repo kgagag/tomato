@@ -3,7 +3,7 @@ extern crate env_logger;
 extern crate log;
 use crate::class::*;
 use crate::runtime_data_area::*;
-use log::{error, info, warn};
+
 
 pub fn putstatic(frame: &mut StackFrame) {
     let index: u16 = u16::from_be_bytes([frame.code[frame.pc + 1], frame.code[frame.pc + 2]]);

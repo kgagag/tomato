@@ -3,8 +3,8 @@ use crate::stack_frame::StackFrame;
 use crate::value::value::StackFrameValue;
 extern crate log;
 extern crate env_logger;
-use log::{error, info, warn};
-use std::env;
+
+
 
 pub fn pop(frame: &mut StackFrame) {
     let v = frame.op_stack.get(frame.op_stack.len() - 1).unwrap();
@@ -28,7 +28,7 @@ pub fn pop2(frame: &mut StackFrame) {
         StackFrameValue::Double(_d) =>{
             frame.op_stack.pop();
         } 
-        StackFrameValue::Long(l) =>{
+        StackFrameValue::Long(_l) =>{
             frame.op_stack.pop();
         } 
         _=> panic!()

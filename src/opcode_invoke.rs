@@ -1,9 +1,6 @@
-use log::info;
 
 use crate::class::ConstantPoolInfo;
 use crate::class::MethodInfo;
-use crate::object;
-use crate::reference;
 use crate::reference::reference::Reference;
 use crate::runtime_data_area::get_class_name;
 use crate::runtime_data_area::get_method_from_pool;
@@ -13,8 +10,6 @@ use crate::runtime_data_area::VM_STACKS;
 use crate::stack_frame::*;
 use crate::u8c::u8s_to_u16;
 use crate::value::value::StackFrameValue;
-use std::array;
-use std::cell::Ref;
 use std::cell::UnsafeCell;
 use std::collections::HashMap;
 
@@ -101,11 +96,11 @@ pub fn invokeinterface(frame: &mut StackFrame) {
     let this_class = get_or_load_class(&class_name).clone();
     let cnt = frame.code[frame.pc + 3];
     let mut tmp: Vec<StackFrameValue> = Vec::new();
-    for i in 1..cnt {
+    for _i in 1..cnt {
         tmp.push(frame.op_stack.pop().unwrap());
     }
     let v = frame.op_stack.pop().unwrap();
-    for i in 1..cnt {
+    for _i in 1..cnt {
         frame.op_stack.push(tmp.pop().unwrap());
     }
     match v {
@@ -115,7 +110,7 @@ pub fn invokeinterface(frame: &mut StackFrame) {
                 Reference::Object(object) => {
                     let class_name = get_class_name(&object.class);
                     let class = get_or_load_class(&class_name);
-                    let (class_index, name_and_type_index) = match this_class
+                    let (_class_index, name_and_type_index) = match this_class
                         .constant_pool
                         .get(&u8s_to_u16(&frame.code[(frame.pc + 1)..(frame.pc + 3)]))
                     {

@@ -1,4 +1,3 @@
-use log::info;
 
 use crate::reference::reference::Reference;
 use crate::stack_frame::StackFrame;

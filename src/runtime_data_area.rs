@@ -1,7 +1,7 @@
     use std::cell::UnsafeCell;
     use std::sync::Mutex;
     use lazy_static::lazy_static;
-    use log::info;
+    
     use std::collections::HashMap;
     use crate::array::array::Array;
     use crate::object::Object;

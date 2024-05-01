@@ -5,7 +5,7 @@
     extern crate log;
     extern crate env_logger;
     use crate::value::*;
-    use log::{error, info, warn};
+    
 
     use self::value::number_to_u32tuple;
 

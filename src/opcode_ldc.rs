@@ -9,8 +9,6 @@ use crate::runtime_data_area::get_class_name;
 use crate::runtime_data_area::get_or_load_class;
 extern crate log;
 extern crate env_logger;
-use log::{error, info, warn};
-use std::env;
 
 pub fn ldc(frame: &mut StackFrame) {
     let index = frame.code[frame.pc + 1];

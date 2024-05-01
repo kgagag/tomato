@@ -2,7 +2,7 @@ use crate::stack_frame::StackFrame;
 use crate::value::value::StackFrameValue;
 extern crate env_logger;
 extern crate log;
-use log::{error, info, warn};
+
 
 pub fn i2l(frame: &mut StackFrame) {
     let v = frame.op_stack.pop().unwrap();

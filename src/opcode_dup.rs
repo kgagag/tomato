@@ -2,7 +2,7 @@
 use crate::stack_frame::StackFrame;
 extern crate log;
 extern crate env_logger;
-use log::{error, info, warn};
+
 
 pub fn dup(frame: &mut StackFrame) {
     frame.op_stack.push(frame.op_stack.last().unwrap().clone());

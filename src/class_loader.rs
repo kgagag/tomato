@@ -184,7 +184,7 @@ pub mod class_loader {
                     let name_constant = class.constant_pool.get(index).unwrap();
                     match name_constant {
                         ConstantPoolInfo::Utf8(class_name) => {
-                            if (!class_exists(class_name)) {
+                            if !class_exists(class_name) {
                                 load_class(&class_name);
                             }
                         }

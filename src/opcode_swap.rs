@@ -2,7 +2,7 @@
 use crate::stack_frame::StackFrame;
 extern crate log;
 extern crate env_logger;
-use log::{error, info, warn};
+
 
 pub fn swap(frame: &mut StackFrame) {
     let last = frame.op_stack[frame.op_stack.len() - 1].clone();

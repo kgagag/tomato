@@ -1,5 +1,4 @@
 pub mod op_code {
-    use crate::stack_frame;
     use crate::stack_frame::*;
     extern crate env_logger;
     extern crate log;
@@ -22,7 +21,7 @@ pub mod op_code {
     use crate::opcode_static::*;
     use crate::opcode_store::*;
     use crate::opcode_swap::*;
-    use log::{error, info, warn};
+    
     use std::cell::UnsafeCell;
     use std::collections::HashMap;
     use crate::runtime_data_area::VM_STACKS;
@@ -40,8 +39,6 @@ pub mod op_code {
                     do_opcode( stack_frames);
                 }
             }
-            
-            
         }
     }
 

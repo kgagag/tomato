@@ -30,19 +30,14 @@ pub mod opcode_new;
 pub mod opcode_invoke;
 pub mod native;
 pub mod native_io;
-use std::cell::UnsafeCell;
 use crate::class::ConstantPoolInfo;
 use crate::stack_frame::*;
 use crate::runtime_data_area::get_or_load_class;
-use std::collections::HashMap;
-use crate::op_code::op_code::do_opcode;
-use crate::runtime_data_area::VM_STACKS;
 extern crate log;
 extern crate env_logger;
 use crate::op_code::op_code::*;
 use std::env;
-use log::{error, info, warn};
-use crate::opcode_invoke::*;
+use log::info;
 
 
 
@@ -75,7 +70,6 @@ pub fn run(main_class_path: String) {
                 //创建虚拟机栈，并创建第一个栈帧
                 if name == "main" {
                     let stack_frame = create_stack_frame(method_info).unwrap();
-                    let stack_frame_clone = stack_frame.clone();
                     let vm_stack_id = push_stack_frame(stack_frame);
                     execute(vm_stack_id);
                 }

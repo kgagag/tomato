@@ -7,7 +7,7 @@ use crate::value::value::StackFrameValue;
 
 extern crate log;
 extern crate env_logger;
-use log::{error, info, warn};
+use log::info;
 pub fn aload_1(frame: &mut StackFrame) {
     frame.op_stack.push(frame.local.get(1).unwrap().clone());
     frame.pc += 1;
@@ -62,7 +62,6 @@ pub fn dload(frame: &mut StackFrame) {
         StackFrameValue::Int(l) =>  u1 = l as u32,
         StackFrameValue::Short(l) => u1 = l as u32,
         StackFrameValue::U32(l) => u1 = l as u32,
-
         _=> panic!()
     }
     match v2 {

@@ -74,7 +74,7 @@ pub fn dload(frame: &mut StackFrame) {
         _=> panic!()
     }
 
-    let d = StackFrameValue::Double(u32_tuple_to_f64((u1,u2)) as f64);
+    let d = StackFrameValue::Double(u32_tuple_to_f64((u1,u2)));
    // info!("{:?}",d);
     frame.op_stack.push(d);
     frame.pc += 2;
@@ -104,7 +104,7 @@ pub fn lload(frame: &mut StackFrame) {
         StackFrameValue::U32(l) => u2 = l as u32,
         _=> panic!()
     }
-    let d = StackFrameValue::Double(u32_tuple_to_f64((u1,u2)) as f64);
+    let d = StackFrameValue::Double(u32_tuple_to_f64((u1,u2)));
    // info!("{:?}",d);
     frame.op_stack.push(d);
     frame.pc += 2;
@@ -233,7 +233,7 @@ pub fn dload_0(frame: &mut StackFrame) {
         StackFrameValue::U32(u1) =>{
             match v2 {
                 StackFrameValue::U32(u2) =>{
-                    frame.op_stack.push(StackFrameValue::Double(u32_tuple_to_f64((u1,u2)) as f64));
+                    frame.op_stack.push(StackFrameValue::Double(u32_tuple_to_f64((u1,u2))));
                 } ,
                 _=> panic!()
             }
@@ -271,7 +271,7 @@ pub fn dload_2(frame: &mut StackFrame) {
         StackFrameValue::U32(u1) =>{
             match v2 {
                 StackFrameValue::U32(u2) =>{
-                    frame.op_stack.push(StackFrameValue::Double(u32_tuple_to_f64((u1,u2)) as f64));
+                    frame.op_stack.push(StackFrameValue::Double(u32_tuple_to_f64((u1,u2))));
 
                 } ,
                 _=> panic!()

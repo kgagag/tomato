@@ -7,7 +7,7 @@ extern crate env_logger;
 
 
 pub fn pop(frame: &mut StackFrame) {
-    let v = frame.op_stack.get(frame.op_stack.len() - 1).unwrap();
+    let v = frame.op_stack.last().unwrap();
     match v {
         StackFrameValue::Double(_d) =>{
             panic!()

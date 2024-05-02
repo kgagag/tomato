@@ -29,8 +29,8 @@ pub fn fadd(frame: &mut StackFrame) {
 }
 
 pub fn dadd(frame: &mut StackFrame) {
-    let i1 = frame.popf64() as f64;
-    let i2 = frame.popf64() as f64;
+    let i1 = frame.popf64() ;
+    let i2 = frame.popf64() ;
     let result = i1 + i2;
     //warn!("{}", format!("{}{}", "fadd add result:", result));
     frame.op_stack.push(StackFrameValue::Double(result));
@@ -38,8 +38,8 @@ pub fn dadd(frame: &mut StackFrame) {
 }
 
 pub fn ladd(frame: &mut StackFrame) {
-    let i1 = frame.popi64() as i64;
-    let i2 = frame.popi64() as i64;
+    let i1 = frame.popi64() ;
+    let i2 = frame.popi64() ;
     let result = i1 + i2;
     //warn!("{}", format!("{}{}", "ladd add result:", result));
     frame.op_stack.push(StackFrameValue::Long(result));
@@ -65,8 +65,8 @@ pub fn fsub(frame: &mut StackFrame) {
 }
 
 pub fn dsub(frame: &mut StackFrame) {
-    let d2 = frame.popf64() as f64;
-    let d1 = frame.popf64() as f64;
+    let d2 = frame.popf64() ;
+    let d1 = frame.popf64() ;
     let result = d1 - d2;
     //warn!("{}", format!("{}{}", "dsub add result:", result));
     frame.op_stack.push(StackFrameValue::Double(result));
@@ -74,8 +74,8 @@ pub fn dsub(frame: &mut StackFrame) {
 }
 
 pub fn lsub(frame: &mut StackFrame) {
-    let l2 = frame.popi64() as i64;
-    let l1 = frame.popi64() as i64;
+    let l2 = frame.popi64() ;
+    let l1 = frame.popi64() ;
     let result = l1 - l2;
     //warn!("{}", format!("{}{}", "lsub add result:", result));
     frame.op_stack.push(StackFrameValue::Long(result));
@@ -101,8 +101,8 @@ pub fn imul(frame: &mut StackFrame) {
 }
 
 pub fn lmul(frame: &mut StackFrame) {
-    let l2 = frame.popi64() as i64;
-    let l1 = frame.popi64() as i64;
+    let l2 = frame.popi64() ;
+    let l1 = frame.popi64() ;
     let result = l1 * l2;
     //warn!("{}", format!("{}{}", "lmul add result:", result));
     frame.op_stack.push(StackFrameValue::Long(result));
@@ -110,8 +110,8 @@ pub fn lmul(frame: &mut StackFrame) {
 }
 
 pub fn dmul(frame: &mut StackFrame) {
-    let d2 = frame.popf64() as f64;
-    let d1 = frame.popf64() as f64;
+    let d2 = frame.popf64() ;
+    let d1 = frame.popf64() ;
     let result = d1 * d2;
     //warn!("{}", format!("{}{}", "dmul add result:", result));
     frame.op_stack.push(StackFrameValue::Double(result));
@@ -143,8 +143,8 @@ pub fn fdiv(frame: &mut StackFrame) {
 }
 
 pub fn ddiv(frame: &mut StackFrame) {
-    let d2 = frame.popf64() as f64;
-    let d1 = frame.popf64() as f64;
+    let d2 = frame.popf64() ;
+    let d1 = frame.popf64() ;
     if d2 == 0.0 {
         panic!()
     }
@@ -155,8 +155,8 @@ pub fn ddiv(frame: &mut StackFrame) {
 }
 
 pub fn ldiv(frame: &mut StackFrame) {
-    let l2 = frame.popi64() as i64;
-    let l1 = frame.popi64() as i64;
+    let l2 = frame.popi64() ;
+    let l1 = frame.popi64() ;
     if l2 == 0 {
         panic!()
     }
@@ -185,8 +185,8 @@ pub fn frem(frame: &mut StackFrame) {
 }
 
 pub fn lrem(frame: &mut StackFrame) {
-    let l2 = frame.popi64() as i64;
-    let l1 = frame.popi64() as i64;
+    let l2 = frame.popi64() ;
+    let l1 = frame.popi64() ;
     let result = l1 % l2;
     //warn!("{}", format!("{}{}", "ldiv add result:", result));
     frame.op_stack.push(StackFrameValue::Long(result));
@@ -210,7 +210,7 @@ pub fn ineg(frame: &mut StackFrame) {
 }
 
 pub fn lneg(frame: &mut StackFrame) {
-    let l = frame.popi64() as i64;
+    let l = frame.popi64() ;
     frame.op_stack.push(StackFrameValue::Long(0 - l));
     frame.pc += 1;
 }
@@ -293,8 +293,8 @@ pub fn ior(frame: &mut StackFrame) {
 }
 
 pub fn lor(frame: &mut StackFrame) {
-    let l2 = frame.popi64() as i64;
-    let l1 = frame.popi64() as i64;
+    let l2 = frame.popi64() ;
+    let l1 = frame.popi64() ;
     frame.op_stack.push(StackFrameValue::Long(l1 | l2));
     frame.pc += 1;
 }
@@ -317,7 +317,7 @@ pub fn iinc(frame: &mut StackFrame) {
     let index = frame.code[frame.pc + 1] as i32;
     let _const = frame.code[frame.pc + 2] as i32;
     let v: &StackFrameValue = frame.local.get(index as usize).unwrap();
-    let mut i: i64 = 0;
+    let i: i64 ;
     match v {
         StackFrameValue::Byte(data) => i = *data as i64,
         StackFrameValue::Char(data) => i = *data as i64,

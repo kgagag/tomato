@@ -190,7 +190,7 @@ pub fn get_frames(vm_stack_id: &u32) -> &Vec<StackFrame> {
 
 pub fn invokestatic(frame: &mut StackFrame) {
     let clone_frame = &frame.clone();
-    let method = get_method_for_invoke(&clone_frame).unwrap();
+    let method = get_method_for_invoke(clone_frame).unwrap();
     //info!("{:?}",method.access_flag);
     if method.access_flag & 0x0100 == 0 {
         let new_frame = init_stack_frame(frame, method, 0);

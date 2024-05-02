@@ -235,8 +235,8 @@ pub fn ishl(frame: &mut StackFrame) {
 }
 
 pub fn lshl(frame: &mut StackFrame) {
-    let l2 = frame.popi64() as i64;
-    let l1 = frame.popi64() as i64;
+    let l2 = frame.popi64() ;
+    let l1 = frame.popi64() ;
     frame.op_stack.push(StackFrameValue::Long(l1 << l2));
     frame.pc += 1;
 }
@@ -249,8 +249,8 @@ pub fn ishr(frame: &mut StackFrame) {
 }
 
 pub fn lshr(frame: &mut StackFrame) {
-    let l2 = frame.popi64() as i64;
-    let l1 = frame.popi64() as i64;
+    let l2 = frame.popi64() ;
+    let l1 = frame.popi64() ;
     frame.op_stack.push(StackFrameValue::Long(l1 >> l2));
     frame.pc += 1;
 }
@@ -263,11 +263,11 @@ pub fn iushr(frame: &mut StackFrame) {
 }
 
 pub fn lushr(frame: &mut StackFrame) {
-    let l2 = frame.popi64() as i64;
-    let l1 = frame.popi64() as i64;
+    let l2 = frame.popi64() ;
+    let l1 = frame.popi64() ;
     frame
         .op_stack
-        .push(StackFrameValue::Long((l1 >> l2) as i64));
+        .push(StackFrameValue::Long(l1 >> l2));
     frame.pc += 1;
 }
 
@@ -279,8 +279,8 @@ pub fn iand(frame: &mut StackFrame) {
 }
 
 pub fn land(frame: &mut StackFrame) {
-    let l2 = frame.popi64() as i64;
-    let l1 = frame.popi64() as i64;
+    let l2 = frame.popi64() ;
+    let l1 = frame.popi64() ;
     frame.op_stack.push(StackFrameValue::Long(l1 & l2));
     frame.pc += 1;
 }
@@ -307,8 +307,8 @@ pub fn ixor(frame: &mut StackFrame) {
 }
 
 pub fn lxor(frame: &mut StackFrame) {
-    let l2 = frame.popi64() as i64;
-    let l1 = frame.popi64() as i64;
+    let l2 = frame.popi64() ;
+    let l1 = frame.popi64() ;
     frame.op_stack.push(StackFrameValue::Long(l1 ^ l2));
     frame.pc += 1;
 }
@@ -322,12 +322,12 @@ pub fn iinc(frame: &mut StackFrame) {
         StackFrameValue::Byte(data) => i = *data as i64,
         StackFrameValue::Char(data) => i = *data as i64,
         StackFrameValue::Int(data) => i = *data as i64,
-        StackFrameValue::Long(data) => i = *data as i64,
+        StackFrameValue::Long(data) => i = *data,
         StackFrameValue::Short(data) => i = *data as i64,
         StackFrameValue::U32(data) => i = *data as i64,
         _ => panic!(),
     }
-    frame.local[index as usize] =  StackFrameValue::Int(((i as i32) + _const) as i32);
+    frame.local[index as usize] =  StackFrameValue::Int((i as i32) + _const);
     frame.pc += 3;
     //info!("{:?}",frame);
 }

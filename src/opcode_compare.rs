@@ -38,8 +38,8 @@ pub fn fcmpg(frame: &mut StackFrame) {
 
 
 pub fn lcmp(frame: &mut StackFrame) {
-    let l2 = frame.popi64() as i64;
-    let l1 = frame.popi64() as i64;
+    let l2 = frame.popi64();
+    let l1 = frame.popi64();
     
     let result = match l1.cmp(&l2) {
         std::cmp::Ordering::Less => -1,

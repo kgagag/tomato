@@ -44,7 +44,7 @@
             let map = &mut *data.get();
             // 释放Mutex锁
             drop(data);
-            return map.contains_key(class_name);
+            map.contains_key(class_name)
         }
     }
 
@@ -61,7 +61,7 @@
             drop(data);
             drop(obj_id_data);
             *obj_id += 1;
-            return obj.id;
+            obj.id
         }
     }
 
@@ -80,7 +80,7 @@
             drop(data);
             drop(obj_id_data);
             *obj_id += 1;
-            return next_id;
+            next_id
         }
     }
 
@@ -123,7 +123,7 @@
                 add_id_class(map.len(), class_name.clone());
             }
             drop(data);
-            return map.get_mut(&class_name).unwrap();
+            map.get_mut(&class_name).unwrap()
         }
     }
 
@@ -144,8 +144,7 @@
         unsafe {
             let map = &mut *data.get();
             drop(data);
-            let class_name =  map.get(class_id).unwrap().clone();
-            return class_name;
+            map.get(class_id).unwrap().clone()
         }
     }
 

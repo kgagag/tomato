@@ -6,10 +6,10 @@ use crate::runtime_data_area::get_or_load_class;
 use crate::value::value::number_to_u32tuple;
 use log::info;
 
-use crate::value::value::StackFrameValue;
-use std::collections::HashMap;
-use std::cell::UnsafeCell;
 use crate::runtime_data_area::VM_STACKS;
+use crate::value::value::StackFrameValue;
+use std::cell::UnsafeCell;
+use std::collections::HashMap;
 /**
  * 栈桢
  */
@@ -61,7 +61,7 @@ impl StackFrame {
             stake_frame.local.push(StackFrameValue::Byte(0));
         }
         //info!("{:?}",stake_frame);
-        return stake_frame;
+        stake_frame
     }
 
     pub fn store(&mut self, index: usize, stack_value: StackFrameValue) {
@@ -134,8 +134,8 @@ pub fn init_stack_frame(
     let mut new_stack_frame: StackFrame = create_stack_frame(&method_info).unwrap();
     new_stack_frame.vm_stack_id = frame.vm_stack_id;
     let mut i: usize = start;
-    let mut param:Vec<StackFrameValue> = Vec::new();
-    for j in 0..method_info.param.len(){
+    let mut param: Vec<StackFrameValue> = Vec::new();
+    for j in 0..method_info.param.len() {
         param.push(frame.op_stack.pop().unwrap());
     }
 
@@ -165,12 +165,10 @@ pub fn init_stack_frame(
                     i += 1;
                 }
                 DataType::Double => {
-                   // info!("{:?}", v);
+                    // info!("{:?}", v);
                     let u32tuple: (u32, u32) = number_to_u32tuple(&v);
-                    new_stack_frame.local[i] =
-                        StackFrameValue::U32(u32tuple.0);
-                    new_stack_frame.local[i + 1] =
-                        StackFrameValue::U32(u32tuple.1);
+                    new_stack_frame.local[i] = StackFrameValue::U32(u32tuple.0);
+                    new_stack_frame.local[i + 1] = StackFrameValue::U32(u32tuple.1);
                     i += 2;
                     // let a = combine_u32_to_f64(u32tuple.1,u32tuple.0);
                     // info!("{:?}",a);
@@ -186,10 +184,8 @@ pub fn init_stack_frame(
                 }
                 DataType::Long => {
                     let u32tuple = number_to_u32tuple(&v);
-                    new_stack_frame.local[i] =
-                        StackFrameValue::U32(u32tuple.0);
-                    new_stack_frame.local[i + 1] =
-                        StackFrameValue::U32(u32tuple.1);
+                    new_stack_frame.local[i] = StackFrameValue::U32(u32tuple.0);
+                    new_stack_frame.local[i + 1] = StackFrameValue::U32(u32tuple.1);
                     i += 2;
                 }
                 DataType::Reference(_string) => {
@@ -204,49 +200,47 @@ pub fn init_stack_frame(
             }
         }
     }
-    return new_stack_frame;
+    new_stack_frame
 }
-
 
 pub fn create_stack_frame(method_info: &MethodInfo) -> Option<StackFrame> {
     let class = get_or_load_class(&method_info.class_name);
     for attr in &method_info.attributes {
-        match attr {
-            AttributeInfo::Code(code_attr) => {
-                return Some(StackFrame::new(
-                    class.id,
-                    code_attr.max_stack,
-                    code_attr.max_locals,
-                    code_attr.code.clone(),
-                    code_attr.clone(),
-                ));
-            }
+        if let AttributeInfo::Code(code_attr) = attr {
+            return Some(StackFrame::new(
+                class.id,
+                code_attr.max_stack,
+                code_attr.max_locals,
+                code_attr.code.clone(),
+                code_attr.clone(),
+            ));
         }
     }
-    return None;
+    None
 }
 
-pub fn create_stack_frame_with_class(method_info: &MethodInfo,class:&Class) -> Option<StackFrame> {
+pub fn create_stack_frame_with_class(
+    method_info: &MethodInfo,
+    class: &Class,
+) -> Option<StackFrame> {
     for attr in &method_info.attributes {
-        match attr {
-            AttributeInfo::Code(code_attr) => {
-                return Some(StackFrame::new(
-                    class.id,
-                    code_attr.max_stack,
-                    code_attr.max_locals,
-                    code_attr.code.clone(),
-                    code_attr.clone(),
-                ));
-            }
+        if let AttributeInfo::Code(code_attr) = attr {
+            return Some(StackFrame::new(
+                class.id,
+                code_attr.max_stack,
+                code_attr.max_locals,
+                code_attr.code.clone(),
+                code_attr.clone(),
+            ));
         }
     }
-    return None;
+    None
 }
 
 pub fn push_stack_frame(mut stack_frame: StackFrame) -> u32 {
     let data: std::sync::MutexGuard<'_, UnsafeCell<HashMap<u32, Vec<StackFrame>>>> =
         VM_STACKS.lock().unwrap();
-        let mut vm_stack_id :u32= stack_frame.vm_stack_id;
+    let mut vm_stack_id: u32 = stack_frame.vm_stack_id;
     unsafe {
         let map: &mut HashMap<u32, Vec<StackFrame>> = &mut *data.get();
         if stack_frame.vm_stack_id == 0 {
@@ -268,7 +262,5 @@ pub fn push_stack_frame(mut stack_frame: StackFrame) -> u32 {
         }
         drop(data);
     }
-    return vm_stack_id;
+    vm_stack_id
 }
-
-

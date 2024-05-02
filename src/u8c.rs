@@ -1,19 +1,19 @@
 pub fn u8s_to_u16(bytes: &[u8]) -> u16 {
     let mut value: [u8; 2] = [0; 2];
     value.copy_from_slice(&bytes);
-    return Some(u16::from_be_bytes(value)).unwrap();
+    u16::from_be_bytes(value)
 }
 
 pub fn u8s_to_u32(bytes: &[u8]) -> u32 {
     let mut value = [0; 4];
     value.copy_from_slice(&bytes);
-    return Some(u32::from_be_bytes(value)).unwrap();
+    u32::from_be_bytes(value)
 }
 
 pub fn u8s_to_u64(bytes: &[u8]) -> u64 {
     let mut value = [0; 8];
     value.copy_from_slice(&bytes);
-    return Some(u64::from_be_bytes(value)).unwrap();
+    u64::from_be_bytes(value)
 }
 
 pub fn f64_to_u32_tuple(v: f64) -> (u32, u32) {
@@ -31,7 +31,7 @@ pub fn u64_to_u32_tuple(bits: u64) -> (u32, u32) {
 
 pub fn u32_tuple_to_f64(tuple: (u32, u32)) -> f64 {
     let bits = ((tuple.1 as u64) << 32) | (tuple.0 as u64);
-    return f64::from_bits(bits) ;
+    f64::from_bits(bits) 
 }
 
 // fn combine_u32_to_f64(high: u32, low: u32) -> f64 {

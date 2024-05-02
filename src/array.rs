@@ -19,7 +19,7 @@ pub mod array{
             for _i in 0.. len {
                 array.data.push(StackFrameValue::Byte(0));
             }
-            return array;
+            array
         }
         
     }

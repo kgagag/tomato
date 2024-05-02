@@ -141,7 +141,7 @@ pub mod class_loader {
         let mut file = fs::File::open(user_class_path).unwrap();
         let mut buffer = Vec::new();
         let _ = file.read_to_end(&mut buffer);
-        return Ok(buffer);
+        Ok(buffer)
     }
 
     /***
@@ -207,7 +207,7 @@ pub mod class_loader {
         do_after_load(&mut class);
         init_class_id(&mut class);
         init(&mut class, "<clinit>".to_string());
-        return class;
+        class
     }
 
     /**
@@ -386,7 +386,7 @@ pub mod class_loader {
      * 获取魔数
      */
     pub fn get_magic(cursor: &mut Cursor<Vec<u8>>) -> u32 {
-        return cursor.read_u32::<BigEndian>().unwrap();
+        cursor.read_u32::<BigEndian>().unwrap()
     }
 
     /**
@@ -394,22 +394,22 @@ pub mod class_loader {
      */
     pub fn read_u32(file: &mut File) -> u32 {
         let mut buffer = [0u8; 4];
-        file.read(&mut buffer).unwrap();
-        return u8s_to_u32(&buffer);
+        let _ = file.read(&mut buffer);
+        u8s_to_u32(&buffer)
     }
 
     /**
      * 获取副版本号
      */
     pub fn get_minor_version(cursor: &mut Cursor<Vec<u8>>) -> u16 {
-        return cursor.read_u16::<BigEndian>().unwrap();
+        cursor.read_u16::<BigEndian>().unwrap()
     }
 
     /**
      * 获取主版本号
      */
     pub fn get_major_version(cursor: &mut Cursor<Vec<u8>>) -> u16 {
-        return cursor.read_u16::<BigEndian>().unwrap();
+        cursor.read_u16::<BigEndian>().unwrap()
     }
 
     /**
@@ -417,7 +417,7 @@ pub mod class_loader {
      */
 
     pub fn get_constant_pool_count(cursor: &mut Cursor<Vec<u8>>) -> u16 {
-        return cursor.read_u16::<BigEndian>().unwrap();
+        cursor.read_u16::<BigEndian>().unwrap()
     }
 
     pub fn get_constant_pool(cnt: u16, file: &mut File) -> Vec<Vec<u8>> {
@@ -426,62 +426,62 @@ pub mod class_loader {
         //总数量是cnt - 1;
         while i < cnt {
             let mut buffer = [0u8; 1];
-            file.read(&mut buffer).unwrap();
+            let _ = file.read(&mut buffer);
             let tag: u8 = buffer[0];
             let mut v: Vec<u8> = Vec::new();
             v.push(tag);
             if tag == 7 {
                 let mut buffer = vec![0; 2];
-                file.read(&mut buffer).unwrap();
+                let _ = file.read(&mut buffer);
                 for j in 0..buffer.len() {
                     v.push(buffer[j]);
                 }
                 ans.push(v);
             } else if tag == 9 {
                 let mut buffer = [0u8; 4];
-                file.read(&mut buffer).unwrap();
+                let _ = file.read(&mut buffer);
                 for j in 0..buffer.len() {
                     v.push(buffer[j]);
                 }
                 ans.push(v);
             } else if tag == 10 {
                 let mut buffer = [0u8; 4];
-                file.read(&mut buffer).unwrap();
+                let _ = file.read(&mut buffer);
                 for j in 0..buffer.len() {
                     v.push(buffer[j]);
                 }
                 ans.push(v);
             } else if tag == 11 {
                 let mut buffer = [0u8; 4];
-                file.read(&mut buffer).unwrap();
+                let _ = file.read(&mut buffer);
                 for j in 0..buffer.len() {
                     v.push(buffer[j]);
                 }
                 ans.push(v);
             } else if tag == 8 {
                 let mut buffer = [0u8; 2];
-                file.read(&mut buffer).unwrap();
+                let _ = file.read(&mut buffer);
                 for j in 0..buffer.len() {
                     v.push(buffer[j]);
                 }
                 ans.push(v);
             } else if tag == 3 {
                 let mut buffer = [0u8; 4];
-                file.read(&mut buffer).unwrap();
+                let _ = file.read(&mut buffer);
                 for j in 0..buffer.len() {
                     v.push(buffer[j]);
                 }
                 ans.push(v);
             } else if tag == 4 {
                 let mut buffer = [0u8; 4];
-                file.read(&mut buffer).unwrap();
+                let _ = file.read(&mut buffer);
                 for j in 0..buffer.len() {
                     v.push(buffer[j]);
                 }
                 ans.push(v);
             } else if tag == 5 {
                 let mut buffer = [0u8; 8];
-                file.read(&mut buffer).unwrap();
+                let _ = file.read(&mut buffer).unwrap();
                 for j in 0..buffer.len() {
                     v.push(buffer[j]);
                 }
@@ -489,7 +489,7 @@ pub mod class_loader {
                 i = i + 1;
             } else if tag == 6 {
                 let mut buffer = [0u8; 8];
-                file.read(&mut buffer).unwrap();
+                let _ = file.read(&mut buffer);
                 for j in 0..buffer.len() {
                     v.push(buffer[j]);
                 }
@@ -497,40 +497,40 @@ pub mod class_loader {
                 i = i + 1;
             } else if tag == 12 {
                 let mut buffer = [0u8; 4];
-                file.read(&mut buffer).unwrap();
+                let _ = file.read(&mut buffer);
                 for j in 0..buffer.len() {
                     v.push(buffer[j]);
                 }
                 ans.push(v);
             } else if tag == 1 {
                 let mut buffer = [0u8; 2];
-                file.read(&mut buffer).unwrap();
+                let _ = file.read(&mut buffer);
                 v.push(buffer[0]);
                 v.push(buffer[1]);
                 let len = u8s_to_u16(&buffer);
-                for j in 0..len {
+                for _j in 0..len {
                     let mut buffer = [0u8; 1];
-                    file.read(&mut buffer).unwrap();
+                    let _ = file.read(&mut buffer);
                     v.push(buffer[0]);
                 }
                 ans.push(v);
             } else if tag == 15 {
                 let mut buffer = [0u8; 3];
-                file.read(&mut buffer).unwrap();
+                let _ = file.read(&mut buffer);
                 for j in 0..buffer.len() {
                     v.push(buffer[j]);
                 }
                 ans.push(v);
             } else if tag == 16 {
                 let mut buffer = [0u8; 2];
-                file.read(&mut buffer).unwrap();
+                let _ = file.read(&mut buffer);
                 for j in 0..buffer.len() {
                     v.push(buffer[j]);
                 }
                 ans.push(v);
             } else if tag == 18 {
                 let mut buffer = [0u8; 4];
-                file.read(&mut buffer).unwrap();
+                let _ = file.read(&mut buffer);
                 for j in 0..buffer.len() {
                     v.push(buffer[j]);
                 }
@@ -546,36 +546,36 @@ pub mod class_loader {
      */
     pub fn read_u16(mut file: &File) -> u16 {
         let mut buffer = [0u8; 2];
-        file.read(&mut buffer).unwrap();
-        return u8s_to_u16(&buffer);
+        let _ = file.read(&mut buffer);
+        u8s_to_u16(&buffer)
     }
 
     /**
      * 读取 access_flag
      */
     pub fn get_access_flag(cursor: &mut Cursor<Vec<u8>>) -> u16 {
-        return cursor.read_u16::<BigEndian>().unwrap();
+        cursor.read_u16::<BigEndian>().unwrap()
     }
 
     /**
      * 读取 this_class
      */
     pub fn get_this_class(cursor: &mut Cursor<Vec<u8>>) -> u16 {
-        return cursor.read_u16::<BigEndian>().unwrap();
+        cursor.read_u16::<BigEndian>().unwrap()
     }
 
     /**
      * 读取 super_class
      */
     pub fn get_super_class(cursor: &mut Cursor<Vec<u8>>) -> u16 {
-        return cursor.read_u16::<BigEndian>().unwrap();
+        cursor.read_u16::<BigEndian>().unwrap()
     }
 
     /**
      * 读取 interface_count
      */
     pub fn get_interface_count(cursor: &mut Cursor<Vec<u8>>) -> u16 {
-        return cursor.read_u16::<BigEndian>().unwrap();
+        cursor.read_u16::<BigEndian>().unwrap()
     }
 
     /**
@@ -587,11 +587,11 @@ pub mod class_loader {
             let interface: u16 = cursor.read_u16::<BigEndian>().unwrap();
             v.push(interface);
         }
-        return v;
+        v
     }
 
     pub fn get_field_count(cursor: &mut Cursor<Vec<u8>>) -> u16 {
-        return cursor.read_u16::<BigEndian>().unwrap();
+        cursor.read_u16::<BigEndian>().unwrap()
     }
 
     pub fn get_field(
@@ -613,23 +613,20 @@ pub mod class_loader {
                 descriptor: String::from(""),
             };
 
-            let field_name: String;
             let name_utf8 = constant_pool.get(&f.name_index).unwrap();
-            match name_utf8 {
-                ConstantPoolInfo::Utf8(name) => {
-                    field_name = name.clone();
-                }
+            let field_name = match name_utf8 {
+                ConstantPoolInfo::Utf8(name) => name.clone(),
                 _ => panic!(),
-            }
+            };
             f.field_name = field_name;
             f.atrributes = get_attribute(constant_pool, f.attribute_count, cursor);
             v.push(f);
         }
-        return v;
+        v
     }
 
     pub fn get_method_count(cursor: &mut Cursor<Vec<u8>>) -> u16 {
-        return cursor.read_u16::<BigEndian>().unwrap();
+        cursor.read_u16::<BigEndian>().unwrap()
     }
 
     pub fn get_method(
@@ -653,11 +650,11 @@ pub mod class_loader {
             m.attributes = get_attribute(constant_pool, m.attributes_count, cursor);
             v.push(m);
         }
-        return v;
+        v
     }
 
     pub fn get_attribute_count(cursor: &mut Cursor<Vec<u8>>) -> u16 {
-        return cursor.read_u16::<BigEndian>().unwrap();
+        cursor.read_u16::<BigEndian>().unwrap()
     }
 
     pub fn get_attribute(
@@ -715,7 +712,7 @@ pub mod class_loader {
                 _ => panic!(),
             }
         }
-        return ans;
+        ans
     }
 
     fn read_constant_pool_info<R: Read>(

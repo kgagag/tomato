@@ -23,7 +23,7 @@ pub fn pop(frame: &mut StackFrame) {
 }
 
 pub fn pop2(frame: &mut StackFrame) {
-    let v = frame.op_stack.get(frame.op_stack.len() - 1).unwrap();
+    let v = frame.op_stack.last().unwrap();
     match v {
         StackFrameValue::Double(_d) =>{
             frame.op_stack.pop();

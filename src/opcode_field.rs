@@ -17,14 +17,14 @@ pub fn putfield(frame: &mut StackFrame) {
         ConstantPoolInfo::Fieldref(class_index, name_and_type_index) => {
             let class_ref: &ConstantPoolInfo = this_class.constant_pool.get(&class_index).unwrap();
             let name_and_type: &ConstantPoolInfo =
-                this_class.constant_pool.get(&name_and_type_index).unwrap();
+                this_class.constant_pool.get(name_and_type_index).unwrap();
             match class_ref {
                 ConstantPoolInfo::Class(class_name_index) => {
                     let class_name_utf8: &ConstantPoolInfo =
-                        this_class.constant_pool.get(&class_name_index).unwrap();
+                        this_class.constant_pool.get(class_name_index).unwrap();
                     match class_name_utf8 {
                         ConstantPoolInfo::Utf8(class_name) => {
-                            let target_class = get_or_load_class(&class_name);
+                            let target_class = get_or_load_class(class_name);
                             match name_and_type {
                                 ConstantPoolInfo::NameAndType(name_index, _descritor_index) => {
                                     let field_name_utf8: &ConstantPoolInfo =
@@ -90,10 +90,10 @@ pub fn getfield(frame: &mut StackFrame) {
             match class_ref {
                 ConstantPoolInfo::Class(class_name_index) => {
                     let class_name_utf8: &ConstantPoolInfo =
-                        this_class.constant_pool.get(&class_name_index).unwrap();
+                        this_class.constant_pool.get(class_name_index).unwrap();
                     match class_name_utf8 {
                         ConstantPoolInfo::Utf8(class_name) => {
-                            let target_class = get_or_load_class(&class_name);
+                            let target_class = get_or_load_class(class_name);
                             match name_and_type {
                                 ConstantPoolInfo::NameAndType(name_index, _descritor_index) => {
                                     let field_name_utf8: &ConstantPoolInfo =

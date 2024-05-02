@@ -17,7 +17,7 @@ pub mod value {
     }
 
     pub fn number_to_u32tuple(v: &StackFrameValue) -> (u32, u32){
-        let mut fv: u64 = 0;
+        let  fv: u64;
         match v {
             StackFrameValue::Int(data) => {
                 fv = *data as u64;
@@ -44,12 +44,12 @@ pub mod value {
                 panic!("wrong value type");
             }
         }
-       return u64_to_u32_tuple(fv);
+        u64_to_u32_tuple(fv)
     }
 
 
     pub fn number_u64(v: &StackFrameValue) -> u64{
-        let mut fv: u64 = 0;
+        let  fv: u64;
         match v {
             StackFrameValue::Int(data) => {
                 fv = *data as u64;
@@ -76,7 +76,7 @@ pub mod value {
                 panic!("wrong value type");
             }
         }
-       return fv;
+        fv
     }
 
 

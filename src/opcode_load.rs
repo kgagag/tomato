@@ -54,8 +54,8 @@ pub fn dload(frame: &mut StackFrame) {
     let index = frame.code[frame.pc + 1] as usize;
     let v1 = frame.local.get(index).unwrap().clone();
     let v2: StackFrameValue  =  frame.local.get(index + 1).unwrap().clone();
-    let mut u1:u32 = 0;
-    let mut u2 : u32 = 0;
+    let  u1:u32 ;
+    let  u2 : u32;
 
     match v1 {
         StackFrameValue::Byte(l) => u1 = l as u32,
@@ -84,8 +84,8 @@ pub fn lload(frame: &mut StackFrame) {
     let index = frame.code[frame.pc + 1] as usize;
     let v1 = frame.local.get(index).unwrap().clone();
     let v2: StackFrameValue  =  frame.local.get(index + 1).unwrap().clone();
-    let mut u1:u32 = 0;
-    let mut u2 : u32 = 0;
+    let  u1:u32 ;
+    let  u2 : u32;
 
     match v1 {
         StackFrameValue::Byte(l) => u1 = l as u32,
@@ -251,7 +251,7 @@ pub fn dload_1(frame: &mut StackFrame) {
         StackFrameValue::U32(u1) =>{
             match v2 {
                 StackFrameValue::U32(u2) =>{
-                    frame.op_stack.push(StackFrameValue::Double(u32_tuple_to_f64((u1,u2)) as f64));
+                    frame.op_stack.push(StackFrameValue::Double(u32_tuple_to_f64((u1,u2))));
 
                 } ,
                 _=> panic!()

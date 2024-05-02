@@ -71,14 +71,14 @@ pub fn get_method_for_invoke(frame: &StackFrame) -> Option<&MethodInfo> {
        method = get_method_from_pool(super_class.class_name.clone(), method_name.clone(), descriptor.clone());
        curr_class = super_class;
     }
-    return method;
+     method
 }
 
 pub fn invokespecial(frame: &mut StackFrame) {
     let clone_frame = &frame.clone();
     frame.pc += 3;
 
-    let method = get_method_for_invoke(&clone_frame);
+    let method = get_method_for_invoke(clone_frame);
     //非native 方法
     let mut new_frame = init_stack_frame(frame, method.unwrap(), 1);
     let v = frame.op_stack.pop();
@@ -162,7 +162,7 @@ pub fn invokeinterface(frame: &mut StackFrame) {
 
 pub fn invokevirtual(frame: &mut StackFrame) {
     let clone_frame = &frame.clone();
-    let method = get_method_for_invoke(&clone_frame);
+    let method = get_method_for_invoke(clone_frame);
     //info!("{:?}", method.unwrap().method_name);
     let mut new_frame = init_stack_frame(frame, method.unwrap(), 1);
     //info!("{:?}",new_frame);

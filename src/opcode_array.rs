@@ -17,7 +17,7 @@ pub fn newarray(frame: &mut StackFrame) {
     let atype = frame.code.get(frame.pc + 1).unwrap();
     ////info!("{:?}",atype);
     let array_type;
-    let mut len: u32 = 0;
+    let  len: u32 ;
     match v {
         StackFrameValue::Byte(l) => len = l as u32,
         StackFrameValue::Char(l) => len = l as u32,
@@ -70,7 +70,7 @@ fn extract_array_base_type_code(descriptor: &str) -> Option<u8> {
 
 pub fn anewarray(frame: &mut StackFrame){
     let v: StackFrameValue = frame.op_stack.pop().unwrap();
-    let mut len: u32 = 0;
+    let  len: u32 ;
     match v {
         StackFrameValue::Byte(l) => len = l as u32,
         StackFrameValue::Char(l) => len = l as u32,
@@ -122,7 +122,7 @@ pub fn multianewarray(frame: &mut StackFrame) {
                         panic!("wrong atype");
                     }
                     let dimenssion = frame.code[frame.pc + 3] as i32;
-                    let mut len:u32 = 0;
+                    let mut len:u32;
 
                     let len_value = frame.op_stack.pop().unwrap();
                     
@@ -179,9 +179,9 @@ pub fn multianewarray(frame: &mut StackFrame) {
 }
 
 
-fn create_muti_array(referenceId:u32,len: u32,array_type: DataType) -> u32 {
+fn create_muti_array(reference_id:u32,len: u32,array_type: DataType) -> u32 {
    let newarr =  create_array(len, array_type);
-   let reference = get_reference(&referenceId);
+   let reference = get_reference(&reference_id);
    match reference {
     Reference::Array(array) => {
         for i in 0 .. array.len{
@@ -190,7 +190,7 @@ fn create_muti_array(referenceId:u32,len: u32,array_type: DataType) -> u32 {
       }
        _=> panic!()
    }
-   return newarr;
+    newarr
 }
 
 pub fn iastore(frame: &mut StackFrame) {

@@ -1,10 +1,12 @@
 public class Test {
     public static void main(String[] args) {
-       //  两个int相加
+
+
+//       //  两个int相加
         new Test1().test();
         // 两个 float 相加
         new Test2().test();
-        // 两个double 相加
+       //  两个高精度 double 相加
         new Test3().test();
         // for 循环
         new Test4().test();
@@ -74,5 +76,7 @@ public class Test {
 
         // 力扣 第33 题
         new Solution_33().test();
+
+        new Test35().test('1',3,4,5.0f,6d);
     }
 }

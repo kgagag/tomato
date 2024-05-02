@@ -91,7 +91,7 @@ pub fn multianewarray(frame: &mut StackFrame) {
     //info!("{:?}", frame);
     let index = u8s_to_u16(&frame.code[frame.pc + 1..frame.pc + 3]);
     let class_name = get_class_name(&frame.class);
-    let this_class = get_or_load_class(&class_name).clone();
+    let this_class = get_or_load_class(&class_name);
     let attr = this_class.constant_pool.get(&index).unwrap();
     match attr {
         ConstantPoolInfo::Class(i) => {

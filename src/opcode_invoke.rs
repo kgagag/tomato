@@ -1,4 +1,6 @@
 
+use log::info;
+
 use crate::class::ConstantPoolInfo;
 use crate::class::MethodInfo;
 use crate::reference::reference::Reference;
@@ -163,6 +165,7 @@ pub fn invokevirtual(frame: &mut StackFrame) {
     let method = get_method_for_invoke(&clone_frame);
     //info!("{:?}", method.unwrap().method_name);
     let mut new_frame = init_stack_frame(frame, method.unwrap(), 1);
+    //info!("{:?}",new_frame);
     let v = frame.op_stack.pop();
     match v {
         Some(obj) => {

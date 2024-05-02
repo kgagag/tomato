@@ -17,34 +17,34 @@ pub mod value {
     }
 
     pub fn number_to_u32tuple(v: &StackFrameValue) -> (u32, u32){
-        let mut fv: f64 = 0.0;
+        let mut fv: u64 = 0;
         match v {
             StackFrameValue::Int(data) => {
-                fv = *data as f64;
+                fv = *data as u64;
             }
             StackFrameValue::Byte(data) => {
-                fv = *data as f64;
+                fv = *data as u64;
             }
             StackFrameValue::Char(data) => {
-                fv = *data as f64;
+                fv = *data as u64;
             }
             StackFrameValue::Double(data) => {
-                fv = *data as f64;
+                return f64_to_u32_tuple(*data);
             }
             StackFrameValue::Float(data) => {
-                fv = *data as f64;
+                fv = *data as u64;
             }
             StackFrameValue::Long(data) => {
-                fv = *data as f64;
+                fv = *data as u64;
             }
             StackFrameValue::Short(data) => {
-                fv = *data as f64;
+                fv = *data as u64;
             }
             _ => {
                 panic!("wrong value type");
             }
         }
-       return f64_to_u32_tuple(fv);
+       return u64_to_u32_tuple(fv);
     }
 
 

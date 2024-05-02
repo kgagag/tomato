@@ -1,7 +1,6 @@
 public class Test {
     public static void main(String[] args) {
 
-
 //       //  两个int相加
         new Test1().test();
         // 两个 float 相加
@@ -75,8 +74,13 @@ public class Test {
         new Test34().test(20240320,5);
 
         // 力扣 第33 题
-        new Solution_33().test();
+        new LeetCode_33().test();
 
+        //测试多种数据类型入参
         new Test35().test('1',3,4,5.0f,6d);
+
+        // 力扣 第31 题
+        new LeetCode_31().test();
+
     }
 }

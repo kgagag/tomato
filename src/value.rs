@@ -1,7 +1,10 @@
 pub mod value {
+    use log::info;
+
     use crate::u8c::*;
 
     #[derive(Debug, Clone)]
+    #[derive(PartialEq)]
     pub enum StackFrameValue {
         Byte(i8),
         Char(u16),
@@ -13,6 +16,7 @@ pub mod value {
         Short(i16),
         Boolean(bool),
         U32(u32),
+        CHARACTER(char),
         Null,
     }
 
@@ -50,6 +54,7 @@ pub mod value {
 
     pub fn number_u64(v: &StackFrameValue) -> u64{
         let  fv: u64;
+       // info!("{:?}",v);
         match v {
             StackFrameValue::Int(data) => {
                 fv = *data as u64;
@@ -70,6 +75,9 @@ pub mod value {
                 fv = *data as u64;
             }
             StackFrameValue::Short(data) => {
+                fv = *data as u64;
+            }
+            StackFrameValue::CHARACTER(data) => {
                 fv = *data as u64;
             }
             _ => {

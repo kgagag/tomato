@@ -5,12 +5,15 @@ use log::info;
 use crate::class::ConstantPoolInfo;
 
 use crate::object::Object;
+use crate::reference::reference::Reference;
+use crate::runtime_data_area::create_array;
 use crate::runtime_data_area::create_object;
 use crate::runtime_data_area::get_constant_pool_str;
+use crate::runtime_data_area::get_reference;
 use crate::stack_frame::StackFrame;
 use crate::u8c::*;
 
-
+use crate::param::*;
 use crate::value::value::StackFrameValue;
 use crate::runtime_data_area::get_class_name;
 use crate::runtime_data_area::get_or_load_class;
@@ -43,8 +46,29 @@ pub fn ldc(frame: &mut StackFrame) {
                   }else {
                     let class_name = String::from("java/lang/String");
                     let class = get_or_load_class(&class_name);
-                    let obj = create_object(class.id);
-                    frame.op_stack.push(StackFrameValue::Reference(obj));
+                    let obj_id: u32 = create_object(class.id);
+                    let reference = get_reference(&obj_id);
+                    let object ;
+                    match reference {
+                        Reference::Object(obj) =>{
+                            object = obj;
+                        }
+                        _=>panic!()
+                    }
+                    let char_array_id = create_array(str.len() as u32, param::DataType::Char);
+                    let char_array_reference = get_reference(&char_array_id);
+                    match char_array_reference  {
+                        Reference::Array(array) =>{
+                           // CHARACTER
+                           let chars: Vec<char> = str.chars().collect();
+                           for i in 0 .. chars.len(){
+                                array.data[i] = StackFrameValue::CHARACTER(*chars.get(i).unwrap());
+                           }
+                        }
+                        _=>panic!()
+                    }
+                    object.field.insert(String::from("value"),StackFrameValue::Reference(char_array_id) );
+                    frame.op_stack.push(StackFrameValue::Reference(obj_id));
                   }
                 }
                 _=> panic!()

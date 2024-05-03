@@ -1,3 +1,5 @@
+use log::info;
+
 use crate::reference::reference::Reference;
 use crate::runtime_data_area::create_array;
 use crate::stack_frame::StackFrame;
@@ -287,6 +289,7 @@ pub fn saload(frame: &mut StackFrame) {
 
 pub fn arraylength(frame: &mut StackFrame){
     let v = frame.op_stack.pop().unwrap();
+    //info!("{:?}",v);
     match v {
         StackFrameValue::Reference(reference) =>{
             let aref = get_reference(&reference);

@@ -12,27 +12,21 @@ pub fn putstatic(frame: &mut StackFrame) {
     let field_ref = this_class.constant_pool.get(&index).expect("Field reference not found");
 
     if let ConstantPoolInfo::Fieldref(class_index, name_and_type_index) = field_ref {
-        let class_name_utf8 = match this_class.constant_pool.get(class_index) {
+        let class_name_utf8 = match this_class.constant_pool.get(&class_index) {
             Some(ConstantPoolInfo::Class(class_name_index)) => this_class.constant_pool.get(class_name_index),
             _ => panic!(),
         }.expect("Class name UTF-8 not found");
 
         if let ConstantPoolInfo::Utf8(class_name) = class_name_utf8 {
-            let target_class = get_or_load_class(class_name);
+            let target_class = get_or_load_class(&class_name);
             let name_and_type = this_class.constant_pool.get(name_and_type_index).expect("Name and type not found");
 
             if let ConstantPoolInfo::NameAndType(name_index, _) = name_and_type {
                 let field_name_utf8 = this_class.constant_pool.get(name_index).expect("Field name UTF-8 not found");
 
                 if let ConstantPoolInfo::Utf8(field_name) = field_name_utf8 {
-                    for field in target_class.field_info.iter_mut() {
-                        if &field.field_name == field_name {
-                           // info!("{:?}",field);
-                            field.value = frame.op_stack.pop().expect("Stack underflow");
-                           // info!("{:?}",field);
-                            break;
-                        }
-                    }
+                    let field = target_class.field_info.get_mut(field_name).unwrap();
+                    field.value = frame.op_stack.pop().expect("Stack underflow");
                 } else {
                     panic!("Unexpected constant pool info type");
                 }
@@ -55,25 +49,21 @@ pub fn getstatic(frame: &mut StackFrame) {
     let field_ref = this_class.constant_pool.get(&index).expect("Field reference not found");
 
     if let ConstantPoolInfo::Fieldref(class_index, name_and_type_index) = field_ref {
-        let class_name_utf8 = match this_class.constant_pool.get(class_index) {
+        let class_name_utf8 = match this_class.constant_pool.get(&class_index) {
             Some(ConstantPoolInfo::Class(class_name_index)) => this_class.constant_pool.get(class_name_index),
             _ => panic!(),
         }.expect("Class name UTF-8 not found");
 
         if let ConstantPoolInfo::Utf8(class_name) = class_name_utf8 {
-            let target_class = get_or_load_class(class_name);
+            let target_class = get_or_load_class(&class_name);
             let name_and_type = this_class.constant_pool.get(name_and_type_index).expect("Name and type not found");
 
             if let ConstantPoolInfo::NameAndType(name_index, _) = name_and_type {
                 let field_name_utf8 = this_class.constant_pool.get(name_index).expect("Field name UTF-8 not found");
 
                 if let ConstantPoolInfo::Utf8(field_name) = field_name_utf8 {
-                    for field in &target_class.field_info {
-                        if &field.field_name == field_name {
-                            //error!("{:?}", field.value);
-                            frame.op_stack.push(field.value.clone());
-                        }
-                    }
+                    let field = target_class.field_info.get(field_name).unwrap();
+                    frame.op_stack.push(field.value.clone());
                 } else {
                     panic!("Unexpected constant pool info type");
                 }

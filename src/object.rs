@@ -6,7 +6,7 @@ pub struct Object {
     pub id: u32,
     pub class: usize,
     pub lock: u8,
-    pub field: HashMap<u16, StackFrameValue>,
+    pub field: HashMap<String, StackFrameValue>,
 }
 
 impl Object {

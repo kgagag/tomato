@@ -317,8 +317,7 @@ pub mod class_loader {
         }
 
         //补充方法方法参数解析后信息
-        for i in 0..class.fields_count {
-            let field_info = class.field_info.get_mut(i as usize).unwrap();
+        for (key, field_info) in class.field_info.iter_mut() {        
             let descriptor = class
                 .constant_pool
                 .get(&field_info.descriptor_index)
@@ -381,6 +380,7 @@ pub mod class_loader {
             }
         }
     }
+    
 
     /**
      * 获取魔数
@@ -598,8 +598,8 @@ pub mod class_loader {
         constant_pool: &HashMap<u16, ConstantPoolInfo>,
         cnt: u16,
         cursor: &mut Cursor<Vec<u8>>,
-    ) -> Vec<FieldInfo> {
-        let mut v: Vec<FieldInfo> = Vec::new();
+    ) -> HashMap<String,FieldInfo> {
+        let mut v: HashMap<String,FieldInfo> = HashMap::new();
         for _j in 0..cnt {
             let mut f: FieldInfo = FieldInfo {
                 access_flag: cursor.read_u16::<BigEndian>().unwrap(),
@@ -620,7 +620,7 @@ pub mod class_loader {
             };
             f.field_name = field_name;
             f.atrributes = get_attribute(constant_pool, f.attribute_count, cursor);
-            v.push(f);
+            v.insert(f.field_name.clone() ,f);
         }
         v
     }

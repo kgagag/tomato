@@ -6,7 +6,11 @@ public class Test39 {
 
     String a;
 
-    Boolean a;
+    Boolean C;
 
     char b;
+
+    public char test(){
+        return b;
+    }
 }

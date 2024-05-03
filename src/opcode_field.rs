@@ -1,8 +1,11 @@
 
+use std::f32::consts::E;
+
 use clap::Id;
 
 use crate::object;
 use crate::object::Object;
+use crate::param::param::DataType;
 use crate::reference::reference::Reference;
 use crate::stack_frame;
 use crate::stack_frame::StackFrame;
@@ -101,7 +104,7 @@ pub fn getfield(frame: &mut StackFrame) {
                         this_class.constant_pool.get(class_name_index).unwrap();
                     match class_name_utf8 {
                         ConstantPoolInfo::Utf8(class_name) => {
-                            let target_class = get_or_load_class(class_name);
+                            let target_class: &mut Class = get_or_load_class(class_name);
                             match name_and_type {
                                 ConstantPoolInfo::NameAndType(name_index, _descritor_index) => {
                                     let field_name_utf8: &ConstantPoolInfo =
@@ -110,7 +113,17 @@ pub fn getfield(frame: &mut StackFrame) {
                                         ConstantPoolInfo::Utf8(field_name) => {
                                             let op = object.field.get(field_name);
                                             if op == None {
-                                                frame.op_stack.push(StackFrameValue::Null);
+                                                let field_info = target_class.field_info.get(field_name).unwrap();
+                                                if field_info.data_type == DataType::Char || field_info.data_type == DataType::Short
+                                                || field_info.data_type == DataType::Int
+                                                || field_info.data_type == DataType::Long
+                                                || field_info.data_type == DataType::Float
+                                                || field_info.data_type == DataType::Double {
+                                                    frame.op_stack.push(StackFrameValue::Short(0));
+                                                }else {
+                                                    frame.op_stack.push(StackFrameValue::Null);
+                                                }
+
                                             }else{
                                                 frame.op_stack.push(op.unwrap().clone());
                                             }

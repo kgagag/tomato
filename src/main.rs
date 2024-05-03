@@ -30,6 +30,8 @@ pub mod opcode_new;
 pub mod opcode_invoke;
 pub mod native;
 pub mod native_io;
+pub mod debug;
+pub mod native_system;
 use crate::class::ConstantPoolInfo;
 use crate::stack_frame::*;
 use crate::runtime_data_area::get_or_load_class;

@@ -14,6 +14,9 @@ use crate::u8c::u8s_to_u16;
 use crate::value::value::StackFrameValue;
 use std::cell::UnsafeCell;
 use std::collections::HashMap;
+use std::f32::consts::E;
+use crate::debug::*;
+use crate::native::*;
 
 pub fn get_method_for_invoke(frame: &StackFrame) -> Option<&MethodInfo> {
     let class_name = get_class_name(&frame.class);
@@ -191,10 +194,15 @@ pub fn get_frames(vm_stack_id: &u32) -> &Vec<StackFrame> {
 pub fn invokestatic(frame: &mut StackFrame) {
     let clone_frame = &frame.clone();
     let method = get_method_for_invoke(clone_frame).unwrap();
-    //info!("{:?}",method.access_flag);
-    if method.access_flag & 0x0100 == 0 {
+    //我写的辅助调试输出的工具
+    if(method.method_name == "print20240503" ){
+       let v =  frame.op_stack.pop().unwrap();
+       dprint(v);
+    }else if method.access_flag & 0x0100 == 0 {
         let new_frame = init_stack_frame(frame, method, 0);
         push_stack_frame(new_frame);
+    }else{
+        run_static_native(method,frame);
     }
     frame.pc += 3;
 }

@@ -1,3 +1,5 @@
+use log::info;
+
 use crate::stack_frame::StackFrame;
 use crate::value::value::StackFrameValue;
 extern crate env_logger;
@@ -287,6 +289,20 @@ pub fn if_acmpne(frame: &mut StackFrame) {
         frame.pc = (frame.pc as i32 + branch_offset as i32) as usize;
     } else {
         frame.pc += 3; // 跳转失败，继续执行下一条指令
+    }
+}
+
+pub fn ifnonnull(frame: &mut StackFrame) {
+    let value = frame.op_stack.pop().unwrap();
+    info!("{:?}",value);
+    match value {
+        StackFrameValue::Null =>{
+            frame.pc += 3; // 跳转失败，继续执行下一条指令
+        }
+        _=>{
+            let branch_offset = u8s_to_u16(&frame.code[frame.pc + 1.. frame.pc + 3]);
+            frame.pc = (frame.pc as i32 + branch_offset as i32) as usize;
+        }
     }
 }
 

@@ -1,16 +1,16 @@
+import java.io.FileDescriptor;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
+import java.io.PrintStream;
+
 public class Test39 {
-    public static void main(String[] args) {
-        Test38 test38 = new Test38();
-        test38.test("hello");
+    public void test(){
+        StringHelper.print20240503("输出一段中文和ying wen");
     }
-
-    String a;
-
-    Boolean C;
-
-    char b;
-
-    public char test(){
-        return b;
+    public static void main(String[] args) {
+        String str = "hello world";
+        FileOutputStream fdOut = new FileOutputStream(FileDescriptor.out);
+        PrintStream printStream = new PrintStream(fdOut);
+        printStream.print(str);
     }
 }

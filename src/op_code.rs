@@ -1,4 +1,6 @@
 pub mod op_code {
+    use log::info;
+
     use crate::stack_frame::*;
     extern crate env_logger;
     extern crate log;
@@ -46,7 +48,7 @@ pub mod op_code {
         while !vm_stack.is_empty() && vm_stack.last().unwrap().pc < vm_stack.last().unwrap().code.len() {
             let code = vm_stack.last().unwrap().code[vm_stack.last().unwrap().pc];
             let frame = vm_stack.last_mut().unwrap();
-           // info!("{:x}",code);
+            //info!("{:x}",code);
             match code {
                 0x00 => nop(frame),
                 0x01 => aconst_null(frame),
@@ -247,7 +249,7 @@ pub mod op_code {
                 // 0xc4 => wide(frame),
                  0xc5 => multianewarray(frame),
                 // 0xc6 => ifnull(frame),
-                // 0xc7 => ifnonnull(frame),
+                 0xc7 => ifnonnull(frame),
                 // 0xc8 => goto_w(frame),
                 // 0xc9 => jsr_w(frame),
                 _ => {

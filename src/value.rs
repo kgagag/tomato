@@ -1,7 +1,7 @@
 pub mod value {
     use log::info;
 
-    use crate::u8c::*;
+    use crate::{runtime_data_area::get_reference, u8c::*};
 
     #[derive(Debug, Clone)]
     #[derive(PartialEq)]
@@ -54,7 +54,7 @@ pub mod value {
 
     pub fn number_u64(v: &StackFrameValue) -> u64{
         let  fv: u64;
-       // info!("{:?}",v);
+        //info!("{:?}",v);
         match v {
             StackFrameValue::Int(data) => {
                 fv = *data as u64;
@@ -78,6 +78,9 @@ pub mod value {
                 fv = *data as u64;
             }
             StackFrameValue::CHARACTER(data) => {
+                fv = *data as u64;
+            }
+            StackFrameValue::U32(data) => {
                 fv = *data as u64;
             }
             _ => {

@@ -4,7 +4,7 @@
     use log::info;
     use std::collections::HashMap;
     use crate::array::array::Array;
-    use crate::object::Object;
+    use crate::object::{self, Object};
     use crate::class::{Class, MethodInfo};
     use crate::reference::reference::Reference;
     use crate::stack_frame::StackFrame;
@@ -48,6 +48,21 @@
             map.get(str)
         }
     }
+
+
+    pub fn put_into_str_constant_pool(string:String,obj_id:u32) {
+        // 获取全局变量的Mutex锁
+        let data: std::sync::MutexGuard<'_, UnsafeCell<HashMap<String, u32>>> =
+            STR_POOL.lock().unwrap();
+        unsafe {
+            // 从 UnsafeCell 中获取 HashMap 的可变引用
+            let map = &mut *data.get();
+            // 释放Mutex锁
+            map.insert(string,obj_id);
+            drop(data);
+        }
+    }
+
 
     pub fn class_exists(class_name:&String) -> bool {
         // 获取全局变量的Mutex锁

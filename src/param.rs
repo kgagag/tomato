@@ -1,6 +1,7 @@
 pub mod param{
     
     #[derive(Debug, Clone)]
+    #[derive(PartialEq)]
     pub enum DataType {
         Byte,
         Char,

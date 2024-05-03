@@ -8,8 +8,8 @@ use crate::value::value::StackFrameValue;
 
 
 pub fn iadd(frame: &mut StackFrame) {
-    let i1 = frame.popi64() as i32;
-    let i2 = frame.popi64() as i32;
+    let i1: i32 = frame.popi64() as i32;
+    let i2: i32 = frame.popi64() as i32;
     let result = i1 + i2;
     //warn!("{}", format!("{}{}", "iadd add result:", result));
     let value = StackFrameValue::Int(result);

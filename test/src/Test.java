@@ -1,6 +1,8 @@
 public class Test {
     public static void main(String[] args) {
 
+        /*
+
 //       //  两个int相加
         new Test1().test();
         // 两个 float 相加
@@ -82,5 +84,8 @@ public class Test {
         // 力扣 第31 题
         new LeetCode_31().test();
 
+        */
+
+        new Test37().test();
     }
 }

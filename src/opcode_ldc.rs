@@ -1,5 +1,12 @@
+use std::f32::consts::E;
+
+use log::info;
+
 use crate::class::ConstantPoolInfo;
 
+use crate::object::Object;
+use crate::runtime_data_area::create_object;
+use crate::runtime_data_area::get_constant_pool_str;
 use crate::stack_frame::StackFrame;
 use crate::u8c::*;
 
@@ -26,7 +33,23 @@ pub fn ldc(frame: &mut StackFrame) {
         ConstantPoolInfo::Long(_) => todo!(),
         ConstantPoolInfo::Double(_) => todo!(),
         ConstantPoolInfo::Class(_) => todo!(),
-        ConstantPoolInfo::String(_) => todo!(),
+        ConstantPoolInfo::String(index) => {
+            let utf8_constant  = this_class.constant_pool.get(index).unwrap();
+            match utf8_constant {
+                ConstantPoolInfo::Utf8(str) =>{
+                let str_obj = get_constant_pool_str(str);
+                  if str_obj != None {
+                    frame.op_stack.push(StackFrameValue::Reference(*str_obj.unwrap()))
+                  }else {
+                    let class_name = String::from("java/lang/String");
+                    let class = get_or_load_class(&class_name);
+                    let obj = create_object(class.id);
+                    frame.op_stack.push(StackFrameValue::Reference(obj));
+                  }
+                }
+                _=> panic!()
+            }
+        },
         ConstantPoolInfo::Fieldref(_, _) => todo!(),
         ConstantPoolInfo::Methodref(_, _) => todo!(),
         ConstantPoolInfo::InterfaceMethodref(_, _) => todo!(),

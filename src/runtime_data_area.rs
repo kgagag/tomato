@@ -22,7 +22,7 @@
         pub static ref METHOD_DATA: Mutex<UnsafeCell<HashMap<String,MethodInfo>>> = Mutex::new(UnsafeCell::new(HashMap::new()));
         
         //字符串常量池
-        pub static ref STR_POOL: Mutex<UnsafeCell<HashMap<Vec<u8>, u32>>> = Mutex::new(UnsafeCell::new(HashMap::new()));
+        pub static ref STR_POOL: Mutex<UnsafeCell<HashMap<String, u32>>> = Mutex::new(UnsafeCell::new(HashMap::new()));
     
         //对象存储
         pub static ref OBJECT_DATA: Mutex<UnsafeCell<HashMap<u32, Reference>>> = Mutex::new(UnsafeCell::new(HashMap::new()));
@@ -33,6 +33,20 @@
         //虚拟机栈
         pub static ref VM_STACKS: Mutex<UnsafeCell<HashMap<u32, Vec<StackFrame>>>> = Mutex::new(UnsafeCell::new(HashMap::new()));
         
+    }
+
+
+    pub fn get_constant_pool_str(str:&String) -> Option<&u32> {
+        // 获取全局变量的Mutex锁
+        let data: std::sync::MutexGuard<'_, UnsafeCell<HashMap<String, u32>>> =
+            STR_POOL.lock().unwrap();
+        unsafe {
+            // 从 UnsafeCell 中获取 HashMap 的可变引用
+            let map = &mut *data.get();
+            // 释放Mutex锁
+            drop(data);
+            map.get(str)
+        }
     }
 
     pub fn class_exists(class_name:&String) -> bool {

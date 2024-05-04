@@ -1,21 +1,13 @@
-use byteorder::LE;
 use log::info;
 
-use crate::array;
 use crate::array::array::Array;
-use crate::reference;
 use crate::reference::reference::Reference;
-use crate::runtime_data_area::create_array;
 use crate::stack_frame::StackFrame;
 use crate::value::value::StackFrameValue;
 extern crate env_logger;
 extern crate log;
 use crate::class::*;
-use crate::param::param::DataType;
-use crate::runtime_data_area::get_class_name;
-use crate::runtime_data_area::get_or_load_class;
 use crate::runtime_data_area::get_reference;
-use crate::u8c::u8s_to_u16;
 
 pub fn array_copy(method: &MethodInfo, frame: &mut StackFrame) {
     let len = frame.op_stack.pop().unwrap();
@@ -61,7 +53,7 @@ pub fn array_copy(method: &MethodInfo, frame: &mut StackFrame) {
     };
 
     let des_start = match des_ops {
-        StackFrameValue::Int(i) => i as i32,
+        StackFrameValue::Int(i) => i ,
         StackFrameValue::Byte(i) => i as i32,
         StackFrameValue::Char(i) => i as i32,
         StackFrameValue::Long(i) => i as i32,

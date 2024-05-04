@@ -18,6 +18,6 @@ pub fn run_static_native(method:&MethodInfo,frame: &mut StackFrame){
     }else if "doubleToRawIntBits" == method.method_name && "(D)J" == method.descriptor && method.class_name == "java/lang/Float" {
         double_to_raw_long_bits(method, frame);
     }else if "getPrimitiveClass" == method.method_name && "(Ljava/lang/String;)Ljava/lang/Class;" == method.descriptor && method.class_name == "java/lang/Class" {
-        get_primitive_class(method, frame);
+        get_primitive_class(frame);
     }
 }

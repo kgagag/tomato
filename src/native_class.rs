@@ -1,15 +1,7 @@
 use byteorder::LE;
 use log::info;
-
-use crate::array;
-use crate::array::array::Array;
-use crate::object;
-use crate::reference;
 use crate::reference::reference::Reference;
-use crate::runtime_data_area::create_array;
-use crate::runtime_data_area::create_class_object;
-use crate::runtime_data_area::get_reference;
-use crate::stack_frame;
+use crate::runtime_data_area::*;
 use crate::stack_frame::StackFrame;
 use crate::value::value::StackFrameValue;
 extern crate env_logger;
@@ -22,7 +14,7 @@ pub fn desired_assertion_status0(method: &MethodInfo, frame: &mut StackFrame) {
     frame.op_stack.push(StackFrameValue::Int(0))
 }
 
-pub fn get_primitive_class(method: &MethodInfo, frame: &mut StackFrame) {
+pub fn get_primitive_class(frame: &mut StackFrame) {
     let param = match frame.op_stack.pop().unwrap() {
         StackFrameValue::Reference(id) => get_reference(&id),
         _ => panic!(),

@@ -1,5 +1,4 @@
 use log::info;
-
 use crate::reference::reference::Reference;
 use crate::runtime_data_area::create_array;
 use crate::stack_frame::StackFrame;

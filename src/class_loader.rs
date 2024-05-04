@@ -167,13 +167,13 @@ pub mod class_loader {
      * 2、从 user class 中加载
      */
     fn get_class(name: &String) -> Vec<u8> {
-        let result = get_rt_class(name);
-        if result.is_none() {
-            return get_user_class(name).unwrap();
-        }else {
-            return  result.unwrap();
+        if let Some(class) = get_rt_class(name) {
+            class
+        } else {
+            get_user_class(name).unwrap()
         }
     }
+    
 
     /***
      * 类加载

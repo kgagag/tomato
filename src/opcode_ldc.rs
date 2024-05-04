@@ -40,7 +40,7 @@ pub fn ldc(frame: &mut StackFrame) {
             let constant_utf8_class = this_class.constant_pool.get(class).unwrap();
             match constant_utf8_class {
                 ConstantPoolInfo::Utf8(class_name) => {
-                    let class = get_or_load_class(&class_name);
+                    let class = get_or_load_class(class_name);
                     let obj_id: u32 = create_object(class.id);
                     frame.op_stack.push(StackFrameValue::Reference(obj_id));
                 }
@@ -62,13 +62,12 @@ pub fn ldc(frame: &mut StackFrame) {
                         let obj_id: u32 = create_object(class.id);
                         let reference = get_reference(&obj_id);
                         let chars: Vec<char> = str.chars().collect();
-                        let object;
-                        match reference {
+                        let object = match reference {
                             Reference::Object(obj) => {
-                                object = obj;
+                                obj
                             }
                             _ => panic!(),
-                        }
+                        };
                         let char_array_id = create_array(chars.len() as u32, param::DataType::Char);
                         let char_array_reference = get_reference(&char_array_id);
                         match char_array_reference {
@@ -119,7 +118,7 @@ pub fn ldc2_w(frame: &mut StackFrame) {
     let index = u8s_to_u16(&frame.code[frame.pc + 1..frame.pc + 3]);
     let class_name = get_class_name(&frame.class);
     let this_class = get_or_load_class(&class_name);
-    let constant_pool_data = this_class.constant_pool.get(&(index as u16)).unwrap();
+    let constant_pool_data = this_class.constant_pool.get(&index).unwrap();
     match constant_pool_data {
         ConstantPoolInfo::Long(l) => {
             frame.op_stack.push(StackFrameValue::Long(*l));

@@ -35,38 +35,23 @@ pub fn putfield(frame: &mut StackFrame) {
         _=> panic!()
     }
 
-
     match field_ref {
         ConstantPoolInfo::Fieldref(class_index, name_and_type_index) => {
-            let class_ref: &ConstantPoolInfo = this_class.constant_pool.get(class_index).unwrap();
             let name_and_type: &ConstantPoolInfo =
                 this_class.constant_pool.get(name_and_type_index).unwrap();
-            match class_ref {
-                ConstantPoolInfo::Class(class_name_index) => {
-                    let class_name_utf8: &ConstantPoolInfo =
-                        this_class.constant_pool.get(class_name_index).unwrap();
-                    match class_name_utf8 {
-                        ConstantPoolInfo::Utf8(class_name) => {
-                            let target_class = get_or_load_class(class_name);
-                            match name_and_type {
-                                ConstantPoolInfo::NameAndType(name_index, _descritor_index) => {
-                                    let field_name_utf8: &ConstantPoolInfo =
-                                        this_class.constant_pool.get(name_index).unwrap();
-                                    match field_name_utf8 {
-                                        ConstantPoolInfo::Utf8(field_name) => {
-                                            object.field.insert(field_name.clone(), value);
-                                        }
-                                        _ => panic!(),
-                                    }
-                                }
-                                _ => panic!(),
+                match name_and_type {
+                    ConstantPoolInfo::NameAndType(name_index, _descritor_index) => {
+                        let field_name_utf8: &ConstantPoolInfo =
+                            this_class.constant_pool.get(name_index).unwrap();
+                        match field_name_utf8 {
+                            ConstantPoolInfo::Utf8(field_name) => {
+                                object.field.insert(field_name.clone(), value);
                             }
+                            _ => panic!(),
                         }
-                        _ => panic!(),
                     }
+                    _ => panic!(),
                 }
-                _ => panic!(),
-            }
         }
         _ => panic!(),
     }
@@ -104,15 +89,18 @@ pub fn getfield(frame: &mut StackFrame) {
                         this_class.constant_pool.get(class_name_index).unwrap();
                     match class_name_utf8 {
                         ConstantPoolInfo::Utf8(class_name) => {
-                            let target_class: &mut Class = get_or_load_class(class_name);
+                            let mut target_class: &mut Class = get_or_load_class(class_name);
                             match name_and_type {
                                 ConstantPoolInfo::NameAndType(name_index, _descritor_index) => {
                                     let field_name_utf8: &ConstantPoolInfo =
                                         this_class.constant_pool.get(name_index).unwrap();
                                     match field_name_utf8 {
                                         ConstantPoolInfo::Utf8(field_name) => {
+                                            while target_class.field_info.get(field_name).is_none() {
+                                                target_class = get_or_load_class(&target_class.super_class_name);
+                                            }
                                             let op = object.field.get(field_name);
-                                            if op == None {
+                                            if op.is_none() {
                                                 let field_info = target_class.field_info.get(field_name).unwrap();
                                                 if field_info.data_type == DataType::Char || field_info.data_type == DataType::Short
                                                 || field_info.data_type == DataType::Int

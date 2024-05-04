@@ -84,26 +84,23 @@ pub fn lload(frame: &mut StackFrame) {
     let index = frame.code[frame.pc + 1] as usize;
     let v1 = frame.local.get(index).unwrap().clone();
     let v2: StackFrameValue  =  frame.local.get(index + 1).unwrap().clone();
-    let  u1:u32 ;
-    let  u2 : u32;
-
-    match v1 {
-        StackFrameValue::Byte(l) => u1 = l as u32,
-        StackFrameValue::Char(l) => u1 = l as u32,
-        StackFrameValue::Int(l) =>  u1 = l as u32,
-        StackFrameValue::Short(l) => u1 = l as u32,
-        StackFrameValue::U32(l) => u1 = l as u32,
+    let u1 = match v1 {
+        StackFrameValue::Byte(l) => l as u32,
+        StackFrameValue::Char(l) => l as u32,
+        StackFrameValue::Int(l) =>  l as u32,
+        StackFrameValue::Short(l) =>  l as u32,
+        StackFrameValue::U32(l) =>  l as u32,
 
         _=> panic!()
-    }
-    match v2 {
-        StackFrameValue::Byte(l) => u2 = l as u32,
-        StackFrameValue::Char(l) => u2 = l as u32,
-        StackFrameValue::Int(l) =>  u2 = l as u32,
-        StackFrameValue::Short(l) => u2 = l as u32,
-        StackFrameValue::U32(l) => u2 = l as u32,
+    };
+   let u2 =  match v2 {
+        StackFrameValue::Byte(l) => l as u32,
+        StackFrameValue::Char(l) =>l as u32,
+        StackFrameValue::Int(l) =>  l as u32,
+        StackFrameValue::Short(l) => l as u32,
+        StackFrameValue::U32(l) => l as u32,
         _=> panic!()
-    }
+    };
     let d = StackFrameValue::Double(u32_tuple_to_f64((u1,u2)));
    // info!("{:?}",d);
     frame.op_stack.push(d);

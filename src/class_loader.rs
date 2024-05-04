@@ -135,7 +135,7 @@ pub mod class_loader {
 
     fn get_user_class(name: &String) -> Result<Vec<u8>, String> {
         let mut user_class_path = String::from("e:/tomato/test/bin/");
-        user_class_path.push_str(&name);
+        user_class_path.push_str(name);
         user_class_path.push_str(".class");
         //info!("user class path:{}", user_class_path);
         let mut file = fs::File::open(user_class_path).unwrap();
@@ -185,7 +185,7 @@ pub mod class_loader {
                     match name_constant {
                         ConstantPoolInfo::Utf8(class_name) => {
                             if !class_exists(class_name) {
-                                load_class(&class_name);
+                                load_class(class_name);
                             }
                         }
                         _ => panic!("wrong class data"),
@@ -486,7 +486,7 @@ pub mod class_loader {
                     v.push(buffer[j]);
                 }
                 ans.push(v);
-                i = i + 1;
+                i +=1;
             } else if tag == 6 {
                 let mut buffer = [0u8; 8];
                 let _ = file.read(&mut buffer);
@@ -494,7 +494,7 @@ pub mod class_loader {
                     v.push(buffer[j]);
                 }
                 ans.push(v);
-                i = i + 1;
+                i +=1;
             } else if tag == 12 {
                 let mut buffer = [0u8; 4];
                 let _ = file.read(&mut buffer);
@@ -536,9 +536,9 @@ pub mod class_loader {
                 }
                 ans.push(v);
             }
-            i = i + 1;
+            i +=1;
         }
-        return ans;
+         ans
     }
 
     /**

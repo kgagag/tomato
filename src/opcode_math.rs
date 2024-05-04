@@ -317,16 +317,15 @@ pub fn iinc(frame: &mut StackFrame) {
     let index = frame.code[frame.pc + 1] as i32;
     let _const = frame.code[frame.pc + 2] as i32;
     let v: &StackFrameValue = frame.local.get(index as usize).unwrap();
-    let i: i64 ;
-    match v {
-        StackFrameValue::Byte(data) => i = *data as i64,
-        StackFrameValue::Char(data) => i = *data as i64,
-        StackFrameValue::Int(data) => i = *data as i64,
-        StackFrameValue::Long(data) => i = *data,
-        StackFrameValue::Short(data) => i = *data as i64,
-        StackFrameValue::U32(data) => i = *data as i64,
+    let i = match v {
+        StackFrameValue::Byte(data) => *data as i64,
+        StackFrameValue::Char(data) => *data as i64,
+        StackFrameValue::Int(data) =>  *data as i64,
+        StackFrameValue::Long(data) => *data,
+        StackFrameValue::Short(data) =>  *data as i64,
+        StackFrameValue::U32(data) =>  *data as i64,
         _ => panic!(),
-    }
+    };
     frame.local[index as usize] =  StackFrameValue::Int((i as i32) + _const);
     frame.pc += 3;
     //info!("{:?}",frame);

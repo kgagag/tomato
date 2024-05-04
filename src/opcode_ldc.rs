@@ -4,13 +4,10 @@ use log::info;
 
 use crate::class::ConstantPoolInfo;
 
+use crate::object;
 use crate::object::Object;
 use crate::reference::reference::Reference;
-use crate::runtime_data_area::create_array;
-use crate::runtime_data_area::create_object;
-use crate::runtime_data_area::get_constant_pool_str;
-use crate::runtime_data_area::get_reference;
-use crate::runtime_data_area::put_into_str_constant_pool;
+use crate::runtime_data_area::*;
 use crate::stack_frame::StackFrame;
 use crate::u8c::*;
 
@@ -20,6 +17,8 @@ use crate::runtime_data_area::get_or_load_class;
 use crate::value::value::StackFrameValue;
 extern crate env_logger;
 extern crate log;
+
+
 
 pub fn ldc(frame: &mut StackFrame) {
     let index = frame.code[frame.pc + 1];
@@ -40,9 +39,8 @@ pub fn ldc(frame: &mut StackFrame) {
             let constant_utf8_class = this_class.constant_pool.get(class).unwrap();
             match constant_utf8_class {
                 ConstantPoolInfo::Utf8(class_name) => {
-                    let class = get_or_load_class(class_name);
-                    let obj_id: u32 = create_object(class.id);
-                    frame.op_stack.push(StackFrameValue::Reference(obj_id));
+                  let obj_id =   create_class_object(class_name);
+                  frame.op_stack.push(StackFrameValue::Reference(obj_id));
                 }
                 _ => panic!(),
             }
@@ -52,40 +50,14 @@ pub fn ldc(frame: &mut StackFrame) {
             match utf8_constant {
                 ConstantPoolInfo::Utf8(str) => {
                     let str_obj = get_constant_pool_str(str);
-                    if str_obj != None {
+                    if !str_obj.is_none() {
                         frame
                             .op_stack
                             .push(StackFrameValue::Reference(*str_obj.unwrap()))
                     } else {
-                        let class_name = String::from("java/lang/String");
-                        let class = get_or_load_class(&class_name);
-                        let obj_id: u32 = create_object(class.id);
-                        let reference = get_reference(&obj_id);
-                        let chars: Vec<char> = str.chars().collect();
-                        let object = match reference {
-                            Reference::Object(obj) => {
-                                obj
-                            }
-                            _ => panic!(),
-                        };
-                        let char_array_id = create_array(chars.len() as u32, param::DataType::Char);
-                        let char_array_reference = get_reference(&char_array_id);
-                        match char_array_reference {
-                            Reference::Array(array) => {
-                                // CHARACTER
-                                for i in 0..chars.len() {
-                                    array.data[i] =
-                                        StackFrameValue::CHARACTER(*chars.get(i).unwrap());
-                                }
-                            }
-                            _ => panic!(),
-                        }
-                        object.field.insert(
-                            String::from("value"),
-                            StackFrameValue::Reference(char_array_id),
-                        );
-                        put_into_str_constant_pool(str.clone(), obj_id);
-                        frame.op_stack.push(StackFrameValue::Reference(obj_id));
+                        frame
+                            .op_stack
+                            .push(StackFrameValue::Reference(create_string_object(str)));
                     }
                 }
                 _ => panic!(),

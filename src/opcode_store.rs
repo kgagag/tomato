@@ -144,7 +144,6 @@
         frame.pc += 1;
     }
 
-
     fn set_u64_frame_local(frame: &mut StackFrame,i:usize){
         let v = frame.op_stack.pop().unwrap();
         let u32tuple = number_to_u32tuple(&v);

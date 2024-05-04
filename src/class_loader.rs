@@ -11,6 +11,7 @@ pub mod class_loader {
     use crate::u8c::u8s_to_u32;
     use crate::value::value::*;
     use byteorder::{BigEndian, ReadBytesExt};
+    use log::info;
     use log::warn;
     use std::collections::HashMap;
     use std::env;
@@ -18,6 +19,7 @@ pub mod class_loader {
     use std::io;
     use std::io::Cursor;
     use std::io::Read;
+    use std::path::Path;
     use zip::read::ZipArchive;
     fn parse_descriptor(descriptor: &Vec<u8>) -> Result<Option<Vec<DataType>>, String> {
         let mut index = 0;
@@ -104,7 +106,8 @@ pub mod class_loader {
     }
 
     fn read_class_from_jar(jar_path: &str, class_name: &str) -> Result<Vec<u8>, String> {
-        let file = File::open(jar_path).map_err(|e| format!("Error opening JAR file: {}", e))?;
+        let file: File =
+            File::open(jar_path).map_err(|e| format!("Error opening JAR file: {}", e))?;
         let mut archive: ZipArchive<File> =
             ZipArchive::new(file).map_err(|e| format!("Error reading ZIP archive: {}", e))?;
         for i in 0..archive.len() {
@@ -122,10 +125,25 @@ pub mod class_loader {
         Err(format!("Class '{}' not found in the JAR file", class_name))
     }
 
-    fn get_rt_class(name: &String) -> Result<Vec<u8>, String> {
+    fn get_rt_class(name: &String) -> Option<Vec<u8>> {
+        let mut user_class_path = String::from("e:/tomato/jre/out/");
+        user_class_path.push_str(name);
+        user_class_path.push_str(".class");
+        let exists = Path::new(&user_class_path).exists();
+        let mut buffer = Vec::new();
+        if exists  {
+            let mut file = fs::File::open(user_class_path);
+            let _ = file.unwrap().read_to_end(&mut buffer);
+            return Some(buffer);
+        }
+        None
+    }
+
+    fn get_rt_class_jar(name: &String) -> Result<Vec<u8>, String> {
         match env::var("JAVA_HOME") {
             Ok(mut home_path) => {
                 let path: String = name.clone() + ".class";
+                info!("{:?}", path);
                 home_path.push_str(&String::from("/jre/lib/rt.jar"));
                 read_class_from_jar(&home_path, &path)
             }
@@ -133,7 +151,7 @@ pub mod class_loader {
         }
     }
 
-    fn get_user_class(name: &String) -> Result<Vec<u8>, String> {
+    fn get_user_class(name: &String) -> Option<Vec<u8>> {
         let mut user_class_path = String::from("e:/tomato/test/bin/");
         user_class_path.push_str(name);
         user_class_path.push_str(".class");
@@ -141,7 +159,7 @@ pub mod class_loader {
         let mut file = fs::File::open(user_class_path).unwrap();
         let mut buffer = Vec::new();
         let _ = file.read_to_end(&mut buffer);
-        Ok(buffer)
+        Some(buffer)
     }
 
     /***
@@ -150,15 +168,10 @@ pub mod class_loader {
      */
     fn get_class(name: &String) -> Vec<u8> {
         let result = get_rt_class(name);
-        match result {
-            Ok(data) => data,
-            _ => {
-                let result = get_user_class(name);
-                match result {
-                    Ok(data) => data,
-                    _ => panic!(),
-                }
-            }
+        if result.is_none() {
+            return get_user_class(name).unwrap();
+        }else {
+            return  result.unwrap();
         }
     }
 
@@ -317,7 +330,7 @@ pub mod class_loader {
         }
 
         //补充方法方法参数解析后信息
-        for (key, field_info) in class.field_info.iter_mut() {        
+        for (key, field_info) in class.field_info.iter_mut() {
             let descriptor = class
                 .constant_pool
                 .get(&field_info.descriptor_index)
@@ -380,7 +393,6 @@ pub mod class_loader {
             }
         }
     }
-    
 
     /**
      * 获取魔数
@@ -486,7 +498,7 @@ pub mod class_loader {
                     v.push(buffer[j]);
                 }
                 ans.push(v);
-                i +=1;
+                i += 1;
             } else if tag == 6 {
                 let mut buffer = [0u8; 8];
                 let _ = file.read(&mut buffer);
@@ -494,7 +506,7 @@ pub mod class_loader {
                     v.push(buffer[j]);
                 }
                 ans.push(v);
-                i +=1;
+                i += 1;
             } else if tag == 12 {
                 let mut buffer = [0u8; 4];
                 let _ = file.read(&mut buffer);
@@ -536,9 +548,9 @@ pub mod class_loader {
                 }
                 ans.push(v);
             }
-            i +=1;
+            i += 1;
         }
-         ans
+        ans
     }
 
     /**
@@ -598,8 +610,8 @@ pub mod class_loader {
         constant_pool: &HashMap<u16, ConstantPoolInfo>,
         cnt: u16,
         cursor: &mut Cursor<Vec<u8>>,
-    ) -> HashMap<String,FieldInfo> {
-        let mut v: HashMap<String,FieldInfo> = HashMap::new();
+    ) -> HashMap<String, FieldInfo> {
+        let mut v: HashMap<String, FieldInfo> = HashMap::new();
         for _j in 0..cnt {
             let mut f: FieldInfo = FieldInfo {
                 access_flag: cursor.read_u16::<BigEndian>().unwrap(),
@@ -620,7 +632,7 @@ pub mod class_loader {
             };
             f.field_name = field_name;
             f.atrributes = get_attribute(constant_pool, f.attribute_count, cursor);
-            v.insert(f.field_name.clone() ,f);
+            v.insert(f.field_name.clone(), f);
         }
         v
     }
@@ -634,7 +646,7 @@ pub mod class_loader {
         cnt: u16,
         cursor: &mut Cursor<Vec<u8>>,
     ) -> Vec<MethodInfo> {
-        let mut v: Vec<MethodInfo> = Vec::new();
+        let mut v: Vec<MethodInfo> = Vec::with_capacity(cnt as usize);
         for j in 0..cnt {
             let mut m: MethodInfo = MethodInfo {
                 access_flag: cursor.read_u16::<BigEndian>().unwrap(),

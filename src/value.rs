@@ -12,10 +12,11 @@ pub mod value {
         Float(f32),
         Int(i32),
         Long(i64),
-        Reference(u32),
         Short(i16),
+        Reference(u32),
         Boolean(bool),
         U32(u32),
+        U64(u64),
         CHARACTER(char),
         Null,
     }

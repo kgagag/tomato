@@ -1,12 +1,14 @@
-public class Test50 {
+import java.util.Arrays;
+
+public class Test51 {
     public void test(){
         char[] c = new char[]{'h','e','l','l','o'};
-        String s = new String(c,0,2);
-        StringHelper.print20240503(s);
+        char[] chars = Arrays.copyOfRange(c, 0, 2);
+        StringHelper.print20240503(new String(chars));
     }
 
     public static void main(String[] args) {
-        Test50 test50 = new Test50();
+        Test51 test50 = new Test51();
         test50.test();
     }
 }

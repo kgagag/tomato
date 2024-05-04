@@ -1,6 +1,6 @@
-public class Test57 {
+public class Test58 {
     public int test(){
-        double d = Double.valueOf(0.1d);
-        return d == 0.1d ? 20240325 : 20240324;
+        int d = Integer.valueOf(1);
+        return d == 1 ? 20240325 : 20240324;
     }
 }

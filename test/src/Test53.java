@@ -1,17 +1,12 @@
-import java.util.Arrays;
+public class Test53 {
+    public int test(){
 
-public class Test52 {
-    public void test(){
-        char[] c = new char[]{'h','e','l','l','o'};
-        char[] chars = new char[5];
-        System.arraycopy(c, 0, chars, 0,
-                Math.min(2, 4));
-        StringHelper.print20240503(new String(chars));
+      return  Math.min(1,2);
 
     }
 
     public static void main(String[] args) {
-        Test52 test50 = new Test52();
+        Test53 test50 = new Test53();
         test50.test();
     }
 }

@@ -18,13 +18,15 @@ pub fn putstatic(frame: &mut StackFrame) {
         }.expect("Class name UTF-8 not found");
 
         if let ConstantPoolInfo::Utf8(class_name) = class_name_utf8 {
-            let target_class = get_or_load_class(&class_name);
+            let mut target_class = get_or_load_class(&class_name);
             let name_and_type = this_class.constant_pool.get(name_and_type_index).expect("Name and type not found");
-
             if let ConstantPoolInfo::NameAndType(name_index, _) = name_and_type {
                 let field_name_utf8 = this_class.constant_pool.get(name_index).expect("Field name UTF-8 not found");
-
                 if let ConstantPoolInfo::Utf8(field_name) = field_name_utf8 {
+                    //如果当前类没有这个成员变量那么就往上找
+                    while target_class.field_info.get_mut(field_name).is_none() {
+                        target_class = get_or_load_class(&target_class.super_class_name);
+                    }
                     let field = target_class.field_info.get_mut(field_name).unwrap();
                     field.value = frame.op_stack.pop().expect("Stack underflow");
                 } else {
@@ -55,13 +57,15 @@ pub fn getstatic(frame: &mut StackFrame) {
         }.expect("Class name UTF-8 not found");
 
         if let ConstantPoolInfo::Utf8(class_name) = class_name_utf8 {
-            let target_class = get_or_load_class(&class_name);
+            let mut target_class = get_or_load_class(&class_name);
             let name_and_type = this_class.constant_pool.get(name_and_type_index).expect("Name and type not found");
-
             if let ConstantPoolInfo::NameAndType(name_index, _) = name_and_type {
                 let field_name_utf8 = this_class.constant_pool.get(name_index).expect("Field name UTF-8 not found");
-
                 if let ConstantPoolInfo::Utf8(field_name) = field_name_utf8 {
+                    //如果当前类没有这个成员变量那么就往上找
+                    while target_class.field_info.get(field_name).is_none() {
+                        target_class = get_or_load_class(&target_class.super_class_name);
+                    }
                     let field = target_class.field_info.get(field_name).unwrap();
                     frame.op_stack.push(field.value.clone());
                 } else {

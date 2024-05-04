@@ -1,6 +1,6 @@
 public class Test {
     public static void main(String[] args) {
-
+    /*
 //       //  两个int相加
         new Test1().test();
         // 两个 float 相加
@@ -89,7 +89,9 @@ public class Test {
         new Test40().test();
         new Test44().test();
         new Test45().test();
-
-        new Test46().test();
+        //new Test46().test();
+        new Test47().test();
+        */
+        new Test49().test();
     }
 }

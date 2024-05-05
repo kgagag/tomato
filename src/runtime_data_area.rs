@@ -134,7 +134,8 @@ pub fn get_or_load_class<'a>(class_name: &String) -> &'a mut Class {
         if !map.contains_key(class_name) {
             load_class(class_name);
         }
-        return map.get_mut(class_name).unwrap();
+        let a = map.get_mut(class_name).unwrap();
+        a
     }
 }
 

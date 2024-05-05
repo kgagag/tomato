@@ -1,4 +1,6 @@
 
+    use log::info;
+
     use crate::stack_frame::StackFrame;
     use crate::u8c::*;
     use crate::value::value::StackFrameValue;
@@ -146,6 +148,7 @@
 
     fn set_u64_frame_local(frame: &mut StackFrame,i:usize){
         let v = frame.op_stack.pop().unwrap();
+        //info!("{:?}",v);
         let u32tuple = number_to_u32tuple(&v);
         frame.local[i] = StackFrameValue::U32(u32tuple.0);
         frame.local[i  + 1] = StackFrameValue::U32(u32tuple.1);

@@ -294,7 +294,7 @@ pub fn if_acmpne(frame: &mut StackFrame) {
 
 pub fn ifnonnull(frame: &mut StackFrame) {
     let value = frame.op_stack.pop().unwrap();
-    info!("{:?}",value);
+    //info!("{:?}",value);
     match value {
         StackFrameValue::Null =>{
             frame.pc += 3; // 跳转失败，继续执行下一条指令

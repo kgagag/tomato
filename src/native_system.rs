@@ -13,13 +13,13 @@ pub fn array_copy(method: &MethodInfo, frame: &mut StackFrame) {
     let len = frame.op_stack.pop().unwrap();
     // info!("{:?}",len);
     let des_ops = frame.op_stack.pop().unwrap();
-    // info!("{:?}",des_ops);
+     //info!("{:?}",des_ops);
     let des = frame.op_stack.pop().unwrap();
-    //  info!("{:?}",des);
+     // info!("{:?}",des);
     let src_ops = frame.op_stack.pop().unwrap();
-    //  info!("{:?}",src_ops);
+     // info!("{:?}",src_ops);
     let src = frame.op_stack.pop().unwrap();
-    //  info!("{:?}",src);
+     // info!("{:?}",src);
 
     let src_array: &mut Array = match src {
         StackFrameValue::Reference(reference_id) => {

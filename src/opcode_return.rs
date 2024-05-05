@@ -14,7 +14,7 @@ pub fn _return(frame: &mut StackFrame) {
 
 fn debug(frame: &mut StackFrame,cursor : i32){
     let class_name = get_class_name(&frame.class);
-    if(cursor == 20240325){
+    if cursor == 20240325 {
         info!("{} {}",class_name,"passed")
     }else if(cursor == 20240324) {
         error!("{} {}",class_name,"failed")
@@ -23,7 +23,6 @@ fn debug(frame: &mut StackFrame,cursor : i32){
 
 pub fn ireturn(frame: &mut StackFrame) {
     let v: StackFrameValue = frame.op_stack.pop().unwrap();
-     //warn!!("ireturn result: {:?}", &v);
     //日志埋点
     debug(frame,number_u64(&v) as i32);
     pop_stack_frame(frame.vm_stack_id);

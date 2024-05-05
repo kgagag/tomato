@@ -1,3 +1,5 @@
+use log::info;
+
 use crate::{
     object::{self, Object},
     reference::reference::Reference,
@@ -17,21 +19,22 @@ pub fn dprint(msg: StackFrameValue) {
                             let arr = get_reference(id);
                             match arr {
                                 Reference::Array(array) => {
-                                    let mut vc:Vec<char> = Vec::new();
+                                    let mut vc: Vec<char> = Vec::new();
                                     for i in 0..array.len {
-                                       // print!("{:?}",);
-                                       let ch = array.data.get(i as usize).unwrap();
-                                       match ch {
-                                           StackFrameValue::CHARACTER(c) =>{
-                                                //print!("{:?}",c);
+                                        // print!("{:?}",);
+                                        let ch = array.data.get(i as usize).unwrap();
+                                        match ch {
+                                            StackFrameValue::CHARACTER(c) => {
                                                 vc.push(*c);
-                                           }
-                                           _=> panic!()
-                                       }
-                                     
+                                            }
+                                            StackFrameValue::Byte(c) => {
+                                                vc.push((*c as u8) as char);
+                                            }
+                                            _ => panic!(),
+                                        }
                                     }
-                                    let aa :String =  vc.into_iter().collect(); 
-                                    println!("{}",aa)
+                                    let str: String = vc.into_iter().collect();
+                                    println!("{}", str)
                                 }
                                 _ => panic!(),
                             }

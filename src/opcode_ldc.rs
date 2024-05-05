@@ -25,6 +25,7 @@ pub fn ldc(frame: &mut StackFrame) {
     let class_name = get_class_name(&frame.class);
     let this_class = get_or_load_class(&class_name);
     let constant_pool_data = this_class.constant_pool.get(&(index as u16)).unwrap();
+    //info!("{:?}",constant_pool_data);
     match constant_pool_data {
         ConstantPoolInfo::Float(f) => {
             frame.op_stack.push(StackFrameValue::Float(*f));

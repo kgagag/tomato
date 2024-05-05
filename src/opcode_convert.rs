@@ -1,3 +1,5 @@
+use log::info;
+
 use crate::stack_frame::StackFrame;
 use crate::value::value::StackFrameValue;
 extern crate env_logger;
@@ -6,6 +8,7 @@ extern crate log;
 
 pub fn i2l(frame: &mut StackFrame) {
     let v = frame.op_stack.pop().unwrap();
+    //info!("{:?}",v);
     match v {
         StackFrameValue::Int(i) => {
             frame.op_stack.push(StackFrameValue::Long(i as i64));
@@ -17,6 +20,9 @@ pub fn i2l(frame: &mut StackFrame) {
             frame.op_stack.push(StackFrameValue::Long(i as i64));
         }
         StackFrameValue::Char(i) => {
+            frame.op_stack.push(StackFrameValue::Long(i as i64));
+        }
+        StackFrameValue::U32(i) => {
             frame.op_stack.push(StackFrameValue::Long(i as i64));
         }
         _ => panic!(),

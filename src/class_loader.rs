@@ -167,6 +167,7 @@ pub mod class_loader {
      * 2、从 user class 中加载
      */
     fn get_class(name: &String) -> Vec<u8> {
+        //info!("{:?}",name);
         if let Some(class) = get_rt_class(name) {
             class
         } else {

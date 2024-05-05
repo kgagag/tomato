@@ -36,6 +36,12 @@ pub struct StackFrame {
 
     //所属虚拟机栈id
     pub vm_stack_id: u32,
+
+    pub method_name:String,
+
+    pub descriptor:String,
+
+    pub class_name:String
 }
 
 impl StackFrame {
@@ -45,6 +51,9 @@ impl StackFrame {
         max_locals: u16,
         code: Vec<u8>,
         code_attr: CodeAttribute,
+        method_name:String,
+        descriptor:String,
+        class_name:String
     ) -> StackFrame {
         let mut stake_frame = StackFrame {
             pc: 0,
@@ -56,6 +65,9 @@ impl StackFrame {
             code,
             code_attr,
             vm_stack_id: 0,
+            method_name,
+            descriptor,
+            class_name
         };
         for _i in 0..stake_frame.max_locals as usize {
             stake_frame.local.push(StackFrameValue::Byte(0));
@@ -216,6 +228,9 @@ pub fn create_stack_frame(method_info: &MethodInfo) -> Option<StackFrame> {
                 code_attr.max_locals,
                 code_attr.code.clone(),
                 code_attr.clone(),
+                method_info.method_name.clone(),
+                method_info.descriptor.clone(),
+                class.class_name.clone()
             ));
         }
     }
@@ -234,6 +249,9 @@ pub fn create_stack_frame_with_class(
                 code_attr.max_locals,
                 code_attr.code.clone(),
                 code_attr.clone(),
+                method_info.method_name.clone(),
+                method_info.descriptor.clone(),
+                class.class_name.clone()
             ));
         }
     }

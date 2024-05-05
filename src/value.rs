@@ -45,6 +45,12 @@ pub mod value {
             StackFrameValue::Short(data) => {
                 fv = *data as u64;
             }
+            StackFrameValue::U64(data) => {
+                fv = *data;
+            }
+            StackFrameValue::U32(data) => {
+                fv = *data as u64;
+            }
             _ => {
                 panic!("wrong value type");
             }

@@ -190,6 +190,7 @@ pub fn lload_2(frame: &mut StackFrame) {
         },
         _ => panic!(),
     }
+    frame.pc += 1;
 }
 
 pub fn lload_3(frame: &mut StackFrame) {

@@ -1,5 +1,6 @@
 
 use log::info;
+use log::warn;
 
 use crate::class::ConstantPoolInfo;
 use crate::class::MethodInfo;
@@ -19,9 +20,7 @@ use crate::debug::*;
 use crate::native::*;
 
 pub fn get_method_for_invoke(frame: &StackFrame) -> Option<&MethodInfo> {
-    let class_name = get_class_name(&frame.class);
-    let this_class = get_or_load_class(&class_name).clone();
-
+    let this_class = get_or_load_class(&frame.class_name).clone();
     // 使用 match 代替 if let 以减少嵌套，并处理 unwrap 导致的潜在 panic
     let (class_index, name_and_type_index) = match this_class
         .constant_pool
@@ -80,10 +79,10 @@ pub fn get_method_for_invoke(frame: &StackFrame) -> Option<&MethodInfo> {
 pub fn invokespecial(frame: &mut StackFrame) {
     let clone_frame = &frame.clone();
     frame.pc += 3;
-
-    let method = get_method_for_invoke(clone_frame);
+    let method = get_method_for_invoke(clone_frame).unwrap();
+    //info!("{}--{}--{}",method.class_name,method.method_name,method.descriptor);
     //非native 方法
-    let mut new_frame = init_stack_frame(frame, method.unwrap(), 1);
+    let mut new_frame = init_stack_frame(frame, method, 1);
     let v = frame.op_stack.pop();
     match v {
         Some(obj) => {
@@ -165,9 +164,10 @@ pub fn invokeinterface(frame: &mut StackFrame) {
 
 pub fn invokevirtual(frame: &mut StackFrame) {
     let clone_frame = &frame.clone();
-    let method = get_method_for_invoke(clone_frame);
+    let method = get_method_for_invoke(clone_frame).unwrap();
+    //info!("{}--{}--{}",method.class_name,method.method_name,method.descriptor);
     //info!("{:?}", method.unwrap().method_name);
-    let mut new_frame = init_stack_frame(frame, method.unwrap(), 1);
+    let mut new_frame = init_stack_frame(frame, method, 1);
     //info!("{:?}",new_frame);
     let v = frame.op_stack.pop();
     match v {
@@ -194,8 +194,9 @@ pub fn get_frames(vm_stack_id: &u32) -> &Vec<StackFrame> {
 pub fn invokestatic(frame: &mut StackFrame) {
     let clone_frame = &frame.clone();
     let method = get_method_for_invoke(clone_frame).unwrap();
+    frame.pc += 3;
     //我写的辅助调试输出的工具
-    if(method.method_name == "print20240503" ){
+    if method.method_name == "print20240503" {
        let v =  frame.op_stack.pop().unwrap();
        dprint(v);
     }else if method.access_flag & 0x0100 == 0 {
@@ -204,5 +205,4 @@ pub fn invokestatic(frame: &mut StackFrame) {
     }else{
         run_static_native(method,frame);
     }
-    frame.pc += 3;
 }

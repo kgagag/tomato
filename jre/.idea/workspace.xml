@@ -4,7 +4,38 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="70c6e279-5046-4c44-ba52-f4228d3f6634" name="Changes" comment="" />
+    <list default="true" id="70c6e279-5046-4c44-ba52-f4228d3f6634" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/../test/src/Test59.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/src/Test60.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/src/Test61.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/src/Test62.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/src/Test63.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/src/Test64.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/src/Test65.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/src/Test66.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/java/lang/Integer.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/java/lang/Integer.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/java/lang/Integer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/java/lang/Integer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/class_loader.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/class_loader.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/debug.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/debug.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/native.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/native.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/native_math.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/native_math.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/native_system.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/native_system.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/op_code.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/op_code.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/opcode_convert.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/opcode_convert.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/opcode_invoke.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/opcode_invoke.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/opcode_ldc.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/opcode_ldc.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/opcode_load.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/opcode_load.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/opcode_return.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/opcode_return.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/opcode_store.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/opcode_store.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/runtime_data_area.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/runtime_data_area.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/stack_frame.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/stack_frame.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/value.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/value.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../test/bin/Test.class" beforeDir="false" afterPath="$PROJECT_DIR$/../test/bin/Test.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../test/bin/Test51.class" beforeDir="false" afterPath="$PROJECT_DIR$/../test/bin/Test51.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../test/src/Test.java" beforeDir="false" afterPath="$PROJECT_DIR$/../test/src/Test.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../test/src/Test51.java" beforeDir="false" afterPath="$PROJECT_DIR$/../test/src/Test51.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -46,7 +77,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1714861876407</updated>
-      <workItem from="1714861877427" duration="1207000" />
+      <workItem from="1714861877427" duration="8562000" />
     </task>
     <servers />
   </component>

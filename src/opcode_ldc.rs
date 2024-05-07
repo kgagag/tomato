@@ -1,17 +1,11 @@
-use std::f32::consts::E;
-
 use log::info;
-
 use crate::class::ConstantPoolInfo;
-
 use crate::object;
 use crate::object::Object;
-use crate::reference::reference::Reference;
+use crate::reference::*;
 use crate::runtime_data_area::*;
 use crate::stack_frame::StackFrame;
 use crate::u8c::*;
-
-use crate::param::*;
 use crate::runtime_data_area::get_class_name;
 use crate::runtime_data_area::get_or_load_class;
 use crate::value::value::StackFrameValue;
@@ -30,18 +24,21 @@ pub fn ldc(frame: &mut StackFrame) {
         ConstantPoolInfo::Float(f) => {
             frame.op_stack.push(StackFrameValue::Float(*f));
         }
-        ConstantPoolInfo::Utf8(_) => todo!(),
         ConstantPoolInfo::Integer(i) => {
             frame.op_stack.push(StackFrameValue::Int(*i));
         }
-        ConstantPoolInfo::Long(_) => todo!(),
-        ConstantPoolInfo::Double(_) => todo!(),
         ConstantPoolInfo::Class(class) => {
             let constant_utf8_class = this_class.constant_pool.get(class).unwrap();
             match constant_utf8_class {
                 ConstantPoolInfo::Utf8(class_name) => {
-                  let obj_id =   create_class_object(class_name);
-                  frame.op_stack.push(StackFrameValue::Reference(obj_id));
+                    let class_obj = get_constant_pool_class(class_name);
+                    if class_obj.is_none() {
+                        let obj_id: u32 =   create_class_object(class_name);
+                        put_into_class_constant_pool(class_name.clone(), obj_id);
+                        frame.op_stack.push(StackFrameValue::Reference(obj_id));
+                    }else {
+                        frame.op_stack.push(StackFrameValue::Reference(*class_obj.unwrap()));
+                    }
                 }
                 _ => panic!(),
             }
@@ -54,7 +51,7 @@ pub fn ldc(frame: &mut StackFrame) {
                     if !str_obj.is_none() {
                         frame
                             .op_stack
-                            .push(StackFrameValue::Reference(*str_obj.unwrap()))
+                            .push(StackFrameValue::Reference(str_obj.unwrap()))
                     } else {
                         frame
                             .op_stack
@@ -64,19 +61,7 @@ pub fn ldc(frame: &mut StackFrame) {
                 _ => panic!(),
             }
         }
-        ConstantPoolInfo::Fieldref(_, _) => todo!(),
-        ConstantPoolInfo::Methodref(_, _) => todo!(),
-        ConstantPoolInfo::InterfaceMethodref(_, _) => todo!(),
-        ConstantPoolInfo::NameAndType(_, _) => todo!(),
-        ConstantPoolInfo::MethodHandle(_, _) => todo!(),
-        ConstantPoolInfo::MethodType(_) => todo!(),
-        ConstantPoolInfo::InvokeDynamic(_, _) => todo!(),
-        ConstantPoolInfo::Module(_) => todo!(),
-        ConstantPoolInfo::Package(_) => todo!(),
-        ConstantPoolInfo::MethodPointer(_, _) => todo!(),
-        ConstantPoolInfo::InvokeStaticDynamic(_, _) => todo!(),
-        ConstantPoolInfo::BootstrapMethod(_, _) => todo!(),
-        ConstantPoolInfo::MethodTypeReference(_) => todo!(),
+        _=>panic!()
     }
     //frame.op_stack.push(frame.local.get(1).unwrap().clone());
     frame.pc += 2;

@@ -22,7 +22,10 @@ lazy_static! {
     pub static ref METHOD_DATA: Mutex<UnsafeCell<HashMap<String,MethodInfo>>> = Mutex::new(UnsafeCell::new(HashMap::new()));
 
     //字符串常量池
-    pub static ref STR_POOL: Mutex<UnsafeCell<HashMap<String, u32>>> = Mutex::new(UnsafeCell::new(HashMap::new()));
+    pub static ref STR_CONSTANT_POOL: Mutex<HashMap<String, u32>> = Mutex::new(HashMap::new());
+
+    // 类对象常量池，是否可以跟字符串常量池合并？
+    pub static ref CLASS_CONSTANT_POOL: Mutex<UnsafeCell<HashMap<String, u32>>> = Mutex::new(UnsafeCell::new(HashMap::new()));
 
     //对象存储
     pub static ref OBJECT_DATA: Mutex<UnsafeCell<HashMap<u32, Reference>>> = Mutex::new(UnsafeCell::new(HashMap::new()));
@@ -35,10 +38,30 @@ lazy_static! {
 
 }
 
-pub fn get_constant_pool_str(str: &String) -> Option<&u32> {
+pub fn get_constant_pool_str(str: &String) -> Option<u32> {
+    // 获取全局变量的Mutex锁
+    let data: std::sync::MutexGuard<'_, HashMap<String, u32>> =
+        STR_CONSTANT_POOL.lock().unwrap();
+        data.get(str).copied()
+}
+
+pub fn put_into_class_constant_pool(string: String, obj_id: u32) {
     // 获取全局变量的Mutex锁
     let data: std::sync::MutexGuard<'_, UnsafeCell<HashMap<String, u32>>> =
-        STR_POOL.lock().unwrap();
+    CLASS_CONSTANT_POOL.lock().unwrap();
+    unsafe {
+        // 从 UnsafeCell 中获取 HashMap 的可变引用
+        let map = &mut *data.get();
+        // 释放Mutex锁
+        map.insert(string, obj_id);
+        drop(data);
+    }
+}
+
+pub fn get_constant_pool_class(str: &String) -> Option<&u32> {
+    // 获取全局变量的Mutex锁
+    let data: std::sync::MutexGuard<'_, UnsafeCell<HashMap<String, u32>>> =
+       CLASS_CONSTANT_POOL.lock().unwrap();
     unsafe {
         // 从 UnsafeCell 中获取 HashMap 的可变引用
         let map = &mut *data.get();
@@ -50,16 +73,16 @@ pub fn get_constant_pool_str(str: &String) -> Option<&u32> {
 
 pub fn put_into_str_constant_pool(string: String, obj_id: u32) {
     // 获取全局变量的Mutex锁
-    let data: std::sync::MutexGuard<'_, UnsafeCell<HashMap<String, u32>>> =
-        STR_POOL.lock().unwrap();
-    unsafe {
+    let mut data: std::sync::MutexGuard<'_, HashMap<String, u32>> =
+        STR_CONSTANT_POOL.lock().unwrap();
         // 从 UnsafeCell 中获取 HashMap 的可变引用
-        let map = &mut *data.get();
+        //let  map =*data;
         // 释放Mutex锁
-        map.insert(string, obj_id);
+        data.insert(string, obj_id);
         drop(data);
-    }
+    
 }
+
 
 pub fn class_exists(class_name: &String) -> bool {
     // 获取全局变量的Mutex锁

@@ -110,8 +110,6 @@ public class Test {
 
         new Test57().test();
 
-
-
         new Test58().test();
 
         new Test59().test();
@@ -121,10 +119,19 @@ public class Test {
         new Test62().test();
         new Test63().test();
 
-      new Test64().test();
+        new Test64().test();
 
         new Test65().test();
 
+        //测试 new String
         new Test66().test();
+
+        //测试substring
+        new Test67().test();
+        // 测试 String concat
+        new Test69().test();
+
+        //测试 "+" 拼接字符串
+        new Test70().test();
     }
 }

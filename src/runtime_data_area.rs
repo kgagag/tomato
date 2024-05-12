@@ -38,7 +38,7 @@ lazy_static! {
 }
 
 // 增加计数器的函数
-fn increment_counter() -> u64{
+fn increment_counter() -> u64 {
     // 使用 lock() 获取 Mutex 的锁，确保线程安全
     let mut counter = GLOBAL_COUNTER.lock().unwrap();
     *counter += 1;
@@ -47,15 +47,22 @@ fn increment_counter() -> u64{
 
 pub fn get_constant_pool_str(str: &String) -> Option<u64> {
     // 获取全局变量的Mutex锁
-    let data: std::sync::MutexGuard<'_, HashMap<String, u64>> =
-        STR_CONSTANT_POOL.lock().unwrap();
-        data.get(str).copied()
+    let data: std::sync::MutexGuard<'_, HashMap<String, u64>> = STR_CONSTANT_POOL.lock().unwrap();
+    //data.get(str).copied()
+    let id: Option<&u64> = data.get(str);
+    if !id.is_none() {
+        let reference = get_reference(id.unwrap());
+        if !reference.is_none() {
+            return id.copied();
+        }
+    }
+    None
 }
 
 pub fn put_into_class_constant_pool(string: String, obj_id: u64) {
     // 获取全局变量的Mutex锁
     let data: std::sync::MutexGuard<'_, UnsafeCell<HashMap<String, u64>>> =
-    CLASS_CONSTANT_POOL.lock().unwrap();
+        CLASS_CONSTANT_POOL.lock().unwrap();
     unsafe {
         // 从 UnsafeCell 中获取 HashMap 的可变引用
         let map = &mut *data.get();
@@ -68,13 +75,21 @@ pub fn put_into_class_constant_pool(string: String, obj_id: u64) {
 pub fn get_constant_pool_class(str: &String) -> Option<&u64> {
     // 获取全局变量的Mutex锁
     let data: std::sync::MutexGuard<'_, UnsafeCell<HashMap<String, u64>>> =
-       CLASS_CONSTANT_POOL.lock().unwrap();
+        CLASS_CONSTANT_POOL.lock().unwrap();
     unsafe {
         // 从 UnsafeCell 中获取 HashMap 的可变引用
         let map = &mut *data.get();
         // 释放Mutex锁
         drop(data);
-        map.get(str)
+        let id = map.get(str);
+        if !id.is_none() {
+            let reference = get_reference(id.unwrap());
+            if !reference.is_none() {
+                return id;
+            }
+        }
+
+        None
     }
 }
 
@@ -82,14 +97,12 @@ pub fn put_into_str_constant_pool(string: String, obj_id: u64) {
     // 获取全局变量的Mutex锁
     let mut data: std::sync::MutexGuard<'_, HashMap<String, u64>> =
         STR_CONSTANT_POOL.lock().unwrap();
-        // 从 UnsafeCell 中获取 HashMap 的可变引用
-        //let  map =*data;
-        // 释放Mutex锁
-        data.insert(string, obj_id);
-        drop(data);
-    
+    // 从 UnsafeCell 中获取 HashMap 的可变引用
+    //let  map =*data;
+    // 释放Mutex锁
+    data.insert(string, obj_id);
+    drop(data);
 }
-
 
 pub fn class_exists(class_name: &String) -> bool {
     // 获取全局变量的Mutex锁
@@ -135,11 +148,11 @@ pub fn create_array(len: u32, array_type: DataType) -> u64 {
  * @id java对象的id
  * 返回引用类型数据
  */
-pub fn get_reference<'a>(id: &u64) -> &'a mut Reference {
+pub fn get_reference<'a>(id: &u64) -> Option<&'a mut Reference> {
     let data = OBJECT_DATA.lock().unwrap();
     unsafe {
         let map = &mut *data.get();
-        return map.get_mut(id).unwrap();
+        return map.get_mut(id);
     }
 }
 
@@ -252,10 +265,10 @@ pub fn push_frame_data(vm_stack_id: u32, value: StackFrameValue) {
 }
 
 pub fn create_string_object(str: &String) -> u64 {
-   let char_array_id =  {
+    let char_array_id = {
         let chars: Vec<char> = str.chars().collect();
         let char_array_id: u64 = create_array(chars.len() as u32, DataType::Char);
-        let char_array_reference = get_reference(&char_array_id);
+        let char_array_reference = get_reference(&char_array_id).unwrap();
         match char_array_reference {
             Reference::Array(array) => {
                 for i in 0..chars.len() {
@@ -269,7 +282,7 @@ pub fn create_string_object(str: &String) -> u64 {
     let class_name = String::from("java/lang/String");
     let class: &mut Class = get_or_load_class(&class_name);
     let obj_id: u64 = create_object(class.id);
-    let reference = get_reference(&obj_id);
+    let reference = get_reference(&obj_id).unwrap();
     let object: &mut Object = match reference {
         Reference::Object(obj) => obj,
         _ => panic!(),
@@ -288,7 +301,7 @@ pub fn create_class_object(class_name: &String) -> u64 {
     let class0 = get_or_load_class(&String::from("java/lang/Class"));
     let obj_id = create_object(class0.id as usize);
     let id = create_string_object(&class.class_name);
-    let referencre: &mut Reference = get_reference(&obj_id);
+    let referencre: &mut Reference = get_reference(&obj_id).unwrap();
     match referencre {
         Reference::Object(object) => {
             object

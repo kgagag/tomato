@@ -16,7 +16,7 @@ pub fn desired_assertion_status0(method: &MethodInfo, frame: &mut StackFrame) {
 
 pub fn get_primitive_class(frame: &mut StackFrame) {
     let param = match frame.op_stack.pop().unwrap() {
-        StackFrameValue::Reference(id) => get_reference(&id),
+        StackFrameValue::Reference(id) => get_reference(&id).unwrap(),
         _ => panic!(),
     };
 
@@ -25,7 +25,7 @@ pub fn get_primitive_class(frame: &mut StackFrame) {
             let sfv = object.field.get("value").unwrap();
             match sfv {
                 StackFrameValue::Reference(arr_id) => {
-                    let arr = get_reference(arr_id);
+                    let arr = get_reference(arr_id).unwrap();
                     match arr {
                         Reference::Array(array) => {
                             let mut v: Vec<char> = Vec::new();

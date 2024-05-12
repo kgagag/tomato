@@ -23,7 +23,7 @@ pub fn array_copy(method: &MethodInfo, frame: &mut StackFrame) {
 
     let src_array: &mut Array = match src {
         StackFrameValue::Reference(reference_id) => {
-            let reference = get_reference(&reference_id);
+            let reference = get_reference(&reference_id).unwrap();
             match reference {
                 Reference::Array(array) => array,
                 _ => panic!(),
@@ -33,7 +33,7 @@ pub fn array_copy(method: &MethodInfo, frame: &mut StackFrame) {
     };
     let des_array: &mut Array = match des {
         StackFrameValue::Reference(reference_id) => {
-            let reference = get_reference(&reference_id);
+            let reference = get_reference(&reference_id).unwrap();
             match reference {
                 Reference::Array(array) => array,
                 _ => panic!(),

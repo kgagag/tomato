@@ -9,10 +9,11 @@ use crate::{
 /**
  * 一、如何判断一个对象是否进行回收 ?
  *  采用使用可达性分析法，分析一个对象是否还能被引用,如果不可能再次被引用则回收
- * 二、哪些对象不能回收 ?
+ * 二、哪些对象还能被引用到 ?
  *  1、还处于虚拟机栈中的对象不予回收
  *  2、刚创建的对象不予回收（为了确保这一条GC时将需要终止所有线程的执行，并确保G
  * C时所有指令集函数已经结束）
+ *  3、被class 引用的对象不予回收
  * 三、何时进行GC ?
  *  1、由于只是一个简单的示例GC方法，我暂定当内存中对象数量超过指定数量时进行GC，这样做起来比较简单。
  */
@@ -37,6 +38,14 @@ pub fn gc() {
                             _ => continue,
                         }
                     }
+                    for sfv in frame.local.iter() {
+                        match sfv {
+                            StackFrameValue::Reference(ref_id) => {
+                                exp.extend(&get_ref_exp_id(*ref_id));
+                            }
+                            _ => continue,
+                        }
+                    }
                 }
             }
             exp.extend(get_class_exp_id());
@@ -54,6 +63,9 @@ pub fn gc() {
     }
 }
 
+/**
+ * 寻找一个对象引用的所有对象
+ */
 fn get_ref_exp_id(obj_id: u64) -> HashSet<u64> {
     let mut ans: HashSet<u64> = HashSet::new();
     let mut queue: VecDeque<u64> = VecDeque::new();
@@ -89,6 +101,9 @@ fn get_ref_exp_id(obj_id: u64) -> HashSet<u64> {
     ans
 }
 
+/**
+ * 寻找被class引用的哪些对象
+ */
 fn get_class_exp_id() -> HashSet<u64>{
     let mut exp: HashSet<u64> = HashSet::new();
     let data: std::sync::MutexGuard<'_, UnsafeCell<HashMap<String, Class>>> =

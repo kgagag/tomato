@@ -134,6 +134,7 @@ public class Test {
         //测试 "+" 拼接字符串
         new Test70().test();
 
+        // 测试GC
         new TestGc().test();
     }
 }

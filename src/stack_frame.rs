@@ -125,7 +125,7 @@ impl StackFrame {
         }
     }
 
-    pub fn pop_reference(&mut self) -> u32 {
+    pub fn pop_reference(&mut self) -> u64 {
         let value = self.op_stack.pop().unwrap();
         match value {
             StackFrameValue::Reference(data) => data,

@@ -13,7 +13,7 @@ pub mod value {
         Int(i32),
         Long(i64),
         Short(i16),
-        Reference(u32),
+        Reference(u64),
         Boolean(bool),
         U32(u32),
         U64(u64),

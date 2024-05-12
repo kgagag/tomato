@@ -2,7 +2,6 @@ pub mod class_loader {
     use crate::class::CodeAttribute;
     use crate::class::ExceptionTable;
     use crate::class::*;
-    use crate::op_code::op_code::*;
     use crate::param::param::DataType;
     use crate::runtime_data_area::add_method;
     use crate::runtime_data_area::*;
@@ -21,6 +20,7 @@ pub mod class_loader {
     use std::io::Read;
     use std::path::Path;
     use zip::read::ZipArchive;
+    use crate::op_code::op_code::execute;
     fn parse_descriptor(descriptor: &Vec<u8>) -> Result<Option<Vec<DataType>>, String> {
         let mut index = 0;
         let descriptor_length = descriptor.len();

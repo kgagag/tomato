@@ -144,7 +144,7 @@ pub fn multianewarray(frame: &mut StackFrame) {
                     }
                     
                     let reference = create_array(len as u32, array_type.clone());
-                    let mut v :Vec<u32>  = Vec::new();
+                    let mut v :Vec<u64>  = Vec::new();
                     v.push(reference);
                     //info!("{:?}", frame.op_stack);
                     for _i in 1 .. dimenssion{
@@ -180,7 +180,7 @@ pub fn multianewarray(frame: &mut StackFrame) {
 }
 
 
-fn create_muti_array(reference_id:u32,len: u32,array_type: DataType) -> u32 {
+fn create_muti_array(reference_id:u64,len: u32,array_type: DataType) -> u64 {
    let newarr =  create_array(len, array_type);
    let reference = get_reference(&reference_id);
    match reference {

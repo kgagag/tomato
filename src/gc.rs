@@ -1,14 +1,9 @@
-use std::collections::{HashSet, VecDeque};
+use std::{cell::UnsafeCell, collections::{HashMap, HashSet, VecDeque}};
 
-use log::{info, warn};
+use log::warn;
 
 use crate::{
-    array::{self, array::Array},
-    object::{self, Object},
-    param::param::DataType,
-    reference::{self, reference::Reference},
-    runtime_data_area::*,
-    value::{self, value::StackFrameValue},
+    class::Class, reference::reference::Reference, runtime_data_area::*, value::value::StackFrameValue
 };
 
 /**
@@ -37,13 +32,14 @@ pub fn gc() {
                     for sfv in frame.op_stack.iter() {
                         match sfv {
                             StackFrameValue::Reference(ref_id) => {
-                                exp.extend(&get_ref_id(*ref_id));
+                                exp.extend(&get_ref_exp_id(*ref_id));
                             }
                             _ => continue,
                         }
                     }
                 }
             }
+            exp.extend(get_class_exp_id());
             let mut prepare_del_vec: Vec<u64> = Vec::new();
             for (key, _value) in reference_data.iter() {
                 if !exp.contains(key) {
@@ -58,7 +54,7 @@ pub fn gc() {
     }
 }
 
-fn get_ref_id(obj_id: u64) -> HashSet<u64> {
+fn get_ref_exp_id(obj_id: u64) -> HashSet<u64> {
     let mut ans: HashSet<u64> = HashSet::new();
     let mut queue: VecDeque<u64> = VecDeque::new();
     queue.push_back(obj_id);
@@ -68,7 +64,7 @@ fn get_ref_id(obj_id: u64) -> HashSet<u64> {
         let reference = get_reference(&id);
         match reference {
             Reference::Object(object) => {
-                for (key, value) in object.field.iter() {
+                for (_key, value) in object.field.iter() {
                     match value {
                         StackFrameValue::Reference(id) => {
                             queue.push_back(*id);
@@ -91,4 +87,26 @@ fn get_ref_id(obj_id: u64) -> HashSet<u64> {
         }
     }
     ans
+}
+
+fn get_class_exp_id() -> HashSet<u64>{
+    let mut exp: HashSet<u64> = HashSet::new();
+    let data: std::sync::MutexGuard<'_, UnsafeCell<HashMap<String, Class>>> =
+        CLASS_DATA.lock().unwrap();
+    unsafe {
+        let map = &mut *data.get();
+        for (_key,class) in map.iter() {
+           let fs = &class.field_info;
+           for (_name,field) in fs.iter() {
+                let v = field.clone();
+                match v.value {
+                    StackFrameValue::Reference(id) =>{
+                        exp.extend(get_ref_exp_id(id));
+                    }
+                    _=> continue
+                }
+           }
+        }
+    }
+    exp
 }

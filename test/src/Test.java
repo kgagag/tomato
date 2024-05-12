@@ -136,5 +136,7 @@ public class Test {
 
         // 测试GC
         new TestGc().test();
+        new TestGC2().test();
+
     }
 }

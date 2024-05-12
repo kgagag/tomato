@@ -109,7 +109,7 @@ pub fn invokeinterface(frame: &mut StackFrame) {
     }
     match v {
         StackFrameValue::Reference(id) => {
-            let reference = get_reference(&id);
+            let reference = get_reference(&id).unwrap();
             match reference {
                 Reference::Object(object) => {
                     let class_name = get_class_name(&object.class);

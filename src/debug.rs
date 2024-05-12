@@ -10,13 +10,13 @@ use crate::{
 pub fn dprint(msg: StackFrameValue) {
     match msg {
         StackFrameValue::Reference(id) => {
-            let obj_refer = get_reference(&id);
+            let obj_refer = get_reference(&id).unwrap();
             match obj_refer {
                 Reference::Object(object) => {
                     let value = object.field.get("value").unwrap();
                     match value {
                         StackFrameValue::Reference(id) => {
-                            let arr = get_reference(id);
+                            let arr = get_reference(id).unwrap();
                             match arr {
                                 Reference::Array(array) => {
                                     let mut vc: Vec<char> = Vec::new();

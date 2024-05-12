@@ -182,7 +182,7 @@ pub fn multianewarray(frame: &mut StackFrame) {
 
 fn create_muti_array(reference_id:u64,len: u32,array_type: DataType) -> u64 {
    let newarr =  create_array(len, array_type);
-   let reference = get_reference(&reference_id);
+   let reference = get_reference(&reference_id).unwrap();
    match reference {
     Reference::Array(array) => {
         for i in 0 .. array.len{
@@ -240,7 +240,7 @@ fn xastore(frame: &mut StackFrame) {
     }
     match array {
         StackFrameValue::Reference(reference_id) => {
-            let reference: &mut Reference = get_reference(&reference_id);
+            let reference: &mut Reference = get_reference(&reference_id).unwrap();
             // //info!("{:?}", reference);
             match reference {
                 Reference::Array(arr) => {
@@ -291,7 +291,7 @@ pub fn arraylength(frame: &mut StackFrame){
     //info!("{:?}",v);
     match v {
         StackFrameValue::Reference(reference) =>{
-            let aref = get_reference(&reference);
+            let aref = get_reference(&reference).unwrap();
             match aref {
                 Reference::Array(array) =>{
                     frame.op_stack.push(StackFrameValue::U32(array.len))
@@ -318,7 +318,7 @@ fn xaload(frame: &mut StackFrame) {
     }
     match array {
         StackFrameValue::Reference(reference_id) => {
-            let reference = get_reference(&reference_id);
+            let reference = get_reference(&reference_id).unwrap();
             match reference {
                 Reference::Array(arr) => {
                   //  info!("{:?}",arr);

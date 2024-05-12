@@ -74,7 +74,7 @@ fn get_ref_exp_id(obj_id: u64) -> HashSet<u64> {
         let id = queue.pop_front().unwrap();
         ans.insert(id);
         let reference = get_reference(&id);
-        match reference {
+        match reference.unwrap() {
             Reference::Object(object) => {
                 for (_key, value) in object.field.iter() {
                     match value {

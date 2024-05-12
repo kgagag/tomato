@@ -24,7 +24,7 @@ pub fn putfield(frame: &mut StackFrame) {
     let  object ;
     match stack_frame_value {
         StackFrameValue::Reference(id) =>{
-            let reference = get_reference(&id);
+            let reference = get_reference(&id).unwrap();
             match reference {
                 Reference::Object(obj) =>{
                     object = obj;
@@ -67,7 +67,7 @@ pub fn getfield(frame: &mut StackFrame) {
     let mut object:&Object;
     match stack_frame_value {
         StackFrameValue::Reference(id) =>{
-            let reference = get_reference(&id);
+            let reference = get_reference(&id).unwrap();
             match reference {
                 Reference::Object(obj) =>{
                     object = obj;

@@ -1,6 +1,7 @@
 pub mod op_code {
     use log::info;
 
+    use crate::gc;
     use crate::stack_frame::*;
     extern crate env_logger;
     extern crate log;
@@ -23,6 +24,7 @@ pub mod op_code {
     use crate::opcode_static::*;
     use crate::opcode_store::*;
     use crate::opcode_swap::*;
+    use crate::gc::*;
     
     use std::cell::UnsafeCell;
     use std::collections::HashMap;
@@ -49,6 +51,7 @@ pub mod op_code {
             let code = vm_stack.last().unwrap().code[vm_stack.last().unwrap().pc];
             let frame = vm_stack.last_mut().unwrap();
             //info!("{:x}--{}--{:?}--{:?}--{:?}--{:?}",code,frame.pc,frame.class_name,frame.method_name,frame.descriptor,frame.op_stack);
+            gc();
             match code {
                 0x00 => nop(frame),
                 0x01 => aconst_null(frame),

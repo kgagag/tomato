@@ -1,6 +1,6 @@
 public class Test {
     public static void main(String[] args) {
-
+//
 //       //  两个int相加
         new Test1().test();
         // 两个 float 相加
@@ -133,5 +133,7 @@ public class Test {
 
         //测试 "+" 拼接字符串
         new Test70().test();
+
+        new TestGc().test();
     }
 }

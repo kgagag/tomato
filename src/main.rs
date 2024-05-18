@@ -34,7 +34,9 @@ pub mod debug;
 pub mod native_system;
 pub mod native_class;
 pub mod native_math;
+pub mod opcode_instanceof;
 pub mod gc;
+pub mod opcode_exception;
 use crate::class::ConstantPoolInfo;
 use crate::stack_frame::*;
 use crate::runtime_data_area::get_or_load_class;
@@ -43,9 +45,6 @@ extern crate env_logger;
 use crate::op_code::op_code::*;
 use std::env;
 use log::info;
-
-
-
 
 
 fn main() {

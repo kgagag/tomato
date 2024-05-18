@@ -91,6 +91,7 @@ impl StackFrame {
             StackFrameValue::Long(data) => *data as u32,
             StackFrameValue::Short(data) => *data as u32,
             StackFrameValue::CHARACTER(data) => *data as u32,
+            StackFrameValue::Boolean(data) => *data as u32,
             _ => {
                 panic!("wrong value type");
             }
@@ -108,6 +109,7 @@ impl StackFrame {
             StackFrameValue::Short(data) => data as i64,
             StackFrameValue::U32(data) => data as i64,
             StackFrameValue::CHARACTER(data) => data as i64,
+            StackFrameValue::Boolean(data) => data as i64,
             _ => {
                 panic!("wrong value type");
             }

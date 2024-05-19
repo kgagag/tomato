@@ -2,6 +2,7 @@ pub mod class_loader {
     use crate::class::CodeAttribute;
     use crate::class::ExceptionTable;
     use crate::class::*;
+    use crate::op_code::op_code::execute;
     use crate::param::param::DataType;
     use crate::runtime_data_area::add_method;
     use crate::runtime_data_area::*;
@@ -20,7 +21,6 @@ pub mod class_loader {
     use std::io::Read;
     use std::path::Path;
     use zip::read::ZipArchive;
-    use crate::op_code::op_code::execute;
     fn parse_descriptor(descriptor: &Vec<u8>) -> Result<Option<Vec<DataType>>, String> {
         let mut index = 0;
         let descriptor_length = descriptor.len();
@@ -126,55 +126,54 @@ pub mod class_loader {
     }
 
     fn get_rt_class(name: &String) -> Option<Vec<u8>> {
-        let mut user_class_path = String::from("e:/tomato/jre/out/");
-        user_class_path.push_str(name);
-        user_class_path.push_str(".class");
-        let exists = Path::new(&user_class_path).exists();
-        let mut buffer = Vec::new();
-        if exists  {
-            let mut file = fs::File::open(user_class_path);
-            let _ = file.unwrap().read_to_end(&mut buffer);
-            return Some(buffer);
-        }
-        None
-    }
-
-    fn get_rt_class_jar(name: &String) -> Result<Vec<u8>, String> {
-        match env::var("JAVA_HOME") {
-            Ok(mut home_path) => {
-                let path: String = name.clone() + ".class";
-                info!("{:?}", path);
-                home_path.push_str(&String::from("/jre/lib/rt.jar"));
-                read_class_from_jar(&home_path, &path)
+        match env::current_dir() {
+            Ok(path) => {
+                let mut user_class_path = path.as_path().to_str().unwrap().to_string();
+                user_class_path.push_str("/jre/out/");
+                user_class_path.push_str(name);
+                user_class_path.push_str(".class");
+                info!("user class path:{}", user_class_path);
+                let mut file = fs::File::open(user_class_path).unwrap();
+                let mut buffer = Vec::new();
+                let _ = file.read_to_end(&mut buffer);
+                Some(buffer)
             }
-            Err(_) => Err(format!("Class '{}' not found in the JAR file", name)),
+            Err(_e) =>panic!()
         }
     }
 
-    fn get_user_class(name: &String) -> Option<Vec<u8>> {
-        let mut user_class_path = String::from("E:/tomato/jre/out/");
-        user_class_path.push_str(name);
-        user_class_path.push_str(".class");
-        //info!("user class path:{}", user_class_path);
-        let mut file = fs::File::open(user_class_path).unwrap();
-        let mut buffer = Vec::new();
-        let _ = file.read_to_end(&mut buffer);
-        Some(buffer)
-    }
+    // fn get_rt_class_jar(name: &String) -> Result<Vec<u8>, String> {
+    //     match env::var("JAVA_HOME") {
+    //         Ok(mut home_path) => {
+    //             let path: String = name.clone() + ".class";
+    //             info!("{:?}", path);
+    //             home_path.push_str(&String::from("/jre/lib/rt.jar"));
+    //             read_class_from_jar(&home_path, &path)
+    //         }
+    //         Err(_) => Err(format!("Class '{}' not found in the JAR file", name)),
+    //     }
+    // }
 
     /***
      * 1、先从 rt.jar 中加载
      * 2、从 user class 中加载
      */
     fn get_class(name: &String) -> Vec<u8> {
-        //info!("{:?}",name);
-        if let Some(class) = get_rt_class(name) {
-            class
-        } else {
-            get_user_class(name).unwrap()
+        match env::current_dir() {
+            Ok(path) => {
+                let mut user_class_path = path.as_path().to_str().unwrap().to_string();
+                user_class_path.push_str("/jre/out/");
+                user_class_path.push_str(name);
+                user_class_path.push_str(".class");
+                info!("user class path:{}", user_class_path);
+                let mut file = fs::File::open(user_class_path).unwrap();
+                let mut buffer = Vec::new();
+                let _ = file.read_to_end(&mut buffer);
+                buffer
+            }
+            Err(_e) =>panic!()
         }
     }
-    
 
     /***
      * 类加载

@@ -4,9 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="70c6e279-5046-4c44-ba52-f4228d3f6634" name="Changes" comment="">
+    <list default="true" id="70c6e279-5046-4c44-ba52-f4228d3f6634" name="Changes" comment="&quot;add test case&quot;">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/op_code.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/op_code.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/Test.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/Test.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/class_loader.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/class_loader.rs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -21,6 +22,11 @@
     </option>
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$/.." value="main" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
   <component name="ProjectColorInfo">{
@@ -112,10 +118,11 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.Test" />
         <item itemvalue="Application.Test77" />
         <item itemvalue="Application.Test75" />
         <item itemvalue="Application.Test73" />
+        <item itemvalue="Application.Test" />
+        <item itemvalue="Application.Test77" />
       </list>
     </recent_temporary>
   </component>
@@ -136,7 +143,25 @@
       <workItem from="1715910349778" duration="1197000" />
       <workItem from="1716021298881" duration="4159000" />
       <workItem from="1716078883476" duration="16140000" />
+      <workItem from="1716137821964" duration="333000" />
     </task>
+    <task id="LOCAL-00001" summary="&quot;add test case&quot;">
+      <option name="closed" value="true" />
+      <created>1716137693958</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1716137693958</updated>
+    </task>
+    <task id="LOCAL-00002" summary="&quot;add test case&quot;">
+      <option name="closed" value="true" />
+      <created>1716137828815</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1716137828815</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -211,5 +236,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
+    <MESSAGE value="&quot;add test case&quot;" />
+    <option name="LAST_COMMIT_MESSAGE" value="&quot;add test case&quot;" />
   </component>
 </project>

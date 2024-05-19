@@ -4,7 +4,7 @@ import java.io.IOException;
 
 public class Test {
     public static void main(String[] args) throws IOException {
-        /*
+
        //  两个int相加
             new Test1().test();
             // 两个 float 相加
@@ -146,15 +146,15 @@ public class Test {
             new Test73().test();
            new Test75().test();
 
-        */
+
          //   new Test76().test();
 
         //new TestMap().test();
 
-       new Test78().test();
+       //new Test78().test();
 
-//        new Test79().test();
-//
-//        new Test80().test();
+        new Test79().test();
+
+        new Test80().test();
     }
 }

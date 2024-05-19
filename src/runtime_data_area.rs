@@ -264,9 +264,10 @@ pub fn push_frame_data(vm_stack_id: u32, value: StackFrameValue) {
     drop(data);
 }
 
-pub fn create_string_object(str: &String) -> u64 {
+pub fn create_string_object(str_value: String) -> u64 {
+    info!("{:?}",str_value);
     let char_array_id = {
-        let chars: Vec<char> = str.chars().collect();
+        let chars: Vec<char> = str_value.chars().collect();
         let char_array_id: u64 = create_array(chars.len() as u32, DataType::Char);
         let char_array_reference = get_reference(&char_array_id).unwrap();
         match char_array_reference {
@@ -292,15 +293,15 @@ pub fn create_string_object(str: &String) -> u64 {
         String::from("value"),
         StackFrameValue::Reference(char_array_id),
     );
-    put_into_str_constant_pool(str.clone(), obj_id);
+    put_into_str_constant_pool(str_value.clone(), obj_id);
     obj_id
 }
 
 pub fn create_class_object(class_name: &String) -> u64 {
-    let class = get_or_load_class(class_name);
+    let class = get_or_load_class(&class_name);
     let class0 = get_or_load_class(&String::from("java/lang/Class"));
     let obj_id = create_object(class0.id as usize);
-    let id = create_string_object(&class.class_name);
+    let id = create_string_object(class_name.clone());
     let referencre: &mut Reference = get_reference(&obj_id).unwrap();
     match referencre {
         Reference::Object(object) => {

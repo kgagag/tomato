@@ -1,14 +1,18 @@
 use crate::native_class::*;
+use crate::native_io::create_file_exclusively;
 use crate::native_math::*;
+use crate::native_object::get_class;
+use crate::native_object::hash_code;
 use crate::native_system::*;
 use std::f32::consts::E;
 extern crate env_logger;
 extern crate log;
 use crate::class::*;
+use crate::native_io;
 use crate::StackFrame;
 use log::{error, info, warn};
 
-pub fn run_static_native(method: &MethodInfo, frame: &mut StackFrame) {
+pub fn run_native(method: &MethodInfo, frame: &mut StackFrame) {
     if "registerNatives" != method.method_name {
         if "arraycopy" == method.method_name
             && "(Ljava/lang/Object;ILjava/lang/Object;II)V" == method.descriptor
@@ -45,8 +49,23 @@ pub fn run_static_native(method: &MethodInfo, frame: &mut StackFrame) {
             && method.class_name == "java/lang/Float"
         {
             int_bits_to_float(method, frame);
+        } else if "createFileExclusively" == method.method_name
+            && "(Ljava/lang/String;)Z" == method.descriptor
+            && method.class_name == "java/io/WinNTFileSystem"
+        {
+            create_file_exclusively(method, frame);
+        } else if "hashCode" == method.method_name
+            && "()I" == method.descriptor
+            && method.class_name == "java/lang/Object"
+        {
+            hash_code(method, frame);
+        } else if "getClass" == method.method_name
+            && "()Ljava/lang/Class;" == method.descriptor
+            && method.class_name == "java/lang/Object"
+        {
+            get_class(method, frame);
         } else {
-            panic!("unknown native method");
+            panic!("unknown native method:{}", method.method_name);
         }
     }
 }

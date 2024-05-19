@@ -36,7 +36,9 @@ pub mod native_class;
 pub mod native_math;
 pub mod opcode_instanceof;
 pub mod gc;
+pub mod native_object;
 pub mod opcode_exception;
+pub mod opcode_checkcast;
 use crate::class::ConstantPoolInfo;
 use crate::stack_frame::*;
 use crate::runtime_data_area::get_or_load_class;
@@ -53,7 +55,7 @@ fn main() {
         .format_timestamp(Some(env_logger::TimestampPrecision::Millis))
         .format_module_path(true)
         .init();
-    run(String::from("Test"));
+    run(String::from("test/Test"));
 }
 
 /***

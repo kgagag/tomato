@@ -26,6 +26,7 @@ pub mod op_code {
     use crate::opcode_swap::*;
     use crate::gc::*;
     use crate::opcode_exception::*;
+    use crate::opcode_checkcast::*;
     use std::cell::UnsafeCell;
     use std::collections::HashMap;
     use crate::runtime_data_area::VM_STACKS;
@@ -245,13 +246,13 @@ pub mod op_code {
                 0xbd => anewarray(frame),
                 0xbe => arraylength(frame),
                 0xbf => athrow(frame),
-                // 0xc0 => checkcast(frame),
+                0xc0 => checkcast(frame),
                 0xc1 => instanceof(frame),
                 // 0xc2 => monitorenter(frame),
                 // 0xc3 => monitorexit(frame),
                 // 0xc4 => wide(frame),
                  0xc5 => multianewarray(frame),
-                // 0xc6 => ifnull(frame),
+                 0xc6 => ifnull(frame),
                  0xc7 => ifnonnull(frame),
                 // 0xc8 => goto_w(frame),
                 // 0xc9 => jsr_w(frame),

@@ -1004,11 +1004,11 @@ public class File
      * @since 1.2
      */
     public boolean createNewFile() throws IOException {
-        SecurityManager security = System.getSecurityManager();
-        if (security != null) security.checkWrite(path);
-        if (isInvalid()) {
-            throw new IOException("Invalid file path");
-        }
+//        SecurityManager security = System.getSecurityManager();
+//        if (security != null) security.checkWrite(path);
+//        if (isInvalid()) {
+//            throw new IOException("Invalid file path");
+//        }
         return fs.createFileExclusively(path);
     }
 

@@ -152,7 +152,7 @@ pub mod class_loader {
     }
 
     fn get_user_class(name: &String) -> Option<Vec<u8>> {
-        let mut user_class_path = String::from("e:/tomato/test/bin/");
+        let mut user_class_path = String::from("E:/tomato/jre/out/");
         user_class_path.push_str(name);
         user_class_path.push_str(".class");
         //info!("user class path:{}", user_class_path);
@@ -647,7 +647,7 @@ pub mod class_loader {
         cnt: u16,
         cursor: &mut Cursor<Vec<u8>>,
     ) -> Vec<MethodInfo> {
-        let mut v: Vec<MethodInfo> = Vec::with_capacity(cnt as usize);
+        let mut v: Vec<MethodInfo> = Vec::new();
         for j in 0..cnt {
             let mut m: MethodInfo = MethodInfo {
                 access_flag: cursor.read_u16::<BigEndian>().unwrap(),

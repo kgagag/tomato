@@ -262,7 +262,7 @@ public class Throwable implements Serializable {
      *          later retrieval by the {@link #getMessage()} method.
      */
     public Throwable(String message) {
-        fillInStackTrace();
+        //fillInStackTrace();
         detailMessage = message;
     }
 

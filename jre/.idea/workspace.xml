@@ -4,38 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="70c6e279-5046-4c44-ba52-f4228d3f6634" name="Changes" comment="&quot;add test case&quot;">
-      <change afterPath="$PROJECT_DIR$/src/test/Test81.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/Test82.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/com/sun/org/apache/xalan/internal/xsltc/compiler/util/MethodGenerator$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/com/sun/org/apache/xalan/internal/xsltc/compiler/util/MethodGenerator$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/java/lang/Integer$IntegerCache.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/java/lang/Integer$IntegerCache.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/java/lang/Integer.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/java/lang/Integer.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/java/util/HashMap$EntryIterator.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/java/util/HashMap$EntryIterator.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/java/util/HashMap$EntrySet.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/java/util/HashMap$EntrySet.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/java/util/HashMap$EntrySpliterator.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/java/util/HashMap$EntrySpliterator.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/java/util/HashMap$HashIterator.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/java/util/HashMap$HashIterator.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/java/util/HashMap$HashMapSpliterator.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/java/util/HashMap$HashMapSpliterator.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/java/util/HashMap$KeyIterator.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/java/util/HashMap$KeyIterator.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/java/util/HashMap$KeySet.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/java/util/HashMap$KeySet.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/java/util/HashMap$KeySpliterator.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/java/util/HashMap$KeySpliterator.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/java/util/HashMap$Node.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/java/util/HashMap$Node.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/java/util/HashMap$TreeNode.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/java/util/HashMap$TreeNode.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/java/util/HashMap$ValueIterator.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/java/util/HashMap$ValueIterator.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/java/util/HashMap$ValueSpliterator.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/java/util/HashMap$ValueSpliterator.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/java/util/HashMap$Values.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/java/util/HashMap$Values.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/java/util/HashMap.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/java/util/HashMap.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/javax/swing/SpringLayout$Constraints$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/javax/swing/SpringLayout$Constraints$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/javax/swing/SpringLayout$Constraints$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/javax/swing/SpringLayout$Constraints$2.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/javax/swing/plaf/basic/BasicToolBarUI$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/javax/swing/plaf/basic/BasicToolBarUI$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/test/Test.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/Test.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/test/TestMap.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/TestMap.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/java/lang/Integer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/java/lang/Integer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/java/util/HashMap.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/java/util/HashMap.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/Test.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/Test.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/TestMap.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/TestMap.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/op_code.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/op_code.rs" afterDir="false" />
-    </list>
+    <list default="true" id="70c6e279-5046-4c44-ba52-f4228d3f6634" name="Changes" comment="&quot;add test case&quot;" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -185,7 +154,7 @@
       <workItem from="1716078883476" duration="16140000" />
       <workItem from="1716137821964" duration="680000" />
       <workItem from="1716407827183" duration="7000" />
-      <workItem from="1716654358993" duration="8822000" />
+      <workItem from="1716654358993" duration="8977000" />
     </task>
     <task id="LOCAL-00001" summary="&quot;add test case&quot;">
       <option name="closed" value="true" />

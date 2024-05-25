@@ -5,7 +5,7 @@ extern crate log;
 extern crate env_logger;
 
 pub fn iconst_m1(frame: &mut StackFrame) {
-    frame.op_stack.push(StackFrameValue::Int(1));
+    frame.op_stack.push(StackFrameValue::Int(-1));
     frame.pc += 1;
 }
 

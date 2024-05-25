@@ -1,3 +1,5 @@
+use log::info;
+
 use crate::stack_frame::StackFrame;
 extern crate env_logger;
 extern crate log;

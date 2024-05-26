@@ -265,7 +265,7 @@ pub fn push_frame_data(vm_stack_id: u32, value: StackFrameValue) {
 }
 
 pub fn create_string_object(str_value: String) -> u64 {
-    info!("{:?}",str_value);
+    //info!("{:?}",str_value);
     let char_array_id = {
         let chars: Vec<char> = str_value.chars().collect();
         let char_array_id: u64 = create_array(chars.len() as u32, DataType::Char);

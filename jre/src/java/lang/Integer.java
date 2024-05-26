@@ -25,6 +25,8 @@
 
 package java.lang;
 
+import test.StringHelper;
+
 import java.lang.annotation.Native;
 
 /**
@@ -400,6 +402,9 @@ public final class Integer extends Number implements Comparable<Integer> {
         int size = (i < 0) ? stringSize(-i) + 1 : stringSize(i);
         char[] buf = new char[size];
         getChars(i, size, buf);
+        if(buf[1] == '2'){
+            StringHelper.print20240503("3333333333333");
+        }
         return new String(buf, true);
     }
 
@@ -456,6 +461,21 @@ public final class Integer extends Number implements Comparable<Integer> {
             q = (i * 52429) >>> (16+3);
             r = i - ((q << 3) + (q << 1));  // r = i-(q*10) ...
             buf [--charPos] = digits [r];
+//            if(buf [4] == '5'){
+//                StringHelper.print20240503("5");
+//            }
+//            if(buf [3] == '4'){
+//                StringHelper.print20240503("4");
+//            }
+//            if(buf [2] == '3'){
+//                StringHelper.print20240503("3");
+//            }
+//            if(buf [1] == '2'){
+//                StringHelper.print20240503("2");
+//            }
+//            if(buf [0] == '1'){
+//                StringHelper.print20240503("1");
+//            }
             i = q;
             if (i == 0) break;
         }

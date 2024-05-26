@@ -5,9 +5,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="70c6e279-5046-4c44-ba52-f4228d3f6634" name="Changes" comment="&quot;add test case&quot;">
+      <change afterPath="$PROJECT_DIR$/src/test/Test83.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/java/lang/Integer$IntegerCache.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/java/lang/Integer$IntegerCache.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/java/lang/Integer.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/java/lang/Integer.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/Test.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/Test.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/Test82.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/Test82.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/java/lang/Integer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/java/lang/Integer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/Test.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/Test.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/Test82.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/Test82.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/op_code.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/op_code.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/opcode_array.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/opcode_array.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/runtime_data_area.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/runtime_data_area.rs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -46,7 +55,7 @@
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;last_opened_file_path&quot;: &quot;E:/huanwang&quot;,
+    &quot;last_opened_file_path&quot;: &quot;E:/soft/jdk1.8.0_131/src.zip&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -63,7 +72,7 @@
       <recent name="E:\tomato\jre\src\test" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.Test">
+  <component name="RunManager" selected="Application.Test83">
     <configuration name="HashMap (1)" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="java.util.HashMap" />
       <module name="jre" />
@@ -103,19 +112,6 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="Test75" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="test.Test75" />
-      <module name="jre" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="test.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="Test77" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="test.Test77" />
       <module name="jre" />
@@ -129,13 +125,26 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="Test83" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="test.Test83" />
+      <module name="jre" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="test.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.Test83" />
         <item itemvalue="Application.Test" />
         <item itemvalue="Application.HashMap" />
         <item itemvalue="Application.HashMap (1)" />
         <item itemvalue="Application.Test77" />
-        <item itemvalue="Application.Test75" />
       </list>
     </recent_temporary>
   </component>
@@ -158,7 +167,8 @@
       <workItem from="1716078883476" duration="16140000" />
       <workItem from="1716137821964" duration="680000" />
       <workItem from="1716407827183" duration="7000" />
-      <workItem from="1716654358993" duration="10147000" />
+      <workItem from="1716654358993" duration="16081000" />
+      <workItem from="1716719826251" duration="1720000" />
     </task>
     <task id="LOCAL-00001" summary="&quot;add test case&quot;">
       <option name="closed" value="true" />
@@ -260,17 +270,27 @@
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/test/Test.java</url>
           <line>161</line>
-          <option name="timeStamp" value="8" />
+          <option name="timeStamp" value="16" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>jar://$PROJECT_DIR$/../../soft/jdk1.8.0_131/jre/lib/rt.jar!/java/lang/String.class</url>
           <line>1097</line>
-          <option name="timeStamp" value="10" />
+          <option name="timeStamp" value="17" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>jar://$PROJECT_DIR$/../../soft/jdk1.8.0_131/jre/lib/rt.jar!/java/lang/Integer.class</url>
-          <line>91</line>
-          <option name="timeStamp" value="14" />
+          <url>jar://$PROJECT_DIR$/../../soft/jdk1.8.0_131/src.zip!/java/lang/String.java</url>
+          <line>3098</line>
+          <option name="timeStamp" value="18" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/test/Test82.java</url>
+          <line>4</line>
+          <option name="timeStamp" value="19" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>jar://$PROJECT_DIR$/../../soft/jdk1.8.0_131/src.zip!/java/lang/Integer.java</url>
+          <line>434</line>
+          <option name="timeStamp" value="21" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

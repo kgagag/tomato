@@ -229,7 +229,6 @@ fn xastore(frame: &mut StackFrame) {
     let v: StackFrameValue = frame.op_stack.pop().unwrap();
     let index = frame.op_stack.pop().unwrap();
     let array = frame.op_stack.pop().unwrap();
-    //info!("{:?}",array);
     let i: usize;
     match index {
         StackFrameValue::Byte(l) => i = l as usize,
@@ -241,10 +240,10 @@ fn xastore(frame: &mut StackFrame) {
     match array {
         StackFrameValue::Reference(reference_id) => {
             let reference: &mut Reference = get_reference(&reference_id).unwrap();
-            // //info!("{:?}", reference);
             match reference {
                 Reference::Array(arr) => {
-                    arr.data.insert(i, v);
+                    arr.data[i] = v;
+                    info!("{:?}",arr.data);
                 }
                 _ => panic!(),
             }

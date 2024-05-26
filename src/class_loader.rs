@@ -165,7 +165,7 @@ pub mod class_loader {
                 user_class_path.push_str("/jre/out/");
                 user_class_path.push_str(name);
                 user_class_path.push_str(".class");
-                info!("user class path:{}", user_class_path);
+                //info!("user class path:{}", user_class_path);
                 let mut file = fs::File::open(user_class_path).unwrap();
                 let mut buffer = Vec::new();
                 let _ = file.read_to_end(&mut buffer);

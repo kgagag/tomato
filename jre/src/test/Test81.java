@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Test81 {
-    public void test(){
+    public int test(){
         HashMap<String,String> map = new HashMap<>();
         boolean f = map.containsKey("a");
         if(f){
@@ -12,6 +12,6 @@ public class Test81 {
         }else {
             StringHelper.print20240503("bbb");
         }
-
+        return 20240325 ;
     }
 }

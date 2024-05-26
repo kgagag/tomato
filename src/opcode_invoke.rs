@@ -184,7 +184,7 @@ pub fn invokeinterface(frame: &mut StackFrame) {
 pub fn invokevirtual(frame: &mut StackFrame) {
     let clone_frame = &frame.clone();
     let method = get_method_for_invoke(clone_frame).unwrap();
-    info!("{}--{}--{}",method.class_name,method.method_name,method.descriptor);
+    //info!("{}--{}--{}",method.class_name,method.method_name,method.descriptor);
     frame.pc += 3;
     if method.access_flag & 0x0100 == 0 {
         let mut new_frame = init_stack_frame(frame, method, 1);

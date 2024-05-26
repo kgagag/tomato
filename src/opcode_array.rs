@@ -243,7 +243,6 @@ fn xastore(frame: &mut StackFrame) {
             match reference {
                 Reference::Array(arr) => {
                     arr.data[i] = v;
-                    info!("{:?}",arr.data);
                 }
                 _ => panic!(),
             }

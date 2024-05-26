@@ -1,8 +1,9 @@
 package test;
 
 public class TestGC2 {
-    public void test(){
+    public int test(){
         createObject();
+        return 20240325 ;
     }
 
     private TestGc[] createObject(){

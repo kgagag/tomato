@@ -6,13 +6,14 @@ public class Test79 {
 
     @Override
     public String toString() {
-        return name + "是" +sex;
+        return name + "是" +sex + "人";
     }
 
-    public void test(){
+    public int test(){
         Test79 test79 = new Test79();
         test79.sex = "男";
         test79.name = "张三";
         StringHelper.print20240503(test79.toString());
+        return 20240325 ;
     }
 }

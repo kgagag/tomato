@@ -5,6 +5,6 @@ public class Test66{
         String a = "hello world";
         String b = new String(a);
         StringHelper.print20240503(b);
-        return 0;
+        return 20240325 ;
     }
 }

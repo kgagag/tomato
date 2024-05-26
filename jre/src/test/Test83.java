@@ -23,10 +23,11 @@ public class Test83 {
 
     }
 
-    public static void test() {
+    public static int test() {
         char[] ch = new char[3];
         getChars(123,3,ch);
         StringHelper.print20240503(new String(ch));
+        return 20240325;
     }
 
     public static void main(String[] args) {

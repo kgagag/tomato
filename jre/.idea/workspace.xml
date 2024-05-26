@@ -5,18 +5,38 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="70c6e279-5046-4c44-ba52-f4228d3f6634" name="Changes" comment="&quot;add test case&quot;">
-      <change afterPath="$PROJECT_DIR$/src/test/Test83.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/java/lang/Integer$IntegerCache.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/java/lang/Integer$IntegerCache.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/java/lang/Integer.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/java/lang/Integer.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/test/Test.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/Test.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/Test65.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/Test65.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/Test66.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/Test66.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/Test67.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/Test67.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/Test69.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/Test69.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/Test70.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/Test70.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/Test78$Node.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/Test78$Node.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/Test78.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/Test78.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/Test79.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/Test79.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/Test80.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/Test80.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/Test81.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/Test81.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/test/Test82.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/Test82.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/java/lang/Integer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/java/lang/Integer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/Test83.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/Test83.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/TestGC2.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/TestGC2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/TestGc.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/TestGc.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/Test.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/Test.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/Test65.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/Test65.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/Test66.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/Test66.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/Test67.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/Test67.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/Test69.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/Test69.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/Test70.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/Test70.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/Test78.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/Test78.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/Test79.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/Test79.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/Test80.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/Test80.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/Test81.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/Test81.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/Test82.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/Test82.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/Test83.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/Test83.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/TestGC2.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/TestGC2.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/TestGc.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/TestGc.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../src/op_code.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/op_code.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../src/opcode_array.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/opcode_array.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/runtime_data_area.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/runtime_data_area.rs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -72,7 +92,7 @@
       <recent name="E:\tomato\jre\src\test" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.Test83">
+  <component name="RunManager" selected="Application.Test75">
     <configuration name="HashMap (1)" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="java.util.HashMap" />
       <module name="jre" />
@@ -112,8 +132,8 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="Test77" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="test.Test77" />
+    <configuration name="Test75" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="test.Test75" />
       <module name="jre" />
       <extension name="coverage">
         <pattern>
@@ -140,11 +160,11 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.Test83" />
+        <item itemvalue="Application.Test75" />
         <item itemvalue="Application.Test" />
+        <item itemvalue="Application.Test83" />
         <item itemvalue="Application.HashMap" />
         <item itemvalue="Application.HashMap (1)" />
-        <item itemvalue="Application.Test77" />
       </list>
     </recent_temporary>
   </component>
@@ -168,7 +188,7 @@
       <workItem from="1716137821964" duration="680000" />
       <workItem from="1716407827183" duration="7000" />
       <workItem from="1716654358993" duration="16081000" />
-      <workItem from="1716719826251" duration="1720000" />
+      <workItem from="1716719826251" duration="6670000" />
     </task>
     <task id="LOCAL-00001" summary="&quot;add test case&quot;">
       <option name="closed" value="true" />
@@ -268,11 +288,6 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/test/Test.java</url>
-          <line>161</line>
-          <option name="timeStamp" value="16" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
           <url>jar://$PROJECT_DIR$/../../soft/jdk1.8.0_131/jre/lib/rt.jar!/java/lang/String.class</url>
           <line>1097</line>
           <option name="timeStamp" value="17" />
@@ -281,11 +296,6 @@
           <url>jar://$PROJECT_DIR$/../../soft/jdk1.8.0_131/src.zip!/java/lang/String.java</url>
           <line>3098</line>
           <option name="timeStamp" value="18" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/test/Test82.java</url>
-          <line>4</line>
-          <option name="timeStamp" value="19" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>jar://$PROJECT_DIR$/../../soft/jdk1.8.0_131/src.zip!/java/lang/Integer.java</url>

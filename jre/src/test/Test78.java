@@ -6,12 +6,18 @@ import java.util.Objects;
 
 public class Test78 {
 
-    public void test(){
-        Node<String,String> node = new Node(1,"name","zhangsan",null);
-//        StringHelper.print20240503(node.key);
-//        StringHelper.print20240503(node.value);
-        StringHelper.print20240503(node.toString());
+    public int test(){
+//        Node<String,String> node = new Node(1,"name","zhangsan",null);
+////        StringHelper.print20240503(node.key);
+////        StringHelper.print20240503(node.value);
+//        StringHelper.print20240503(node.toString());
+//        return 20240325 ;
 
+        String str = "hello ";
+        String str1 = "world";
+        String str3 = str + str1;
+        StringHelper.print20240503(str3);
+        return 20240325 ;
     }
     static class Node<K,V> implements Map.Entry<K,V> {
         final int hash;

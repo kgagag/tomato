@@ -46,7 +46,7 @@ pub fn newarray(frame: &mut StackFrame) {
     } else {
         panic!("wrong atype");
     }
-    let reference = create_array(len, array_type);
+    let reference = create_array(len, DataType::Array { element_type: Box::new(array_type), depth: (1) });
     frame.op_stack.push(StackFrameValue::Reference(reference));
     frame.pc += 2;
 }
@@ -81,7 +81,10 @@ pub fn anewarray(frame: &mut StackFrame){
         _ => panic!(),
     }
     let class_name = get_class_name(&frame.class);
-    let reference = create_array(len as u32, DataType::Reference(class_name));
+    let reference = create_array(len as u32, DataType::Array{
+       element_type:Box::new(DataType::Reference(class_name)),
+       depth: (1)
+    });
     frame.op_stack.push(StackFrameValue::Reference(reference));
     frame.pc += 3;
 }
@@ -96,7 +99,7 @@ pub fn multianewarray(frame: &mut StackFrame) {
     let attr = this_class.constant_pool.get(&index).unwrap();
     match attr {
         ConstantPoolInfo::Class(i) => {
-            let class_utf8_attr = this_class.constant_pool.get(&i).unwrap();
+            let class_utf8_attr: &ConstantPoolInfo = this_class.constant_pool.get(&i).unwrap();
             match class_utf8_attr {
                 ConstantPoolInfo::Utf8(class_name_str) => {
                     let atype = extract_array_base_type_code(&class_name_str).unwrap();
@@ -118,11 +121,11 @@ pub fn multianewarray(frame: &mut StackFrame) {
                     } else if atype == 11 {
                         array_type = DataType::Long;
                     }  else if atype == 12 {
-                        array_type = DataType::Reference(class_name);
+                        array_type = DataType::Reference(class_name_str.clone());
                     } else {
                         panic!("wrong atype");
                     }
-                    let dimenssion = frame.code[frame.pc + 3] as i32;
+                    let dimenssion: u8 = frame.code[frame.pc + 3];
                     let mut len:u32;
 
                     let len_value = frame.op_stack.pop().unwrap();
@@ -143,12 +146,10 @@ pub fn multianewarray(frame: &mut StackFrame) {
                         _ => panic!(),
                     }
                     
-                    let reference = create_array(len as u32, array_type.clone());
+                    let reference = create_array(len as u32, DataType::Array { element_type: (Box::new(array_type.clone())), depth: (dimenssion) });
                     let mut v :Vec<u64>  = Vec::new();
                     v.push(reference);
-                    //info!("{:?}", frame.op_stack);
-                    for _i in 1 .. dimenssion{
-                        //info!("{:?}",i);
+                    for i in 1 .. dimenssion{
                         let len_value: StackFrameValue = frame.op_stack.pop().unwrap();
                         match len_value {
                             StackFrameValue::Byte(l) => {
@@ -166,7 +167,7 @@ pub fn multianewarray(frame: &mut StackFrame) {
                             _ => panic!(),
                         }
                         // 创建数组
-                        let b = create_muti_array(v.pop().unwrap(),len,array_type.clone());
+                        let b = create_muti_array(v.pop().unwrap(),len,DataType::Array { element_type: (Box::new(array_type.clone())), depth: (dimenssion - i) });
                         v.push(b);
                     }
                     frame.op_stack.push(StackFrameValue::Reference(reference));
@@ -180,7 +181,7 @@ pub fn multianewarray(frame: &mut StackFrame) {
 }
 
 
-fn create_muti_array(reference_id:u64,len: u32,array_type: DataType) -> u64 {
+fn create_muti_array(reference_id:u64,len: u32 ,array_type: DataType) -> u64 {
    let newarr =  create_array(len, array_type);
    let reference = get_reference(&reference_id).unwrap();
    match reference {
@@ -319,8 +320,6 @@ fn xaload(frame: &mut StackFrame) {
             let reference = get_reference(&reference_id).unwrap();
             match reference {
                 Reference::Array(arr) => {
-                  //  info!("{:?}",arr);
-                 //   info!("{:?}",arr.data.get(i ));
                     frame
                         .op_stack
                         .push(arr.data.get(i ).unwrap().clone());

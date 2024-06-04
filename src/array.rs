@@ -5,7 +5,7 @@ pub mod array{
         pub id: u64,
         pub len: u32,
         pub array_type: DataType,
-        pub data:Vec<StackFrameValue> ,
+        pub data:Vec<StackFrameValue> 
     }
     
     impl Array {
@@ -14,7 +14,7 @@ pub mod array{
                 id,
                 len,
                 array_type,
-                data: Vec::new(),
+                data: Vec::new()
             };
             for _i in 0.. len {
                 array.data.push(StackFrameValue::Byte(0));

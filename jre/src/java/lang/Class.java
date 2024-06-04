@@ -70,6 +70,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Proxy;
 import sun.reflect.annotation.*;
 import sun.reflect.misc.ReflectUtil;
+import test.StringHelper;
 
 /**
  * Instances of the class {@code Class} represent classes and
@@ -138,6 +139,11 @@ public final class Class<T> implements java.io.Serializable,
         // Initialize final field for classLoader.  The initialization value of non-null
         // prevents future JIT optimizations from assuming this final field is null.
         classLoader = loader;
+    }
+
+    public Class (String name){
+        this.name = name;
+        classLoader = null;
     }
 
     /**
@@ -638,8 +644,9 @@ public final class Class<T> implements java.io.Serializable,
      */
     public String getName() {
         String name = this.name;
-        if (name == null)
+        if (name == null) {
             this.name = name = getName0();
+        }
         return name;
     }
 
@@ -923,9 +930,44 @@ public final class Class<T> implements java.io.Serializable,
      * class if this class is an array
      * @see     java.lang.reflect.Array
      * @since JDK1.1
+     *
+     * @author kgagag
+     * 这个方法原来是个native方法,我给改成非native了
      */
-    public native Class<?> getComponentType();
-
+    public Class<?> getComponentType(){
+        if(this.name == null || this.name.charAt(0) != '['){
+            return null;
+        }
+        if(this.name.charAt(1) == '['){
+            return new Class<>(name.substring(1));
+        }
+        char flag = this.name.charAt(1);
+        String name0 = null;
+        switch (flag) {
+            case 'Z':
+                name0 = "boolean";
+                break;
+            case 'B':
+                name0 = "byte";
+                break;
+            case 'J':
+                name0 = "long";
+                break;
+            case 'S':
+                name0 = "short";
+                break;
+            case 'C':
+                name0 = "char";
+                break;
+            case 'D':
+                name0 = "double";
+                break;
+            default:
+                name0 = name.substring(1,name.length() - 1);
+                break;
+        }
+        return new Class<>(name0);
+    }
 
     /**
      * Returns the Java language modifiers for this class or interface, encoded

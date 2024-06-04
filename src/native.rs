@@ -1,3 +1,4 @@
+use crate::native_array::new_array;
 use crate::native_class::*;
 use crate::native_io::create_file_exclusively;
 use crate::native_math::*;
@@ -64,6 +65,11 @@ pub fn run_native(method: &MethodInfo, frame: &mut StackFrame) {
             && method.class_name == "java/lang/Object"
         {
             get_class(method, frame);
+        } else if "newArray" == method.method_name
+            && "(Ljava/lang/Class<*>;I)Ljava/lang/Object;" == method.descriptor
+            && method.class_name == "java/lang/reflect/Array"
+        {
+            new_array(method, frame);
         } else {
             panic!("unknown native method:{}", method.method_name);
         }

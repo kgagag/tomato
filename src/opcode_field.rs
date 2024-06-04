@@ -65,7 +65,6 @@ pub fn getfield(frame: &mut StackFrame) {
     let this_class = get_or_load_class(&class_name);
     let field_ref: &ConstantPoolInfo = this_class.constant_pool.get(&(index)).unwrap();
     let stack_frame_value: StackFrameValue = frame.op_stack.pop().unwrap();
-    //info!("{:?}",stack_frame_value);
     let mut object:&Object;
     match stack_frame_value {
         StackFrameValue::Reference(id) =>{
@@ -103,10 +102,11 @@ pub fn getfield(frame: &mut StackFrame) {
                                             }
                                             let op = object.field.get(field_name);
                                             if op.is_none() {
-                                                let field_info = target_class.field_info.get(field_name).unwrap();
+                                                let field_info: &FieldInfo = target_class.field_info.get(field_name).unwrap();
                                                 if field_info.data_type == DataType::Char || field_info.data_type == DataType::Short
                                                 || field_info.data_type == DataType::Int
                                                 || field_info.data_type == DataType::Long
+                                                || field_info.data_type == DataType::Byte
                                                 || field_info.data_type == DataType::Float
                                                 || field_info.data_type == DataType::Double {
                                                     frame.op_stack.push(StackFrameValue::Short(0));
@@ -115,6 +115,7 @@ pub fn getfield(frame: &mut StackFrame) {
                                                 }
 
                                             }else{
+                                             //   info!("{}--{}--{:?}",class_name,field_name,op);
                                                 frame.op_stack.push(op.unwrap().clone());
                                             }
                                         }

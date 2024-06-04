@@ -225,7 +225,7 @@ pub mod op_code {
                 // 0xa8 => jsr(frame),
                 // 0xa9 => ret(frame),
                 // 0xaa => tableswitch(frame),
-                // 0xab => lookupswitch(frame),
+                0xab => lookupswitch(frame),
                 0xac => ireturn(frame),
                 0xad => lreturn(frame),
                 0xae => freturn(frame),

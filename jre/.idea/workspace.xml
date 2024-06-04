@@ -5,38 +5,39 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="70c6e279-5046-4c44-ba52-f4228d3f6634" name="Changes" comment="&quot;add test case&quot;">
+      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/ArrayComponentTypeExample.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/Test85.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/Test86.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/Test87.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/TestList.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/java/lang/Class$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/java/lang/Class$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/java/lang/Class$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/java/lang/Class$2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/java/lang/Class$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/java/lang/Class$3.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/java/lang/Class$4.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/java/lang/Class$4.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/java/lang/Class$AnnotationData.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/java/lang/Class$AnnotationData.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/java/lang/Class$Atomic.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/java/lang/Class$Atomic.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/java/lang/Class$EnclosingMethodInfo.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/java/lang/Class$EnclosingMethodInfo.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/java/lang/Class$MethodArray.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/java/lang/Class$MethodArray.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/java/lang/Class$ReflectionData.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/java/lang/Class$ReflectionData.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/java/lang/Class.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/java/lang/Class.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/test/Test.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/Test.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/test/Test65.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/Test65.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/test/Test66.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/Test66.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/test/Test67.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/Test67.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/test/Test69.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/Test69.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/test/Test70.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/Test70.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/test/Test78$Node.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/Test78$Node.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/test/Test78.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/Test78.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/test/Test79.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/Test79.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/test/Test80.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/Test80.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/test/Test81.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/Test81.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/test/Test82.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/Test82.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/test/Test83.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/Test83.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/test/TestGC2.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/TestGC2.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/test/TestGc.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/TestGc.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/TestMap.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/TestMap.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/java/lang/Class.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/java/lang/Class.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/java/lang/reflect/Array.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/java/lang/reflect/Array.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/Test.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/Test.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/Test65.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/Test65.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/Test66.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/Test66.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/Test67.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/Test67.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/Test69.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/Test69.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/Test70.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/Test70.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/Test78.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/Test78.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/Test79.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/Test79.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/Test80.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/Test80.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/Test81.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/Test81.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/Test82.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/Test82.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/Test83.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/Test83.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/TestGC2.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/TestGC2.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/TestGc.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/TestGc.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/TestMap.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/TestMap.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/array.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/array.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/native.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/native.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/native_object.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/native_object.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../src/op_code.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/op_code.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../src/opcode_array.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/opcode_array.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/opcode_compare.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/opcode_compare.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/opcode_field.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/opcode_field.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/param.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/param.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/runtime_data_area.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/runtime_data_area.rs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -74,6 +75,7 @@
     &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
     &quot;last_opened_file_path&quot;: &quot;E:/soft/jdk1.8.0_131/src.zip&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
@@ -92,26 +94,13 @@
       <recent name="E:\tomato\jre\src\test" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.Test75">
-    <configuration name="HashMap (1)" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="java.util.HashMap" />
+  <component name="RunManager" selected="Application.Test87">
+    <configuration name="ArrayComponentTypeExample" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="test.ArrayComponentTypeExample" />
       <module name="jre" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="java.util.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="HashMap" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="java.util.HashMap" />
-      <module name="jre" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="java.util.*" />
+          <option name="PATTERN" value="test.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -145,8 +134,21 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="Test83" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="test.Test83" />
+    <configuration name="Test87" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="test.Test87" />
+      <module name="jre" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="test.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="TestList" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="test.TestList" />
       <module name="jre" />
       <extension name="coverage">
         <pattern>
@@ -160,11 +162,11 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.Test75" />
+        <item itemvalue="Application.Test87" />
         <item itemvalue="Application.Test" />
-        <item itemvalue="Application.Test83" />
-        <item itemvalue="Application.HashMap" />
-        <item itemvalue="Application.HashMap (1)" />
+        <item itemvalue="Application.TestList" />
+        <item itemvalue="Application.ArrayComponentTypeExample" />
+        <item itemvalue="Application.Test75" />
       </list>
     </recent_temporary>
   </component>
@@ -189,6 +191,17 @@
       <workItem from="1716407827183" duration="7000" />
       <workItem from="1716654358993" duration="16081000" />
       <workItem from="1716719826251" duration="6670000" />
+      <workItem from="1716826179969" duration="598000" />
+      <workItem from="1716955437606" duration="581000" />
+      <workItem from="1716956628874" duration="3172000" />
+      <workItem from="1716995344693" duration="766000" />
+      <workItem from="1716998487377" duration="3185000" />
+      <workItem from="1717033516257" duration="4828000" />
+      <workItem from="1717196050042" duration="2994000" />
+      <workItem from="1717224278876" duration="27964000" />
+      <workItem from="1717324677649" duration="4424000" />
+      <workItem from="1717378980890" duration="609000" />
+      <workItem from="1717385768154" duration="1073000" />
     </task>
     <task id="LOCAL-00001" summary="&quot;add test case&quot;">
       <option name="closed" value="true" />

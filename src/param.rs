@@ -14,7 +14,7 @@ pub mod param{
         Boolean,
         Array {
             element_type: Box<DataType>,
-            depth: u32,
+            depth: u8,
         },
         Unknown
     }

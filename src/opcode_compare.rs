@@ -294,7 +294,7 @@ pub fn if_acmpne(frame: &mut StackFrame) {
 
 pub fn ifnonnull(frame: &mut StackFrame) {
     let value = frame.op_stack.pop().unwrap();
-    //info!("{:?}",value);
+    // info!("{:?}",value);
     match value {
         StackFrameValue::Null =>{
             frame.pc += 3; // 跳转失败，继续执行下一条指令
@@ -319,4 +319,47 @@ pub fn ifnull(frame: &mut StackFrame) {
         }
     }
 }
+
+
+pub fn lookupswitch(frame: &mut StackFrame) {
+    let pc0 = frame.pc;
+    // 确保PC是4字节对齐的
+    while frame.pc % 4 != 0 {
+        frame.pc += 1;
+    }
+
+    // 获取默认跳转地址
+    let default_offset = u8s_to_i32(&frame.code[frame.pc..frame.pc + 4]);
+    frame.pc += 4;
+
+    // 获取匹配的键值对数量
+    let npairs = u8s_to_i32(&frame.code[frame.pc..frame.pc + 4]);
+    frame.pc += 4;
+
+    // 弹出栈顶的key
+    let key = frame.popi64() as i32;
+
+    for _ in 0..npairs {
+        let match_key = u8s_to_i32(&frame.code[frame.pc..frame.pc + 4]);
+        let match_offset = u8s_to_i32(&frame.code[frame.pc + 4..frame.pc + 8]);
+        //frame.pc += 8;
+        if key == match_key {
+            frame.pc = (pc0 as i32 + match_offset) as usize;
+            return;
+        }
+    }
+
+    // 没有匹配，跳转到默认地址
+    frame.pc = (frame.pc as i32 + default_offset) as usize;
+}
+
+
+// 辅助函数：将四个 u8 转换为 i32
+fn u8s_to_i32(bytes: &[u8]) -> i32 {
+    ((bytes[0] as i32) << 24)
+        | ((bytes[1] as i32) << 16)
+        | ((bytes[2] as i32) << 8)
+        | (bytes[3] as i32)
+}
+
 

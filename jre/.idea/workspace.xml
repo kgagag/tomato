@@ -5,10 +5,216 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="70c6e279-5046-4c44-ba52-f4228d3f6634" name="Changes" comment="&quot;add test case&quot;">
+      <change afterPath="$PROJECT_DIR$/../test/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/.idea/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/test.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/AbstracTest.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/Array.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/ArrayComponentTypeExample.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/InterfaceTest.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/LeetCode_31.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/LeetCode_33.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/LogUtil.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/StringHelper.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/Test.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/Test1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/Test10.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/Test11.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/Test12.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/Test13.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/Test14.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/Test15.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/Test16.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/Test17.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/Test18.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/Test19.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/Test2.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/Test20.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/Test21.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/Test22.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/Test23.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/Test24.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/Test25.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/Test26.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/Test27.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/Test28.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/Test29.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/Test3.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/Test30.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/Test31.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/Test32.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/Test33.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/Test34.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/Test35.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/Test36.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/Test37.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/Test38.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/Test39.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/Test4.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/Test40.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/Test41.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/Test42.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/Test43.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/Test44.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/Test45.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/Test46.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/Test47.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/Test48.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/Test49.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/Test5.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/Test50.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/Test51.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/Test52.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/Test53.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/Test55.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/Test56.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/Test57.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/Test58.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/Test59.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/Test6.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/Test60.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/Test61.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/Test62.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/Test63.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/Test64.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/Test65.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/Test66.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/Test67.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/Test68.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/Test69.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/Test7.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/Test70.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/Test71.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/Test72.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/Test73.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/Test74.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/Test75.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/Test76.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/Test77.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/Test78$Node.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/Test78.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/Test79.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/Test8.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/Test80.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/Test81.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/Test82.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/Test83.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/Test85.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/Test86.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/Test87.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/Test9.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/TestGC2.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/TestGc.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/TestList.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/TestMap.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/Value.class" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/java/lang/Class.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/java/lang/Class.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/Test.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/Test.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/TestList.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/TestList.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/java/lang/Integer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/java/lang/Integer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/AbstracTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/Array.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/ArrayComponentTypeExample.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/InterfaceTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/LeetCode_31.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/LeetCode_33.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/LogUtil.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/StringHelper.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/Test.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/Test1.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/Test10.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/Test11.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/Test12.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/Test13.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/Test14.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/Test15.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/Test16.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/Test17.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/Test18.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/Test19.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/Test2.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/Test20.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/Test21.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/Test22.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/Test23.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/Test24.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/Test25.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/Test26.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/Test27.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/Test28.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/Test29.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/Test3.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/Test30.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/Test31.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/Test32.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/Test33.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/Test34.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/Test35.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/Test36.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/Test37.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/Test38.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/Test39.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/Test4.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/Test40.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/Test41.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/Test42.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/Test43.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/Test44.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/Test45.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/Test46.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/Test47.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/Test48.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/Test49.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/Test5.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/Test50.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/Test51.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/Test52.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/Test53.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/Test55.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/Test56.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/Test57.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/Test58.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/Test59.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/Test6.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/Test60.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/Test61.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/Test62.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/Test63.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/Test64.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/Test65.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/Test66.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/Test67.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/Test68.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/Test69.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/Test7.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/Test70.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/Test71.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/Test72.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/Test73.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/Test74.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/Test75.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/Test76.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/Test77.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/Test78.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/Test79.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/Test8.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/Test80.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/Test81.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/Test82.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/Test83.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/Test85.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/Test86.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/Test87.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/Test9.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/TestGC2.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/TestGc.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/TestList.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/TestMap.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/Value.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../test/.idea/workspace.xml" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -49,12 +255,12 @@
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "ToolWindowRun.ShowToolbar": "false",
     "WebServerToolWindowFactoryState": "false",
-    "last_opened_file_path": "E:/soft/jdk1.8.0_131/src.zip",
+    "last_opened_file_path": "E:/jvm/tomato/jre",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
-    "project.structure.last.edited": "SDKs",
+    "project.structure.last.edited": "Project",
     "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.2",
     "settings.editor.selected.configurable": "preferences.pluginManager",
@@ -176,6 +382,7 @@
       <workItem from="1717385768154" duration="1073000" />
       <workItem from="1717815737430" duration="1069000" />
       <workItem from="1717837971738" duration="6314000" />
+      <workItem from="1717867352201" duration="872000" />
     </task>
     <task id="LOCAL-00001" summary="&quot;add test case&quot;">
       <option name="closed" value="true" />

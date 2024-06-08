@@ -25,7 +25,6 @@
 
 package java.lang;
 
-import test.StringHelper;
 
 import java.lang.annotation.Native;
 
@@ -402,9 +401,6 @@ public final class Integer extends Number implements Comparable<Integer> {
         int size = (i < 0) ? stringSize(-i) + 1 : stringSize(i);
         char[] buf = new char[size];
         getChars(i, size, buf);
-        if(buf[1] == '2'){
-            StringHelper.print20240503("3333333333333");
-        }
         return new String(buf, true);
     }
 

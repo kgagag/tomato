@@ -70,7 +70,6 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Proxy;
 import sun.reflect.annotation.*;
 import sun.reflect.misc.ReflectUtil;
-import test.StringHelper;
 
 /**
  * Instances of the class {@code Class} represent classes and

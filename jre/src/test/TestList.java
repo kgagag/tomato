@@ -6,8 +6,12 @@ import java.util.List;
 public class TestList {
     public void test(){
         List<String> stringList = new ArrayList<>();
-        stringList.add("测试list");
-        //StringHelper.print20240503(stringList.get(0));
+        for(int i = 0 ; i < 100; i ++) {
+            stringList.add("测试list" + i);
+        }
+        for(int i = 0 ; i < stringList.size();i++) {
+            StringHelper.print20240503(stringList.get(i));
+        }
     }
 
     public static void main(String[] args) {

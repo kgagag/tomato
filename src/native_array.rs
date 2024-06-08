@@ -16,28 +16,36 @@ extern crate env_logger;
 extern crate log;
 use crate::{array, class::*, object, param, reference};
 
+/*
+ * 创建一个一维数组
+ */
 pub fn new_array(method: &MethodInfo, frame: &mut StackFrame) {
-    let component_sfv_type_: StackFrameValue = frame.op_stack.pop().unwrap();
     let len = frame.popi64();
-    match component_sfv_type_ {
-        StackFrameValue::Reference(id) => {
-            let reference = get_reference(&id).unwrap();
-            match reference {
-                Reference::Object(object) => {
-                    let sfv: &StackFrameValue = object.field.get("name").unwrap();
-                    match sfv {
-                        StackFrameValue::Reference(java_str_id)=>{
-                          let string =   get_rust_string(java_str_id);
-                          //create_array(len, DataType::Array { element_type: (DataType::Reference(())), depth: (1) })
-                        }
-                        _=> panic!()
-                    }
-                }
-                _ => panic!(),
-            }
-        }
-        _ => panic!(),
-    }
+    let component_sfv_type_: StackFrameValue = frame.op_stack.pop().unwrap();
+    
+    let array = create_array(len as u32, DataType::Array { element_type: (Box::new(DataType::Int)), depth: (1) });
+    frame.op_stack.push(StackFrameValue::Reference(array));
+
+    // match component_sfv_type_ {
+    //     StackFrameValue::Reference(id) => {
+    //         let reference = get_reference(&id).unwrap();
+    //         match reference {
+    //             Reference::Object(object) => {
+    //                 let sfv: &StackFrameValue = object.field.get("name").unwrap();
+    //                 match sfv {
+    //                     StackFrameValue::Reference(java_str_id)=>{
+    //                       //let string =   get_rust_string(java_str_id);
+    //                       let array = create_array(len as u32, DataType::Array { element_type: (Box::new(DataType::Int)), depth: (1) });
+    //                       frame.op_stack.push(StackFrameValue::Reference(array));
+    //                     }
+    //                     _=> panic!()
+    //                 }
+    //             }
+    //             _ => panic!(),
+    //         }
+    //     }
+    //     _ => panic!(),
+    // }
 }
 
 fn get_rust_string(id: &u64) -> String {

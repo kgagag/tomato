@@ -100,7 +100,7 @@ impl StackFrame {
 
     pub fn popi64(&mut self) -> i64 {
         let value = self.op_stack.pop().unwrap();
-        //info!("{:?}",value);
+        // info!("{:?}",value);
         match value {
             StackFrameValue::Int(data) => data as i64,
             StackFrameValue::Byte(data) => data as i64,

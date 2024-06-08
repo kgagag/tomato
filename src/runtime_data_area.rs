@@ -141,6 +141,7 @@ pub fn create_array(len: u32, array_type: DataType) -> u64 {
         map.insert(array.id, Reference::Array(array));
         drop(data);
         id
+        
     }
 }
 

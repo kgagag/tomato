@@ -321,6 +321,9 @@ pub fn ifnull(frame: &mut StackFrame) {
 }
 
 
+/**
+ * gpt4o 实现的 lookupswitch
+ */
 pub fn lookupswitch(frame: &mut StackFrame) {
     let pc0 = frame.pc;
     // 确保PC是4字节对齐的
@@ -351,6 +354,43 @@ pub fn lookupswitch(frame: &mut StackFrame) {
 
     // 没有匹配，跳转到默认地址
     frame.pc = (frame.pc as i32 + default_offset) as usize;
+}
+
+
+/**
+ *  * gpt4o 实现的 lookupswitch
+ */
+pub fn tableswitch(frame: &mut StackFrame) {
+    let pc0 = frame.pc;
+
+    // 确保PC是4字节对齐的
+    frame.pc = (frame.pc + 3) & !3;
+
+    // 获取默认跳转地址
+    let default_offset = u8s_to_i32(&frame.code[frame.pc..frame.pc + 4]);
+    frame.pc += 4;
+
+    // 获取最低值和最高值
+    let low = u8s_to_i32(&frame.code[frame.pc..frame.pc + 4]);
+    frame.pc += 4;
+    let high = u8s_to_i32(&frame.code[frame.pc..frame.pc + 4]);
+    frame.pc += 4;
+
+    // 计算跳转表的长度
+    let jump_table_length = (high - low + 1) as usize;
+
+    // 弹出栈顶的key
+    let key = frame.popi64() as i32;
+
+    if key < low || key > high {
+        // 如果key不在范围内，跳转到默认地址
+        frame.pc = (pc0 as i32 + default_offset) as usize;
+    } else {
+        // 在跳转表中查找跳转偏移量
+        let index = (key - low) as usize;
+        let offset = u8s_to_i32(&frame.code[frame.pc + index * 4..frame.pc + (index + 1) * 4]);
+        frame.pc = (pc0 as i32 + offset) as usize;
+    }
 }
 
 

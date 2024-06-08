@@ -5,39 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="70c6e279-5046-4c44-ba52-f4228d3f6634" name="Changes" comment="&quot;add test case&quot;">
-      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/ArrayComponentTypeExample.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/Test85.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/Test86.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/Test87.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/TestList.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/java/lang/Class$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/java/lang/Class$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/java/lang/Class$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/java/lang/Class$2.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/java/lang/Class$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/java/lang/Class$3.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/java/lang/Class$4.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/java/lang/Class$4.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/java/lang/Class$AnnotationData.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/java/lang/Class$AnnotationData.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/java/lang/Class$Atomic.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/java/lang/Class$Atomic.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/java/lang/Class$EnclosingMethodInfo.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/java/lang/Class$EnclosingMethodInfo.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/java/lang/Class$MethodArray.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/java/lang/Class$MethodArray.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/java/lang/Class$ReflectionData.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/java/lang/Class$ReflectionData.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/java/lang/Class.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/java/lang/Class.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/test/Test.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/Test.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/test/TestMap.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/TestMap.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/java/lang/Class.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/java/lang/Class.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/java/lang/reflect/Array.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/java/lang/reflect/Array.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/Test.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/Test.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/TestMap.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/TestMap.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/array.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/array.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/native.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/native.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/native_object.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/native_object.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/op_code.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/op_code.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/opcode_array.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/opcode_array.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/opcode_compare.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/opcode_compare.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/opcode_field.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/opcode_field.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/param.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/param.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/runtime_data_area.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/runtime_data_area.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/TestList.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/TestList.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -70,31 +41,32 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;last_opened_file_path&quot;: &quot;E:/soft/jdk1.8.0_131/src.zip&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;SDKs&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_ADD_EXTERNAL_FILES": "true",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "ToolWindowRun.ShowToolbar": "false",
+    "WebServerToolWindowFactoryState": "false",
+    "last_opened_file_path": "E:/soft/jdk1.8.0_131/src.zip",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "project.structure.last.edited": "SDKs",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="E:\tomato\jre\src\test" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.Test87">
+  <component name="RunManager" selected="Application.Test">
     <configuration name="ArrayComponentTypeExample" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="test.ArrayComponentTypeExample" />
       <module name="jre" />
@@ -162,9 +134,9 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.Test87" />
         <item itemvalue="Application.Test" />
         <item itemvalue="Application.TestList" />
+        <item itemvalue="Application.Test87" />
         <item itemvalue="Application.ArrayComponentTypeExample" />
         <item itemvalue="Application.Test75" />
       </list>
@@ -202,6 +174,8 @@
       <workItem from="1717324677649" duration="4424000" />
       <workItem from="1717378980890" duration="609000" />
       <workItem from="1717385768154" duration="1073000" />
+      <workItem from="1717815737430" duration="1069000" />
+      <workItem from="1717837971738" duration="6314000" />
     </task>
     <task id="LOCAL-00001" summary="&quot;add test case&quot;">
       <option name="closed" value="true" />

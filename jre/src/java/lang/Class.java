@@ -944,6 +944,9 @@ public final class Class<T> implements java.io.Serializable,
         char flag = this.name.charAt(1);
         String name0 = null;
         switch (flag) {
+            case 'I':
+                name0 = "int";
+                break;
             case 'Z':
                 name0 = "boolean";
                 break;

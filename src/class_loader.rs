@@ -125,22 +125,22 @@ pub mod class_loader {
         Err(format!("Class '{}' not found in the JAR file", class_name))
     }
 
-    fn get_rt_class(name: &String) -> Option<Vec<u8>> {
-        match env::current_dir() {
-            Ok(path) => {
-                let mut user_class_path = path.as_path().to_str().unwrap().to_string();
-                user_class_path.push_str("/jre/out/");
-                user_class_path.push_str(name);
-                user_class_path.push_str(".class");
-                info!("user class path:{}", user_class_path);
-                let mut file = fs::File::open(user_class_path).unwrap();
-                let mut buffer = Vec::new();
-                let _ = file.read_to_end(&mut buffer);
-                Some(buffer)
-            }
-            Err(_e) =>panic!()
-        }
-    }
+    // fn get_rt_class(name: &String) -> Option<Vec<u8>> {
+    //     match env::current_dir() {
+    //         Ok(path) => {
+    //             let mut user_class_path = path.as_path().to_str().unwrap().to_string();
+    //             user_class_path.push_str("/jre/out/");
+    //             user_class_path.push_str(name);
+    //             user_class_path.push_str(".class");
+    //             info!("user class path:{}", user_class_path);
+    //             let mut file = fs::File::open(user_class_path).unwrap();
+    //             let mut buffer = Vec::new();
+    //             let _ = file.read_to_end(&mut buffer);
+    //             Some(buffer)
+    //         }
+    //         Err(_e) =>panic!()
+    //     }
+    // }
 
     // fn get_rt_class_jar(name: &String) -> Result<Vec<u8>, String> {
     //     match env::var("JAVA_HOME") {
@@ -154,24 +154,36 @@ pub mod class_loader {
     //     }
     // }
 
-    /***
-     * 1、先从 rt.jar 中加载
-     * 2、从 user class 中加载
-     */
-    fn get_class(name: &String) -> Vec<u8> {
+    fn get_class_from_disk(name: &String) -> Vec<u8> {
         match env::current_dir() {
             Ok(path) => {
-                let mut user_class_path = path.as_path().to_str().unwrap().to_string();
-                user_class_path.push_str("/jre/out/");
-                user_class_path.push_str(name);
-                user_class_path.push_str(".class");
-                //info!("user class path:{}", user_class_path);
-                let mut file = fs::File::open(user_class_path).unwrap();
-                let mut buffer = Vec::new();
-                let _ = file.read_to_end(&mut buffer);
-                buffer
+                let mut jre_class_path = path.as_path().to_str().unwrap().to_string();
+                jre_class_path.push_str("/jre/out/");
+                jre_class_path.push_str(name);
+                jre_class_path.push_str(".class");
+                let class_path = Path::new(&jre_class_path);
+                if class_path.exists() {
+                    let mut file = fs::File::open(jre_class_path).unwrap();
+                    let mut buffer = Vec::new();
+                    let _ = file.read_to_end(&mut buffer);
+                    buffer
+                } else {
+                    let mut user_class_path = path.as_path().to_str().unwrap().to_string();
+                    user_class_path.push_str("/test/out/");
+                    user_class_path.push_str(name);
+                    user_class_path.push_str(".class");
+                    let class_path = Path::new(&user_class_path);
+                    if class_path.exists() {
+                        let mut file = fs::File::open(user_class_path).unwrap();
+                        let mut buffer = Vec::new();
+                        let _ = file.read_to_end(&mut buffer);
+                        buffer
+                    } else {
+                        panic!("class ：{} not found", name)
+                    }
+                }
             }
-            Err(_e) =>panic!()
+            Err(_e) => panic!(),
         }
     }
 
@@ -179,7 +191,7 @@ pub mod class_loader {
      * 类加载
      */
     pub fn load_class(name: &String) -> Class {
-        let buffer: Vec<u8> = get_class(name);
+        let buffer: Vec<u8> = get_class_from_disk(name);
         let mut cursor = io::Cursor::new(buffer);
         let mut class: Class = Class::new();
         class.magic = get_magic(&mut cursor);

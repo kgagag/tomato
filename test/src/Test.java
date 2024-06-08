@@ -2,7 +2,7 @@ import java.io.IOException;
 
 public class Test {
     public static void main(String[] args) throws IOException {
-        /*
+//
         //  两个int相加
         new Test1().test();
         // 两个 float 相加
@@ -21,7 +21,7 @@ public class Test {
         new Test8().test();
         // 7层方法调用栈
         new Test9().test();
-
+//
         //测试递归
         Test10.test();
 
@@ -95,15 +95,15 @@ public class Test {
         new Test47().test();
 
         new Test49().test();
-
+//
         new Test50().test();
-
+////
         new Test51().test();
-
-
+////
+////
         new Test52().test();
-
-
+//
+//
         new Test53().test();
 
         new Test55().test();
@@ -135,17 +135,16 @@ public class Test {
 
         //测试 "+" 拼接字符串
         new Test70().test();
-
-        // 测试GC
+//
+//        // 测试GC
         new TestGc().test();
         new TestGC2().test();
-
-       // new Test71().test();
-        // 加载Throwable
-        new Test73().test();
-        new Test75().test();
-
-      // new TestMap().test();
+//
+//       // new Test71().test();
+//        // 加载Throwable
+//        new Test73().test();
+//        new Test75().test();
+//
         new Test78().test();
         new Test79().test();
         new Test80().test();
@@ -153,14 +152,15 @@ public class Test {
         //测试 String.valueOf()
         new Test82().test();
         Test83.test();
-//
+
+        new Test85().test();
+        new Test86().test();
+        //测试 hashMap
+        new TestMap().test();
+        // 测试 hashSet
+        new TestSet().test();
+        // 测试 ArrayList
         new TestList().test();
         new TestList2().test();
-        new Test85().test();
-       new Test86().test();
-
-       */
-       new TestMap().test();
-
     }
 }

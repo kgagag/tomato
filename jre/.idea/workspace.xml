@@ -5,6 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="70c6e279-5046-4c44-ba52-f4228d3f6634" name="Changes" comment="&quot;调整目录&quot;">
+      <change afterPath="$PROJECT_DIR$/src/test/StringHelper.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/src/TestSet.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/java/lang/Class$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/java/lang/Class$1.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/java/lang/Class$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/java/lang/Class$2.class" afterDir="false" />
@@ -21,6 +23,8 @@
       <change beforePath="$PROJECT_DIR$/../src/class_loader.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/class_loader.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../src/main.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../src/op_code.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/op_code.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../test/src/Test.java" beforeDir="false" afterPath="$PROJECT_DIR$/../test/src/Test.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../test/src/TestMap.java" beforeDir="false" afterPath="$PROJECT_DIR$/../test/src/TestMap.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -77,8 +81,11 @@
     <key name="CopyFile.RECENT_KEYS">
       <recent name="E:\tomato\jre\src\test" />
     </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="test" />
+    </key>
   </component>
-  <component name="RunManager" selected="Application.Test">
+  <component name="RunManager" selected="Application.StringHelper">
     <configuration name="ArrayComponentTypeExample" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="test.ArrayComponentTypeExample" />
       <module name="jre" />
@@ -92,8 +99,8 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="Test" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="test.Test" />
+    <configuration name="StringHelper" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="test.StringHelper" />
       <module name="jre" />
       <extension name="coverage">
         <pattern>
@@ -105,8 +112,8 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="Test75" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="test.Test75" />
+    <configuration name="Test" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="test.Test" />
       <module name="jre" />
       <extension name="coverage">
         <pattern>
@@ -146,11 +153,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.StringHelper" />
         <item itemvalue="Application.Test" />
         <item itemvalue="Application.TestList" />
         <item itemvalue="Application.Test87" />
         <item itemvalue="Application.ArrayComponentTypeExample" />
-        <item itemvalue="Application.Test75" />
       </list>
     </recent_temporary>
   </component>
@@ -188,7 +195,7 @@
       <workItem from="1717385768154" duration="1073000" />
       <workItem from="1717815737430" duration="1069000" />
       <workItem from="1717837971738" duration="6314000" />
-      <workItem from="1717867352201" duration="1836000" />
+      <workItem from="1717867352201" duration="6520000" />
     </task>
     <task id="LOCAL-00001" summary="&quot;add test case&quot;">
       <option name="closed" value="true" />

@@ -65,7 +65,7 @@ pub fn getfield(frame: &mut StackFrame) {
     let this_class = get_or_load_class(&class_name);
     let field_ref: &ConstantPoolInfo = this_class.constant_pool.get(&(index)).unwrap();
     let stack_frame_value: StackFrameValue = frame.op_stack.pop().unwrap();
-    let mut object:&Object;
+    let object:&Object;
     match stack_frame_value {
         StackFrameValue::Reference(id) =>{
             let reference = get_reference(&id).unwrap();

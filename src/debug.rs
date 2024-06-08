@@ -21,7 +21,6 @@ pub fn dprint(msg: StackFrameValue) {
                                 Reference::Array(array) => {
                                     let mut vc: Vec<char> = Vec::new();
                                     for i in 0..array.len {
-                                        // print!("{:?}",);
                                         let ch = array.data.get(i as usize).unwrap();
                                         match ch {
                                             StackFrameValue::CHARACTER(c) => {
@@ -30,7 +29,7 @@ pub fn dprint(msg: StackFrameValue) {
                                             StackFrameValue::Byte(c) => {
                                                 vc.push((*c as u8) as char);
                                             }
-                                            _ => panic!(),
+                                            _ => continue
                                         }
                                     }
                                     let str: String = vc.into_iter().collect();
@@ -45,6 +44,9 @@ pub fn dprint(msg: StackFrameValue) {
                 _ => panic!(),
             }
         }
-        _ => panic!(),
+        StackFrameValue::Null =>{
+            println!("{}", "null")
+        }
+        _=> panic!()
     }
 }

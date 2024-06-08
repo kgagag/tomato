@@ -287,7 +287,6 @@ pub fn saload(frame: &mut StackFrame) {
 
 pub fn arraylength(frame: &mut StackFrame){
     let v = frame.op_stack.pop().unwrap();
-    //info!("{:?}",v);
     match v {
         StackFrameValue::Reference(reference) =>{
             let aref = get_reference(&reference).unwrap();
@@ -306,7 +305,6 @@ pub fn arraylength(frame: &mut StackFrame){
 fn xaload(frame: &mut StackFrame) {
     let index = frame.op_stack.pop().unwrap();
     let array = frame.op_stack.pop().unwrap();
-    //info!("{:?}",array);
     let i;
     match index {
         StackFrameValue::Byte(l) => i = l as usize,

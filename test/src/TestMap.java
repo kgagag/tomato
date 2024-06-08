@@ -5,7 +5,13 @@ public class TestMap {
     public int test(){
         Map<String,String> map = new HashMap<>();
         map.put("name","zhangsan");
+        map.put("name","lisi");
         StringHelper.print20240503(map.get("name"));
-          return 20240325;
+        StringHelper.print20240503("map 的容量是：" + map.size());
+        if(map.containsKey("name") && map.get("name").equals("lisi")) {
+            return 20240325;
+        }else {
+            return 20240324;
+        }
     }
 }

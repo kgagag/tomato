@@ -4,9 +4,9 @@ public class Test36 {
     public int test(int b , int c){
         try {
             int a = b / c;
-            return 20240324;
+            return Result.FAILED;
         }catch (Exception e){
-            return 20240325;
+            return Result.SUCCESS;
         }
     }
 

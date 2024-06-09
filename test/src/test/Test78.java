@@ -10,13 +10,13 @@ public class Test78 {
 ////        test.StringHelper.print20240503(node.key);
 ////        test.StringHelper.print20240503(node.value);
 //        test.StringHelper.print20240503(node.toString());
-//        return 20240325 ;
+//        return Result.SUCCESS ;
 
         String str = "hello ";
         String str1 = "world";
         String str3 = str + str1;
         StringHelper.print20240503(str3);
-        return 20240325 ;
+        return Result.SUCCESS ;
     }
     static class Node<K,V> implements Map.Entry<K,V> {
         final int hash;

@@ -27,7 +27,7 @@ public class Test83 {
         char[] ch = new char[3];
         getChars(123,3,ch);
         StringHelper.print20240503(new String(ch));
-        return 20240325;
+        return Result.SUCCESS;
     }
 
     public static void main(String[] args) {

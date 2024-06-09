@@ -13,9 +13,9 @@ public class Test8 {
         }
        // System.out.println(a);
         if( a== 1999){
-            return 20240325;
+            return Result.SUCCESS;
         }
-        return 20240324;
+        return Result.FAILED;
     }
 
     public static void main(String[] args) {

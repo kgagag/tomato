@@ -9,8 +9,8 @@ public class Test7 {
     public int test(){
         add();
         if( a== 1){
-            return 20240325;
+            return Result.SUCCESS;
         }
-        return 20240324;
+        return Result.FAILED;
     }
 }

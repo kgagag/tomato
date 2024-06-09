@@ -9,9 +9,9 @@ public class Test1 {
         int a = 1000;
         int b = 666;
         if(add(a, b) == 1666){
-            return 20240325;
+            return Result.SUCCESS;
         }
-        return 20240324;
+        return Result.FAILED;
         // return add(a, b);
     }
 }

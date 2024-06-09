@@ -4,7 +4,7 @@ public class Test35 {
     public int test(char a, int c , long d , float e , double f){
         double g = a  + c + d + e+ f;
 
-        return  67.0 == g ? 20240325 : 20240324;
+        return  67.0 == g ? Result.SUCCESS : Result.FAILED;
     }
 
     public static void main(String[] args) {

@@ -17,8 +17,8 @@ public class TestList2 {
         StringHelper.print20240503("stringList remove 后的容量是 ：" +stringList.size());
 
         if(stringList.size() == 10){
-            return 20240325;
+            return Result.SUCCESS;
         }
-        return 20240324;
+        return Result.FAILED;
     }
 }

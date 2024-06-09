@@ -7,7 +7,7 @@ public class Test21 {
         for(int i = 0; i < arr.length ; i++){
             arr[i] = a ++;
         }
-        return arr[1] == 1 ? 20240325 : 20240324 ;
+        return arr[1] == 1 ? Result.SUCCESS : Result.FAILED ;
     }
 
 }

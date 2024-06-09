@@ -8,7 +8,7 @@ public class Test20 {
                 arr[i][j] = j;
             }
         }
-        return arr[99][99] == 99 ? 20240325 : 20240324 ;
+        return arr[99][99] == 99 ? Result.SUCCESS : Result.FAILED ;
     }
 
 }

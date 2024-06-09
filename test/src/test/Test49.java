@@ -5,9 +5,9 @@ public class Test49 extends Test48 {
         Test49 test49 = new Test49();
         test49.id = 100;
         if(test49.id == 100 && Test48.id == 100){
-            return 20240325;
+            return Result.SUCCESS;
         }
-        return 20240324;
+        return Result.FAILED;
     }
     public static void main(String[] args) {
 

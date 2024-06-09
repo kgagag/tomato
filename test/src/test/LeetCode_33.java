@@ -3,7 +3,7 @@ package test;
 public class LeetCode_33 {
     public int  test(){
          int a = search(new int[]{4,5,6,7,0,1,2},0);
-         return a == 4 ? 20240325 : 20240324;
+         return a == 4 ? Result.SUCCESS : Result.FAILED;
     }
     public int search(int[] nums, int target) {
         int left = 0;

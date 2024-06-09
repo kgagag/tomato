@@ -11,7 +11,7 @@ public class Test16 {
                 }
             }
         }
-        return arr[9][9][9] == 999 ? 20240325 : 20240324 ;
+        return arr[9][9][9] == 999 ? Result.SUCCESS : Result.FAILED ;
     }
 
     public static void main(String[] args) {

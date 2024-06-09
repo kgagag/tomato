@@ -9,8 +9,8 @@ public class Test2 {
         float a = 1000.001f;
         float b = 666f;
         if(add(a, b) == 1666.001f){
-            return 20240325;
+            return Result.SUCCESS;
         }
-        return 20240324;
+        return Result.FAILED;
     }
 }

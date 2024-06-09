@@ -5,7 +5,7 @@ public class Test75 {
         Throwable e = new RuntimeException("exception");
         StringHelper.print20240503(e.getMessage());
         //e.printStackTrace();
-        return 20240325;
+        return Result.SUCCESS;
     }
 
     public static void main(String[] args) {

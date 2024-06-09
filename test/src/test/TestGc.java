@@ -6,7 +6,7 @@ public class TestGc {
         for(int i = 0; i < 12000;i++){
             TestGc testGc = new TestGc();
         }
-        return 20240325 ;
+        return Result.SUCCESS ;
     }
 
     private void createObject(){

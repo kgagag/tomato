@@ -12,8 +12,8 @@ public class Test5 {
     }
     public int test(){
         if(add() == 4950){
-            return 20240325;
+            return Result.SUCCESS;
         }
-        return 20240324;
+        return Result.FAILED;
     }
 }

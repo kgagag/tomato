@@ -34,9 +34,9 @@ public class Test9 {
             a = add_3(i, i + 1);
         }
         if( a== 199){
-            return 20240325;
+            return Result.SUCCESS;
         }
-        return 20240324;
+        return Result.FAILED;
     }
 
     public static void main(String[] args) {

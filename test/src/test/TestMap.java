@@ -11,9 +11,9 @@ public class TestMap {
         StringHelper.print20240503(map.get("name"));
         StringHelper.print20240503("map 的容量是：" + map.size());
         if(map.containsKey("name") && map.get("name").equals("lisi")) {
-            return 20240325;
+            return Result.SUCCESS;
         }else {
-            return 20240324;
+            return Result.FAILED;
         }
     }
 }

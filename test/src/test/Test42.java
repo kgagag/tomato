@@ -5,7 +5,7 @@ public class Test42 {
         int[] ints = new int[]{1,2,3,4};
         int[] ints1 = new int[4];
         System.arraycopy(ints, 2, ints1,0,2);
-        return ints1[1] == 4 ? 20240325 : 20240324;
+        return ints1[1] == 4 ? Result.SUCCESS : Result.FAILED;
     }
 
     public static void main(String[] args) {

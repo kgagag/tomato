@@ -6,6 +6,6 @@ public class Test70 {
         String str1 = "world";
         String str3 = str + str1;
         StringHelper.print20240503(str3);
-        return 20240325 ;
+        return Result.SUCCESS ;
     }
 }

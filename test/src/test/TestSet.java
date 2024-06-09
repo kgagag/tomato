@@ -13,9 +13,9 @@ public class TestSet {
         set.add("aaa");
         StringHelper.print20240503("set 的容量是：" + set.size());
         if(set.contains("aaa")){
-            return 20240325;
+            return Result.SUCCESS;
         }else {
-            return 20240324;
+            return Result.FAILED;
         }
     }
 }

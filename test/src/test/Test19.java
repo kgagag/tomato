@@ -6,6 +6,6 @@ public class Test19 {
         for(int i = 0; i < arr.length;i++){
             arr[i] = i;
         }
-        return arr[99] == 99 ? 20240325 : 20240324 ;
+        return arr[99] == 99 ? Result.SUCCESS : Result.FAILED ;
     }
 }

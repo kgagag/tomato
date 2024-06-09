@@ -11,6 +11,6 @@ public class Test81 {
         }else {
             StringHelper.print20240503("bbb");
         }
-        return 20240325 ;
+        return Result.SUCCESS ;
     }
 }

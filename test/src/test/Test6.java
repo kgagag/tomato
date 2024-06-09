@@ -13,7 +13,7 @@ public class Test6 {
 
     public int test(){
          add(1);
-         return a == 4951 ? 20240325 : 20240324 ;
+         return a == 4951 ? Result.SUCCESS : Result.FAILED ;
     }
 
     public static void main(String[] args) {

@@ -6,6 +6,6 @@ public class Test12 {
     }
 
     public static int test(){
-        return add(100,200) == 300 ? 20240325 : 20240324 ;
+        return add(100,200) == 300 ? Result.SUCCESS : Result.FAILED ;
     }
 }

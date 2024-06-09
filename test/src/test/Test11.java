@@ -11,6 +11,6 @@ public class Test11 {
         add(300);
         //add(199);
         //System.out.println(a);
-        return a == 300 ? 20240325 : 20240324 ;
+        return a == 300 ? Result.SUCCESS : Result.FAILED ;
     }
 }

@@ -100,7 +100,7 @@ impl StackFrame {
 
     pub fn popi64(&mut self) -> i64 {
         let value = self.op_stack.pop().unwrap();
-        // info!("{:?}",value);
+        info!("{:?}",value);
         match value {
             StackFrameValue::Int(data) => data as i64,
             StackFrameValue::Byte(data) => data as i64,
@@ -110,6 +110,8 @@ impl StackFrame {
             StackFrameValue::U32(data) => data as i64,
             StackFrameValue::CHARACTER(data) => data as i64,
             StackFrameValue::Boolean(data) => data as i64,
+            StackFrameValue::Double(data) => data as i64,
+            StackFrameValue::Float(data) => data as i64,
             _ => {
                 panic!("wrong value type");
             }

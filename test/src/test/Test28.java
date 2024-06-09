@@ -2,7 +2,7 @@ package test;
 
 public class Test28 {
     public int test(int[][] arr,int[][] brr){
-      return   arr.length + arr[0].length + brr[0].length + brr.length == 300 ? 20240325 : 20240324;
+      return   arr.length + arr[0].length + brr[0].length + brr.length == 300 ? Result.SUCCESS : Result.FAILED;
     }
 
     public static void main(String[] args) {

@@ -7,7 +7,7 @@ pub mod value {
     #[derive(PartialEq)]
     pub enum StackFrameValue {
         Byte(i8),
-        Char(u16),
+        Char(i16),
         Double(f64),
         Float(f32),
         Int(i32),

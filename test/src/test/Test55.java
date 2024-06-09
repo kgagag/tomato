@@ -5,6 +5,6 @@ public class Test55 {
         Float f = 100f;
         int a = 100;
         Float c = a + f;
-        return c == 200 ? 20240325 : 20240324;
+        return c == 200 ? Result.SUCCESS : Result.FAILED;
     }
 }

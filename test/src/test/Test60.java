@@ -3,7 +3,7 @@ package test;
 public class Test60 {
     public int test(){
       long l =   Double.doubleToLongBits(Double.longBitsToDouble(10));
-      return l == 10 ? 20240325 : 20240324;
+      return l == 10 ? Result.SUCCESS : Result.FAILED;
     }
 
     public static void main(String[] args) {

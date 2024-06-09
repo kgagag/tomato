@@ -14,6 +14,6 @@ public class Test79 {
         test79.sex = "男";
         test79.name = "张三";
         StringHelper.print20240503(test79.toString());
-        return 20240325 ;
+        return Result.SUCCESS ;
     }
 }

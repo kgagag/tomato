@@ -4,7 +4,7 @@ public class Test47 {
     public int test(){
         int i = 2 << 10;
         i >>= 4;
-        return i == 128 ? 20240325 : 20240324;
+        return i == 128 ? Result.SUCCESS : Result.FAILED;
     }
 
     public static void main(String[] args) {

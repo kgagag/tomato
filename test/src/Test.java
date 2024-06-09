@@ -1,10 +1,11 @@
 import test.*;
+import test.leetcode.Solution_1;
 
 import java.io.IOException;
 
 public class Test {
     public static void main(String[] args) throws IOException {
-        //
+        /*
         //  两个int相加
         new Test1().test();
         // 两个 float 相加
@@ -61,7 +62,7 @@ public class Test {
         new Test25().test(new int[]{0, 20240320}, new int[]{0, 0, 5});
 
         // 减法
-        new Test26().test(20240325, 0);
+        new Test26().test(Result.SUCCESS, 0);
 
         //测试二维数组作为参数
         new Test27().test(new int[100][100], new int[50][50]);
@@ -158,11 +159,28 @@ public class Test {
         new Test85().test();
         new Test86().test();
         //测试 hashMap
-        new TestMap().test();
         // 测试 hashSet
         new TestSet().test();
         // 测试 ArrayList
         new TestList().test();
         new TestList2().test();
+          new CheckCust01().test();
+        new CheckCust02().test();
+        new CheckCust03().test();
+        new CheckCust04().test();
+        new CheckCust05().test();
+        new CheckCust06().test();
+        new CheckCust07().test();
+        new CheckCust08().test();
+        */
+        new TestMap().test();
+
+        // leetcode 1
+        //new Solution_1().test();
+        //new TestMap2().test();
+        //new Test88().test();
+
+
+
     }
 }

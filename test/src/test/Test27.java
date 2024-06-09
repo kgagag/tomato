@@ -14,7 +14,7 @@ public class Test27 {
             }
         }
 
-        return arr[arr.length - 1][arr[0].length - 1] + brr[brr.length - 1][brr[0].length - 1]  == 12202 ? 20240325 : 20240324;
+        return arr[arr.length - 1][arr[0].length - 1] + brr[brr.length - 1][brr[0].length - 1]  == 12202 ? Result.SUCCESS : Result.FAILED;
     }
 
     public static void main(String[] args) {

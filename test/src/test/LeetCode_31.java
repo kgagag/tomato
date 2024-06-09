@@ -6,9 +6,9 @@ public class LeetCode_31 {
         int[] arr = new int[]{1,2,3};
         nextPermutation(arr);
         if(arr[0] == 1 && arr[1] == 3 && arr[2] == 2){
-            return 20240325;
+            return Result.SUCCESS;
         }
-        return 20240324;
+        return Result.FAILED;
     }
 
     public void nextPermutation(int[] nums) {

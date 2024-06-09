@@ -3,7 +3,7 @@ package test;
 public class TestGC2 {
     public int test(){
         createObject();
-        return 20240325 ;
+        return Result.SUCCESS ;
     }
 
     private TestGc[] createObject(){

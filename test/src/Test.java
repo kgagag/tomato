@@ -1,8 +1,10 @@
+import test.*;
+
 import java.io.IOException;
 
 public class Test {
     public static void main(String[] args) throws IOException {
-//
+        //
         //  两个int相加
         new Test1().test();
         // 两个 float 相加
@@ -41,7 +43,7 @@ public class Test {
         //   测试多维数组赋值读取
         new Test15().test();
 
-        // new Test16().test();
+        // new test.Test16().test();
         // 测试计算数组长度
         new Test18().test();
         // 一维数组循环赋值
@@ -91,7 +93,7 @@ public class Test {
         new Test40().test();
         new Test44().test();
         new Test45().test();
-        //new Test46().test();
+        //new test.Test46().test();
         new Test47().test();
 
         new Test49().test();
@@ -140,10 +142,10 @@ public class Test {
         new TestGc().test();
         new TestGC2().test();
 //
-//       // new Test71().test();
+//       // new test.Test71().test();
 //        // 加载Throwable
-//        new Test73().test();
-//        new Test75().test();
+//        new test.Test73().test();
+//        new test.Test75().test();
 //
         new Test78().test();
         new Test79().test();

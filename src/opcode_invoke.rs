@@ -1,6 +1,7 @@
 use log::info;
 use log::warn;
 
+use crate::array;
 use crate::class::ConstantPoolInfo;
 use crate::class::MethodInfo;
 use crate::debug::*;
@@ -67,17 +68,17 @@ pub fn get_method_for_invoke(frame: &StackFrame) -> Option<&MethodInfo> {
     };
 
     let mut method = get_method_from_pool(
-        target_class.class_name.clone(),
-        method_name.clone(),
-        descriptor.clone(),
+       & target_class.class_name,
+       & method_name,
+       & descriptor,
     );
     let mut curr_class = target_class;
     while method.is_none() {
         let super_class = get_or_load_class(&curr_class.super_class_name);
         method = get_method_from_pool(
-            super_class.class_name.clone(),
-            method_name.clone(),
-            descriptor.clone(),
+            &super_class.class_name,
+           & method_name,
+            &descriptor,
         );
         curr_class = super_class;
     }
@@ -156,17 +157,17 @@ pub fn invokeinterface(frame: &mut StackFrame) {
                         };
 
                     let mut method = get_method_from_pool(
-                        class.class_name.clone(),
-                        method_name.clone(),
-                        descriptor.clone(),
+                        &class.class_name,
+                        &method_name,
+                        &descriptor,
                     );
                     let mut curr_class = class;
                     while method.is_none() {
                         let super_class = get_or_load_class(&curr_class.super_class_name);
                         method = get_method_from_pool(
-                            super_class.class_name.clone(),
-                            method_name.clone(),
-                            descriptor.clone(),
+                            &super_class.class_name,
+                            &method_name,
+                            &descriptor,
                         );
                         curr_class = super_class;
                     }
@@ -201,20 +202,23 @@ pub fn invokevirtual(frame: &mut StackFrame) {
                     let class_name = get_class_name(&object.class);
                     let mut curr_class_name = class_name.clone();
                     let mut target_method = get_method_from_pool(
-                        curr_class_name.clone(),
-                        method.method_name.clone(),
-                        method.descriptor.clone(),
+                        &curr_class_name,
+                        &method.method_name,
+                        &method.descriptor,
                     );
                     while target_method.is_none() {
                         let clazz = get_or_load_class(&(curr_class_name.clone()));
                         curr_class_name = clazz.super_class_name.clone();
                         target_method = get_method_from_pool(
-                            curr_class_name.clone(),
-                            method.method_name.clone(),
-                            method.descriptor.clone(),
+                            &curr_class_name,
+                            &method.method_name,
+                            &method.descriptor,
                         )
                     }
                     target_method
+                }
+                Reference::Array(_array) =>{
+                    Some(method)
                 }
                 _ => panic!(),
             }

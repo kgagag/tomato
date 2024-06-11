@@ -180,6 +180,7 @@ public class Test {
         new Test88().test();
         new IntegerHashCodeTest().test();
         new IntegerHashCodeTest2().test();
-
+        new TestMap3().test();
+        new HashCodeTest3().test();
     }
 }

@@ -231,6 +231,7 @@ pub fn get_method_from_pool<'a>(
     let data = METHOD_DATA.lock().unwrap();
     unsafe {
         let key = format!("{}{}{}{}{}", class_name, ".", method_name, ".", descriptor);
+        info!("{:?}",key);
         let map = &mut *data.get();
         drop(data);
         return map.get(&key);

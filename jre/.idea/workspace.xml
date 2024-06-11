@@ -5,94 +5,32 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="70c6e279-5046-4c44-ba52-f4228d3f6634" name="Changes" comment="&quot;调整目录&quot;">
-      <change afterPath="$PROJECT_DIR$/../test/src/test/CheckCust01.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../test/src/test/CheckCust02.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../test/src/test/CheckCust03.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../test/src/test/CheckCust04.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../test/src/test/CheckCust05.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../test/src/test/CheckCust06.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../test/src/test/CheckCust07.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../test/src/test/CheckCust08.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../test/src/test/MyTestUnit.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../test/src/test/Result.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../test/src/test/Test88.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../test/src/test/TestMap2.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../test/src/test/leetcode/Solution_1.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../test/src/test/leetcode/Solution_2.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../test/src/test/leetcode/Solution_3.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/src/test/IntegerHashCodeTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/src/test/IntegerHashCodeTest2.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/java/util/HashMap$EntryIterator.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/java/util/HashMap$EntryIterator.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/java/util/HashMap$EntrySet.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/java/util/HashMap$EntrySet.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/java/util/HashMap$EntrySpliterator.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/java/util/HashMap$EntrySpliterator.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/java/util/HashMap$HashIterator.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/java/util/HashMap$HashIterator.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/java/util/HashMap$HashMapSpliterator.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/java/util/HashMap$HashMapSpliterator.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/java/util/HashMap$KeyIterator.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/java/util/HashMap$KeyIterator.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/java/util/HashMap$KeySet.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/java/util/HashMap$KeySet.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/java/util/HashMap$KeySpliterator.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/java/util/HashMap$KeySpliterator.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/java/util/HashMap$Node.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/java/util/HashMap$Node.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/java/util/HashMap$TreeNode.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/java/util/HashMap$TreeNode.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/java/util/HashMap$ValueIterator.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/java/util/HashMap$ValueIterator.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/java/util/HashMap$ValueSpliterator.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/java/util/HashMap$ValueSpliterator.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/java/util/HashMap$Values.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/java/util/HashMap$Values.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/java/util/HashMap.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/java/util/HashMap.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/java/util/HashMap.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/java/util/HashMap.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../src/op_code.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/op_code.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/opcode_checkcast.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/opcode_checkcast.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/opcode_convert.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/opcode_convert.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/opcode_invoke.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/opcode_invoke.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/opcode_return.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/opcode_return.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/runtime_data_area.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/runtime_data_area.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../src/stack_frame.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/stack_frame.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/value.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/value.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../test/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../test/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../test/src/Test.java" beforeDir="false" afterPath="$PROJECT_DIR$/../test/src/Test.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../test/src/test/LeetCode_31.java" beforeDir="false" afterPath="$PROJECT_DIR$/../test/src/test/LeetCode_31.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../test/src/test/LeetCode_33.java" beforeDir="false" afterPath="$PROJECT_DIR$/../test/src/test/LeetCode_33.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../test/src/test/Test1.java" beforeDir="false" afterPath="$PROJECT_DIR$/../test/src/test/Test1.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../test/src/test/Test10.java" beforeDir="false" afterPath="$PROJECT_DIR$/../test/src/test/Test10.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../test/src/test/Test11.java" beforeDir="false" afterPath="$PROJECT_DIR$/../test/src/test/Test11.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../test/src/test/Test12.java" beforeDir="false" afterPath="$PROJECT_DIR$/../test/src/test/Test12.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../test/src/test/Test13.java" beforeDir="false" afterPath="$PROJECT_DIR$/../test/src/test/Test13.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../test/src/test/Test14.java" beforeDir="false" afterPath="$PROJECT_DIR$/../test/src/test/Test14.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../test/src/test/Test15.java" beforeDir="false" afterPath="$PROJECT_DIR$/../test/src/test/Test15.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../test/src/test/Test16.java" beforeDir="false" afterPath="$PROJECT_DIR$/../test/src/test/Test16.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../test/src/test/Test18.java" beforeDir="false" afterPath="$PROJECT_DIR$/../test/src/test/Test18.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../test/src/test/Test19.java" beforeDir="false" afterPath="$PROJECT_DIR$/../test/src/test/Test19.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../test/src/test/Test2.java" beforeDir="false" afterPath="$PROJECT_DIR$/../test/src/test/Test2.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../test/src/test/Test20.java" beforeDir="false" afterPath="$PROJECT_DIR$/../test/src/test/Test20.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../test/src/test/Test21.java" beforeDir="false" afterPath="$PROJECT_DIR$/../test/src/test/Test21.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../test/src/test/Test23.java" beforeDir="false" afterPath="$PROJECT_DIR$/../test/src/test/Test23.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../test/src/test/Test27.java" beforeDir="false" afterPath="$PROJECT_DIR$/../test/src/test/Test27.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../test/src/test/Test28.java" beforeDir="false" afterPath="$PROJECT_DIR$/../test/src/test/Test28.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../test/src/test/Test29.java" beforeDir="false" afterPath="$PROJECT_DIR$/../test/src/test/Test29.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../test/src/test/Test3.java" beforeDir="false" afterPath="$PROJECT_DIR$/../test/src/test/Test3.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../test/src/test/Test30.java" beforeDir="false" afterPath="$PROJECT_DIR$/../test/src/test/Test30.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../test/src/test/Test35.java" beforeDir="false" afterPath="$PROJECT_DIR$/../test/src/test/Test35.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../test/src/test/Test36.java" beforeDir="false" afterPath="$PROJECT_DIR$/../test/src/test/Test36.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../test/src/test/Test37.java" beforeDir="false" afterPath="$PROJECT_DIR$/../test/src/test/Test37.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../test/src/test/Test4.java" beforeDir="false" afterPath="$PROJECT_DIR$/../test/src/test/Test4.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../test/src/test/Test40.java" beforeDir="false" afterPath="$PROJECT_DIR$/../test/src/test/Test40.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../test/src/test/Test42.java" beforeDir="false" afterPath="$PROJECT_DIR$/../test/src/test/Test42.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../test/src/test/Test44.java" beforeDir="false" afterPath="$PROJECT_DIR$/../test/src/test/Test44.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../test/src/test/Test45.java" beforeDir="false" afterPath="$PROJECT_DIR$/../test/src/test/Test45.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../test/src/test/Test47.java" beforeDir="false" afterPath="$PROJECT_DIR$/../test/src/test/Test47.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../test/src/test/Test49.java" beforeDir="false" afterPath="$PROJECT_DIR$/../test/src/test/Test49.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../test/src/test/Test5.java" beforeDir="false" afterPath="$PROJECT_DIR$/../test/src/test/Test5.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../test/src/test/Test55.java" beforeDir="false" afterPath="$PROJECT_DIR$/../test/src/test/Test55.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../test/src/test/Test56.java" beforeDir="false" afterPath="$PROJECT_DIR$/../test/src/test/Test56.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../test/src/test/Test57.java" beforeDir="false" afterPath="$PROJECT_DIR$/../test/src/test/Test57.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../test/src/test/Test58.java" beforeDir="false" afterPath="$PROJECT_DIR$/../test/src/test/Test58.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../test/src/test/Test59.java" beforeDir="false" afterPath="$PROJECT_DIR$/../test/src/test/Test59.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../test/src/test/Test6.java" beforeDir="false" afterPath="$PROJECT_DIR$/../test/src/test/Test6.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../test/src/test/Test60.java" beforeDir="false" afterPath="$PROJECT_DIR$/../test/src/test/Test60.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../test/src/test/Test61.java" beforeDir="false" afterPath="$PROJECT_DIR$/../test/src/test/Test61.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../test/src/test/Test62.java" beforeDir="false" afterPath="$PROJECT_DIR$/../test/src/test/Test62.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../test/src/test/Test63.java" beforeDir="false" afterPath="$PROJECT_DIR$/../test/src/test/Test63.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../test/src/test/Test64.java" beforeDir="false" afterPath="$PROJECT_DIR$/../test/src/test/Test64.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../test/src/test/Test65.java" beforeDir="false" afterPath="$PROJECT_DIR$/../test/src/test/Test65.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../test/src/test/Test66.java" beforeDir="false" afterPath="$PROJECT_DIR$/../test/src/test/Test66.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../test/src/test/Test67.java" beforeDir="false" afterPath="$PROJECT_DIR$/../test/src/test/Test67.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../test/src/test/Test69.java" beforeDir="false" afterPath="$PROJECT_DIR$/../test/src/test/Test69.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../test/src/test/Test7.java" beforeDir="false" afterPath="$PROJECT_DIR$/../test/src/test/Test7.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../test/src/test/Test70.java" beforeDir="false" afterPath="$PROJECT_DIR$/../test/src/test/Test70.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../test/src/test/Test73.java" beforeDir="false" afterPath="$PROJECT_DIR$/../test/src/test/Test73.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../test/src/test/Test74.java" beforeDir="false" afterPath="$PROJECT_DIR$/../test/src/test/Test74.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../test/src/test/Test75.java" beforeDir="false" afterPath="$PROJECT_DIR$/../test/src/test/Test75.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../test/src/test/Test76.java" beforeDir="false" afterPath="$PROJECT_DIR$/../test/src/test/Test76.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../test/src/test/Test78.java" beforeDir="false" afterPath="$PROJECT_DIR$/../test/src/test/Test78.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../test/src/test/Test79.java" beforeDir="false" afterPath="$PROJECT_DIR$/../test/src/test/Test79.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../test/src/test/Test8.java" beforeDir="false" afterPath="$PROJECT_DIR$/../test/src/test/Test8.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../test/src/test/Test80.java" beforeDir="false" afterPath="$PROJECT_DIR$/../test/src/test/Test80.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../test/src/test/Test81.java" beforeDir="false" afterPath="$PROJECT_DIR$/../test/src/test/Test81.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../test/src/test/Test82.java" beforeDir="false" afterPath="$PROJECT_DIR$/../test/src/test/Test82.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../test/src/test/Test83.java" beforeDir="false" afterPath="$PROJECT_DIR$/../test/src/test/Test83.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../test/src/test/Test9.java" beforeDir="false" afterPath="$PROJECT_DIR$/../test/src/test/Test9.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../test/src/test/TestGC2.java" beforeDir="false" afterPath="$PROJECT_DIR$/../test/src/test/TestGC2.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../test/src/test/TestGc.java" beforeDir="false" afterPath="$PROJECT_DIR$/../test/src/test/TestGc.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../test/src/test/TestList2.java" beforeDir="false" afterPath="$PROJECT_DIR$/../test/src/test/TestList2.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../test/src/test/TestMap.java" beforeDir="false" afterPath="$PROJECT_DIR$/../test/src/test/TestMap.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../test/src/test/TestSet.java" beforeDir="false" afterPath="$PROJECT_DIR$/../test/src/test/TestSet.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../test/src/test/TestMap2.java" beforeDir="false" afterPath="$PROJECT_DIR$/../test/src/test/TestMap2.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -264,7 +202,8 @@
       <workItem from="1717815737430" duration="1069000" />
       <workItem from="1717837971738" duration="6314000" />
       <workItem from="1717867352201" duration="6758000" />
-      <workItem from="1717946072745" duration="4383000" />
+      <workItem from="1717946072745" duration="10690000" />
+      <workItem from="1718070224715" duration="251000" />
     </task>
     <task id="LOCAL-00001" summary="&quot;add test case&quot;">
       <option name="closed" value="true" />

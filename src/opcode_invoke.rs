@@ -5,6 +5,7 @@ use crate::class::ConstantPoolInfo;
 use crate::class::MethodInfo;
 use crate::debug::*;
 use crate::native::*;
+use crate::object;
 use crate::reference::reference::Reference;
 use crate::runtime_data_area::get_class_name;
 use crate::runtime_data_area::get_method_from_pool;
@@ -186,8 +187,43 @@ pub fn invokevirtual(frame: &mut StackFrame) {
     let method = get_method_for_invoke(clone_frame).unwrap();
     //info!("{}--{}--{}",method.class_name,method.method_name,method.descriptor);
     frame.pc += 3;
-    if method.access_flag & 0x0100 == 0 {
-        let mut new_frame = init_stack_frame(frame, method, 1);
+    let param_len = method.param.len();
+    let sfv = frame
+        .op_stack
+        .get(frame.op_stack.len() - param_len - 1)
+        .unwrap();
+
+    let target_method = match sfv {
+        StackFrameValue::Reference(id) => {
+            let reference = get_reference(id).unwrap();
+            match reference {
+                Reference::Object(object) => {
+                    let class_name = get_class_name(&object.class);
+                    let mut curr_class_name = class_name.clone();
+                    let mut target_method = get_method_from_pool(
+                        curr_class_name.clone(),
+                        method.method_name.clone(),
+                        method.descriptor.clone(),
+                    );
+                    while target_method.is_none() {
+                        let clazz = get_or_load_class(&(curr_class_name.clone()));
+                        curr_class_name = clazz.super_class_name.clone();
+                        target_method = get_method_from_pool(
+                            curr_class_name.clone(),
+                            method.method_name.clone(),
+                            method.descriptor.clone(),
+                        )
+                    }
+                    target_method
+                }
+                _ => panic!(),
+            }
+        }
+        _ => panic!(),
+    };
+
+    if target_method.unwrap().access_flag & 0x0100 == 0 {
+        let mut new_frame = init_stack_frame(frame, target_method.unwrap(), 1);
         let v = frame.op_stack.pop();
         match v {
             Some(obj) => {

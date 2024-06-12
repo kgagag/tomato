@@ -311,6 +311,7 @@ fn xaload(frame: &mut StackFrame) {
         StackFrameValue::Char(l) => i = l as usize,
         StackFrameValue::Int(l) => i = l as usize,
         StackFrameValue::Short(l) => i = l as usize,
+        StackFrameValue::CHARACTER(l) => i = l as usize,
         _ => panic!(),
     }
     match array {

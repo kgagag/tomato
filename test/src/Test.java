@@ -1,5 +1,6 @@
 import test.*;
 import test.leetcode.Solution_1;
+import test.leetcode.Solution_3;
 
 import java.io.IOException;
 
@@ -176,6 +177,8 @@ public class Test {
 
         // leetcode 1
         new Solution_1().test();
+        new Solution_3().test();
+
         new TestMap2().test();
         new Test88().test();
         new IntegerHashCodeTest().test();

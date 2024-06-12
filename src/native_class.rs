@@ -52,6 +52,9 @@ pub fn get_primitive_class(frame: &mut StackFrame) {
                             } else if v == vec!['d', 'o', 'u', 'b', 'l', 'e'] {
                                 class_object =
                                     create_class_object(&String::from("java/lang/Double"));
+                            } else if v == vec!['c', 'h', 'a', 'r'] {
+                                class_object =
+                                    create_class_object(&String::from("java/lang/Character"));
                             } else {
                                 panic!()
                             }

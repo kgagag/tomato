@@ -7,7 +7,7 @@ public class IntegerHashCodeTest {
         StringHelper.print20240503("hascode1:"+a.hashCode());
         StringHelper.print20240503("hascode2:" +b.hashCode());
         StringHelper.print20240503(a.toString());
-        if(a == b){
+        if(a.intValue() == b.intValue()){
             return Result.SUCCESS;
         }
         return Result.FAILED;

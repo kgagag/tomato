@@ -1,15 +1,33 @@
 package test.leetcode;
 
+import test.Result;
+
+import java.util.*;
+
 public class Solution_3 {
-    public int[] twoSum(int[] nums, int target) {
-        int n = nums.length;
-        for (int i = 0; i < n; ++i) {
-            for (int j = i + 1; j < n; ++j) {
-                if (nums[i] + nums[j] == target) {
-                    return new int[]{i, j};
+    public int lengthOfLongestSubstring(String s) {
+        int n = s.length();
+        Set<Character> set = new HashSet<>();
+        int ans = 0;
+        for (int left = 0, right = 0; right < n; ) {
+            if (!set.contains(s.charAt(right))) {
+                set.add(s.charAt(right));
+            } else {
+                while (set.contains(s.charAt(right))) {
+                    set.remove(s.charAt(left++));
                 }
+                set.add(s.charAt(right));
             }
+            right++;
+            ans = Math.max(ans, right - left);
         }
-        return new int[0];
+        return ans;
     }
+
+	public int test(){
+		if(lengthOfLongestSubstring("abcabcadfghdfhhhhhfgfhfghfhhhfsefasfafafafafafaaafadggghkhjllxzcvzvzbb")==7){
+			return Result.SUCCESS;
+		}
+		return Result.FAILED;
+	}
 }

@@ -20,13 +20,11 @@ public class Solution_1 {
         return new int[0];
     }
     public int test(){
-//        if (MyTestUnit.assertEquals(twoSum(new int[]{2,7,11,15},9),new int[]{0,1})
-//            && MyTestUnit.assertEquals(twoSum(new int[]{3,2,4},6),new int[]{1,2})
-//                        && MyTestUnit.assertEquals(twoSum(new int[]{3,3},6),new int[]{0,1})){
-//           return  Result.SUCCESS;
-//        }
-        int[] ints = twoSum(new int[]{2, 7, 11, 15}, 9);
-        StringHelper.print20240503("aaa"+ints[0] +" " + ints[1]);
+        if (MyTestUnit.assertEquals(twoSum(new int[]{2,7,11,15},9),new int[]{0,1})
+            && MyTestUnit.assertEquals(twoSum(new int[]{3,2,4},6),new int[]{1,2})
+                        && MyTestUnit.assertEquals(twoSum(new int[]{3,3},6),new int[]{0,1})){
+           return  Result.SUCCESS;
+        }
         return Result.FAILED;
     }
 }

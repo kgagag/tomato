@@ -49,7 +49,7 @@ pub fn putstatic(frame: &mut StackFrame) {
 pub fn getstatic(frame: &mut StackFrame) {
     let index: u16 = u16::from_be_bytes([frame.code[frame.pc + 1], frame.code[frame.pc + 2]]);
     let class_name = get_class_name(&frame.class);
-    let this_class = get_or_load_class(&class_name);
+    let this_class = get_or_load_class(&class_name).clone();
     let field_ref = this_class.constant_pool.get(&index).expect("Field reference not found");
 
     if let ConstantPoolInfo::Fieldref(class_index, name_and_type_index) = field_ref {

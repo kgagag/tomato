@@ -84,7 +84,6 @@ pub fn lload(frame: &mut StackFrame) {
         StackFrameValue::Int(l) => l as u32,
         StackFrameValue::Short(l) => l as u32,
         StackFrameValue::U32(l) => l as u32,
-
         _ => panic!(),
     };
     let u2 = match v2 {

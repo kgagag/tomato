@@ -1,37 +1,51 @@
-pub mod array{
+pub mod array {
+    use log::info;
+
     use crate::{param::param::DataType, value::value::StackFrameValue};
     #[derive(Debug, Clone)]
     pub struct Array {
         pub id: u64,
         pub len: u32,
         pub array_type: DataType,
-        pub data:Vec<StackFrameValue> 
+        pub data: Vec<StackFrameValue>,
     }
-    
+
     impl Array {
-        pub fn new(id: u64, len: u32, array_type: DataType) -> Array{
-           // let t = array_type.clone();
-           let mut array =  Array {
+        pub fn new(id: u64, len: u32, array_type: DataType) -> Array {
+            let mut array = Array {
                 id,
                 len,
-                array_type,
-                data: Vec::new()
+                array_type: array_type.clone(),
+                data: Vec::new(),
             };
-            for _i in 0.. len {
-                // if t == DataType::Char || t == DataType::Short
-                // || t == DataType::Int
-                // || t == DataType::Long
-                // || t == DataType::Byte
-                // || t == DataType::Float
-                // || t == DataType::Double {
-                //     array.data.push(StackFrameValue::Int(0));
-                // }else {
-                //     array.data.push(StackFrameValue::Null);
-                // }
-                array.data.push(StackFrameValue::Null);
+
+            match array_type {
+                DataType::Array {
+                    element_type,
+                    depth,
+                } => {
+                    let array_type0 = *element_type;
+                    if array_type0 == DataType::Char
+                        || array_type0 == DataType::Short
+                        || array_type0 == DataType::Int
+                        || array_type0 == DataType::Long
+                        || array_type0 == DataType::Byte
+                        || array_type0 == DataType::Float
+                        || array_type0 == DataType::Double
+                    {
+                        for _i in 0..len {
+                            array.data.push(StackFrameValue::Int(0));
+                        }
+                    } else {
+                        for _i in 0..len {
+                            array.data.push(StackFrameValue::Null);
+                        }
+                    }
+                }
+                _ => panic!(),
             }
+
             array
         }
-        
     }
 }

@@ -1,6 +1,7 @@
 import test.*;
 import test.leetcode.Solution_1;
 import test.leetcode.Solution_3;
+import test.leetcode.Solution_63;
 
 import java.io.IOException;
 
@@ -81,7 +82,8 @@ public class Test {
 
         // 力扣 第33 题
         new LeetCode_33().test();
-
+        // 力扣 第33 题
+        new Solution_63().test();
         //测试多种数据类型入参
         new Test35().test('1', 3, 4, 5.0f, 6d);
 

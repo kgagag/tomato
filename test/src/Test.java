@@ -1,7 +1,5 @@
 import test.*;
-import test.leetcode.Solution_1;
-import test.leetcode.Solution_3;
-import test.leetcode.Solution_63;
+import test.leetcode.*;
 
 import java.io.IOException;
 
@@ -187,5 +185,8 @@ public class Test {
         new IntegerHashCodeTest2().test();
         new TestMap3().test();
         new HashCodeTest3().test();
+        new Solution_2710().test();
+        new Solution_231().test();
+        new Solution_14().test();
     }
 }

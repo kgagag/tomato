@@ -134,9 +134,9 @@ pub fn dcmpl(frame: &mut StackFrame) {
 
 pub fn ifeq(frame: &mut StackFrame) {
     let value = frame.popi64();
-    let branch_offset = u8s_to_u16(&frame.code[frame.pc + 1.. frame.pc + 3]);
+    let branch_offset = u8s_to_i16(&frame.code[frame.pc + 1.. frame.pc + 3]) as i32;
     if value == 0 {
-        frame.pc = (frame.pc as i32 + branch_offset as i32) as usize;
+        frame.pc = (frame.pc as i32 + branch_offset ) as usize;
     } else {
         frame.pc += 3; // 跳转失败，继续执行下一条指令
     }
@@ -144,7 +144,7 @@ pub fn ifeq(frame: &mut StackFrame) {
 
 pub fn ifne(frame: &mut StackFrame) {
     let value = frame.popi64();
-    let branch_offset = u8s_to_u16(&frame.code[frame.pc + 1.. frame.pc + 3]) as i16;
+    let branch_offset = u8s_to_i16(&frame.code[frame.pc + 1.. frame.pc + 3]) as i16;
     if value != 0 {
         frame.pc = (frame.pc as i32 + branch_offset as i32) as usize;
     } else {
@@ -154,7 +154,7 @@ pub fn ifne(frame: &mut StackFrame) {
 
 pub fn iflt(frame: &mut StackFrame) {
     let value = frame.popi64();
-    let branch_offset = u8s_to_u16(&frame.code[frame.pc + 1.. frame.pc + 3]);
+    let branch_offset = u8s_to_i16(&frame.code[frame.pc + 1.. frame.pc + 3]);
     if value < 0 {
         frame.pc = (frame.pc as i32 + branch_offset as i32) as usize;
     } else {
@@ -165,7 +165,7 @@ pub fn iflt(frame: &mut StackFrame) {
 
 pub fn ifge(frame: &mut StackFrame) {
     let value = frame.popi64();
-    let branch_offset = u8s_to_u16(&frame.code[frame.pc + 1.. frame.pc + 3]);
+    let branch_offset = u8s_to_i16(&frame.code[frame.pc + 1.. frame.pc + 3]);
     if value >= 0 {
         frame.pc = (frame.pc as i32 + branch_offset as i32) as usize;
     } else {
@@ -176,7 +176,7 @@ pub fn ifge(frame: &mut StackFrame) {
 
 pub fn ifgt(frame: &mut StackFrame) {
     let value = frame.popi64();
-    let branch_offset = u8s_to_u16(&frame.code[frame.pc + 1.. frame.pc + 3]);
+    let branch_offset = u8s_to_i16(&frame.code[frame.pc + 1.. frame.pc + 3]);
     if value > 0 {
         frame.pc = (frame.pc as i32 + branch_offset as i32) as usize;
     } else {
@@ -186,7 +186,7 @@ pub fn ifgt(frame: &mut StackFrame) {
 
 pub fn ifle(frame: &mut StackFrame) {
     let value = frame.popi64();
-    let branch_offset = u8s_to_u16(&frame.code[frame.pc + 1.. frame.pc + 3]);
+    let branch_offset = u8s_to_i16(&frame.code[frame.pc + 1.. frame.pc + 3]);
     if value <= 0 {
         frame.pc = (frame.pc as i32 + branch_offset as i32) as usize;
     } else {
@@ -198,8 +198,7 @@ pub fn ifle(frame: &mut StackFrame) {
 pub fn if_icmpeq(frame: &mut StackFrame) {
     let value2 = frame.popi64();
     let value1 = frame.popi64();
-    let branch_offset = u8s_to_u16(&frame.code[frame.pc + 1.. frame.pc + 3]);
-
+    let branch_offset = u8s_to_i16(&frame.code[frame.pc + 1.. frame.pc + 3]);
     if value1 == value2 {
         frame.pc = (frame.pc as i32 + branch_offset as i32) as usize;
     } else {

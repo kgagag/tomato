@@ -1,31 +1,24 @@
+use std::num::Wrapping;
 use log::info;
-
 use crate::stack_frame::StackFrame;
-
 use crate::value::value::StackFrameValue;
-
-
-
-
 
 
 pub fn iadd(frame: &mut StackFrame) {
     let i1: i32 = frame.popi64() as i32;
     let i2: i32 = frame.popi64() as i32;
-    let result = i1 + i2;
-    //warn!("{}", format!("{}{}", "iadd add result:", result));
-    let value = StackFrameValue::Int(result);
-    
+    let a: Wrapping<i32> = Wrapping(i2);
+    let b: Wrapping<i32> = Wrapping(i1);
+    let result = a + b;
+    let value = StackFrameValue::Int(result.0);
     frame.op_stack.push(value);
     frame.pc += 1;
 }
 
 pub fn fadd(frame: &mut StackFrame) {
-    // info!("{:?}", frame);
     let i1 = frame.popf64() as f32;
     let i2 = frame.popf64() as f32;
     let result = i1 + i2;
-    //warn!("{}", format!("{}{}", "fadd add result:", result));
     frame.op_stack.push(StackFrameValue::Float(result));
     frame.pc += 1;
 }
@@ -34,7 +27,6 @@ pub fn dadd(frame: &mut StackFrame) {
     let i1 = frame.popf64() ;
     let i2 = frame.popf64() ;
     let result = i1 + i2;
-    //warn!("{}", format!("{}{}", "fadd add result:", result));
     frame.op_stack.push(StackFrameValue::Double(result));
     frame.pc += 1;
 }
@@ -42,9 +34,10 @@ pub fn dadd(frame: &mut StackFrame) {
 pub fn ladd(frame: &mut StackFrame) {
     let i1 = frame.popi64() ;
     let i2 = frame.popi64() ;
-    let result = i1 + i2;
-    //warn!("{}", format!("{}{}", "ladd add result:", result));
-    frame.op_stack.push(StackFrameValue::Long(result));
+    let a: Wrapping<i64> = Wrapping(i2);
+    let b: Wrapping<i64> = Wrapping(i1);
+    let result = a + b;
+    frame.op_stack.push(StackFrameValue::Long(result.0));
     frame.pc += 1;
 }
 
@@ -52,7 +45,6 @@ pub fn isub(frame: &mut StackFrame) {
     let i2 = frame.popi64() as i32;
     let i1 = frame.popi64() as i32;
     let result = i1 - i2;
-    //warn!("{}", format!("{}{}", "isub add result:", result));
     frame.op_stack.push(StackFrameValue::Int(result));
     frame.pc += 1;
 }
@@ -61,7 +53,6 @@ pub fn fsub(frame: &mut StackFrame) {
     let f2 = frame.popf64() as f32;
     let f1 = frame.popf64() as f32;
     let result = f1 - f2;
-    //warn!("{}", format!("{}{}", "isub add result:", result));
     frame.op_stack.push(StackFrameValue::Float(result));
     frame.pc += 1;
 }
@@ -70,7 +61,6 @@ pub fn dsub(frame: &mut StackFrame) {
     let d2 = frame.popf64() ;
     let d1 = frame.popf64() ;
     let result = d1 - d2;
-    //warn!("{}", format!("{}{}", "dsub add result:", result));
     frame.op_stack.push(StackFrameValue::Double(result));
     frame.pc += 1;
 }
@@ -79,7 +69,6 @@ pub fn lsub(frame: &mut StackFrame) {
     let l2 = frame.popi64() ;
     let l1 = frame.popi64() ;
     let result = l1 - l2;
-    //warn!("{}", format!("{}{}", "lsub add result:", result));
     frame.op_stack.push(StackFrameValue::Long(result));
     frame.pc += 1;
 }
@@ -88,7 +77,6 @@ pub fn fmul(frame: &mut StackFrame) {
     let f2 = frame.popf64() as f32;
     let f1 = frame.popf64() as f32;
     let result = f1 * f2;
-    //warn!("{}", format!("{}{}", "fmul add result:", result));
     frame.op_stack.push(StackFrameValue::Float(result));
     frame.pc += 1;
 }
@@ -96,18 +84,20 @@ pub fn fmul(frame: &mut StackFrame) {
 pub fn imul(frame: &mut StackFrame) {
     let i2 = frame.popi64() as i32;
     let i1 = frame.popi64() as i32;
-    let result = i1 * i2;
-    //warn!("{}", format!("{}{}", "imul add result:", result));
-    frame.op_stack.push(StackFrameValue::Int(result));
+    let a: Wrapping<i32> = Wrapping(i2);
+    let b: Wrapping<i32> = Wrapping(i1);
+    let result = a * b;
+    frame.op_stack.push(StackFrameValue::Int(result.0));
     frame.pc += 1;
 }
 
 pub fn lmul(frame: &mut StackFrame) {
     let l2 = frame.popi64() ;
     let l1 = frame.popi64() ;
-    let result = l1 * l2;
-    //warn!("{}", format!("{}{}", "lmul add result:", result));
-    frame.op_stack.push(StackFrameValue::Long(result));
+    let a: Wrapping<i64> = Wrapping(l2);
+    let b: Wrapping<i64> = Wrapping(l1);
+    let result = a * b;
+    frame.op_stack.push(StackFrameValue::Long(result.0));
     frame.pc += 1;
 }
 
@@ -115,7 +105,6 @@ pub fn dmul(frame: &mut StackFrame) {
     let d2 = frame.popf64() ;
     let d1 = frame.popf64() ;
     let result = d1 * d2;
-    //warn!("{}", format!("{}{}", "dmul add result:", result));
     frame.op_stack.push(StackFrameValue::Double(result));
     frame.pc += 1;
 }

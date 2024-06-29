@@ -47,6 +47,7 @@
             StackFrameValue::Char(l) => value = l as i64,
             StackFrameValue::Int(l) => value = l as i64,
             StackFrameValue::Short(l) => value = l as i64,
+            StackFrameValue::Long(l) => value = l as i64,
             _=> panic!()
         }
         let bytes: [u8; 8] = value.to_le_bytes();

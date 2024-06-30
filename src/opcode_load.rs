@@ -154,7 +154,6 @@ pub fn lload_0(frame: &mut StackFrame) {
         },
         _ => panic!(),
     }
-    frame.op_stack.push(frame.local.get(0).unwrap().clone());
     frame.pc += 1;
 }
 

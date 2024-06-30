@@ -97,7 +97,6 @@ pub fn invokespecial(frame: &mut StackFrame) {
         let v = frame.op_stack.pop();
         match v {
             Some(obj) => {
-                info!("{:?}",obj);
                 new_frame.local[0] = obj;
             }
             None => {

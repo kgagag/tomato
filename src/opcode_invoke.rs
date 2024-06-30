@@ -86,9 +86,6 @@ pub fn get_method_for_invoke(frame: &StackFrame) -> Option<&MethodInfo> {
 }
 
 pub fn invokespecial(frame: &mut StackFrame) {
-    if frame.pc == 36{
-        info!("{:?}",frame);
-    }
     let clone_frame = &frame.clone();
     frame.pc += 3;
     let method = get_method_for_invoke(clone_frame).unwrap();

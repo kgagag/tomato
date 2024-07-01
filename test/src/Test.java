@@ -185,8 +185,8 @@ public class Test {
         new Solution_2710().test();
         new Solution_231().test();
         new Solution_14().test();
-       //  new Solution_69().test();
-        //new IntTest().test();
+         new Solution_69().test();
+        new IntTest().test();
         new Test89().test();
         new Test90().test();
         new Test91().test();

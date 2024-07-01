@@ -19,7 +19,7 @@ pub fn i2f(frame: &mut StackFrame) {
 }
 
 pub fn i2d(frame: &mut StackFrame) {
-    let v = frame.popi64();
+    let v = frame.popf64();
     frame.op_stack.push(StackFrameValue::Double(v as f64));
     frame.pc += 1;
 }

@@ -94,7 +94,7 @@ pub fn lload(frame: &mut StackFrame) {
         StackFrameValue::U32(l) => l as u32,
         _ => panic!(),
     };
-    let d = StackFrameValue::Double(u32_tuple_to_f64((u1, u2)));
+    let d = StackFrameValue::Long(u32_tuple_to_i64((u1, u2)));
     // info!("{:?}",d);
     frame.op_stack.push(d);
     frame.pc += 2;

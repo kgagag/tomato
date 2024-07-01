@@ -50,10 +50,13 @@
             StackFrameValue::Long(l) => value = l as i64,
             _=> panic!()
         }
-        let bytes: [u8; 8] = value.to_le_bytes();
-        let a =  u8s_to_u32(&bytes[0..4]);
-        frame.local[index] = StackFrameValue::U32(u8s_to_u32(&bytes[0..4])) ;
-        frame.local[index + 1] = StackFrameValue::U32(u8s_to_u32(&bytes[4..8])) ;
+        let u32_tuple = i64_to_u32_tuple(value);
+
+        frame.local[index] = StackFrameValue::U32(u32_tuple.0) ;
+        frame.local[index + 1] = StackFrameValue::U32(u32_tuple.1) ;
+
+       // frame.local[index] = StackFrameValue::U32(c) ;
+       // frame.local[index + 1] = StackFrameValue::U32(u8s_to_u32(&bytes[4..8])) ;
         frame.pc += 2;
     }
 

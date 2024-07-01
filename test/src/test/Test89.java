@@ -5,7 +5,7 @@ public class Test89 {
 //        StringHelper.print20240503(add(Integer.MAX_VALUE,Long.MAX_VALUE) +"====");
       //  StringHelper.print20240503(Long.MIN_VALUE +"====");
 //        long a = add(10000l,200000l);
-        StringHelper.print20240503(Long.toString(Long.MAX_VALUE));
+            Long.toString(Long.MAX_VALUE);
         return Result.SUCCESS;
     }
 

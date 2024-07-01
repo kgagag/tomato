@@ -44,7 +44,7 @@ public class Test {
         //   测试多维数组赋值读取
         new Test15().test();
 
-        // new test.Test16().test();
+         new test.Test16().test();
         // 测试计算数组长度
         new Test18().test();
         // 一维数组循环赋值
@@ -186,9 +186,10 @@ public class Test {
         new Solution_231().test();
         new Solution_14().test();
        //  new Solution_69().test();
-        new IntTest().test();
+        //new IntTest().test();
         new Test89().test();
         new Test90().test();
         new Test91().test();
+        new Test92().test();
     }
 }

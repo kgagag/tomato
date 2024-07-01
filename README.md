@@ -16,7 +16,7 @@
 
    ```sh
    git clone https://github.com/kgagag/tomato.git
-   cd java-vm-rust
+   cd tomato
    ```
 
 3. **构建项目**: 在项目根目录运行以下命令以构建项目：
@@ -25,7 +25,10 @@
    cargo build
    ```
 
-4. **运行虚拟机**: 你可以使用以下命令运行Java虚拟机并指定要执行的Java类文件：
+4、**编写测试用例**:java代码写在test/src/test/Test类里面，注意执行前先编译。
+
+
+5. **运行虚拟机**: 你可以使用以下命令运行Java虚拟机并指定要执行的Java类文件
 
    ```sh
    cargo run 

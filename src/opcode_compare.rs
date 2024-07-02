@@ -352,7 +352,7 @@ pub fn lookupswitch(frame: &mut StackFrame) {
     }
 
     // 没有匹配，跳转到默认地址
-    frame.pc = (pc0 as i32 + default_offset) as usize;
+    frame.pc = (frame.pc as i32 + default_offset) as usize;
 }
 
 

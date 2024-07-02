@@ -25,10 +25,10 @@
    cargo build
    ```
 
-4、**编写测试用例**:java代码写在test/src/test/Test类里面，注意执行前先编译。
+4.**编写测试用例**:java测试代码写在test/src/test/Test类里面进行调用，注意执行前先编译。
 
 
-5. **运行虚拟机**: 你可以使用以下命令运行Java虚拟机并指定要执行的Java类文件
+5. **运行虚拟机**: 你可以使用以下命令运行Java虚拟机。
 
    ```sh
    cargo run 

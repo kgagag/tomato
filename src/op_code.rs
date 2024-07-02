@@ -1,6 +1,5 @@
 pub mod op_code {
     use log::info;
-
     use crate::gc;
     use crate::stack_frame::*;
     extern crate env_logger;

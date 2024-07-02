@@ -31,6 +31,7 @@ pub mod op_code {
     use std::collections::HashMap;
     use crate::runtime_data_area::VM_STACKS;
     use crate::opcode_instanceof::*;
+    use crate::opcode_thread::*;
     pub fn execute(vm_stack_id : u32){
         let data: std::sync::MutexGuard<'_, UnsafeCell<HashMap<u32, Vec<StackFrame>>>> = VM_STACKS.lock().unwrap();
         unsafe {
@@ -250,8 +251,8 @@ pub mod op_code {
                 0xbf => athrow(frame),
                 0xc0 => checkcast(frame),
                 0xc1 => instanceof(frame),
-                // 0xc2 => monitorenter(frame),
-                // 0xc3 => monitorexit(frame),
+                0xc2 => monitorenter(frame),
+                0xc3 => monitorexit(frame),
                 // 0xc4 => wide(frame),
                  0xc5 => multianewarray(frame),
                  0xc6 => ifnull(frame),

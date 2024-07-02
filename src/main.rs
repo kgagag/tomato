@@ -40,6 +40,7 @@ pub mod native_object;
 pub mod opcode_exception;
 pub mod opcode_checkcast;
 pub mod native_array;
+pub mod opcode_thread;
 use crate::class::ConstantPoolInfo;
 use crate::stack_frame::*;
 use crate::runtime_data_area::get_or_load_class;

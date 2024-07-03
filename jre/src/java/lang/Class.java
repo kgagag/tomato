@@ -70,6 +70,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Proxy;
 import sun.reflect.annotation.*;
 import sun.reflect.misc.ReflectUtil;
+import test.StringHelper;
 
 /**
  * Instances of the class {@code Class} represent classes and
@@ -527,18 +528,20 @@ public final class Class<T> implements java.io.Serializable,
 
     /**
      * Determines if this {@code Class} object represents an array class.
-     *
+     * 原来是个native方法，我改成非native了，哈哈
      * @return  {@code true} if this object represents an array class;
      *          {@code false} otherwise.
      * @since   JDK1.1
      */
-    public native boolean isArray();
+    public boolean isArray(){
+        return this.name.charAt(0) == '[' ;
+    }
 
 
     /**
      * Determines if the specified {@code Class} object represents a
      * primitive type.
-     *
+     * 这个 native 方法被我改成非native的了
      * <p> There are nine predefined {@code Class} objects to represent
      * the eight primitive types and void.  These are created by the Java
      * Virtual Machine, and have the same names as the primitive types that
@@ -563,7 +566,17 @@ public final class Class<T> implements java.io.Serializable,
      * @see     java.lang.Void#TYPE
      * @since JDK1.1
      */
-    public native boolean isPrimitive();
+    public boolean isPrimitive() {
+        Class<?> componentType = getComponentType();
+        if (componentType != null && componentType.name != null) {
+            String name = componentType.name;
+            return "int".equals(name) || "boolean".equals(name) || "float".equals(name) ||
+                    "double".equals(name) || "long".equals(name) || "byte".equals(name) ||
+                    "char".equals(name);
+        }
+        return false;
+    }
+
 
     /**
      * Returns true if this {@code Class} object represents an annotation

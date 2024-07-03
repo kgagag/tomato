@@ -1,7 +1,7 @@
 ### IntelliJ IDEA ###
-out/
-!**/src/main/**/out/
-!**/src/test/**/out/
+# out/
+# !**/src/main/**/out/
+# !**/src/test/**/out/
 
 ### Eclipse ###
 .apt_generated

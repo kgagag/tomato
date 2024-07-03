@@ -5,7 +5,6 @@ import java.io.IOException;
 
 public class Test {
     public static void main(String[] args) throws IOException {
-//
         //  两个int相加
         new Test1().test();
         // 两个 float 相加
@@ -190,8 +189,9 @@ public class Test {
         new Test90().test();
         new Test91().test();
         new Test92().test();
-        //new Test93().test();
+        new Test93().test();
         new AlphabetSwitch().test();
         new LookupSwitchExample().test();
+        new Test94().test();
     }
 }

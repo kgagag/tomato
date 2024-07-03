@@ -5,6 +5,155 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="70c6e279-5046-4c44-ba52-f4228d3f6634" name="Changes" comment="&quot;调整目录&quot;">
+      <change afterPath="$PROJECT_DIR$/../test/out/Test.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/AbstracTest.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/AlphabetSwitch.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/Array.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/ArrayComponentTypeExample.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/CheckCust01.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/CheckCust02.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/CheckCust03.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/CheckCust04.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/CheckCust05.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/CheckCust06.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/CheckCust07.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/CheckCust08.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/HashCodeTest3.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/IntTest.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/IntegerHashCodeTest.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/IntegerHashCodeTest2.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/InterfaceTest.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/LeetCode_31.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/LeetCode_33.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/LogUtil.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/LookupSwitchExample.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/MyTestUnit.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/Result.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/StringHelper.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/Test1.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/Test10.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/Test11.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/Test12.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/Test13.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/Test14.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/Test15.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/Test16.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/Test17.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/Test18.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/Test19.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/Test2.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/Test20.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/Test21.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/Test22.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/Test23.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/Test24.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/Test25.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/Test26.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/Test27.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/Test28.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/Test29.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/Test3.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/Test30.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/Test31.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/Test32.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/Test33.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/Test34.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/Test35.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/Test36.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/Test37.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/Test38.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/Test39.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/Test4.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/Test40.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/Test41.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/Test42.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/Test43.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/Test44.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/Test45.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/Test46.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/Test47.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/Test48.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/Test49.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/Test5.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/Test50.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/Test51.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/Test52.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/Test53.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/Test55.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/Test56.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/Test57.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/Test58.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/Test59.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/Test6.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/Test60.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/Test61.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/Test62.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/Test63.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/Test64.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/Test65.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/Test66.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/Test67.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/Test68.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/Test69.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/Test7.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/Test70.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/Test71.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/Test72.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/Test73.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/Test74.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/Test75.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/Test76.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/Test77.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/Test78$Node.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/Test78.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/Test79.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/Test8.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/Test80.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/Test81.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/Test82.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/Test83.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/Test85.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/Test86.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/Test87.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/Test88.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/Test89.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/Test9.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/Test90.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/Test91.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/Test92.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/Test93.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/Test94.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/TestGC2.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/TestGc.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/TestList.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/TestList2.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/TestMap.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/TestMap2.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/TestMap3.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/TestSet.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/Value.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/leetcode/Solution_1.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/leetcode/Solution_14.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/leetcode/Solution_231.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/leetcode/Solution_2710.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/leetcode/Solution_3.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/leetcode/Solution_63.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/out/test/leetcode/Solution_69.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/src/test/Test94.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/jre.iml" beforeDir="false" afterPath="$PROJECT_DIR$/jre.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/java/lang/Class$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/java/lang/Class$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/java/lang/Class$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/java/lang/Class$2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/java/lang/Class$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/java/lang/Class$3.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/java/lang/Class$4.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/java/lang/Class$4.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/java/lang/Class$AnnotationData.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/java/lang/Class$AnnotationData.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/java/lang/Class$Atomic.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/java/lang/Class$Atomic.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/java/lang/Class$EnclosingMethodInfo.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/java/lang/Class$EnclosingMethodInfo.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/java/lang/Class$MethodArray.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/java/lang/Class$MethodArray.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/java/lang/Class$ReflectionData.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/java/lang/Class$ReflectionData.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/java/lang/Class.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/java/lang/Class.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/java/lang/Class.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/java/lang/Class.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../test/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../test/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../test/src/Test.java" beforeDir="false" afterPath="$PROJECT_DIR$/../test/src/Test.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -38,26 +187,26 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;ToolWindowRun.ShowToolbar&quot;: &quot;false&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;last_opened_file_path&quot;: &quot;E:/jvm/tomato/jre&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_ADD_EXTERNAL_FILES": "true",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "ToolWindowRun.ShowToolbar": "false",
+    "WebServerToolWindowFactoryState": "false",
+    "last_opened_file_path": "E:/jvm/tomato/jre",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="E:\tomato\jre\src\test" />
@@ -186,6 +335,7 @@
       <workItem from="1719800421338" duration="1806000" />
       <workItem from="1719844542457" duration="1087000" />
       <workItem from="1719922553513" duration="1397000" />
+      <workItem from="1720016721421" duration="2435000" />
     </task>
     <task id="LOCAL-00001" summary="&quot;add test case&quot;">
       <option name="closed" value="true" />

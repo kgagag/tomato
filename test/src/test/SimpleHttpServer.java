@@ -1,51 +1,38 @@
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
+package test;
+
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 
 public class SimpleHttpServer {
-    public static void main(String[] args) {
+    public void test() {
         int port = 8080;
+        StringHelper.print20240503("HTTP 服务器正在运行，端口：" + port);
         try (ServerSocket serverSocket = new ServerSocket(port)) {
-            System.out.println("HTTP 服务器正在运行，端口：" + port);
             while (true) {
                 try (Socket clientSocket = serverSocket.accept()) {
                     handleClientRequest(clientSocket);
                 } catch (Exception e) {
-                    System.err.println("客户端请求处理失败: " + e.getMessage());
+                    StringHelper.print20240503("客户端请求处理失败: " + e.getMessage());
                 }
             }
         } catch (Exception e) {
-            System.err.println("服务器启动失败: " + e.getMessage());
+            StringHelper.print20240503("服务器启动失败: " + e.getMessage());
         }
     }
 
     private static void handleClientRequest(Socket clientSocket) {
-        try (
-                BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream(), StandardCharsets.UTF_8));
-                PrintWriter out = new PrintWriter(new OutputStreamWriter(clientSocket.getOutputStream(), StandardCharsets.UTF_8), true);
-        ) {
-            String inputLine;
-            StringBuilder request = new StringBuilder();
-            while ((inputLine = in.readLine()) != null && !inputLine.isEmpty()) {
-                request.append(inputLine).append("\n");
-            }
-            System.out.println("接收到请求:\n" + request.toString());
-
-            // 构建 HTTP 响应
+        // 构建 HTTP 响应
+        try {
             String httpResponse = "HTTP/1.1 200 OK\r\n" +
                     "Content-Type: text/html; charset=UTF-8\r\n" +
                     "Content-Length: " + getHomePage().getBytes(StandardCharsets.UTF_8).length + "\r\n" +
                     "\r\n" +
                     getHomePage();
-
-            out.write(httpResponse);
-            out.flush();
-        } catch (Exception e) {
-            System.err.println("请求处理异常: " + e.getMessage());
+            clientSocket.getOutputStream().write(httpResponse.getBytes(),0,httpResponse.length());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -81,5 +68,10 @@ public class SimpleHttpServer {
                 "</footer>" +
                 "</body>" +
                 "</html>";
+    }
+
+    public static void main(String[] args) {
+        SimpleHttpServer simpleHttpServer = new SimpleHttpServer();
+        simpleHttpServer.test();
     }
 }

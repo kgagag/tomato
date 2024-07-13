@@ -1,5 +1,4 @@
-import test.*;
-import test.leetcode.*;
+import test.SimpleHttpServer;
 
 import java.io.IOException;
 
@@ -194,7 +193,8 @@ public class Test {
         new AlphabetSwitch().test();
         new LookupSwitchExample().test();
         new Test94().test();
-        */
         new Test95().test();
+        */
+        new SimpleHttpServer().test();
     }
 }

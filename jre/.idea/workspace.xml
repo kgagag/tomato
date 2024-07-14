@@ -4,7 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="70c6e279-5046-4c44-ba52-f4228d3f6634" name="Changes" comment="&quot;调整目录&quot;" />
+    <list default="true" id="70c6e279-5046-4c44-ba52-f4228d3f6634" name="Changes" comment="&quot;调整目录&quot;">
+      <change afterPath="$PROJECT_DIR$/../test/out/tomato/net/SimpleNetServer.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../test/out/Test.class" beforeDir="false" afterPath="$PROJECT_DIR$/../test/out/Test.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../test/out/test/Test96.class" beforeDir="false" afterPath="$PROJECT_DIR$/../test/out/test/Test96.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../test/src/Test.java" beforeDir="false" afterPath="$PROJECT_DIR$/../test/src/Test.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />

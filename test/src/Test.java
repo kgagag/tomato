@@ -1,10 +1,11 @@
 import test.SimpleHttpServer;
-
+import test.*;
+import test.leetcode.*;
 import java.io.IOException;
 
 public class Test {
     public static void main(String[] args) throws IOException {
-       /*
+
         //  两个int相加
         new Test1().test();
         // 两个 float 相加
@@ -194,7 +195,7 @@ public class Test {
         new LookupSwitchExample().test();
         new Test94().test();
         new Test95().test();
-        */
-        new SimpleHttpServer().test();
+
+        //new SimpleHttpServer().test();
     }
 }

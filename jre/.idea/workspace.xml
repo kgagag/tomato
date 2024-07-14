@@ -4,24 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="70c6e279-5046-4c44-ba52-f4228d3f6634" name="Changes" comment="&quot;调整目录&quot;">
-      <change afterPath="$PROJECT_DIR$/../test/out/test/SimpleHttpServer.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../test/out/test/Test96.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../test/src/test/Test96.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../test/src/tomato/net/SimpleNetServer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Cargo.lock" beforeDir="false" afterPath="$PROJECT_DIR$/../Cargo.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Cargo.toml" beforeDir="false" afterPath="$PROJECT_DIR$/../Cargo.toml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/native_class.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/native_class.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../test/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../test/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../test/out/SimpleHttpServer.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../test/out/Test.class" beforeDir="false" afterPath="$PROJECT_DIR$/../test/out/Test.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../test/src/Test.java" beforeDir="false" afterPath="$PROJECT_DIR$/../test/src/Test.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../test/src/test/SimpleHttpServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/../test/src/test/SimpleHttpServer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../test/src/test/Test88.java" beforeDir="false" afterPath="$PROJECT_DIR$/../test/src/test/Test88.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../test/src/test/leetcode/Solution_1.java" beforeDir="false" afterPath="$PROJECT_DIR$/../test/src/test/leetcode/Solution_1.java" afterDir="false" />
-    </list>
+    <list default="true" id="70c6e279-5046-4c44-ba52-f4228d3f6634" name="Changes" comment="&quot;调整目录&quot;" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -209,6 +192,7 @@
       <workItem from="1720752205576" duration="659000" />
       <workItem from="1720754640112" duration="1797000" />
       <workItem from="1720821341506" duration="596000" />
+      <workItem from="1720913439299" duration="665000" />
     </task>
     <task id="LOCAL-00001" summary="&quot;add test case&quot;">
       <option name="closed" value="true" />

@@ -68,14 +68,3 @@ pub fn get_primitive_class(frame: &mut StackFrame) {
     }
 }
 
-
-pub fn is_array(frame: &mut StackFrame) {
-   let sfv = frame.op_stack.pop().unwrap();
-   match sfv {
-       StackFrameValue::Reference(id) =>{
-            let refrence = get_reference(&id).unwrap();
-            
-       }
-       _=> panic!()
-   }
-}

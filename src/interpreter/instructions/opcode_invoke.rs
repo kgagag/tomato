@@ -4,7 +4,6 @@ use log::warn;
 
 use std::cell::UnsafeCell;
 use std::collections::HashMap;
-use std::f32::consts::E;
 
 use crate::classfile::class::ConstantPoolInfo;
 use crate::classfile::class::MethodInfo;

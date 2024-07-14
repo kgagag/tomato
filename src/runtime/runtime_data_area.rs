@@ -52,9 +52,9 @@ pub fn get_constant_pool_str(str: &String) -> Option<u64> {
     let data: std::sync::MutexGuard<'_, HashMap<String, u64>> = STR_CONSTANT_POOL.lock().unwrap();
     //data.get(str).copied()
     let id: Option<&u64> = data.get(str);
-    if !id.is_none() {
+    if id.is_some() {
         let reference = get_reference(id.unwrap());
-        if !reference.is_none() {
+        if reference.is_some() {
             return id.copied();
         }
     }
@@ -84,9 +84,9 @@ pub fn get_constant_pool_class(str: &String) -> Option<&u64> {
         // 释放Mutex锁
         drop(data);
         let id = map.get(str);
-        if !id.is_none() {
+        if id.is_some() {
             let reference = get_reference(id.unwrap());
-            if !reference.is_none() {
+            if reference.is_some() {
                 return id;
             }
         }
@@ -183,7 +183,7 @@ pub fn init_class_id<'a>(class: &mut Class) -> &'a mut Class {
         let map = &mut *data.get();
         let class_name = class.class_name.clone();
         if !map.contains_key(&class.class_name) {
-            class.id = map.len() + 1 as usize;
+            class.id = map.len() + 1_usize;
             map.insert(class_name.clone(), class.clone());
             add_id_class(map.len(), class_name.clone());
         }

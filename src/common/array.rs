@@ -23,7 +23,7 @@ pub mod array {
             match array_type {
                 DataType::Array {
                     element_type,
-                    depth,
+                    depth: _,
                 } => {
                     let array_type0 = *element_type;
                     if array_type0 == DataType::Char

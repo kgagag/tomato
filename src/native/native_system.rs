@@ -8,6 +8,7 @@ extern crate log;
 
 
 pub fn array_copy(method: &MethodInfo, frame: &mut StackFrame) {
+    let _ = method;
     let len = frame.op_stack.pop().unwrap();
     // info!("{:?}",len);
     let des_ops = frame.op_stack.pop().unwrap();

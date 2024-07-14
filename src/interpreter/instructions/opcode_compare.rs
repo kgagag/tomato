@@ -374,7 +374,7 @@ pub fn tableswitch(frame: &mut StackFrame) {
     pc0 += 4;
 
     // 计算跳转表的长度
-    let jump_table_length = (high - low + 1) as usize;
+    let _jump_table_length = (high - low + 1) as usize;
 
     // 弹出栈顶的key
     let key = frame.popi64() as i32;

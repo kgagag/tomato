@@ -34,15 +34,14 @@
     fn xistore(frame: &mut StackFrame){
         let v: StackFrameValue = frame.op_stack.pop().unwrap();
         let index = frame.code[frame.pc + 1] as usize;
-        let value:i64;
-        match v {
-            StackFrameValue::Byte(l) => value = l as i64,
-            StackFrameValue::Char(l) => value = l as i64,
-            StackFrameValue::Int(l) => value = l as i64,
-            StackFrameValue::Short(l) => value = l as i64,
-            StackFrameValue::Long(l) => value = l as i64,
+        let value = match v {
+            StackFrameValue::Byte(l) => l as i64,
+            StackFrameValue::Char(l) =>  l as i64,
+            StackFrameValue::Int(l) =>  l as i64,
+            StackFrameValue::Short(l) =>  l as i64,
+            StackFrameValue::Long(l) => l ,
             _=> panic!()
-        }
+        };
         let u32_tuple = i64_to_u32_tuple(value);
 
         frame.local[index] = StackFrameValue::U32(u32_tuple.0) ;

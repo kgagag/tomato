@@ -6,7 +6,7 @@ use log::info;
 use crate::{classfile::class::MethodInfo, common::{stack_frame::StackFrame, value::StackFrameValue}};
 
 
-pub fn float_to_raw_int_bits(method: &MethodInfo, frame: &mut StackFrame) {
+pub fn float_to_raw_int_bits(frame: &mut StackFrame) {
    let f = frame.op_stack.pop().unwrap();
    match f {
        StackFrameValue::Float(ff) =>{
@@ -16,7 +16,7 @@ pub fn float_to_raw_int_bits(method: &MethodInfo, frame: &mut StackFrame) {
    }
 }
 
-pub fn int_bits_to_float(method: &MethodInfo, frame: &mut StackFrame) {
+pub fn int_bits_to_float(frame: &mut StackFrame) {
     let f = frame.op_stack.pop().unwrap();
    // info!("{:?}",f);
     match f {
@@ -41,7 +41,7 @@ pub fn double_to_raw_long_bits(method: &MethodInfo, frame: &mut StackFrame) {
     }
  }
 
- pub fn long_bits_to_double(method: &MethodInfo, frame: &mut StackFrame) {
+ pub fn long_bits_to_double( frame: &mut StackFrame) {
     let f = frame.op_stack.pop().unwrap();
     //info!("{:?}",f);
     match f {
@@ -55,7 +55,7 @@ pub fn double_to_raw_long_bits(method: &MethodInfo, frame: &mut StackFrame) {
             frame.op_stack.push(StackFrameValue::Double(f64::from_bits( num as u64)))
         }
         StackFrameValue::U64(num) => {
-            frame.op_stack.push(StackFrameValue::Double(f64::from_bits( num as u64)))
+            frame.op_stack.push(StackFrameValue::Double(f64::from_bits( num )))
         }
         _=> panic!()
     }

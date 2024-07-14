@@ -26,7 +26,7 @@ pub fn ldc(frame: &mut StackFrame) {
                 ConstantPoolInfo::Utf8(class_name) => {
                     let class_obj = get_constant_pool_class(class_name);
                     if class_obj.is_none() {
-                        let obj_id: u64 =   create_class_object(&class_name);
+                        let obj_id: u64 =   create_class_object(class_name);
                         put_into_class_constant_pool(class_name.clone(), obj_id);
                         frame.op_stack.push(StackFrameValue::Reference(obj_id));
                     }else {
@@ -41,7 +41,7 @@ pub fn ldc(frame: &mut StackFrame) {
             match utf8_constant {
                 ConstantPoolInfo::Utf8(str) => {
                     let str_obj = get_constant_pool_str(str);
-                    if !str_obj.is_none() {
+                    if str_obj.is_some() {
                         frame
                             .op_stack
                             .push(StackFrameValue::Reference(str_obj.unwrap()))

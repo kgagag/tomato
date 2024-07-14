@@ -110,25 +110,25 @@ pub mod class_loader {
         }
     }
 
-    fn read_class_from_jar(jar_path: &str, class_name: &str) -> Result<Vec<u8>, String> {
-        let file: File =
-            File::open(jar_path).map_err(|e| format!("Error opening JAR file: {}", e))?;
-        let mut archive: ZipArchive<File> =
-            ZipArchive::new(file).map_err(|e| format!("Error reading ZIP archive: {}", e))?;
-        for i in 0..archive.len() {
-            let mut entry = archive
-                .by_index(i)
-                .map_err(|e| format!("Error reading entry {}: {}", i, e))?;
-            if entry.name().eq(class_name) {
-                let mut buffer = Vec::new();
-                entry
-                    .read_to_end(&mut buffer)
-                    .map_err(|e| format!("Error reading class file: {}", e))?;
-                return Ok(buffer);
-            }
-        }
-        Err(format!("Class '{}' not found in the JAR file", class_name))
-    }
+    // fn read_class_from_jar(jar_path: &str, class_name: &str) -> Result<Vec<u8>, String> {
+    //     let file: File =
+    //         File::open(jar_path).map_err(|e| format!("Error opening JAR file: {}", e))?;
+    //     let mut archive: ZipArchive<File> =
+    //         ZipArchive::new(file).map_err(|e| format!("Error reading ZIP archive: {}", e))?;
+    //     for i in 0..archive.len() {
+    //         let mut entry = archive
+    //             .by_index(i)
+    //             .map_err(|e| format!("Error reading entry {}: {}", i, e))?;
+    //         if entry.name().eq(class_name) {
+    //             let mut buffer = Vec::new();
+    //             entry
+    //                 .read_to_end(&mut buffer)
+    //                 .map_err(|e| format!("Error reading class file: {}", e))?;
+    //             return Ok(buffer);
+    //         }
+    //     }
+    //     Err(format!("Class '{}' not found in the JAR file", class_name))
+    // }
 
     // fn get_rt_class(name: &String) -> Option<Vec<u8>> {
     //     match env::current_dir() {
@@ -347,7 +347,7 @@ pub mod class_loader {
         }
 
         //补充方法方法参数解析后信息
-        for (key, field_info) in class.field_info.iter_mut() {
+        for (_key, field_info) in class.field_info.iter_mut() {
             let descriptor = class
                 .constant_pool
                 .get(&field_info.descriptor_index)
@@ -664,7 +664,7 @@ pub mod class_loader {
         cursor: &mut Cursor<Vec<u8>>,
     ) -> Vec<MethodInfo> {
         let mut v: Vec<MethodInfo> = Vec::new();
-        for j in 0..cnt {
+        for _j in 0..cnt {
             let mut m: MethodInfo = MethodInfo {
                 access_flag: cursor.read_u16::<BigEndian>().unwrap(),
                 name_index: cursor.read_u16::<BigEndian>().unwrap(),

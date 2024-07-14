@@ -15,7 +15,7 @@ pub fn hash_code(method: &MethodInfo, frame: &mut StackFrame) {
  }
 
 
- pub fn get_class(method: &MethodInfo, frame: &mut StackFrame) {
+ pub fn get_class( frame: &mut StackFrame) {
     let sfv: StackFrameValue = frame.op_stack.pop().unwrap();
     match sfv {
         StackFrameValue::Reference(id) =>{
@@ -35,7 +35,7 @@ pub fn hash_code(method: &MethodInfo, frame: &mut StackFrame) {
                 }
                 Reference::Array(array) =>{
                     //info!("{:?}",array);
-                    let array_class_name = get_array_class_name(&array);
+                    let array_class_name = get_array_class_name(array);
                     //info!("{:?}",array_class_name);
                     let obj_id: u64 =   create_class_object(&array_class_name);
                     frame.op_stack.push(StackFrameValue::Reference(obj_id));
@@ -47,8 +47,8 @@ pub fn hash_code(method: &MethodInfo, frame: &mut StackFrame) {
  }
 
  fn get_array_class_name(array:&Array) ->String{
-    let mut class_name:String = String::from("");
-    let mut prefix = String::from("");
+    let _class_name:String = String::from("");
+    let _prefix = String::from("");
     
     match &array.array_type {
         DataType::Array { element_type, depth } =>{
@@ -57,37 +57,37 @@ pub fn hash_code(method: &MethodInfo, frame: &mut StackFrame) {
             let data_type = *element_type.clone();
             match data_type {
                 DataType::Byte => {
-                    for i in 0 .. *depth{
+                    for _i in 0 .. *depth{
                         prefix.push('[');
                     }
                     prefix.push('B');
                 },
                 DataType::Char => {
-                    for i in 0 .. *depth{
+                    for _i in 0 .. *depth{
                         prefix.push('[');
                     }
                     prefix.push('C');
                 }
                 DataType::Double => {
-                    for i in 0 .. *depth{
+                    for _i in 0 .. *depth{
                         prefix.push('[');
                     }
                     prefix.push('D');
                 }
                 DataType::Float => {
-                    for i in 0 .. *depth{
+                    for _i in 0 .. *depth{
                         prefix.push('[');
                     }
                     prefix.push('F');
                 }
                 DataType::Int => {
-                    for i in 0 .. *depth{
+                    for _i in 0 .. *depth{
                         prefix.push('[');
                     }
                     prefix.push('I');
                 }
                 DataType::Long => {
-                    for i in 0 .. *depth{
+                    for _i in 0 .. *depth{
                         prefix.push('[');
                     }
                     prefix.push('J');
@@ -96,7 +96,7 @@ pub fn hash_code(method: &MethodInfo, frame: &mut StackFrame) {
                     prefix.push_str(&name);
                 }
                 DataType::Short => {
-                    for i in 0 .. *depth{
+                    for _i in 0 .. *depth{
                         prefix.push('[');
                     }
                     prefix.push('J');

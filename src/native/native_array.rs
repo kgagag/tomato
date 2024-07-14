@@ -13,7 +13,7 @@ use crate::{classfile::class::MethodInfo, common::{param::DataType, stack_frame:
 pub fn new_array(method: &MethodInfo, frame: &mut StackFrame) {
     let _ = method;
     let len = frame.popi64();
-    let component_sfv_type_: StackFrameValue = frame.op_stack.pop().unwrap();
+    let _component_sfv_type_: StackFrameValue = frame.op_stack.pop().unwrap();
     let array = create_array(len as u32, DataType::Array { element_type: (Box::new(DataType::Int)), depth: (1) });
     frame.op_stack.push(StackFrameValue::Reference(array));
 }

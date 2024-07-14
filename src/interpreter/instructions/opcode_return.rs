@@ -14,7 +14,7 @@ fn debug(frame: &mut StackFrame,cursor : i32){
     let class_name = get_class_name(&frame.class);
     if cursor == 20240325 {
         info!("{} {}",class_name,"passed")
-    }else if(cursor == 20240324) {
+    }else if cursor == 20240324 {
         error!("{} {}",class_name,"failed")
     }
 }

@@ -136,10 +136,10 @@ impl StackFrame {
     }
 }
 
-fn combine_u32_to_f64(high: u32, low: u32) -> f64 {
-    let bits = ((high as u64) << 32) | (low as u64); // 将两个u32组合成一个64位整数
-    f64::from_bits(bits) // 将64位整数转换回f64
-}
+// fn combine_u32_to_f64(high: u32, low: u32) -> f64 {
+//     let bits = ((high as u64) << 32) | (low as u64); // 将两个u32组合成一个64位整数
+//     f64::from_bits(bits) // 将64位整数转换回f64
+// }
 
 pub fn init_stack_frame(
     frame: &mut StackFrame,
@@ -150,7 +150,7 @@ pub fn init_stack_frame(
     new_stack_frame.vm_stack_id = frame.vm_stack_id;
     let mut i: usize = start;
     let mut param: Vec<StackFrameValue> = Vec::new();
-    for j in 0..method_info.param.len() {
+    for _j in 0..method_info.param.len() {
         param.push(frame.op_stack.pop().unwrap());
     }
 
@@ -169,8 +169,8 @@ pub fn init_stack_frame(
                     i += 1;
                 }
                 DataType::Array {
-                    element_type,
-                    depth,
+                    element_type: _,
+                    depth: _,
                 } => {
                     new_stack_frame.local[i] = v;
                     i += 1;

@@ -21,7 +21,7 @@ pub fn run_native(method: &MethodInfo, frame: &mut StackFrame) {
             && "(F)I" == method.descriptor
             && method.class_name == "java/lang/Float"
         {
-            float_to_raw_int_bits(method, frame);
+            float_to_raw_int_bits( frame);
         } else if "doubleToRawLongBits" == method.method_name
             && "(D)J" == method.descriptor
             && method.class_name == "java/lang/Double"
@@ -36,12 +36,12 @@ pub fn run_native(method: &MethodInfo, frame: &mut StackFrame) {
             && "(J)D" == method.descriptor
             && method.class_name == "java/lang/Double"
         {
-            long_bits_to_double(method, frame);
+            long_bits_to_double( frame);
         } else if "intBitsToFloat" == method.method_name
             && "(I)F" == method.descriptor
             && method.class_name == "java/lang/Float"
         {
-            int_bits_to_float(method, frame);
+            int_bits_to_float(frame);
         } else if "createFileExclusively" == method.method_name
             && "(Ljava/lang/String;)Z" == method.descriptor
             && method.class_name == "java/io/WinNTFileSystem"
@@ -56,7 +56,7 @@ pub fn run_native(method: &MethodInfo, frame: &mut StackFrame) {
             && "()Ljava/lang/Class;" == method.descriptor
             && method.class_name == "java/lang/Object"
         {
-            get_class(method, frame);
+            get_class(frame);
         } else if "newArray" == method.method_name
             && "(Ljava/lang/Class;I)Ljava/lang/Object;" == method.descriptor
             && method.class_name == "java/lang/reflect/Array"

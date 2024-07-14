@@ -9,10 +9,10 @@ use crate::classfile::class::{Class, MethodInfo};
 use crate::classloader::class_loader::class_loader::load_class;
 use crate::common::array::array::Array;
 use crate::common::object::Object;
-use crate::common::param::param::DataType;
-use crate::common::reference::reference::Reference;
+use crate::common::param::DataType;
+use crate::common::reference::Reference;
 use crate::common::stack_frame::StackFrame;
-use crate::common::value::value::StackFrameValue;
+use crate::common::value::StackFrameValue;
 lazy_static! {
     // 创建一个包含UnsafeCell的Mutex，用于包装全局变量
     //类常量池

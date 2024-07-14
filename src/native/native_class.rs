@@ -1,7 +1,7 @@
 use byteorder::LE;
 use log::info;
 
-use crate::{classfile::class::MethodInfo, common::{reference::reference::Reference, stack_frame::StackFrame, value::value::StackFrameValue}, runtime::runtime_data_area::{create_class_object, get_reference}};
+use crate::{classfile::class::MethodInfo, common::{reference::Reference, stack_frame::StackFrame, value::StackFrameValue}, runtime::runtime_data_area::{create_class_object, get_reference}};
 
 
 pub fn desired_assertion_status0(method: &MethodInfo, frame: &mut StackFrame) {

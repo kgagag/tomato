@@ -63,7 +63,7 @@ pub fn getstatic(frame: &mut StackFrame) {
                 let field_name_utf8 = this_class.constant_pool.get(name_index).expect("Field name UTF-8 not found");
                 if let ConstantPoolInfo::Utf8(field_name) = field_name_utf8 {
                     //如果当前类没有这个成员变量那么就往上找
-                    while target_class.field_info.get(field_name).is_none() {
+                    while !target_class.field_info.contains_key(field_name) {
                         target_class = get_or_load_class(&target_class.super_class_name);
                     }
                     let field = target_class.field_info.get(field_name).unwrap();

@@ -5,7 +5,7 @@ use std::collections::HashMap;
 
 use crate::{classfile::class::{AttributeInfo, Class, CodeAttribute, MethodInfo}, runtime::runtime_data_area::{get_or_load_class, VM_STACKS}};
 
-use super::{param::param::DataType, value::value::{number_to_u32tuple, StackFrameValue}};
+use super::{param::DataType, value::{number_to_u32tuple, StackFrameValue}};
 /**
  * 栈桢
  */
@@ -101,7 +101,7 @@ impl StackFrame {
             StackFrameValue::Int(data) => data as i64,
             StackFrameValue::Byte(data) => data as i64,
             StackFrameValue::Char(data) => data as i64,
-            StackFrameValue::Long(data) => data as i64,
+            StackFrameValue::Long(data) => data ,
             StackFrameValue::Short(data) => data as i64,
             StackFrameValue::U32(data) => data as i64,
             StackFrameValue::CHARACTER(data) => data as i64,
@@ -117,7 +117,7 @@ impl StackFrame {
     pub fn popf64(&mut self) -> f64 {
         let value = self.op_stack.pop().unwrap();
         match value {
-            StackFrameValue::Double(data) => data as f64,
+            StackFrameValue::Double(data) => data ,
             StackFrameValue::Float(data) => data as f64,
             _ => {
                 panic!("wrong value type");
@@ -146,7 +146,7 @@ pub fn init_stack_frame(
     method_info: &MethodInfo,
     start: usize,
 ) -> StackFrame {
-    let mut new_stack_frame: StackFrame = create_stack_frame(&method_info).unwrap();
+    let mut new_stack_frame: StackFrame = create_stack_frame(method_info).unwrap();
     new_stack_frame.vm_stack_id = frame.vm_stack_id;
     let mut i: usize = start;
     let mut param: Vec<StackFrameValue> = Vec::new();
@@ -155,7 +155,7 @@ pub fn init_stack_frame(
     }
 
     //param.reverse();
-    if method_info.param.len() > 0 {
+    if !method_info.param.is_empty()  {
         for j in 0..method_info.param.len() {
             let v = param.pop().unwrap();
             let param: &DataType = method_info.param.get(j).unwrap();
@@ -265,12 +265,11 @@ pub fn push_stack_frame(mut stack_frame: StackFrame) -> u32 {
     unsafe {
         let map: &mut HashMap<u32, Vec<StackFrame>> = &mut *data.get();
         if stack_frame.vm_stack_id == 0 {
-            for i in 0x1..0xFFFFFFFF as u32 {
+            for i in 0x1..0xFFFFFFFF_u32 {
                 if !map.contains_key(&i) {
                     stack_frame.vm_stack_id = i;
                     vm_stack_id = i;
-                    let mut stack_frames: Vec<StackFrame> = Vec::new();
-                    stack_frames.push(stack_frame);
+                    let stack_frames: Vec<StackFrame> = vec![stack_frame];
                     map.insert(i, stack_frames);
                     break;
                 }

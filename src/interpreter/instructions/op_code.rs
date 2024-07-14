@@ -43,9 +43,9 @@ pub mod op_code {
             let map = &mut *data.get();
             drop(data);
             let stack_frames_op = map.get_mut(&vm_stack_id);
-            if !stack_frames_op.is_none() {
+            if stack_frames_op.is_some() {
                 let stack_frames = stack_frames_op.unwrap();
-                if stack_frames.len() > 0 {
+                if !stack_frames.is_empty()  {
                     do_opcode( stack_frames);
                 }
             }

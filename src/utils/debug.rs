@@ -1,6 +1,6 @@
 use log::info;
 
-use crate::{common::{reference::reference::Reference, value::value::StackFrameValue}, runtime::runtime_data_area::get_reference};
+use crate::{common::{reference::Reference, value::StackFrameValue}, runtime::runtime_data_area::get_reference};
 
 
 
@@ -42,7 +42,7 @@ pub fn dprint(msg: StackFrameValue) {
             }
         }
         StackFrameValue::Null =>{
-            println!("{}", "null")
+            println!("null")
         }
         _=> panic!()
     }

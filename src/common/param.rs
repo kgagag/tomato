@@ -1,5 +1,4 @@
-pub mod param{
-    
+ 
     #[derive(Debug, Clone)]
     #[derive(PartialEq)]
     pub enum DataType {
@@ -18,4 +17,3 @@ pub mod param{
         },
         Unknown
     }
-}

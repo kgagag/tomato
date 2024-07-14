@@ -1,6 +1,6 @@
 use log::info;
 
-use crate::{classfile::class::ConstantPoolInfo, common::{param::param::DataType, reference::reference::Reference, stack_frame::StackFrame, value::value::StackFrameValue}, runtime::runtime_data_area::{create_array, get_class_name, get_or_load_class, get_reference}, utils::u8c::u8s_to_u16};
+use crate::{classfile::class::ConstantPoolInfo, common::{param::DataType, reference::Reference, stack_frame::StackFrame, value::StackFrameValue}, runtime::runtime_data_area::{create_array, get_class_name, get_or_load_class, get_reference}, utils::u8c::u8s_to_u16};
 
 
 pub fn newarray(frame: &mut StackFrame) {

@@ -2,10 +2,10 @@ use std::{cell::UnsafeCell, collections::{HashMap, HashSet, VecDeque}};
 
 use log::warn;
 
-use crate::{classfile::class::Class, common::{reference::reference::Reference, value::value::StackFrameValue}, runtime::runtime_data_area::{get_reference, CLASS_DATA, OBJECT_DATA, VM_STACKS}};
+use crate::{classfile::class::Class, common::{reference::Reference, value::StackFrameValue}, runtime::runtime_data_area::{get_reference, CLASS_DATA, OBJECT_DATA, VM_STACKS}};
 
 // use crate::{
-//     class::Class, reference::reference::Reference, runtime_data_area::*, value::value::StackFrameValue
+//     class::Class, reference::Reference, runtime_data_area::*, value::StackFrameValue
 // };
 
 /**

@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use super::value::value::StackFrameValue;
+use crate::common::value::StackFrameValue;
 
 #[derive(Debug, Clone)]
 pub struct Object {

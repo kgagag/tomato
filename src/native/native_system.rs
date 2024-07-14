@@ -1,6 +1,6 @@
 use log::info;
 
-use crate::{classfile::class::MethodInfo, common::{array::array::Array, reference::reference::Reference, stack_frame::StackFrame, value::value::StackFrameValue}, runtime::runtime_data_area::get_reference};
+use crate::{classfile::class::MethodInfo, common::{array::array::Array, reference::Reference, stack_frame::StackFrame, value::StackFrameValue}, runtime::runtime_data_area::get_reference};
 
 
 extern crate env_logger;

@@ -3,7 +3,7 @@ use core::num;
 use byteorder::LE;
 use log::info;
 
-use crate::{classfile::class::MethodInfo, common::{stack_frame::StackFrame, value::value::StackFrameValue}};
+use crate::{classfile::class::MethodInfo, common::{stack_frame::StackFrame, value::StackFrameValue}};
 
 
 pub fn float_to_raw_int_bits(method: &MethodInfo, frame: &mut StackFrame) {

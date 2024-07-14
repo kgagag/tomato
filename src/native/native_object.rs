@@ -1,7 +1,7 @@
 
 use log::info;
 
-use crate::{classfile::class::MethodInfo, common::{array::array::Array, param::param::DataType, reference::reference::Reference, stack_frame::StackFrame, value::value::StackFrameValue}, runtime::runtime_data_area::{create_class_object, get_class_name, get_constant_pool_class, get_reference, put_into_class_constant_pool}};
+use crate::{classfile::class::MethodInfo, common::{array::array::Array, param::DataType, reference::Reference, stack_frame::StackFrame, value::StackFrameValue}, runtime::runtime_data_area::{create_class_object, get_class_name, get_constant_pool_class, get_reference, put_into_class_constant_pool}};
 
 
 pub fn hash_code(method: &MethodInfo, frame: &mut StackFrame) {
@@ -58,54 +58,54 @@ pub fn hash_code(method: &MethodInfo, frame: &mut StackFrame) {
             match data_type {
                 DataType::Byte => {
                     for i in 0 .. *depth{
-                        prefix.push_str("[");
+                        prefix.push('[');
                     }
-                    prefix.push_str("B");
+                    prefix.push('B');
                 },
                 DataType::Char => {
                     for i in 0 .. *depth{
-                        prefix.push_str("[");
+                        prefix.push('[');
                     }
-                    prefix.push_str("C");
+                    prefix.push('C');
                 }
                 DataType::Double => {
                     for i in 0 .. *depth{
-                        prefix.push_str("[");
+                        prefix.push('[');
                     }
-                    prefix.push_str("D");
+                    prefix.push('D');
                 }
                 DataType::Float => {
                     for i in 0 .. *depth{
-                        prefix.push_str("[");
+                        prefix.push('[');
                     }
-                    prefix.push_str("F");
+                    prefix.push('F');
                 }
                 DataType::Int => {
                     for i in 0 .. *depth{
-                        prefix.push_str("[");
+                        prefix.push('[');
                     }
-                    prefix.push_str("I");
+                    prefix.push('I');
                 }
                 DataType::Long => {
                     for i in 0 .. *depth{
-                        prefix.push_str("[");
+                        prefix.push('[');
                     }
-                    prefix.push_str("J");
+                    prefix.push('J');
                 }
                 DataType::Reference(name) => {
                     prefix.push_str(&name);
                 }
                 DataType::Short => {
                     for i in 0 .. *depth{
-                        prefix.push_str("[");
+                        prefix.push('[');
                     }
-                    prefix.push_str("J");
+                    prefix.push('J');
                 }
                 DataType::Boolean =>  {
                     for i in 0 .. *depth{
-                        prefix.push_str("[");
+                        prefix.push('[');
                     }
-                    prefix.push_str("B");
+                    prefix.push('B');
                 }
                 _=> panic!()
             }

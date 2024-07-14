@@ -1,7 +1,7 @@
 pub mod array {
     use log::info;
 
-    use crate::common::{param::param::DataType, value::value::StackFrameValue};
+    use crate::common::{param::DataType, value::StackFrameValue};
 
     #[derive(Debug, Clone)]
     pub struct Array {

@@ -17,9 +17,9 @@ pub mod class_loader {
     use crate::classfile::class::ExceptionTable;
     use crate::classfile::class::FieldInfo;
     use crate::classfile::class::MethodInfo;
-    use crate::common::param::param::DataType;
+    use crate::common::param::DataType;
     use crate::common::stack_frame::*;
-    use crate::common::value::value::StackFrameValue;
+    use crate::common::value::StackFrameValue;
     use crate::interpreter::instructions::op_code::op_code::execute;
     use crate::runtime::runtime_data_area::add_method;
     use crate::runtime::runtime_data_area::class_exists;
@@ -710,7 +710,7 @@ pub mod class_loader {
                         index += 8;
                         let mut code: Vec<u8> = Vec::new();
                         for i in index..index + code_length as usize {
-                            code.push(attr_info[i as usize]);
+                            code.push(attr_info[i]);
                         }
                         index += code_length as usize;
                         let exception_table_length = u8s_to_u16(&attr_info[index..index + 2]);
@@ -796,7 +796,7 @@ pub mod class_loader {
                             reader.read_i64::<BigEndian>().expect("Failed to read long"),
                         ),
                     );
-                    constant_pool_count = constant_pool_count - 1;
+                    constant_pool_count -= 1;
                     index += 2;
                 }
                 6 => {
@@ -808,7 +808,7 @@ pub mod class_loader {
                                 .expect("Failed to read double"),
                         ),
                     );
-                    constant_pool_count = constant_pool_count - 1;
+                    constant_pool_count -= 1;
                     index += 2;
                 }
                 7 => {
@@ -1010,7 +1010,7 @@ pub mod class_loader {
                 _ => panic!("Invalid constant pool tag: {}", tag),
             }
             //index += 1;
-            constant_pool_count = constant_pool_count - 1;
+            constant_pool_count -= 1;
         }
 
         constant_pool

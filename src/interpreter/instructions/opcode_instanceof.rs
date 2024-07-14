@@ -2,9 +2,9 @@ use log::info;
 use log::warn;
 
 use crate::classfile::class::ConstantPoolInfo;
-use crate::common::reference::reference::Reference;
+use crate::common::reference::Reference;
 use crate::common::stack_frame::StackFrame;
-use crate::common::value::value::StackFrameValue;
+use crate::common::value::StackFrameValue;
 use crate::runtime::runtime_data_area::get_class_name;
 use crate::runtime::runtime_data_area::get_or_load_class;
 use crate::runtime::runtime_data_area::get_reference;
@@ -19,8 +19,7 @@ pub fn instanceof(frame: &mut StackFrame) {
             let reference = get_reference(&id).unwrap();
             match reference {
                 Reference::Object(object) => {
-                  let a =   get_class_name(&object.class);
-                  a
+                  get_class_name(&object.class)
                 }
                 _ => panic!(),
             }

@@ -8,11 +8,11 @@ use std::f32::consts::E;
 
 use crate::classfile::class::ConstantPoolInfo;
 use crate::classfile::class::MethodInfo;
-use crate::common::reference::reference::Reference;
+use crate::common::reference::Reference;
 use crate::common::stack_frame::init_stack_frame;
 use crate::common::stack_frame::push_stack_frame;
 use crate::common::stack_frame::StackFrame;
-use crate::common::value::value::StackFrameValue;
+use crate::common::value::StackFrameValue;
 use crate::native::native::run_native;
 use crate::runtime::runtime_data_area::get_class_name;
 use crate::runtime::runtime_data_area::get_method_from_pool;

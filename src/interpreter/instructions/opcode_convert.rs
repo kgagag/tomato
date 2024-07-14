@@ -1,6 +1,6 @@
 use log::info;
 
-use crate::common::{stack_frame::StackFrame, value::value::StackFrameValue};
+use crate::common::{stack_frame::StackFrame, value::StackFrameValue};
 
 
 extern crate env_logger;
@@ -9,7 +9,7 @@ extern crate log;
 
 pub fn i2l(frame: &mut StackFrame) {
     let v = frame.popi64();
-    frame.op_stack.push(StackFrameValue::Long(v as i64));
+    frame.op_stack.push(StackFrameValue::Long(v));
     frame.pc += 1;
 }
 
@@ -21,7 +21,7 @@ pub fn i2f(frame: &mut StackFrame) {
 
 pub fn i2d(frame: &mut StackFrame) {
     let v = frame.popf64();
-    frame.op_stack.push(StackFrameValue::Double(v as f64));
+    frame.op_stack.push(StackFrameValue::Double(v));
     frame.pc += 1;
 }
 
@@ -75,7 +75,7 @@ pub fn d2f(frame: &mut StackFrame) {
 
 pub fn d2l(frame: &mut StackFrame) {
     let v = frame.popi64();
-    frame.op_stack.push(StackFrameValue::Long(v as i64));
+    frame.op_stack.push(StackFrameValue::Long(v));
     frame.pc += 1;
 }
 

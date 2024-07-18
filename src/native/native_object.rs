@@ -4,7 +4,7 @@ use log::info;
 use crate::{classfile::class::MethodInfo, common::{array::array::Array, param::DataType, reference::Reference, stack_frame::StackFrame, value::StackFrameValue}, runtime::runtime_data_area::{create_class_object, get_class_name, get_constant_pool_class, get_reference, put_into_class_constant_pool}};
 
 
-pub fn hash_code(method: &MethodInfo, frame: &mut StackFrame) {
+pub fn hash_code( frame: &mut StackFrame) {
     let sfv: StackFrameValue = frame.op_stack.pop().unwrap();
     match sfv {
         StackFrameValue::Reference(id) =>{
@@ -102,7 +102,7 @@ pub fn hash_code(method: &MethodInfo, frame: &mut StackFrame) {
                     prefix.push('J');
                 }
                 DataType::Boolean =>  {
-                    for i in 0 .. *depth{
+                    for _i in 0 .. *depth{
                         prefix.push('[');
                     }
                     prefix.push('B');

@@ -221,7 +221,6 @@ pub fn invokevirtual(frame: &mut StackFrame) {
                 Reference::Array(_array) =>{
                     Some(method)
                 }
-                _ => panic!(),
             }
         }
         _ => panic!(),

@@ -29,7 +29,7 @@ pub fn putfield(frame: &mut StackFrame) {
     }
 
     match field_ref {
-        ConstantPoolInfo::Fieldref(class_index, name_and_type_index) => {
+        ConstantPoolInfo::Fieldref(_class_index, name_and_type_index) => {
             let name_and_type: &ConstantPoolInfo =
                 this_class.constant_pool.get(name_and_type_index).unwrap();
                 match name_and_type {

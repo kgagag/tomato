@@ -359,7 +359,7 @@ pub mod class_loader {
                         parse_descriptor(&(str.clone().into_bytes()));
                     match result {
                         Ok(Some(parameters)) => {
-                            for param in parameters {
+                            if let Some( param ) = parameters.into_iter().next() {
                                 field_info.data_type = param.clone();
                                 match param {
                                     DataType::Array {
@@ -384,7 +384,7 @@ pub mod class_loader {
                                     DataType::Long => {
                                         field_info.value = StackFrameValue::Long(0);
                                     }
-                                    DataType::Reference(s) => {
+                                    DataType::Reference(_s) => {
                                         field_info.value = StackFrameValue::Null;
                                     }
                                     DataType::Short => {
@@ -395,7 +395,7 @@ pub mod class_loader {
                                     }
                                     DataType::Unknown => panic!(),
                                 }
-                                break;
+                                
                             }
                         }
                         Ok(None) => {
@@ -696,7 +696,7 @@ pub mod class_loader {
             let attribute_name_index = cursor.read_u16::<BigEndian>().unwrap();
             let attribute_length = cursor.read_u32::<BigEndian>().unwrap();
             let mut attr_info: Vec<u8> = Vec::new();
-            for j in 0..attribute_length {
+            for _j in 0..attribute_length {
                 attr_info.push(cursor.read_u8().unwrap());
             }
             let mut index: usize = 0;
@@ -716,7 +716,7 @@ pub mod class_loader {
                         let exception_table_length = u8s_to_u16(&attr_info[index..index + 2]);
                         let mut exception_table = Vec::new();
                         index += 2;
-                        for i in 0..exception_table_length {
+                        for _i in 0..exception_table_length {
                             let start_pc = u8s_to_u16(&attr_info[index..index + 2]);
                             index += 2;
                             let end_pc = u8s_to_u16(&attr_info[index..index + 2]);

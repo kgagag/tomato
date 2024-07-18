@@ -369,9 +369,9 @@ class ServerSocket implements java.io.Closeable {
         if (backlog < 1)
           backlog = 50;
         try {
-            SecurityManager security = System.getSecurityManager();
-            if (security != null)
-                security.checkListen(epoint.getPort());
+//            SecurityManager security = System.getSecurityManager();
+//            if (security != null)
+//                security.checkListen(epoint.getPort());
             getImpl().bind(epoint.getAddress(), epoint.getPort());
             getImpl().listen(backlog);
             bound = true;

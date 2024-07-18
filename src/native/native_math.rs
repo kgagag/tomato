@@ -31,7 +31,7 @@ pub fn int_bits_to_float(frame: &mut StackFrame) {
   //  info!("{:?}",frame);
  }
 
-pub fn double_to_raw_long_bits(method: &MethodInfo, frame: &mut StackFrame) {
+pub fn double_to_raw_long_bits( frame: &mut StackFrame) {
     let f = frame.op_stack.pop().unwrap();
     match f {
         StackFrameValue::Double(ff) =>{

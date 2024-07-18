@@ -26,7 +26,7 @@ pub fn run_native(method: &MethodInfo, frame: &mut StackFrame) {
             && "(D)J" == method.descriptor
             && method.class_name == "java/lang/Double"
         {
-            double_to_raw_long_bits(method, frame);
+            double_to_raw_long_bits( frame);
         } else if "getPrimitiveClass" == method.method_name
             && "(Ljava/lang/String;)Ljava/lang/Class;" == method.descriptor
             && method.class_name == "java/lang/Class"
@@ -51,7 +51,7 @@ pub fn run_native(method: &MethodInfo, frame: &mut StackFrame) {
             && "()I" == method.descriptor
             && method.class_name == "java/lang/Object"
         {
-            hash_code(method, frame);
+            hash_code( frame);
         } else if "getClass" == method.method_name
             && "()Ljava/lang/Class;" == method.descriptor
             && method.class_name == "java/lang/Object"

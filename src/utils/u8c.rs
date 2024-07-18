@@ -50,5 +50,5 @@ pub fn u32_tuple_to_i64(tuple: (u32, u32)) -> i64 {
 pub fn u32_tuple_to_u64(tuple: (u32, u32)) -> u64 {
     let lower = tuple.0 as u64;
     let upper = (tuple.1 as u64) << 32;
-    (lower | upper)
+    lower | upper
 }

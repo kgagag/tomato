@@ -19,7 +19,7 @@ use crate::{classfile::class::Class, common::{reference::Reference, value::Stack
  * 三、何时进行GC ?
  *  1、由于只是一个简单的示例GC方法，我暂定当内存中对象数量超过指定数量时进行GC，这样做起来比较简单。
  */
-pub fn gc() {
+pub fn full_gc() {
     // 获取所有虚拟机栈
     let vm_stacks = VM_STACKS.lock().unwrap();
     let object_data = OBJECT_DATA.lock().unwrap();

@@ -1,6 +1,4 @@
-use std::path::Component;
 
-use clap::Id;
 use log::info;
 
 use crate::{classfile::class::MethodInfo, common::{param::DataType, stack_frame::StackFrame, value::StackFrameValue}, runtime::runtime_data_area::create_array};

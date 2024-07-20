@@ -18,7 +18,7 @@ pub fn run(main_class_path: String) {
     let class = get_or_load_class(&main_class_path);   
     //创建VM
     //找到main方法
-    for i in 0..* &class.method_info.len() {
+    for i in 0..class.method_info.len() {
         let method_info = &class.method_info[i];
         //let methond_index = (method_info.name_index as usize) - 1;
         let u8_vec = class.constant_pool.get(&method_info.name_index).unwrap();

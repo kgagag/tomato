@@ -30,7 +30,7 @@ pub mod op_code {
 
     use opcode_nop::nop;
     use crate::common::stack_frame::StackFrame;
-    use crate::memory::gc::gc;
+    use crate::memory::gc::full_gc;
     use crate::interpreter::instructions::*;
     use crate::runtime::runtime_data_area::VM_STACKS;
     extern crate env_logger;
@@ -58,7 +58,7 @@ pub mod op_code {
             let frame = vm_stack.last_mut().unwrap();
             //info!("{:x}--{}--{:?}--{:?}--{:?}--opstack:{:?}--local:{:?}",code,frame.pc,frame.class_name,frame.method_name,frame.descriptor,frame.op_stack,frame.local);
             if code == 0xbb || code == 0xbc || code == 0xbd || code == 0xc5{
-                gc();
+                full_gc();
             } 
             match code {
                 0x00 => nop(frame),

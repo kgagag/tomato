@@ -16,7 +16,7 @@ pub fn run_native(method: &MethodInfo, frame: &mut StackFrame) {
             && "(Ljava/lang/Class;)Z" == method.descriptor
             && method.class_name == "java/lang/Class"
         {
-            desired_assertion_status0(method, frame);
+            desired_assertion_status0( frame);
         } else if "floatToRawIntBits" == method.method_name
             && "(F)I" == method.descriptor
             && method.class_name == "java/lang/Float"

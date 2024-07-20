@@ -1,10 +1,9 @@
-use byteorder::LE;
 use log::info;
 
-use crate::{classfile::class::MethodInfo, common::{reference::Reference, stack_frame::StackFrame, value::StackFrameValue}, runtime::runtime_data_area::{create_class_object, get_reference}};
+use crate::{ common::{reference::Reference, stack_frame::StackFrame, value::StackFrameValue}, runtime::runtime_data_area::{create_class_object, get_reference}};
 
 
-pub fn desired_assertion_status0(method: &MethodInfo, frame: &mut StackFrame) {
+pub fn desired_assertion_status0( frame: &mut StackFrame) {
     frame.op_stack.pop();
     // 暂时默认不开启
     frame.op_stack.push(StackFrameValue::Int(0))

@@ -1,6 +1,6 @@
 use log::info;
 
-use crate::{ common::{reference::Reference, stack_frame::StackFrame, value::StackFrameValue}, runtime::runtime_data_area::{create_class_object, get_reference}};
+use crate::{ classloader, common::{reference::Reference, stack_frame::StackFrame, value::StackFrameValue}, runtime::runtime_data_area::get_reference, utils::java::{self, create_class_object}};
 
 
 pub fn desired_assertion_status0( frame: &mut StackFrame) {
@@ -8,6 +8,17 @@ pub fn desired_assertion_status0( frame: &mut StackFrame) {
     // 暂时默认不开启
     frame.op_stack.push(StackFrameValue::Int(0))
 }
+
+
+pub fn for_name( frame: &mut StackFrame) {
+    let sfv = frame.op_stack.pop().unwrap();
+    let rust_string = java::convert_to_rust_string(sfv);
+    if rust_string.is_some(){
+       let class_reference_id = java::create_class_object(&rust_string.unwrap());
+       frame.op_stack.push(StackFrameValue::Reference(class_reference_id));
+    }
+}
+
 
 pub fn get_primitive_class(frame: &mut StackFrame) {
     let param = match frame.op_stack.pop().unwrap() {

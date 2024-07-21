@@ -6,7 +6,7 @@ use std::collections::HashMap;
 use std::sync::{Arc, Mutex};
 
 use crate::classfile::class::{Class, MethodInfo};
-use crate::classloader::class_loader::class_loader::load_class;
+use crate::classloader;
 use crate::common::array::array::Array;
 use crate::common::object::Object;
 use crate::common::param::DataType;
@@ -169,7 +169,7 @@ pub fn get_or_load_class<'a>(class_name: &String) -> &'a mut Class {
         let map = &mut *data.get();
         drop(data);
         if !map.contains_key(class_name) {
-            load_class(class_name);
+            classloader::class_loader::load_class(class_name);
         }
         let a = map.get_mut(class_name).unwrap();
         a
@@ -267,50 +267,6 @@ pub fn push_frame_data(vm_stack_id: u32, value: StackFrameValue) {
     drop(data);
 }
 
-pub fn create_string_object(str_value: String) -> u64 {
-    let char_array_id = {
-        let chars: Vec<char> = str_value.chars().collect();
-        let char_array_id: u64 = create_array(chars.len() as u32, DataType::Array { element_type: (Box::new(DataType::Char)), depth: (1) });
-        let char_array_reference = get_reference(&char_array_id).unwrap();
-        match char_array_reference {
-            Reference::Array(array) => {
-                for i in 0..chars.len() {
-                    array.data[i] = StackFrameValue::CHARACTER(*chars.get(i).unwrap());
-                }
-            }
-            _ => panic!(),
-        }
-        char_array_id
-    };
-    let class_name = String::from("java/lang/String");
-    let class: &mut Class = get_or_load_class(&class_name);
-    let obj_id: u64 = create_object(class.id);
-    let reference = get_reference(&obj_id).unwrap();
-    let object: &mut Object = match reference {
-        Reference::Object(obj) => obj,
-        _ => panic!(),
-    };
 
-    object.field.insert(
-        String::from("value"),
-        StackFrameValue::Reference(char_array_id),
-    );
-    put_into_str_constant_pool(str_value.clone(), obj_id);
-    obj_id
-}
 
-pub fn create_class_object(class_name: &String) -> u64 {
-    let class0 = get_or_load_class(&String::from("java/lang/Class"));
-    let obj_id: u64 = create_object(class0.id as usize);
-    let id = create_string_object(class_name.clone());
-    let referencre: &mut Reference = get_reference(&obj_id).unwrap();
-    match referencre {
-        Reference::Object(object) => {
-            object
-                .field
-                .insert(String::from("name"), StackFrameValue::Reference(id));
-        }
-        _ => panic!(),
-    }
-    obj_id
-}
+

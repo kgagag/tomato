@@ -264,11 +264,8 @@ public final class Class<T> implements java.io.Serializable,
      * @exception ClassNotFoundException if the class cannot be located
      */
     @CallerSensitive
-    public static Class<?> forName(String className)
-                throws ClassNotFoundException {
-        Class<?> caller = Reflection.getCallerClass();
-        return forName0(className, true, ClassLoader.getClassLoader(caller), caller);
-    }
+    public static native Class<?> forName(String className)
+                throws ClassNotFoundException ;
 
 
     /**
@@ -337,28 +334,29 @@ public final class Class<T> implements java.io.Serializable,
                                    ClassLoader loader)
         throws ClassNotFoundException
     {
-        Class<?> caller = null;
-        SecurityManager sm = System.getSecurityManager();
-        if (sm != null) {
-            // Reflective call to get caller class is only needed if a security manager
-            // is present.  Avoid the overhead of making this call otherwise.
-            caller = Reflection.getCallerClass();
-            if (sun.misc.VM.isSystemDomainLoader(loader)) {
-                ClassLoader ccl = ClassLoader.getClassLoader(caller);
-                if (!sun.misc.VM.isSystemDomainLoader(ccl)) {
-                    sm.checkPermission(
-                        SecurityConstants.GET_CLASSLOADER_PERMISSION);
-                }
-            }
-        }
-        return forName0(name, initialize, loader, caller);
+//        Class<?> caller = null;
+//        SecurityManager sm = System.getSecurityManager();
+//        if (sm != null) {
+//            // Reflective call to get caller class is only needed if a security manager
+//            // is present.  Avoid the overhead of making this call otherwise.
+//            caller = Reflection.getCallerClass();
+//            if (sun.misc.VM.isSystemDomainLoader(loader)) {
+//                ClassLoader ccl = ClassLoader.getClassLoader(caller);
+//                if (!sun.misc.VM.isSystemDomainLoader(ccl)) {
+//                    sm.checkPermission(
+//                        SecurityConstants.GET_CLASSLOADER_PERMISSION);
+//                }
+//            }
+//        }
+//        return forName0(name, initialize, loader, caller);
+        return forName(name);
     }
 
     /** Called after security check for system loader access checks have been made. */
-    private static native Class<?> forName0(String name, boolean initialize,
-                                            ClassLoader loader,
-                                            Class<?> caller)
-        throws ClassNotFoundException;
+//    private static native Class<?> forName0(String name, boolean initialize,
+//                                            ClassLoader loader,
+//                                            Class<?> caller)
+//        throws ClassNotFoundException;
 
     /**
      * Creates a new instance of the class represented by this {@code Class}

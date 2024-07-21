@@ -1,6 +1,6 @@
 use log::info;
 
-use crate::{classfile::class::ConstantPoolInfo, common::{stack_frame::StackFrame, value::StackFrameValue}, runtime::runtime_data_area::{create_class_object, create_string_object, get_class_name, get_constant_pool_class, get_constant_pool_str, get_or_load_class, put_into_class_constant_pool}, utils::u8c::u8s_to_u16};
+use crate::{classfile::class::ConstantPoolInfo, common::{stack_frame::StackFrame, value::StackFrameValue}, runtime::runtime_data_area::{ get_class_name, get_constant_pool_class, get_constant_pool_str, get_or_load_class, put_into_class_constant_pool}, utils::{java, u8c::u8s_to_u16}};
 
 extern crate env_logger;
 extern crate log;
@@ -26,7 +26,7 @@ pub fn ldc(frame: &mut StackFrame) {
                 ConstantPoolInfo::Utf8(class_name) => {
                     let class_obj = get_constant_pool_class(class_name);
                     if class_obj.is_none() {
-                        let obj_id: u64 =   create_class_object(class_name);
+                        let obj_id: u64 =   java::create_class_object(class_name);
                         put_into_class_constant_pool(class_name.clone(), obj_id);
                         frame.op_stack.push(StackFrameValue::Reference(obj_id));
                     }else {
@@ -48,7 +48,7 @@ pub fn ldc(frame: &mut StackFrame) {
                     } else {
                         frame
                             .op_stack
-                            .push(StackFrameValue::Reference(create_string_object(str.clone())));
+                            .push(StackFrameValue::Reference(java::create_string_object(str.clone())));
                     }
                 }
                 _ => panic!(),

@@ -1,7 +1,7 @@
 
 use log::info;
 
-use crate::{classfile::class::MethodInfo, common::{array::array::Array, param::DataType, reference::Reference, stack_frame::StackFrame, value::StackFrameValue}, runtime::runtime_data_area::{create_class_object, get_class_name, get_constant_pool_class, get_reference, put_into_class_constant_pool}};
+use crate::{common::{array::array::Array, param::DataType, reference::Reference, stack_frame::StackFrame, value::StackFrameValue}, runtime::runtime_data_area::{ get_class_name, get_constant_pool_class, get_reference, put_into_class_constant_pool}, utils::java};
 
 
 pub fn hash_code( frame: &mut StackFrame) {
@@ -26,7 +26,7 @@ pub fn hash_code( frame: &mut StackFrame) {
                     let class_name = get_class_name(&object.class);
                     let class_obj = get_constant_pool_class(&class_name);
                     if class_obj.is_none() {
-                        let obj_id: u64 =   create_class_object(&class_name);
+                        let obj_id: u64 =   java::create_class_object(&class_name);
                         put_into_class_constant_pool(class_name.clone(), obj_id);
                         frame.op_stack.push(StackFrameValue::Reference(obj_id));
                     }else {
@@ -37,7 +37,7 @@ pub fn hash_code( frame: &mut StackFrame) {
                     //info!("{:?}",array);
                     let array_class_name = get_array_class_name(array);
                     //info!("{:?}",array_class_name);
-                    let obj_id: u64 =   create_class_object(&array_class_name);
+                    let obj_id: u64 =   java::create_class_object(&array_class_name);
                     frame.op_stack.push(StackFrameValue::Reference(obj_id));
                 }
             }

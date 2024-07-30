@@ -3,14 +3,9 @@ use log::{error, info, warn};
 use crate::{classfile::class::MethodInfo, common::stack_frame::StackFrame};
 
 use super::{
-    native_array::new_array,
-    native_class::{desired_assertion_status0, get_primitive_class,for_name},
-    native_io::create_file_exclusively,
-    native_math::{
+    native_array::new_array, native_class::{desired_assertion_status0, for_name, get_primitive_class}, native_io::create_file_exclusively, native_math::{
         double_to_raw_long_bits, float_to_raw_int_bits, int_bits_to_float, long_bits_to_double,
-    },
-    native_object::{get_class, hash_code},
-    native_system::array_copy,
+    }, native_net, native_object::{get_class, hash_code}, native_system::array_copy
 };
 
 pub fn run_native(method: &MethodInfo, frame: &mut StackFrame) {
@@ -75,7 +70,12 @@ pub fn run_native(method: &MethodInfo, frame: &mut StackFrame) {
             && method.class_name == "java/lang/reflect/Array"
         {
             new_array(method, frame);
-        } else {
+        } else if "accept0" == method.method_name
+            && "(Ltomato/net/Socket;)V" == method.descriptor
+            && method.class_name == "tomato/net/Socket"{
+             native_net::accept(frame);       
+        }
+        else {
             panic!("unknown native method:{}", method.method_name);
         }
     }

@@ -3,6 +3,7 @@ use lazy_static::lazy_static;
 use log::info;
 use std::cell::UnsafeCell;
 use std::collections::HashMap;
+use std::net::TcpStream;
 use std::sync::{Arc, Mutex};
 
 use crate::classfile::class::{Class, MethodInfo};
@@ -36,6 +37,10 @@ lazy_static! {
 
     //虚拟机栈
     pub static ref VM_STACKS: Mutex<UnsafeCell<HashMap<u32, Vec<StackFrame>>>> = Mutex::new(UnsafeCell::new(HashMap::new()));
+
+    //TCP 连接
+    pub static ref TCP_CONNECT: Mutex<UnsafeCell<HashMap<u64, TcpStream>>> = Mutex::new(UnsafeCell::new(HashMap::new()));
+
 
 }
 
@@ -265,6 +270,24 @@ pub fn push_frame_data(vm_stack_id: u32, value: StackFrameValue) {
         //println!("after push_frame_data：{:?}",&map);
     }
     drop(data);
+}
+
+pub fn put_tcp(id:&u64,tcp_stream:TcpStream) {
+    // 获取全局变量的Mutex锁
+    let data: std::sync::MutexGuard<'_, UnsafeCell<HashMap<u64, TcpStream>>> = TCP_CONNECT.lock().unwrap();
+    unsafe {
+        let map: &mut HashMap<u64, TcpStream> = &mut *data.get();
+        map.insert(*id, tcp_stream);
+    }
+}
+
+pub fn get_tcp <'a>(id:&u64) -> &'a TcpStream{
+    // 获取全局变量的Mutex锁
+    let data: std::sync::MutexGuard<'_, UnsafeCell<HashMap<u64, TcpStream>>> = TCP_CONNECT.lock().unwrap();
+    unsafe {
+        let map: &mut HashMap<u64, TcpStream> = &mut *data.get();
+        return map.get(id).unwrap()
+    }
 }
 
 

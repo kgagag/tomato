@@ -6,3 +6,4 @@ pub mod native_math;
 pub mod native_object;
 pub mod native_system;
 pub mod native_net;
+pub mod native_stringcoding;

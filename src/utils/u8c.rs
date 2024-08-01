@@ -52,3 +52,17 @@ pub fn u32_tuple_to_u64(tuple: (u32, u32)) -> u64 {
     let upper = (tuple.1 as u64) << 32;
     lower | upper
 }
+
+
+pub fn char_to_bytes(c: char) -> Vec<u8> {
+    //c.encode_utf8(dst)
+    let mut buffer = [0; 4];
+    let encoded = c.encode_utf8(&mut buffer);
+    encoded.as_bytes().to_vec()
+}
+
+pub fn bytes_to_chars(bytes: Vec<u8>) -> Vec<char> {
+    let string = String::from_utf8(bytes).expect("Invalid UTF-8 sequence");
+    //info!("{:?}",string);
+    string.chars().collect()
+}

@@ -5,173 +5,25 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="70c6e279-5046-4c44-ba52-f4228d3f6634" name="Changes" comment="&quot;调整目录&quot;">
-      <change afterPath="$PROJECT_DIR$/net" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/output.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/java/lang/StringCoding2.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/AbstracTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/AlphabetSwitch.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/Array.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/ArrayComponentTypeExample.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/CheckCust01.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/CheckCust02.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/CheckCust03.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/CheckCust04.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/CheckCust05.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/CheckCust06.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/CheckCust07.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/CheckCust08.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/FileDescriptorExample.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/HashCodeTest3.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/InetAddressTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/IntTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/IntegerHashCodeTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/IntegerHashCodeTest2.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/InterfaceTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/LeetCode_31.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/LeetCode_33.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/LogUtil.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/LookupSwitchExample.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/MyTestUnit.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/Result.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/SimpleHttpServer.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/Test.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/Test1.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/Test10.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/Test11.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/Test12.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/Test13.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/Test14.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/Test15.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/Test16.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/Test17.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/Test18.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/Test19.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/Test2.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/Test20.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/Test21.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/Test22.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/Test23.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/Test24.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/Test25.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/Test26.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/Test27.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/Test28.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/Test29.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/Test3.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/Test30.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/Test31.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/Test32.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/Test33.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/Test34.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/Test35.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/Test36.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/Test37.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/Test38.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/Test39.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/Test4.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/Test40.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/Test41.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/Test42.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/Test43.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/Test44.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/Test45.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/Test46.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/Test47.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/Test48.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/Test49.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/Test5.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/Test50.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/Test51.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/Test52.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/Test53.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/Test55.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/Test56.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/Test57.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/Test58.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/Test59.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/Test6.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/Test60.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/Test61.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/Test62.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/Test63.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/Test64.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/Test65.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/Test66.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/Test67.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/Test68.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/Test69.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/Test7.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/Test70.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/Test71.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/Test72.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/Test73.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/Test74.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/Test75.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/Test76.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/Test77.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/Test78.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/Test79.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/Test8.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/Test80.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/Test81.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/Test82.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/Test83.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/Test85.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/Test86.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/Test87.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/Test88.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/Test89.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/Test9.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/Test90.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/Test91.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/Test92.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/Test93.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/Test94.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/Test95.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/Test96.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/Test97.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/Test98.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/Test99.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/TestGC2.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/TestGc.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/TestList.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/TestList2.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/TestMap.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/TestMap2.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/TestMap3.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/TestSet.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/Value.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/leetcode/Solution_1.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/leetcode/Solution_14.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/leetcode/Solution_231.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/leetcode/Solution_2710.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/leetcode/Solution_3.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/leetcode/Solution_63.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/leetcode/Solution_69.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/net/SimpleNetServer.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/tomato/net/InetAddress.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/tomato/net/ServerSocket.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/tomato/net/Socket.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/tomato/net/SocketInputStream.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/tomato/net/SocketOutputStream.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/java/lang/StringCoding.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/java/lang/StringCoding.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/java/lang/ThreadLocal$SuppliedThreadLocal.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/java/lang/ThreadLocal$SuppliedThreadLocal.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/java/lang/ThreadLocal$ThreadLocalMap$Entry.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/java/lang/ThreadLocal$ThreadLocalMap$Entry.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/java/lang/ThreadLocal$ThreadLocalMap.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/java/lang/ThreadLocal$ThreadLocalMap.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/java/lang/ThreadLocal.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/java/lang/ThreadLocal.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/java/net/InetAddress$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/java/net/InetAddress$1.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/java/net/InetAddress$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/java/net/InetAddress$2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/java/net/InetAddress$3.class" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/out/java/net/InetAddress.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/java/net/InetAddress.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/java/net/ServerSocket.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/java/net/ServerSocket.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/java/util/concurrent/atomic/AtomicInteger.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/java/util/concurrent/atomic/AtomicInteger.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/Test99.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/Test99.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/java/lang/StringCoding.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/java/lang/StringCoding.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/Test99.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/Test99.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../src/interpreter/instructions/op_code.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/interpreter/instructions/op_code.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../src/native/mod.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/native/mod.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../src/native/native.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/native/native.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/runtime/runtime_data_area.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/runtime/runtime_data_area.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../test/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../test/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../test/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/utils/u8c.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/utils/u8c.rs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -249,7 +101,7 @@
       <recent name="test" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.Test">
+  <component name="RunManager" selected="Application.Test99">
     <configuration name="FileDescriptorExample" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="test.FileDescriptorExample" />
       <module name="jre" />
@@ -317,8 +169,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.Test" />
         <item itemvalue="Application.Test99" />
+        <item itemvalue="Application.Test" />
         <item itemvalue="Application.SimpleHttpServer" />
         <item itemvalue="Application.FileDescriptorExample" />
         <item itemvalue="Application.Test98" />
@@ -387,6 +239,10 @@
       <workItem from="1721496505273" duration="5005000" />
       <workItem from="1722216968301" duration="18019000" />
       <workItem from="1722303376035" duration="7880000" />
+      <workItem from="1722417696691" duration="3752000" />
+      <workItem from="1722441477493" duration="1192000" />
+      <workItem from="1722478239073" duration="5556000" />
+      <workItem from="1722518439457" duration="3333000" />
     </task>
     <task id="LOCAL-00001" summary="&quot;add test case&quot;">
       <option name="closed" value="true" />

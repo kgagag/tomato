@@ -11,7 +11,7 @@ use super::{
     },
     native_net,
     native_object::{get_class, hash_code},
-    native_stringcoding,
+    native_socket_output_stream, native_stringcoding,
     native_system::array_copy,
 };
 
@@ -97,8 +97,26 @@ pub fn run_native(method: &MethodInfo, frame: &mut StackFrame) {
             && method.class_name == "java/lang/StringCoding"
         {
             native_stringcoding::decode0(frame);
+        } else if "write0" == method.method_name
+            && "([B)V" == method.descriptor
+            && method.class_name == "tomato/net/SocketOutputStream"
+        {
+            native_socket_output_stream::write0(frame);
+        } else if "close0" == method.method_name
+            && "()V" == method.descriptor
+            && method.class_name == "tomato/net/SocketOutputStream"
+        {
+            native_socket_output_stream::close0(frame);
+        } else if "close0" == method.method_name
+            && "()V" == method.descriptor
+            && method.class_name == "tomato/net/SocketInputStream"
+        {
+            native_socket_output_stream::close0(frame);
         } else {
-            panic!("unknown native method:{}", method.method_name);
+            panic!(
+                "unknown native method:{},{},{}",
+                method.method_name, method.descriptor, method.class_name
+            );
         }
     }
 }

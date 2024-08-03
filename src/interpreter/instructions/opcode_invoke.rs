@@ -90,7 +90,7 @@ pub fn invokespecial(frame: &mut StackFrame) {
     let clone_frame = &frame.clone();
     frame.pc += 3;
     let method = get_method_for_invoke(clone_frame).unwrap();
-    //info!("{}--{}--{}",method.class_name,method.method_name,method.descriptor);
+    // info!("{}--{}--{}",method.class_name,method.method_name,method.descriptor);
     //非native 方法
     //push_stack_frame(new_frame);
     if method.access_flag & 0x0100 == 0 {

@@ -4,15 +4,21 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-public class SocketOutputStream extends FileOutputStream {
-    public SocketOutputStream(String name) throws FileNotFoundException {
-        super(name);
-    }
+public class SocketOutputStream  {
+    int fd;
 
-    @Override
-    public void write(byte[] b){
+    public SocketOutputStream(String name,int fd) throws FileNotFoundException {
+        this.fd = fd;
+    }
+    public void write(byte[] b) throws IOException{
         write0(b);
     }
 
     private native void  write0(byte[] b);
+
+    public void close(){
+        close0();
+    }
+
+    private native void close0();
 }

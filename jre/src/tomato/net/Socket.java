@@ -7,25 +7,41 @@ import java.io.OutputStream;
 public  class Socket {
     private InetAddress bind;
 
+    SocketOutputStream outputStream;
+
+    public SocketOutputStream getOutputStream() {
+        return outputStream;
+    }
+
+    SocketInputStream  inputStream;
+
+    public SocketInputStream getInputStream() {
+        return inputStream;
+    }
+
+    public void setInputStream(SocketInputStream inputStream) {
+        this.inputStream = inputStream;
+    }
     private int keepLive;
 
-    public Socket(InetAddress bind, int keepLive) {
+    public Socket(InetAddress bind, int keepLive) throws IOException {
         this.bind = bind;
         this.keepLive = keepLive;
+        outputStream = new SocketOutputStream(null,this.hashCode());
+        inputStream = new SocketInputStream(null,this.hashCode());
     }
 
     public InetAddress getBind() {
         return bind;
     }
 
-    public OutputStream getOutputStream() throws IOException{
-        return new SocketOutputStream(null);
-    }
-    public InputStream getInputStream() throws IOException{
-        return new SocketInputStream(null);
-    }
     public void accept(){
          accept0(this);
     };
     private native void accept0(Socket socket);
+
+    public void close(){
+        this.outputStream.close();
+        this.inputStream.close();
+    }
 }

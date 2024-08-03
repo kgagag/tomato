@@ -15,6 +15,8 @@ public class SimpleHttpServer {
                 try  {
                     Socket clientSocket = serverSocket.accept();
                     handleClientRequest(clientSocket);
+                    //clientSocket.close();
+                    //break;
                 } catch (Exception e) {
                     StringHelper.print20240503("客户端请求处理失败: " + e.getMessage());
                 }
@@ -27,12 +29,8 @@ public class SimpleHttpServer {
     private static void handleClientRequest(Socket clientSocket) {
         // 构建 HTTP 响应
         try {
-            String httpResponse = "HTTP/1.1 200 OK\r\n" +
-                    "Content-Type: text/html; charset=UTF-8\r\n" +
-                    "Content-Length: " + getHomePage().getBytes().length + "\r\n" +
-                    "\r\n" +
-                    getHomePage();
-            clientSocket.getOutputStream().write(httpResponse.getBytes(),0,httpResponse.length());
+            String httpResponse = getHomePage();
+            clientSocket.getOutputStream().write(("HTTP/1.1 200 OK \r\n\r\n" +httpResponse).getBytes());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -42,6 +40,7 @@ public class SimpleHttpServer {
         return "<!DOCTYPE html>" +
                 "<html>" +
                 "<head>" +
+                "<meta charset = 'utf8'>"+
                 "<title>我的主页</title>" +
                 "<style>" +
                 "body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f7f7f7; margin: 0; padding: 0; color: #333; }" +
@@ -73,7 +72,9 @@ public class SimpleHttpServer {
     }
 
     public static void main(String[] args) {
-        SimpleHttpServer simpleHttpServer = new SimpleHttpServer();
-        simpleHttpServer.test();
+//        SimpleHttpServer simpleHttpServer = new SimpleHttpServer();
+//        simpleHttpServer.test();
+        System.out.println(0x0100 & 258);
+        System.out.println(Integer.toBinaryString(258));
     }
 }

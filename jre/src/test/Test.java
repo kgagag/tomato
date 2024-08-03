@@ -200,8 +200,8 @@ public class Test {
         new Test97().test();
 
         */
-        //new SimpleHttpServer().test();
+        new SimpleHttpServer().test();
 
-        new Test99().test();
+        //new Test99().test();
     }
 }

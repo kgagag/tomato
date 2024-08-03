@@ -114,6 +114,3 @@ pub fn encode0(frame: &mut StackFrame) {
             _ => panic!(),
         }
     }
-
-
-//                    let reference = create_array(len, DataType::Array { element_type: Box::new(array_type), depth: (1) });

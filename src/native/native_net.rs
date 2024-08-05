@@ -9,7 +9,6 @@ use crate::{
 
 pub fn accept(frame: &mut StackFrame) {
     let sfv = frame.op_stack.pop().unwrap();
-    //创建一个链接,返回一个socket对象
     let (bind, reference_id) = match sfv {
         StackFrameValue::Reference(id) => {
             let reference = get_reference(&id).unwrap();
@@ -46,7 +45,6 @@ pub fn accept(frame: &mut StackFrame) {
                 Reference::Array(array) => {
                     for i in 0..array.data.len() {
                         let op: &StackFrameValue = array.data.get(i).unwrap();
-                       // info!("{:?}", op);
                         match op {
                             StackFrameValue::Int(p) => {
                                 url.push_str(p.to_string().as_str());
@@ -92,7 +90,7 @@ pub fn accept(frame: &mut StackFrame) {
             for stream in tcp.incoming() {
                 match stream {
                     Ok(stream) => {
-                        info!("{:?}","connected..");
+                       // info!("{:?}","connected..");
                         runtime_data_area::put_tcp(&reference_id, stream);
                         break;
                     }

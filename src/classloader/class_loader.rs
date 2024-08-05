@@ -214,6 +214,7 @@ pub fn load_class(name: &String) -> Class {
                 match name_constant {
                     ConstantPoolInfo::Utf8(class_name) => {
                         if !class_exists(class_name) {
+                            info!("load class:{}",class_name);
                             load_class(class_name);
                         }
                     }

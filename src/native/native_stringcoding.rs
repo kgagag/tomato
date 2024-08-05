@@ -37,6 +37,9 @@ pub fn encode0(frame: &mut StackFrame) {
                             bytes.push(StackFrameValue::Byte(*items.get(j).unwrap() as i8))
                         }
                     }
+                    StackFrameValue::Byte(b) =>{
+                        bytes.push(StackFrameValue::Byte(*b as i8));
+                    }
                     _ => panic!(),
                 }
             }

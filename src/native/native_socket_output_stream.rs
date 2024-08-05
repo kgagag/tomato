@@ -5,7 +5,7 @@ use log::{info, warn};
 
 use crate::{common::{reference::Reference, stack_frame::StackFrame, value::StackFrameValue}, runtime::runtime_data_area::{self, get_reference}};
 pub fn write0( frame: &mut StackFrame) {
-    warn!("write .....");
+    //info!("write .....");
     let reference_id = frame.pop_reference();    
     let reference = get_reference(&reference_id).unwrap();
     let mut bytes:Vec<u8> = Vec::new();
@@ -13,7 +13,6 @@ pub fn write0( frame: &mut StackFrame) {
         Reference::Array(array) =>{
             for i in 0.. array.data.len(){
                let sfv = array.data.get(i).unwrap();
-              // info!("{:?}",sfv);
                match sfv {
                    StackFrameValue::Byte(b) =>{
                         bytes.push(*b as u8);
@@ -24,7 +23,6 @@ pub fn write0( frame: &mut StackFrame) {
         }
         _=> panic!()
     }
-    //info!("-----{:?}",String::from_utf8(bytes.clone()).ok().unwrap());
     let java_stream = frame.local.get(0).unwrap();
     match java_stream {
         StackFrameValue::Reference(id) =>{

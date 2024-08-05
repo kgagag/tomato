@@ -1,11 +1,14 @@
 package test;
 
 import java.io.IOException;
-import tomato.net.ServerSocket;
-import tomato.net.Socket;
-import java.nio.charset.StandardCharsets;
+import java.io.OutputStream;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.io.InputStream;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 
-public class SimpleHttpServer {
+public class MyHttpServer2 {
 
     String response =  "<!DOCTYPE html>" +
             "<html>" +
@@ -40,49 +43,52 @@ public class SimpleHttpServer {
             "</body>" +
             "</html>";
 
-    public void test() {
+    public static void main(String[] args) {
+        MyHttpServer2 myHttpServer2 = new MyHttpServer2();
         int port = 8080;
-        try{
-            ServerSocket serverSocket = new ServerSocket(port);
-            StringHelper.print20240503("HTTP 服务器正在运行，端口：" + port);
+        try (ServerSocket serverSocket = new ServerSocket(port)) {
+            System.out.println("Server is listening on port " + port);
+
             while (true) {
-                try  {
-                    Socket clientSocket = serverSocket.accept();
-                    handleClientRequest(clientSocket);
-                } catch (Exception e) {
-                    StringHelper.print20240503("客户端请求处理失败: " + e.getMessage());
+                try (Socket socket = serverSocket.accept()) {
+                    myHttpServer2.handleClient(socket);
+                } catch (IOException e) {
+                    System.out.println("Server exception: " + e.getMessage());
+                    e.printStackTrace();
                 }
             }
-        } catch (Exception e) {
-            StringHelper.print20240503("服务器启动失败: " + e.getMessage());
-        }
-    }
-
-    private  void handleClientRequest(Socket clientSocket) {
-        // 构建 HTTP 响应
-        try {
-            clientSocket.getOutputStream().write(getHomePage().getBytes());
         } catch (IOException e) {
-            throw new RuntimeException(e);
-        }finally {
-            clientSocket.close();
+            System.out.println("Could not listen on port " + port);
+            e.printStackTrace();
         }
     }
 
-    private  String getHomePage() {
-       // String response = "<html><body><h1>Welcome to the Home Page</h1></body></html>";
+    private  void handleClient(Socket socket) throws IOException {
+        InputStream input = socket.getInputStream();
+        BufferedReader reader = new BufferedReader(new InputStreamReader(input));
+        OutputStream output = socket.getOutputStream();
+
+        // Read the request line (e.g., "GET / HTTP/1.1")
+        String requestLine = reader.readLine();
+        System.out.println(requestLine);
+
+        // Read and discard the rest of the request headers
+        while (true) {
+            String headerLine = reader.readLine();
+            if (headerLine == null || headerLine.isEmpty()) {
+                break;
+            }
+        }
+
+        // Prepare the response
         String httpResponse = "HTTP/1.1 200 OK\r\n" +
                 "Content-Type: text/html\r\n" +
-                "Content-Length: " + response.getBytes().length + "\r\n" +
+                "Content-Length: " + response.length() + "\r\n" +
                 "\r\n" +
                 response;
-        return httpResponse;
-    }
 
-    public static void main(String[] args) {
-//        SimpleHttpServer simpleHttpServer = new SimpleHttpServer();
-//        simpleHttpServer.test();
-        System.out.println(0x0100 & 258);
-        System.out.println(Integer.toBinaryString(258));
+        // Send the response
+        output.write(httpResponse.getBytes());
+        output.flush();
     }
 }

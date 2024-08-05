@@ -1,6 +1,6 @@
 
 use lazy_static::lazy_static;
-use log::info;
+use log::{info, warn};
 use std::cell::UnsafeCell;
 use std::collections::HashMap;
 use std::net::{Shutdown, TcpStream};
@@ -291,12 +291,14 @@ pub fn get_tcp <'a>(id:&u64) -> &'a TcpStream{
 }
 
 
+
 pub fn close_tcp(id:&u64) {
     // 获取全局变量的Mutex锁
     let data: std::sync::MutexGuard<'_, UnsafeCell<HashMap<u64, TcpStream>>> = TCP_CONNECT.lock().unwrap();
     unsafe {
         let map: &mut HashMap<u64, TcpStream> = &mut *data.get();
-         let _ = map.get(id).unwrap().shutdown(Shutdown::Both);
+         let _res = map.get(id).unwrap().shutdown(Shutdown::Both);
+         warn!("{:?}",map.capacity());
          //map.remove(id);
     }
 }

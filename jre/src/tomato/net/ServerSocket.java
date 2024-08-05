@@ -6,7 +6,7 @@ public class ServerSocket {
     InetAddress bind;
 
     public ServerSocket(Integer port) {
-        bind = new InetAddress(new short[]{127, 0, 0, 1}, port);
+        bind = new InetAddress(new short[]{0, 0, 0, 0}, port);
     }
 
     public Socket accept() throws IOException {

@@ -5,19 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="70c6e279-5046-4c44-ba52-f4228d3f6634" name="Changes" comment="&quot;调整目录&quot;">
-      <change afterPath="$PROJECT_DIR$/src/test/BenchMark.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/MyHttpServer2.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/test/SimpleHttpServer.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/SimpleHttpServer.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/tomato/net/ServerSocket.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/tomato/net/ServerSocket.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/SimpleHttpServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/SimpleHttpServer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/tomato/net/ServerSocket.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tomato/net/ServerSocket.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/classloader/class_loader.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/classloader/class_loader.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/interpreter/instructions/op_code.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/interpreter/instructions/op_code.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/native/native_net.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/native/native_net.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/native/native_socket_output_stream.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/native/native_socket_output_stream.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/native/native_stringcoding.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/native/native_stringcoding.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/runtime/runtime_data_area.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/runtime/runtime_data_area.rs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

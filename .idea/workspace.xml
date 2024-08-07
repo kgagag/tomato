@@ -2,17 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="83fa2691-cc4a-47b7-882a-e5eccbb0b396" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/test/src/test/Test92.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/jre/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/jre/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/jre/jre.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/op_code.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/op_code.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/opcode_convert.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/opcode_convert.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/opcode_load.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/opcode_load.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/opcode_store.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/opcode_store.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/u8c.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/u8c.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/src/Test.java" beforeDir="false" afterPath="$PROJECT_DIR$/test/src/Test.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/src/test/Test89.java" beforeDir="false" afterPath="$PROJECT_DIR$/test/src/test/Test89.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/test.iml" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -25,9 +16,9 @@
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 2
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 2
+}</component>
   <component name="ProjectId" id="2idg2TyzVhnLJP91SMDvt4rwPgk" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -38,7 +29,8 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
-    "last_opened_file_path": "E:/jvm/tomato",
+    "git-widget-placeholder": "dev",
+    "last_opened_file_path": "D:/tomato/test",
     "nodejs_package_manager_path": "npm",
     "vue.rearranger.settings.migration": "true"
   }
@@ -52,6 +44,7 @@
       <option name="presentableId" value="Default" />
       <updated>1719825660862</updated>
       <workItem from="1719825661925" duration="96000" />
+      <workItem from="1721923236186" duration="41000" />
     </task>
     <servers />
   </component>

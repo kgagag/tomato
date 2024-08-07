@@ -4,7 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="70c6e279-5046-4c44-ba52-f4228d3f6634" name="Changes" comment="&quot;调整目录&quot;" />
+    <list default="true" id="70c6e279-5046-4c44-ba52-f4228d3f6634" name="Changes" comment="&quot;调整目录&quot;">
+      <change afterPath="$PROJECT_DIR$/src/test/Test100.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/SimpleHttpServer.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/SimpleHttpServer.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/Test.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/Test.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/Test.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/Test.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/native/native.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/native/native.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/native/native_system.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/native/native_system.rs" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -81,20 +89,7 @@
       <recent name="test" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.SimpleHttpServer">
-    <configuration name="MyHttpServer (1)" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="test.MyHttpServer" />
-      <module name="jre" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="test.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
+  <component name="RunManager" selected="Application.Test">
     <configuration name="MyHttpServer (2)" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="test.MyHttpServer" />
       <module name="jre" />
@@ -154,13 +149,26 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="Test" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="test.Test" />
+      <module name="jre" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="test.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.Test" />
         <item itemvalue="Application.SimpleHttpServer" />
         <item itemvalue="Application.MyHttpServer2" />
         <item itemvalue="Application.MyHttpServer" />
         <item itemvalue="Application.MyHttpServer" />
-        <item itemvalue="Application.MyHttpServer (2)" />
       </list>
     </recent_temporary>
   </component>
@@ -235,7 +243,7 @@
       <workItem from="1722714965650" duration="9479000" />
       <workItem from="1722777543701" duration="608000" />
       <workItem from="1722826855287" duration="1794000" />
-      <workItem from="1722845181002" duration="1794000" />
+      <workItem from="1722845181002" duration="15792000" />
     </task>
     <task id="LOCAL-00001" summary="&quot;add test case&quot;">
       <option name="closed" value="true" />

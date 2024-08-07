@@ -8,6 +8,7 @@ public class Test {
     public static void main(String[] args) throws IOException {
 
         /*
+        long t1 = System.currentTimeMillis();
         //  两个int相加
         new Test1().test();
         // 两个 float 相加
@@ -199,9 +200,16 @@ public class Test {
         new Test95().test();
         new Test97().test();
 
-        */
-        new SimpleHttpServer().test();
+        //new SimpleHttpServer().test();
+        new Test99().test();
+        new Test100().test();
 
-        //new Test99().test();
+        */
+        long t1 = System.nanoTime();
+
+        long t2 = System.nanoTime();
+
+        long t3 = t2 - t1;
+        StringHelper.print20240503(t3 + "");
     }
 }

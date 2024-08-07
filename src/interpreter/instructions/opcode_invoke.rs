@@ -195,6 +195,8 @@ pub fn invokevirtual(frame: &mut StackFrame) {
         .get(frame.op_stack.len() - param_len - 1)
         .unwrap();
 
+        info!("{:?},{:?}",method,sfv);
+
     let target_method = match sfv {
         StackFrameValue::Reference(id) => {
             let reference = get_reference(id).unwrap();

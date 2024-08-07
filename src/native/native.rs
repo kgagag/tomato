@@ -12,7 +12,7 @@ use super::{
     native_net,
     native_object::{get_class, hash_code},
     native_socket_output_stream, native_stringcoding,
-    native_system::array_copy,
+    native_system::{self, array_copy},
 };
 
 pub fn run_native(method: &MethodInfo, frame: &mut StackFrame) {
@@ -21,7 +21,17 @@ pub fn run_native(method: &MethodInfo, frame: &mut StackFrame) {
             && "(Ljava/lang/Object;ILjava/lang/Object;II)V" == method.descriptor
             && method.class_name == "java/lang/System"
         {
-            array_copy(method, frame);
+            native_system::array_copy(method, frame);
+        } else if "currentTimeMillis" == method.method_name
+            && "()J" == method.descriptor
+            && method.class_name == "java/lang/System"
+        {
+            native_system::current_time_millis(frame);
+        } else if "nanoTime" == method.method_name
+            && "()J" == method.descriptor
+            && method.class_name == "java/lang/System"
+        {
+            native_system::nano_time(frame);
         } else if "desiredAssertionStatus0" == method.method_name
             && "(Ljava/lang/Class;)Z" == method.descriptor
             && method.class_name == "java/lang/Class"

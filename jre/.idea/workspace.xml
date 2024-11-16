@@ -5,9 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="70c6e279-5046-4c44-ba52-f4228d3f6634" name="Changes" comment="&quot;调整目录&quot;">
-      <change beforePath="$PROJECT_DIR$/../.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/Test.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/Test.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -242,7 +240,7 @@
       <workItem from="1722845181002" duration="1794000" />
       <workItem from="1729401690294" duration="1843000" />
       <workItem from="1729429695012" duration="327000" />
-      <workItem from="1731734824676" duration="219000" />
+      <workItem from="1731734824676" duration="1828000" />
     </task>
     <task id="LOCAL-00001" summary="&quot;add test case&quot;">
       <option name="closed" value="true" />

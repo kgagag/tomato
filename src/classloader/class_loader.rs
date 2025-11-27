@@ -23,7 +23,7 @@ use std::fs::{self, File};
 use std::io;
 use std::io::Cursor;
 use std::io::Read;
-use std::path::Path;
+use std::path::PathBuf;
 use zip::read::ZipArchive;
 fn parse_descriptor(descriptor: &Vec<u8>) -> Result<Option<Vec<DataType>>, String> {
     let mut index = 0;
@@ -109,25 +109,24 @@ fn parse_descriptor(descriptor: &Vec<u8>) -> Result<Option<Vec<DataType>>, Strin
     }
 }
 
-// fn read_class_from_jar(jar_path: &str, class_name: &str) -> Result<Vec<u8>, String> {
-//     let file: File =
-//         File::open(jar_path).map_err(|e| format!("Error opening JAR file: {}", e))?;
-//     let mut archive: ZipArchive<File> =
-//         ZipArchive::new(file).map_err(|e| format!("Error reading ZIP archive: {}", e))?;
-//     for i in 0..archive.len() {
-//         let mut entry = archive
-//             .by_index(i)
-//             .map_err(|e| format!("Error reading entry {}: {}", i, e))?;
-//         if entry.name().eq(class_name) {
-//             let mut buffer = Vec::new();
-//             entry
-//                 .read_to_end(&mut buffer)
-//                 .map_err(|e| format!("Error reading class file: {}", e))?;
-//             return Ok(buffer);
-//         }
-//     }
-//     Err(format!("Class '{}' not found in the JAR file", class_name))
-// }
+fn read_class_from_jar(file : File, class_name: &str) -> Result<Vec<u8>, String> {
+    let mut archive: ZipArchive<File> =
+        ZipArchive::new(file).map_err(|e| format!("Error reading ZIP archive: {}", e))?;
+    for i in 0..archive.len() {
+        let mut entry = archive
+            .by_index(i)
+            .map_err(|e| format!("Error reading entry {}: {}", i, e))?;
+        if entry.name().eq(class_name) {
+            let mut buffer = Vec::new();
+            entry
+                .read_to_end(&mut buffer)
+                .map_err(|e| format!("Error reading class file: {}", e))?;
+            return Ok(buffer);
+        }
+    }
+    //返回空
+    Ok(vec![])
+}
 
 // fn get_rt_class(name: &String) -> Option<Vec<u8>> {
 //     match env::current_dir() {
@@ -158,37 +157,61 @@ fn parse_descriptor(descriptor: &Vec<u8>) -> Result<Option<Vec<DataType>>, Strin
 //     }
 // }
 
+
 fn get_class_from_disk(name: &String) -> Vec<u8> {
-    match env::current_dir() {
-        Ok(path) => {
-            let mut jre_class_path = path.as_path().to_str().unwrap().to_string();
-            jre_class_path.push_str("/jre/out/");
-            jre_class_path.push_str(name);
-            jre_class_path.push_str(".class");
-            let class_path = Path::new(&jre_class_path);
-            if class_path.exists() {
-                let mut file = fs::File::open(jre_class_path).unwrap();
-                let mut buffer = Vec::new();
-                let _ = file.read_to_end(&mut buffer);
-                buffer
-            } else {
-                let mut user_class_path = path.as_path().to_str().unwrap().to_string();
-                user_class_path.push_str("/test/out/");
-                user_class_path.push_str(name);
-                user_class_path.push_str(".class");
-                let class_path = Path::new(&user_class_path);
-                if class_path.exists() {
-                    let mut file = fs::File::open(user_class_path).unwrap();
-                    let mut buffer = Vec::new();
-                    let _ = file.read_to_end(&mut buffer);
-                    buffer
-                } else {
-                    panic!("class ：{} not found", name)
+    let current_dir = match env::current_dir() {
+        Ok(path) => path,
+        Err(_) => panic!("Unable to get current directory"),
+    };
+
+    // 尝试从 JRE 目录加载
+    let jre_class_path = current_dir
+        .join("jre")
+        .join("out")
+        .join(format!("{}.class", name));
+    
+    if jre_class_path.exists() {
+        return read_file_to_bytes(jre_class_path)
+            .expect("Unable to read JRE class file");
+    }
+
+    // 尝试从用户测试目录加载
+    let user_class_path = current_dir
+        .join("test")
+        .join("out")
+        .join(format!("{}.class", name));
+        
+    if user_class_path.exists() {
+        return read_file_to_bytes(user_class_path)
+            .expect("Unable to read user class file");
+    }
+
+    // 尝试从 lib JAR 文件中加载
+    let lib_dir = current_dir.join("lib");
+    if let Ok(entries) = fs::read_dir(lib_dir) {
+        for entry in entries {
+            if let Ok(entry) = entry {
+                let path = entry.path();
+                if path.is_file() && path.extension().map_or(false, |ext| ext == "jar") {
+                    if let Ok(file) = fs::File::open(&path) {
+                        if let Ok(buffer) = read_class_from_jar(file, &format!("{}.class", name)) {
+                            if !buffer.is_empty() {
+                                return buffer;
+                            }
+                        }
+                    }
                 }
             }
         }
-        Err(_e) => panic!(),
     }
+    panic!("Class not found: {}", name);
+}
+
+fn read_file_to_bytes(path: PathBuf) -> Result<Vec<u8>, std::io::Error> {
+    let mut file = fs::File::open(path)?;
+    let mut buffer = Vec::new();
+    file.read_to_end(&mut buffer)?;
+    Ok(buffer)
 }
 
 /***

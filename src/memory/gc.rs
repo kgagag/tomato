@@ -27,7 +27,7 @@ pub fn full_gc() {
         let vm_stacks_map = &mut *vm_stacks.get();
         let reference_data = &mut *object_data.get();
         drop(object_data);
-        if reference_data.len() > 10000 {
+        if reference_data.len() > 100000 {
             warn!("gc before size:{}",reference_data.len());
             let mut exp: HashSet<u64> = HashSet::new();
             for (_key, value) in vm_stacks_map.iter() {

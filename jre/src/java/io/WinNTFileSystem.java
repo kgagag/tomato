@@ -42,11 +42,10 @@ class WinNTFileSystem extends FileSystem {
     private final char semicolon;
 
     public WinNTFileSystem() {
-        slash = AccessController.doPrivileged(
-            new GetPropertyAction("file.separator")).charAt(0);
-        semicolon = AccessController.doPrivileged(
-            new GetPropertyAction("path.separator")).charAt(0);
-        altSlash = (this.slash == '\\') ? '/' : '\\';
+        //tomato todo
+        slash = '\\';
+        semicolon = ';';
+        altSlash = '/';
     }
 
     private boolean isSlash(char c) {
@@ -640,9 +639,9 @@ class WinNTFileSystem extends FileSystem {
         return f.getPath().toLowerCase(Locale.ENGLISH).hashCode() ^ 1234321;
     }
 
-    private static native void initIDs();
-
-    static {
-        initIDs();
-    }
+//    private static native void initIDs();
+//
+//    static {
+//        initIDs();
+//    }
 }

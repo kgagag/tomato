@@ -2,13 +2,15 @@ package test;
 
 import test.leetcode.*;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.FileSystem;
 
 public class Test {
     public static void main(String[] args) throws IOException {
 
-        /*
-        long t1 = System.currentTimeMillis();
+
+//        long t1 = System.currentTimeMillis();
         //  两个int相加
         new Test1().test();
         // 两个 float 相加
@@ -199,17 +201,21 @@ public class Test {
         new Test94().test();
         new Test95().test();
         new Test97().test();
-
-        //new SimpleHttpServer().test();
+//
+//
         new Test99().test();
         new Test100().test();
 
-        */
-        long t1 = System.nanoTime();
 
-        long t2 = System.nanoTime();
+        //long t1 = System.nanoTime();
 
-        long t3 = t2 - t1;
-        StringHelper.print20240503(t3 + "");
+//        long t2 = System.nanoTime();
+//
+//        long t3 = t2 - t1;
+//        StringHelper.print20240503(t3 + "");
+
+        //new Test101().test();
+     //   new SimpleHttpServer().test();
+       // new Test102().test();
     }
 }

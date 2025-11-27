@@ -147,7 +147,7 @@ import sun.security.action.GetPropertyAction;
  */
 
 public class File
-    implements Serializable, Comparable<File>
+        implements Serializable, Comparable<File>
 {
 
     /**
@@ -185,7 +185,7 @@ public class File
     final boolean isInvalid() {
         if (status == null) {
             status = (this.path.indexOf('\u0000') < 0) ? PathStatus.CHECKED
-                                                       : PathStatus.INVALID;
+                    : PathStatus.INVALID;
         }
         return status == PathStatus.INVALID;
     }
@@ -319,10 +319,10 @@ public class File
         if (parent != null) {
             if (parent.equals("")) {
                 this.path = fs.resolve(fs.getDefaultParent(),
-                                       fs.normalize(child));
+                        fs.normalize(child));
             } else {
                 this.path = fs.resolve(fs.normalize(parent),
-                                       fs.normalize(child));
+                        fs.normalize(child));
             }
         } else {
             this.path = fs.normalize(child);
@@ -362,10 +362,10 @@ public class File
         if (parent != null) {
             if (parent.path.equals("")) {
                 this.path = fs.resolve(fs.getDefaultParent(),
-                                       fs.normalize(child));
+                        fs.normalize(child));
             } else {
                 this.path = fs.resolve(parent.path,
-                                       fs.normalize(child));
+                        fs.normalize(child));
             }
         } else {
             this.path = fs.normalize(child);
@@ -1004,11 +1004,11 @@ public class File
      * @since 1.2
      */
     public boolean createNewFile() throws IOException {
-//        SecurityManager security = System.getSecurityManager();
-//        if (security != null) security.checkWrite(path);
-//        if (isInvalid()) {
-//            throw new IOException("Invalid file path");
-//        }
+        SecurityManager security = System.getSecurityManager();
+        if (security != null) security.checkWrite(path);
+        if (isInvalid()) {
+            throw new IOException("Invalid file path");
+        }
         return fs.createFileExclusively(path);
     }
 
@@ -1892,7 +1892,7 @@ public class File
 
         // temporary directory location
         private static final File tmpdir = new File(AccessController
-            .doPrivileged(new GetPropertyAction("java.io.tmpdir")));
+                .doPrivileged(new GetPropertyAction("java.io.tmpdir")));
         static File location() {
             return tmpdir;
         }
@@ -1900,7 +1900,7 @@ public class File
         // file name generation
         private static final SecureRandom random = new SecureRandom();
         static File generateFile(String prefix, String suffix, File dir)
-            throws IOException
+                throws IOException
         {
             long n = random.nextLong();
             if (n == Long.MIN_VALUE) {
@@ -1995,7 +1995,7 @@ public class File
      */
     public static File createTempFile(String prefix, String suffix,
                                       File directory)
-        throws IOException
+            throws IOException
     {
         if (prefix.length() < 3)
             throw new IllegalArgumentException("Prefix string too short");
@@ -2003,7 +2003,7 @@ public class File
             suffix = ".tmp";
 
         File tmpdir = (directory != null) ? directory
-                                          : TempDirectory.location();
+                : TempDirectory.location();
         SecurityManager sm = System.getSecurityManager();
         File f;
         do {
@@ -2065,7 +2065,7 @@ public class File
      * @see java.nio.file.Files#createTempDirectory(String,FileAttribute[])
      */
     public static File createTempFile(String prefix, String suffix)
-        throws IOException
+            throws IOException
     {
         return createTempFile(prefix, suffix, null);
     }
@@ -2150,7 +2150,7 @@ public class File
      * @serialData  Default fields followed by separator character.
      */
     private synchronized void writeObject(java.io.ObjectOutputStream s)
-        throws IOException
+            throws IOException
     {
         s.defaultWriteObject();
         s.writeChar(separatorChar); // Add the separator character
@@ -2163,7 +2163,7 @@ public class File
      * is replaced by the local separator.
      */
     private synchronized void readObject(java.io.ObjectInputStream s)
-         throws IOException, ClassNotFoundException
+            throws IOException, ClassNotFoundException
     {
         ObjectInputStream.GetField fields = s.readFields();
         String pathField = (String)fields.get("path", null);

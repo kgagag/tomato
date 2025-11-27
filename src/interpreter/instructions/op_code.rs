@@ -40,7 +40,7 @@ pub mod op_code {
         let data: std::sync::MutexGuard<'_, UnsafeCell<HashMap<u32, Vec<StackFrame>>>> = VM_STACKS.lock().unwrap();
         unsafe {
             // 从 UnsafeCell 中获取 HashMap 的可变引用
-            let map = &mut *data.get();
+            let map: &mut HashMap<u32, Vec<StackFrame>> = &mut *data.get();
             drop(data);
             let stack_frames_op = map.get_mut(&vm_stack_id);
             if stack_frames_op.is_some() {
@@ -56,7 +56,7 @@ pub mod op_code {
         while !vm_stack.is_empty() && vm_stack.last().unwrap().pc < vm_stack.last().unwrap().code.len() {
             let code = vm_stack.last().unwrap().code[vm_stack.last().unwrap().pc];
             let frame = vm_stack.last_mut().unwrap();
-            // info!("{:x}--{}--{:?}--{:?}--{:?}--opstack:{:?}--local:{:?}",code,frame.pc,frame.class_name,frame.method_name,frame.descriptor,frame.op_stack,frame.local);
+            //info!("{:x}--{}--{:?}--{:?}--{:?}--opstack:{:?}--local:{:?}",code,frame.pc,frame.class_name,frame.method_name,frame.descriptor,frame.op_stack,frame.local);
             if code == 0xbb || code == 0xbc || code == 0xbd || code == 0xc5{
                 full_gc();
             } 

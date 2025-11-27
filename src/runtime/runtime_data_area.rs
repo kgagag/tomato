@@ -3,6 +3,7 @@ use lazy_static::lazy_static;
 use log::{info, warn};
 use std::cell::UnsafeCell;
 use std::collections::HashMap;
+use std::hash::RandomState;
 use std::net::{Shutdown, TcpStream};
 use std::sync::{Arc, Mutex};
 
@@ -28,10 +29,10 @@ lazy_static! {
     pub static ref STR_CONSTANT_POOL: Mutex<HashMap<String, u64>> = Mutex::new(HashMap::new());
 
     // 类对象常量池，是否可以跟字符串常量池合并？
-    pub static ref CLASS_CONSTANT_POOL: Mutex<UnsafeCell<HashMap<String, u64>>> = Mutex::new(UnsafeCell::new(HashMap::new()));
+    pub static ref CLASS_CONSTANT_POOL: Mutex<UnsafeCell<HashMap<String, u64>>> = Mutex::new(UnsafeCell::new(HashMap::with_capacity_and_hasher(1024, RandomState::new())));
 
     //对象存储
-    pub static ref OBJECT_DATA: Mutex<UnsafeCell<HashMap<u64, Reference>>> = Mutex::new(UnsafeCell::new(HashMap::new()));
+    pub static ref OBJECT_DATA: Mutex<UnsafeCell<HashMap<u64, Reference,RandomState>>> = Mutex::new(UnsafeCell::new(HashMap::new()));
 
     static ref GLOBAL_COUNTER: Arc<Mutex<u64>> = Arc::new(Mutex::new(0));
 

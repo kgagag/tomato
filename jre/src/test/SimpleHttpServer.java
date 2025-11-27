@@ -44,7 +44,7 @@ public class SimpleHttpServer {
         int port = 8080;
         try{
             ServerSocket serverSocket = new ServerSocket(port);
-            StringHelper.print20240503("HTTP 服务器正在运行，端口：" + port);
+            //StringHelper.print20240503("HTTP 服务器正在运行，端口：" + port);
             while (true) {
                 try  {
                     Socket clientSocket = serverSocket.accept();

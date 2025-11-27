@@ -5,13 +5,40 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="70c6e279-5046-4c44-ba52-f4228d3f6634" name="Changes" comment="&quot;调整目录&quot;">
-      <change afterPath="$PROJECT_DIR$/src/test/Test100.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/java/io/File2.java_bak" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/test/Main.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/test/Solution.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/test/Test101.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/java/io/File2.java_bak" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/Main.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/Solution.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/TS.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/Test101.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test/.idea/test.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Cargo.lock" beforeDir="false" afterPath="$PROJECT_DIR$/../Cargo.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Cargo.toml" beforeDir="false" afterPath="$PROJECT_DIR$/../Cargo.toml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/jre.iml" beforeDir="false" afterPath="$PROJECT_DIR$/jre.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/java/io/File.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/java/io/File.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/java/io/FileSystem.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/java/io/FileSystem.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/java/io/WinNTFileSystem.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/java/io/WinNTFileSystem.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/java/lang/StringCoding.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/java/lang/StringCoding.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/test/SimpleHttpServer.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/SimpleHttpServer.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/test/Test.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/Test.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/java/io/File.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/java/io/File.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/java/io/FileSystem.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/java/io/FileSystem.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/java/io/WinNTFileSystem.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/java/io/WinNTFileSystem.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/java/lang/StringCoding.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/java/lang/StringCoding.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/SimpleHttpServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/SimpleHttpServer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/Test.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/Test.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/native/native.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/native/native.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/native/native_system.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/native/native_system.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/classloader/class_loader.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/classloader/class_loader.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/interpreter/instructions/op_code.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/interpreter/instructions/op_code.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_invoke.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_invoke.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_return.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_return.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/memory/gc.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/memory/gc.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/runtime/runtime_data_area.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/runtime/runtime_data_area.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../test/test.iml" beforeDir="false" afterPath="$PROJECT_DIR$/../test/test.iml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -46,6 +73,9 @@
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="jar://$PROJECT_DIR$/../../../soft/jdk1.8.0_131/src.zip!/java/lang/System.java" root0="SKIP_INSPECTION" />
+  </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 1
 }</component>
@@ -66,7 +96,7 @@
     &quot;ToolWindowRun.ShowToolbar&quot;: &quot;false&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
     &quot;git-widget-placeholder&quot;: &quot;dev&quot;,
-    &quot;last_opened_file_path&quot;: &quot;E:/jvm/tomato/jre/src/test&quot;,
+    &quot;last_opened_file_path&quot;: &quot;E:/jvm&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -74,7 +104,7 @@
     &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
     &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
     &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;editor.preferences.fonts.default&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
@@ -84,34 +114,16 @@
       <recent name="E:\tomato\jre\src\test" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="java.io" />
       <recent name="java.lang" />
       <recent name="tomato.net" />
       <recent name="test" />
     </key>
   </component>
   <component name="RunManager" selected="Application.Test">
-    <configuration name="MyHttpServer (2)" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="test.MyHttpServer" />
-      <module name="jre" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="test.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="MyHttpServer" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="test.MyHttpServer" />
+      <option name="MAIN_CLASS_NAME" value="MyHttpServer" />
       <module name="jre" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="test.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -129,15 +141,34 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="MyHttpServer" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="MyHttpServer" />
+    <configuration name="SimpleHttpServer" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="test.SimpleHttpServer" />
       <module name="jre" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="test.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="SimpleHttpServer" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="test.SimpleHttpServer" />
+    <configuration name="Solution" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="test.Solution" />
+      <module name="jre" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="test.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="StringHelper" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="test.StringHelper" />
       <module name="jre" />
       <extension name="coverage">
         <pattern>
@@ -165,9 +196,9 @@
     <recent_temporary>
       <list>
         <item itemvalue="Application.Test" />
+        <item itemvalue="Application.Solution" />
+        <item itemvalue="Application.StringHelper" />
         <item itemvalue="Application.SimpleHttpServer" />
-        <item itemvalue="Application.MyHttpServer2" />
-        <item itemvalue="Application.MyHttpServer" />
         <item itemvalue="Application.MyHttpServer" />
       </list>
     </recent_temporary>
@@ -243,7 +274,48 @@
       <workItem from="1722714965650" duration="9479000" />
       <workItem from="1722777543701" duration="608000" />
       <workItem from="1722826855287" duration="1794000" />
-      <workItem from="1722845181002" duration="15792000" />
+      <workItem from="1722845181002" duration="16905000" />
+      <workItem from="1723172531144" duration="1826000" />
+      <workItem from="1723211762519" duration="14755000" />
+      <workItem from="1723441576794" duration="17600000" />
+      <workItem from="1723599379948" duration="2037000" />
+      <workItem from="1725083675574" duration="754000" />
+      <workItem from="1725198388002" duration="594000" />
+      <workItem from="1725241041236" duration="1212000" />
+      <workItem from="1725638342252" duration="113000" />
+      <workItem from="1725689373912" duration="4350000" />
+      <workItem from="1725711024783" duration="599000" />
+      <workItem from="1725845567134" duration="7142000" />
+      <workItem from="1726104645230" duration="1793000" />
+      <workItem from="1726625235037" duration="3246000" />
+      <workItem from="1726737646241" duration="599000" />
+      <workItem from="1726971005296" duration="596000" />
+      <workItem from="1727011987370" duration="3377000" />
+      <workItem from="1727505578088" duration="10281000" />
+      <workItem from="1727792401436" duration="252000" />
+      <workItem from="1727875095449" duration="7418000" />
+      <workItem from="1728817812904" duration="1038000" />
+      <workItem from="1728883789341" duration="404000" />
+      <workItem from="1728884272329" duration="279000" />
+      <workItem from="1729477849908" duration="2386000" />
+      <workItem from="1729579975614" duration="4182000" />
+      <workItem from="1729750131029" duration="1207000" />
+      <workItem from="1730035176631" duration="587000" />
+      <workItem from="1730079248908" duration="1537000" />
+      <workItem from="1733038181951" duration="3231000" />
+      <workItem from="1733566101065" duration="629000" />
+      <workItem from="1733652614041" duration="596000" />
+      <workItem from="1733708252604" duration="1190000" />
+      <workItem from="1733969887461" duration="1209000" />
+      <workItem from="1734264241510" duration="2023000" />
+      <workItem from="1734313569376" duration="594000" />
+      <workItem from="1734361724057" duration="1793000" />
+      <workItem from="1734711065512" duration="597000" />
+      <workItem from="1734791901051" duration="596000" />
+      <workItem from="1735285749233" duration="9000" />
+      <workItem from="1736051365354" duration="1583000" />
+      <workItem from="1736078431729" duration="2264000" />
+      <workItem from="1764061133806" duration="3785000" />
     </task>
     <task id="LOCAL-00001" summary="&quot;add test case&quot;">
       <option name="closed" value="true" />
@@ -291,7 +363,9 @@
       <map>
         <entry key="176ec0b3-c914-4621-bdf0-1cf6de74290d" value="TOOL_WINDOW" />
         <entry key="52ecfb6d-0b98-46ce-87c5-30f2a90be4ae" value="TOOL_WINDOW" />
+        <entry key="5c9d0389-0f0b-49bd-bd8b-43e4d80003de" value="TOOL_WINDOW" />
         <entry key="829da733-3fe8-4c70-a493-61ac24ae3feb" value="TOOL_WINDOW" />
+        <entry key="a9c6e401-749c-4a48-84bc-34845131a08f" value="TOOL_WINDOW" />
         <entry key="af237bfb-88f3-4e28-b10c-274e80be2ed3" value="TOOL_WINDOW" />
         <entry key="dd22680a-c37b-4a94-8c10-805a3bfbfbac" value="TOOL_WINDOW" />
       </map>
@@ -348,6 +422,31 @@
             </State>
           </value>
         </entry>
+        <entry key="5c9d0389-0f0b-49bd-bd8b-43e4d80003de">
+          <value>
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="HEAD" />
+                      </list>
+                    </value>
+                  </entry>
+                  <entry key="structure">
+                    <value>
+                      <list>
+                        <option value="dir:E:/jvm/tomato/jre/src/java" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+              <option name="SHOW_ONLY_AFFECTED_CHANGES" value="true" />
+            </State>
+          </value>
+        </entry>
         <entry key="829da733-3fe8-4c70-a493-61ac24ae3feb">
           <value>
             <State>
@@ -376,6 +475,31 @@
         <entry key="MAIN">
           <value>
             <State />
+          </value>
+        </entry>
+        <entry key="a9c6e401-749c-4a48-84bc-34845131a08f">
+          <value>
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="HEAD" />
+                      </list>
+                    </value>
+                  </entry>
+                  <entry key="structure">
+                    <value>
+                      <list>
+                        <option value="dir:E:/jvm/tomato/jre/src" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+              <option name="SHOW_ONLY_AFFECTED_CHANGES" value="true" />
+            </State>
           </value>
         </entry>
         <entry key="af237bfb-88f3-4e28-b10c-274e80be2ed3">
@@ -454,6 +578,11 @@
           <url>jar://$PROJECT_DIR$/../../soft/jdk1.8.0_131/src.zip!/java/lang/Integer.java</url>
           <line>434</line>
           <option name="timeStamp" value="21" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/java/io/PrintStream.java</url>
+          <line>508</line>
+          <option name="timeStamp" value="25" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

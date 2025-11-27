@@ -6,8 +6,8 @@ use log::{error, info,  warn};
 use crate::{common::{stack_frame::StackFrame, value::{number_u64, StackFrameValue}}, runtime::runtime_data_area::{get_class_name, pop_stack_frame, push_frame_data}};
 
 pub fn _return(frame: &mut StackFrame) {
-    pop_stack_frame(frame.vm_stack_id);
     frame.pc += 1;
+    pop_stack_frame(frame.vm_stack_id);
 }
 
 fn debug(frame: &mut StackFrame,cursor : i32){
@@ -49,7 +49,7 @@ pub fn freturn(frame: &mut StackFrame) {
 
 pub fn dreturn(frame: &mut StackFrame) {
     let v: StackFrameValue = frame.op_stack.pop().unwrap();
-     //warn!!("ireturn result: {:?}", &v);
+    warn!("ireturn result: {:?}", &v);
     pop_stack_frame(frame.vm_stack_id);
     push_frame_data(frame.vm_stack_id, v);
     //将返回值传给上一个栈帧

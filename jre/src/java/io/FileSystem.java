@@ -237,10 +237,10 @@ abstract class FileSystem {
         }
     }
 
-    static {
-        useCanonCaches      = getBooleanProperty("sun.io.useCanonCaches",
-                                                 useCanonCaches);
-        useCanonPrefixCache = getBooleanProperty("sun.io.useCanonPrefixCache",
-                                                 useCanonPrefixCache);
-    }
+//    static {
+//        useCanonCaches      = getBooleanProperty("sun.io.useCanonCaches",
+//                                                 useCanonCaches);
+//        useCanonPrefixCache = getBooleanProperty("sun.io.useCanonPrefixCache",
+//                                                 useCanonPrefixCache);
+//    }
 }

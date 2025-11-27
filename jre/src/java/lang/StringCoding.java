@@ -4,16 +4,15 @@ import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 
 public class StringCoding {
-    static  byte[] encode(char[] ca, int off, int len) throws UnsupportedEncodingException {
+    static  byte[] encode(char[] ca, int off, int len)  {
         return encode("utf8",ca,off,len);
     }
 
-    static  byte[] encode(Charset cs, char[] ca, int off, int len) throws UnsupportedEncodingException {
+    static  byte[] encode(Charset cs, char[] ca, int off, int len)  {
         return encode(cs.name(),ca,off,len);
     }
 
-    static  char[] decode(Charset charset, byte[] ba, int off, int len)
-            throws UnsupportedEncodingException{
+    static  char[] decode(Charset charset, byte[] ba, int off, int len) {
         return decode0(ba,off,len);
     }
 
@@ -23,12 +22,12 @@ public class StringCoding {
 
 
     static  char[] decode(String charsetName, byte[] ba, int off, int len)
-            throws UnsupportedEncodingException{
+             {
         return decode0(ba,off,len);
     }
 
     static  byte[] encode(String charsetName, char[] ca, int off, int len)
-            throws UnsupportedEncodingException{
+             {
         return encode0(ca,off,len);
     }
 

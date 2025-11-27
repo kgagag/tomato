@@ -5,6 +5,7 @@ use log::warn;
 use std::cell::UnsafeCell;
 use std::collections::HashMap;
 
+use crate::classfile::class::Class;
 use crate::classfile::class::ConstantPoolInfo;
 use crate::classfile::class::MethodInfo;
 use crate::common::reference::Reference;
@@ -85,6 +86,75 @@ pub fn get_method_for_invoke(frame: &StackFrame) -> Option<&MethodInfo> {
     }
     method
 }
+
+
+
+pub fn get_method_for_invoke2<'a>(this_class : &Class , class_index:&'a u16 , name_and_type_index :&'a u16 ) -> Option<&'a MethodInfo> {
+    // let this_class = get_or_load_class(&frame.class_name).clone();
+    // // 使用 match 代替 if let 以减少嵌套，并处理 unwrap 导致的潜在 panic
+    // let (class_index, name_and_type_index) = match this_class
+    //     .constant_pool
+    //     .get(&u8s_to_u16(&frame.code[(frame.pc + 1)..(frame.pc + 3)]))
+    // {
+    //     Some(ConstantPoolInfo::Methodref(class_index, name_and_type_index)) => {
+    //         (class_index, name_and_type_index)
+    //     }
+    //     _ => return None,
+    // };
+
+    // 通过链式调用减少嵌套
+    let target_class_name = this_class
+        .constant_pool
+        .get(class_index)
+        .and_then(|cp_info| match cp_info {
+            ConstantPoolInfo::Class(name_index) => this_class.constant_pool.get(name_index),
+            _ => None,
+        })
+        .and_then(|name_info| match name_info {
+            ConstantPoolInfo::Utf8(target_class_name) => Some(target_class_name),
+            _ => None,
+        });
+
+    let target_class = match target_class_name {
+        Some(class_name_target) => get_or_load_class(class_name_target),
+        None => return None,
+    };
+
+    // 继续减少嵌套并简化逻辑
+    let (method_name, descriptor) = match this_class.constant_pool.get(name_and_type_index) {
+        Some(ConstantPoolInfo::NameAndType(name_index, descriptor_index)) => {
+            let method_name = match this_class.constant_pool.get(name_index) {
+                Some(ConstantPoolInfo::Utf8(name)) => name,
+                _ => return None,
+            };
+            let descriptor = match this_class.constant_pool.get(descriptor_index) {
+                Some(ConstantPoolInfo::Utf8(desc)) => desc,
+                _ => return None,
+            };
+            (method_name, descriptor)
+        }
+        _ => return None,
+    };
+
+    let mut method = get_method_from_pool(
+       & target_class.class_name,
+       & method_name,
+       & descriptor,
+    );
+    let mut curr_class = target_class;
+    while method.is_none() {
+        let super_class = get_or_load_class(&curr_class.super_class_name);
+        method = get_method_from_pool(
+            &super_class.class_name,
+           & method_name,
+            &descriptor,
+        );
+        curr_class = super_class;
+    }
+    method
+}
+
+
 
 pub fn invokespecial(frame: &mut StackFrame) {
     let clone_frame = &frame.clone();
@@ -185,8 +255,18 @@ pub fn invokeinterface(frame: &mut StackFrame) {
 }
 
 pub fn invokevirtual(frame: &mut StackFrame) {
-    let clone_frame = &frame.clone();
-    let method = get_method_for_invoke(clone_frame).unwrap();
+    let this_class = get_or_load_class(&frame.class_name);
+    // 使用 match 代替 if let 以减少嵌套，并处理 unwrap 导致的潜在 panic
+    let (class_index, name_and_type_index) = match this_class
+        .constant_pool
+        .get(&u8s_to_u16(&frame.code[(frame.pc + 1)..(frame.pc + 3)]))
+    {
+        Some(ConstantPoolInfo::Methodref(class_index, name_and_type_index)) => {
+            (class_index, name_and_type_index)
+        }
+        _ => return (),
+    };
+    let method = get_method_for_invoke2(&this_class,class_index,name_and_type_index).unwrap();
     //info!("{}--{}--{}",method.class_name,method.method_name,method.descriptor);
     frame.pc += 3;
     let param_len = method.param.len();
@@ -194,8 +274,6 @@ pub fn invokevirtual(frame: &mut StackFrame) {
         .op_stack
         .get(frame.op_stack.len() - param_len - 1)
         .unwrap();
-
-        info!("{:?},{:?}",method,sfv);
 
     let target_method = match sfv {
         StackFrameValue::Reference(id) => {
@@ -255,6 +333,9 @@ pub fn get_frames(vm_stack_id: &u32) -> &Vec<StackFrame> {
 }
 
 pub fn invokestatic(frame: &mut StackFrame) {
+    if frame.pc == 37{
+        info!("{:?}",frame);
+    }
     let clone_frame = &frame.clone();
     let method = get_method_for_invoke(clone_frame).unwrap();
     frame.pc += 3;

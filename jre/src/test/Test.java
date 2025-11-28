@@ -6,9 +6,7 @@ import java.io.IOException;
 
 public class Test {
     public static void main(String[] args) throws IOException {
-
-        /*
-        long t1 = System.currentTimeMillis();
+        //long t1 = System.currentTimeMillis();
         //  两个int相加
         new Test1().test();
         // 两个 float 相加
@@ -44,15 +42,15 @@ public class Test {
         new Test14().test();
 
         //   测试多维数组赋值读取
-        new Test15().test();
-
-         new Test16().test();
+//        new Test15().test();
+//
+//         new Test16().test();
         // 测试计算数组长度
         new Test18().test();
         // 一维数组循环赋值
         new Test19().test();
         // 多维数组循环赋值
-        new Test20().test();
+        //new Test20().test();
 
         // 测试 invikeinterface
         InterfaceTest interfaceTest = new Test22();
@@ -204,13 +202,13 @@ public class Test {
         new Test99().test();
         new Test100().test();
 
-        */
-        long t1 = System.nanoTime();
 
-        long t2 = System.nanoTime();
-
-        long t3 = t2 - t1;
-        StringHelper.print20240503(t3 + "");
-        new SimpleHttpServer().test();
+//        long t1 = System.nanoTime();
+//
+//        long t2 = System.nanoTime();
+//
+//        long t3 = t2 - t1;
+//        StringHelper.print20240503(t3 + "");
+//        new SimpleHttpServer().test();
     }
 }

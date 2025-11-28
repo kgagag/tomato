@@ -5,21 +5,24 @@
 
   
 
-    pub fn fstore(frame: &mut StackFrame) {
+    pub fn fstore(vm_stack: &mut Vec<StackFrame>) {
+        let frame = vm_stack.last_mut().unwrap();
         let v = frame.op_stack.pop().unwrap();
         let index = frame.code[frame.pc + 1] as usize;
         frame.local[index] = v;
         frame.pc += 2;
     }
 
-    pub fn astore(frame: &mut StackFrame) {
+    pub fn astore(vm_stack: &mut Vec<StackFrame>) {
+        let frame = vm_stack.last_mut().unwrap();
         let v = frame.op_stack.pop().unwrap();
         let index = frame.code[frame.pc + 1] as usize;
         frame.local[index] = v;
         frame.pc += 2;
     }
 
-    pub fn istore(frame: &mut StackFrame) {
+    pub fn istore(vm_stack: &mut Vec<StackFrame>) {
+        let frame = vm_stack.last_mut().unwrap();
         let v = frame.op_stack.pop().unwrap();
         let index = frame.code[frame.pc + 1] as usize;
         frame.local[index] = v;
@@ -27,11 +30,12 @@
     }
 
     
-    pub fn lstore(frame: &mut StackFrame) {
+    pub fn lstore(vm_stack: &mut Vec<StackFrame>) {
+        let frame = vm_stack.last_mut().unwrap();
         xistore(frame);
     }
 
-    fn xistore(frame: &mut StackFrame){
+    fn xistore(frame :&mut StackFrame){
         let v: StackFrameValue = frame.op_stack.pop().unwrap();
         let index = frame.code[frame.pc + 1] as usize;
         let value = match v {
@@ -53,7 +57,7 @@
     }
 
 
-    fn xfstore(frame: &mut StackFrame){
+    fn xfstore(frame :&mut StackFrame){
         let v: StackFrameValue = frame.op_stack.pop().unwrap();
         let index = frame.code[frame.pc + 1] as usize;
         let value:f64;
@@ -68,81 +72,94 @@
         frame.pc += 2;
     }
 
-    pub fn dstore(frame: &mut StackFrame) {
+    pub fn dstore(vm_stack: &mut Vec<StackFrame>) {
+        let frame = vm_stack.last_mut().unwrap();
         xfstore(frame);
     }
 
-    pub fn istore_0(frame: &mut StackFrame) {
+    pub fn istore_0(vm_stack: &mut Vec<StackFrame>) {
+        let frame = vm_stack.last_mut().unwrap();
         let i = frame.op_stack.pop().unwrap();
         frame.local[0] = i;
         frame.pc += 1;
     }
 
 
-    pub fn istore_1(frame: &mut StackFrame) {
+    pub fn istore_1(vm_stack: &mut Vec<StackFrame>) {
+        let frame = vm_stack.last_mut().unwrap();
         let i = frame.op_stack.pop().unwrap();
         frame.local[1] = i;
         frame.pc += 1;
     }
 
-    pub fn istore_2(frame: &mut StackFrame) {
+    pub fn istore_2(vm_stack: &mut Vec<StackFrame>) {
+        let frame = vm_stack.last_mut().unwrap();
         let i = frame.op_stack.pop().unwrap();
         frame.local[2] = i;
         frame.pc += 1;
     }
 
-    pub fn istore_3(frame: &mut StackFrame) {
+    pub fn istore_3(vm_stack: &mut Vec<StackFrame>) {
+        let frame = vm_stack.last_mut().unwrap();
         let i = frame.op_stack.pop().unwrap();
         frame.local[3] = i;
         frame.pc += 1;
     }
 
-    pub fn fstore_0(frame: &mut StackFrame) {
+    pub fn fstore_0(vm_stack: &mut Vec<StackFrame>) {
+        let frame = vm_stack.last_mut().unwrap();
         let i = frame.op_stack.pop().unwrap();
         frame.local[0] = i;
         frame.pc += 1;
     }
 
-    pub fn fstore_1(frame: &mut StackFrame) {
+    pub fn fstore_1(vm_stack: &mut Vec<StackFrame>) {
+        let frame = vm_stack.last_mut().unwrap();
         let i = frame.op_stack.pop().unwrap();
         frame.local[1] = i;
         frame.pc += 1;
     }
 
-    pub fn fstore_2(frame: &mut StackFrame) {
+    pub fn fstore_2(vm_stack: &mut Vec<StackFrame>) {
+        let frame = vm_stack.last_mut().unwrap();
         let i = frame.op_stack.pop().unwrap();
         frame.local[2] = i;
         frame.pc += 1;
     }
 
-    pub fn fstore_3(frame: &mut StackFrame) {
+    pub fn fstore_3(vm_stack: &mut Vec<StackFrame>) {
+        let frame = vm_stack.last_mut().unwrap();
         let i = frame.op_stack.pop().unwrap();
         frame.local[3] = i;
         frame.pc += 1;
     }
 
 
-    pub fn dstore_0(frame: &mut StackFrame) {
+    pub fn dstore_0(vm_stack: &mut Vec<StackFrame>) {
+        let frame = vm_stack.last_mut().unwrap();
         set_u64_frame_local(frame,0);
         frame.pc += 1;
     }
 
-    pub fn dstore_1(frame: &mut StackFrame) {
+    pub fn dstore_1(vm_stack: &mut Vec<StackFrame>) {
+        let frame = vm_stack.last_mut().unwrap();
         set_u64_frame_local(frame,1);
         frame.pc += 1;
     }
 
-    pub fn dstore_2(frame: &mut StackFrame) {
+    pub fn dstore_2(vm_stack: &mut Vec<StackFrame>) {
+        let frame = vm_stack.last_mut().unwrap();
         set_u64_frame_local(frame,2);
         frame.pc += 1;
     }
 
-    pub fn dstore_3(frame: &mut StackFrame) {
+    pub fn dstore_3(vm_stack: &mut Vec<StackFrame>) {
+        let frame = vm_stack.last_mut().unwrap();
         set_u64_frame_local(frame,3);
         frame.pc += 1;
     }
 
-    fn set_u64_frame_local(frame: &mut StackFrame,i:usize){
+    fn set_u64_frame_local(frame :&mut StackFrame,i:usize){
         let v = frame.op_stack.pop().unwrap();
         //info!("{:?}",v);
         let u32tuple = number_to_u32tuple(&v);
@@ -151,45 +168,53 @@
     }
 
 
-    pub fn lstore_0(frame: &mut StackFrame) {
+    pub fn lstore_0(vm_stack: &mut Vec<StackFrame>) {
+        let frame = vm_stack.last_mut().unwrap();
         set_u64_frame_local(frame,0);
         frame.pc += 1;
     }
 
-    pub fn lstore_1(frame: &mut StackFrame) {
+    pub fn lstore_1(vm_stack: &mut Vec<StackFrame>) {
+        let frame = vm_stack.last_mut().unwrap();
         set_u64_frame_local(frame,1);
         frame.pc += 1;
     }
 
-    pub fn lstore_2(frame: &mut StackFrame) {
+    pub fn lstore_2(vm_stack: &mut Vec<StackFrame>) {
+        let frame = vm_stack.last_mut().unwrap();
         set_u64_frame_local(frame,2);
         frame.pc += 1;
     }
 
-    pub fn lstore_3(frame: &mut StackFrame) {
+    pub fn lstore_3(vm_stack: &mut Vec<StackFrame>) {
+        let frame = vm_stack.last_mut().unwrap();
         set_u64_frame_local(frame,3);
         frame.pc += 1;
     }
 
-    pub fn astore_0(frame: &mut StackFrame) {
+    pub fn astore_0(vm_stack: &mut Vec<StackFrame>) {
+        let frame = vm_stack.last_mut().unwrap();
         let i = frame.op_stack.pop().unwrap();
         frame.local[0] = i;
         frame.pc += 1;
     }
 
-    pub fn astore_1(frame: &mut StackFrame) {
+    pub fn astore_1(vm_stack: &mut Vec<StackFrame>) {
+        let frame = vm_stack.last_mut().unwrap();
         let i = frame.op_stack.pop().unwrap();
         frame.local[1] = i;
         frame.pc += 1;
     }
 
-    pub fn astore_2(frame: &mut StackFrame) {
+    pub fn astore_2(vm_stack: &mut Vec<StackFrame>) {
+        let frame = vm_stack.last_mut().unwrap();
         let i = frame.op_stack.pop().unwrap();
         frame.local[2] = i;
         frame.pc += 1;
     }
     
-    pub fn astore_3(frame: &mut StackFrame) {
+    pub fn astore_3(vm_stack: &mut Vec<StackFrame>) {
+        let frame = vm_stack.last_mut().unwrap();
         let i = frame.op_stack.pop().unwrap();
         frame.local[3] = i;
         frame.pc += 1;

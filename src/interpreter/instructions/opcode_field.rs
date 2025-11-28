@@ -4,14 +4,15 @@ use log::info;
 use crate::{classfile::class::{Class, ConstantPoolInfo, FieldInfo}, common::{object::Object, param::DataType, reference::Reference, stack_frame::StackFrame, value::StackFrameValue}, runtime::runtime_data_area::{get_class_name, get_or_load_class, get_reference}};
 
 
-pub fn putfield(frame: &mut StackFrame) {
+pub fn putfield(vm_stack: &mut Vec<StackFrame>) {
+    let frame = vm_stack.last_mut().unwrap();
     let index: u16 = u16::from_be_bytes([frame.code[frame.pc + 1], frame.code[frame.pc + 2]]);
     let class_name = get_class_name(&frame.class);
     let this_class = get_or_load_class(&class_name);
     let field_ref: &ConstantPoolInfo = this_class.constant_pool.get(&(index)).unwrap();
     let value: StackFrameValue = frame.op_stack.pop().unwrap();
     let stack_frame_value: StackFrameValue = frame.op_stack.pop().unwrap();
-    let  object ;
+    let  mut object ;
     match stack_frame_value {
         StackFrameValue::Reference(id) =>{
             let reference = get_reference(&id).unwrap();
@@ -48,13 +49,14 @@ pub fn putfield(frame: &mut StackFrame) {
     frame.pc += 3;
 }
 
-pub fn getfield(frame: &mut StackFrame) {
+pub fn getfield(vm_stack: &mut Vec<StackFrame>) {
+    let frame = vm_stack.last_mut().unwrap();
     let index: u16 = u16::from_be_bytes([frame.code[frame.pc + 1], frame.code[frame.pc + 2]]);
     let class_name = get_class_name(&frame.class);
     let this_class = get_or_load_class(&class_name);
     let field_ref: &ConstantPoolInfo = this_class.constant_pool.get(&(index)).unwrap();
     let stack_frame_value: StackFrameValue = frame.op_stack.pop().unwrap();
-    let object:&Object;
+    let object:Object;
     match stack_frame_value {
         StackFrameValue::Reference(id) =>{
             let reference = get_reference(&id).unwrap();
@@ -79,7 +81,7 @@ pub fn getfield(frame: &mut StackFrame) {
                         this_class.constant_pool.get(class_name_index).unwrap();
                     match class_name_utf8 {
                         ConstantPoolInfo::Utf8(class_name) => {
-                            let mut target_class: &mut Class = get_or_load_class(class_name);
+                            let mut target_class: Class = get_or_load_class(class_name);
                             match name_and_type {
                                 ConstantPoolInfo::NameAndType(name_index, _descritor_index) => {
                                     let field_name_utf8: &ConstantPoolInfo =

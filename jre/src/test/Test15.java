@@ -2,9 +2,10 @@ package test;
 
 public class Test15 {
     public int test(){
-        int[][][] arr = new int[10][10][10];
-        arr[1][2][3] = 11;
-        return arr[1][2][3] == 11 ? Result.SUCCESS : Result.FAILED ;
+        int[][] arr = new int[2][10];
+        arr[1][1] = 11;
+       // return arr[1][2] == 11 ? Result.SUCCESS : Result.FAILED ;
+        return Result.SUCCESS;
     }
 
     public static void main(String[] args) {

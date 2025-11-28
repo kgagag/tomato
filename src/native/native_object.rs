@@ -1,116 +1,78 @@
-
 use log::info;
 
-use crate::{common::{array::array::Array, param::DataType, reference::Reference, stack_frame::StackFrame, value::StackFrameValue}, runtime::runtime_data_area::{ get_class_name, get_constant_pool_class, get_reference, put_into_class_constant_pool}, utils::java};
+use crate::{
+    common::{
+        array::array::Array,
+        param::DataType,
+        reference::Reference,
+        stack_frame::StackFrame,
+        value::StackFrameValue,
+    },
+    runtime::runtime_data_area::{
+        get_class_name, get_constant_pool_class, get_reference, put_into_class_constant_pool,
+    },
+    utils::java,
+};
 
-
-pub fn hash_code( frame: &mut StackFrame) {
-    let sfv: StackFrameValue = frame.op_stack.pop().unwrap();
-    match sfv {
-        StackFrameValue::Reference(id) =>{
-            frame.op_stack.push(StackFrameValue::Int(id as i32))
+pub fn hash_code(frame: &mut StackFrame) {
+    match frame.op_stack.pop() {
+        Some(StackFrameValue::Reference(id)) => {
+            frame.op_stack.push(StackFrameValue::Int(id as i32));
         }
-        _=> panic!()
+        Some(_) | None => panic!("Invalid operand stack state in hash_code"),
     }
- }
+}
 
+pub fn get_class(frame: &mut StackFrame) {
+    match frame.op_stack.pop() {
+        Some(StackFrameValue::Reference(id)) => {
+            let reference = match get_reference(&id) {
+                Some(r) => r,
+                None => panic!("Reference not found for ID: {}", id),
+            };
 
- pub fn get_class( frame: &mut StackFrame) {
-    let sfv: StackFrameValue = frame.op_stack.pop().unwrap();
-    match sfv {
-        StackFrameValue::Reference(id) =>{
-            let reference = get_reference(&id).unwrap();
-           // info!("{:?}",reference);
             match reference {
-                Reference::Object(object) =>{
+                Reference::Object(object) => {
                     let class_name = get_class_name(&object.class);
-                    let class_obj = get_constant_pool_class(&class_name);
-                    if class_obj.is_none() {
-                        let obj_id: u64 =   java::create_class_object(&class_name);
-                        put_into_class_constant_pool(class_name.clone(), obj_id);
-                        frame.op_stack.push(StackFrameValue::Reference(obj_id));
-                    }else {
-                        frame.op_stack.push(StackFrameValue::Reference(*class_obj.unwrap()));
+                    match get_constant_pool_class(&class_name) {
+                        Some(class_obj_id) => {
+                            frame.op_stack.push(StackFrameValue::Reference(class_obj_id));
+                        }
+                        None => {
+                            let obj_id = java::create_class_object(&class_name);
+                            put_into_class_constant_pool(class_name.clone(), obj_id);
+                            frame.op_stack.push(StackFrameValue::Reference(obj_id));
+                        }
                     }
                 }
-                Reference::Array(array) =>{
-                    //info!("{:?}",array);
-                    let array_class_name = get_array_class_name(array);
-                    //info!("{:?}",array_class_name);
-                    let obj_id: u64 =   java::create_class_object(&array_class_name);
+                Reference::Array(array) => {
+                    let array_class_name = get_array_class_name(&array);
+                    let obj_id = java::create_class_object(&array_class_name);
                     frame.op_stack.push(StackFrameValue::Reference(obj_id));
                 }
             }
         }
-        _=> panic!()
+        Some(_) | None => panic!("Invalid operand stack state in get_class"),
     }
- }
+}
 
- fn get_array_class_name(array:&Array) ->String{
-    let _class_name:String = String::from("");
-    let _prefix = String::from("");
-    
+fn get_array_class_name(array: &Array) -> String {
     match &array.array_type {
-        DataType::Array { element_type, depth } =>{
-            let mut prefix = String::from("");
-            
-            let data_type = *element_type.clone();
-            match data_type {
-                DataType::Byte => {
-                    for _i in 0 .. *depth{
-                        prefix.push('[');
-                    }
-                    prefix.push('B');
-                },
-                DataType::Char => {
-                    for _i in 0 .. *depth{
-                        prefix.push('[');
-                    }
-                    prefix.push('C');
-                }
-                DataType::Double => {
-                    for _i in 0 .. *depth{
-                        prefix.push('[');
-                    }
-                    prefix.push('D');
-                }
-                DataType::Float => {
-                    for _i in 0 .. *depth{
-                        prefix.push('[');
-                    }
-                    prefix.push('F');
-                }
-                DataType::Int => {
-                    for _i in 0 .. *depth{
-                        prefix.push('[');
-                    }
-                    prefix.push('I');
-                }
-                DataType::Long => {
-                    for _i in 0 .. *depth{
-                        prefix.push('[');
-                    }
-                    prefix.push('J');
-                }
-                DataType::Reference(name) => {
-                    prefix.push_str(&name);
-                }
-                DataType::Short => {
-                    for _i in 0 .. *depth{
-                        prefix.push('[');
-                    }
-                    prefix.push('J');
-                }
-                DataType::Boolean =>  {
-                    for _i in 0 .. *depth{
-                        prefix.push('[');
-                    }
-                    prefix.push('B');
-                }
-                _=> panic!()
-            }
-            prefix
+        DataType::Array { element_type, depth } => {
+            let base_char = match &**element_type {
+                DataType::Byte => 'B',
+                DataType::Char => 'C',
+                DataType::Double => 'D',
+                DataType::Float => 'F',
+                DataType::Int => 'I',
+                DataType::Long => 'J',
+                DataType::Short => 'S',     // Fixed from 'J'
+                DataType::Boolean => 'Z',   // Fixed from 'B'
+                DataType::Reference(name) => return format!("{}{}", "[".repeat(*depth as usize), name),
+                _ => panic!("Unsupported array element type"),
+            };
+            format!("{}{}", "[".repeat(*depth as usize), base_char)
         }
-        _=> panic!()
+        _ => panic!("Expected Array type"),
     }
- }
+}

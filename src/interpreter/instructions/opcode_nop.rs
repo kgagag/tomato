@@ -4,6 +4,7 @@ extern crate log;
 extern crate env_logger;
 
 
-pub fn nop(frame: &mut StackFrame) {
+pub fn nop(vm_stack: &mut Vec<StackFrame>) {
+    let frame = vm_stack.last_mut().unwrap();
     frame.pc += 1;
 }

@@ -1,7 +1,8 @@
 
-use std::io::Write;
+use std::{io::Write, net::TcpStream, sync::Arc};
 
 use log::{info, warn};
+use zip::unstable::stream;
 
 use crate::{common::{reference::Reference, stack_frame::StackFrame, value::StackFrameValue}, runtime::runtime_data_area::{self, get_reference}};
 pub fn write0( frame: &mut StackFrame) {
@@ -32,9 +33,11 @@ pub fn write0( frame: &mut StackFrame) {
                    let fdsfv =  object.field.get("fd").unwrap();
                    match fdsfv {
                        StackFrameValue::Int(fd) =>{
-                          let mut stream = runtime_data_area::get_tcp(&(*fd as u64));
-                          let _ = stream.write_all(&bytes).unwrap();
-                          let _ = stream.flush().unwrap();
+                        let data: std::sync::MutexGuard<'_, std::collections::HashMap<u64, TcpStream>> = runtime_data_area::TCP_CONNECT.lock().unwrap();
+                        let mut stream = data.get(id).unwrap();
+                         let _ = stream.write_all(&bytes).unwrap();
+                         let _ = stream.flush().unwrap();
+                         drop(data)
                        }
                        _=> panic!()
                    }

@@ -5,7 +5,8 @@ use crate::common::{stack_frame::StackFrame, value::StackFrameValue};
 
 
 
-pub fn iadd(frame: &mut StackFrame) {
+pub fn iadd(vm_stack: &mut Vec<StackFrame>) {
+    let frame = vm_stack.last_mut().unwrap();
     let i1: i32 = frame.popi64() as i32;
     let i2: i32 = frame.popi64() as i32;
     let a: Wrapping<i32> = Wrapping(i2);
@@ -16,7 +17,8 @@ pub fn iadd(frame: &mut StackFrame) {
     frame.pc += 1;
 }
 
-pub fn fadd(frame: &mut StackFrame) {
+pub fn fadd(vm_stack: &mut Vec<StackFrame>) {
+    let frame = vm_stack.last_mut().unwrap();
     let i1 = frame.popf64() as f32;
     let i2 = frame.popf64() as f32;
     let result = i1 + i2;
@@ -24,7 +26,8 @@ pub fn fadd(frame: &mut StackFrame) {
     frame.pc += 1;
 }
 
-pub fn dadd(frame: &mut StackFrame) {
+pub fn dadd(vm_stack: &mut Vec<StackFrame>) {
+    let frame = vm_stack.last_mut().unwrap();
     let i1 = frame.popf64() ;
     let i2 = frame.popf64() ;
     let result = i1 + i2;
@@ -32,7 +35,8 @@ pub fn dadd(frame: &mut StackFrame) {
     frame.pc += 1;
 }
 
-pub fn ladd(frame: &mut StackFrame) {
+pub fn ladd(vm_stack: &mut Vec<StackFrame>) {
+    let frame = vm_stack.last_mut().unwrap();
     let i1 = frame.popi64() ;
     let i2 = frame.popi64() ;
     let a: Wrapping<i64> = Wrapping(i2);
@@ -42,7 +46,8 @@ pub fn ladd(frame: &mut StackFrame) {
     frame.pc += 1;
 }
 
-pub fn isub(frame: &mut StackFrame) {
+pub fn isub(vm_stack: &mut Vec<StackFrame>) {
+    let frame = vm_stack.last_mut().unwrap();
     let i2 = frame.popi64() as i32;
     let i1 = frame.popi64() as i32;
     let result = i1 - i2;
@@ -50,7 +55,8 @@ pub fn isub(frame: &mut StackFrame) {
     frame.pc += 1;
 }
 
-pub fn fsub(frame: &mut StackFrame) {
+pub fn fsub(vm_stack: &mut Vec<StackFrame>) {
+    let frame = vm_stack.last_mut().unwrap();
     let f2 = frame.popf64() as f32;
     let f1 = frame.popf64() as f32;
     let result = f1 - f2;
@@ -58,7 +64,8 @@ pub fn fsub(frame: &mut StackFrame) {
     frame.pc += 1;
 }
 
-pub fn dsub(frame: &mut StackFrame) {
+pub fn dsub(vm_stack: &mut Vec<StackFrame>) {
+    let frame = vm_stack.last_mut().unwrap();
     let d2 = frame.popf64() ;
     let d1 = frame.popf64() ;
     let result = d1 - d2;
@@ -66,7 +73,8 @@ pub fn dsub(frame: &mut StackFrame) {
     frame.pc += 1;
 }
 
-pub fn lsub(frame: &mut StackFrame) {
+pub fn lsub(vm_stack: &mut Vec<StackFrame>) {
+    let frame = vm_stack.last_mut().unwrap();
     let l2 = frame.popi64() ;
     let l1 = frame.popi64() ;
     let result = l1 - l2;
@@ -74,7 +82,8 @@ pub fn lsub(frame: &mut StackFrame) {
     frame.pc += 1;
 }
 
-pub fn fmul(frame: &mut StackFrame) {
+pub fn fmul(vm_stack: &mut Vec<StackFrame>) {
+    let frame = vm_stack.last_mut().unwrap();
     let f2 = frame.popf64() as f32;
     let f1 = frame.popf64() as f32;
     let result = f1 * f2;
@@ -82,7 +91,8 @@ pub fn fmul(frame: &mut StackFrame) {
     frame.pc += 1;
 }
 
-pub fn imul(frame: &mut StackFrame) {
+pub fn imul(vm_stack: &mut Vec<StackFrame>) {
+    let frame = vm_stack.last_mut().unwrap();
     let i2 = frame.popi64() as i32;
     let i1 = frame.popi64() as i32;
     let a: Wrapping<i32> = Wrapping(i2);
@@ -92,7 +102,8 @@ pub fn imul(frame: &mut StackFrame) {
     frame.pc += 1;
 }
 
-pub fn lmul(frame: &mut StackFrame) {
+pub fn lmul(vm_stack: &mut Vec<StackFrame>) {
+    let frame = vm_stack.last_mut().unwrap();
     let l2 = frame.popi64() ;
     let l1 = frame.popi64() ;
     let a: Wrapping<i64> = Wrapping(l2);
@@ -102,7 +113,8 @@ pub fn lmul(frame: &mut StackFrame) {
     frame.pc += 1;
 }
 
-pub fn dmul(frame: &mut StackFrame) {
+pub fn dmul(vm_stack: &mut Vec<StackFrame>) {
+    let frame = vm_stack.last_mut().unwrap();
     let d2 = frame.popf64() ;
     let d1 = frame.popf64() ;
     let result = d1 * d2;
@@ -110,7 +122,8 @@ pub fn dmul(frame: &mut StackFrame) {
     frame.pc += 1;
 }
 
-pub fn idiv(frame: &mut StackFrame) {
+pub fn idiv(vm_stack: &mut Vec<StackFrame>) {
+    let frame = vm_stack.last_mut().unwrap();
     let i2 = frame.popi64() as i32;
     let i1 = frame.popi64() as i32;
     if i2 == 0 {
@@ -122,7 +135,8 @@ pub fn idiv(frame: &mut StackFrame) {
     frame.pc += 1;
 }
 
-pub fn fdiv(frame: &mut StackFrame) {
+pub fn fdiv(vm_stack: &mut Vec<StackFrame>) {
+    let frame = vm_stack.last_mut().unwrap();
     let f2 = frame.popf64() as f32;
     let f1 = frame.popf64() as f32;
     if f2 == 0.0 {
@@ -134,7 +148,8 @@ pub fn fdiv(frame: &mut StackFrame) {
     frame.pc += 1;
 }
 
-pub fn ddiv(frame: &mut StackFrame) {
+pub fn ddiv(vm_stack: &mut Vec<StackFrame>) {
+    let frame = vm_stack.last_mut().unwrap();
     let d2 = frame.popf64() ;
     let d1 = frame.popf64() ;
     if d2 == 0.0 {
@@ -146,7 +161,8 @@ pub fn ddiv(frame: &mut StackFrame) {
     frame.pc += 1;
 }
 
-pub fn ldiv(frame: &mut StackFrame) {
+pub fn ldiv(vm_stack: &mut Vec<StackFrame>) {
+    let frame = vm_stack.last_mut().unwrap();
     let l2 = frame.popi64() ;
     let l1 = frame.popi64() ;
     if l2 == 0 {
@@ -158,7 +174,8 @@ pub fn ldiv(frame: &mut StackFrame) {
     frame.pc += 1;
 }
 
-pub fn irem(frame: &mut StackFrame) {
+pub fn irem(vm_stack: &mut Vec<StackFrame>) {
+    let frame = vm_stack.last_mut().unwrap();
     let l2 = frame.popi64() as i32;
     let l1 = frame.popi64() as i32;
     let result = l1 % l2;
@@ -167,7 +184,8 @@ pub fn irem(frame: &mut StackFrame) {
     frame.pc += 1;
 }
 
-pub fn frem(frame: &mut StackFrame) {
+pub fn frem(vm_stack: &mut Vec<StackFrame>) {
+    let frame = vm_stack.last_mut().unwrap();
     let f2 = frame.popi64() as f32;
     let f1 = frame.popi64() as f32;
     let result = f1 % f2;
@@ -176,7 +194,8 @@ pub fn frem(frame: &mut StackFrame) {
     frame.pc += 1;
 }
 
-pub fn lrem(frame: &mut StackFrame) {
+pub fn lrem(vm_stack: &mut Vec<StackFrame>) {
+    let frame = vm_stack.last_mut().unwrap();
     let l2 = frame.popi64() ;
     let l1 = frame.popi64() ;
     let result = l1 % l2;
@@ -185,7 +204,8 @@ pub fn lrem(frame: &mut StackFrame) {
     frame.pc += 1;
 }
 
-pub fn drem(frame: &mut StackFrame) {
+pub fn drem(vm_stack: &mut Vec<StackFrame>) {
+    let frame = vm_stack.last_mut().unwrap();
     let d2 = frame.popi64() as f64;
     let d1 = frame.popi64() as f64;
     let result = d1 % d2;
@@ -195,66 +215,76 @@ pub fn drem(frame: &mut StackFrame) {
 }
 
 // 取负
-pub fn ineg(frame: &mut StackFrame) {
+pub fn ineg(vm_stack: &mut Vec<StackFrame>) {
+    let frame = vm_stack.last_mut().unwrap();
     let i = frame.popi64() as i32;
     frame.op_stack.push(StackFrameValue::Int(0 - i));
     frame.pc += 1;
 }
 
-pub fn lneg(frame: &mut StackFrame) {
+pub fn lneg(vm_stack: &mut Vec<StackFrame>) {
+    let frame = vm_stack.last_mut().unwrap();
     let l = frame.popi64() ;
     frame.op_stack.push(StackFrameValue::Long(0 - l));
     frame.pc += 1;
 }
 
-pub fn fneg(frame: &mut StackFrame) {
+pub fn fneg(vm_stack: &mut Vec<StackFrame>) {
+    let frame = vm_stack.last_mut().unwrap();
     let f = frame.popi64() as f32;
     frame.op_stack.push(StackFrameValue::Float(0.0 - f));
     frame.pc += 1;
 }
 
-pub fn dneg(frame: &mut StackFrame) {
+pub fn dneg(vm_stack: &mut Vec<StackFrame>) {
+    let frame = vm_stack.last_mut().unwrap();
     let d = frame.popi64() as f64;
     frame.op_stack.push(StackFrameValue::Double(0.0 - d));
     frame.pc += 1;
 }
 
-pub fn ishl(frame: &mut StackFrame) {
+pub fn ishl(vm_stack: &mut Vec<StackFrame>) {
+    let frame = vm_stack.last_mut().unwrap();
     let i2 = frame.popi64() as i32;
     let i1 = frame.popi64() as i32;
     frame.op_stack.push(StackFrameValue::Int(i1 << i2));
     frame.pc += 1;
 }
 
-pub fn lshl(frame: &mut StackFrame) {
+pub fn lshl(vm_stack: &mut Vec<StackFrame>) {
+    let frame = vm_stack.last_mut().unwrap();
     let l2 = frame.popi64() ;
     let l1 = frame.popi64() ;
     frame.op_stack.push(StackFrameValue::Long(l1 << l2));
     frame.pc += 1;
 }
 
-pub fn ishr(frame: &mut StackFrame) {
+pub fn ishr(vm_stack: &mut Vec<StackFrame>) {
+    let frame = vm_stack.last_mut().unwrap();
     let i2 = frame.popi64() as i32;
     let i1 = frame.popi64() as i32;
     frame.op_stack.push(StackFrameValue::Int(i1 >> i2));
     frame.pc += 1;
 }
 
-pub fn lshr(frame: &mut StackFrame) {
+pub fn lshr(vm_stack: &mut Vec<StackFrame>) {
+    let frame = vm_stack.last_mut().unwrap();
     let l2 = frame.popi64() ;
     let l1 = frame.popi64() ;
     frame.op_stack.push(StackFrameValue::Long(l1 >> l2));
     frame.pc += 1;
 }
 
-pub fn iushr(frame: &mut StackFrame) {
+pub fn iushr(vm_stack: &mut Vec<StackFrame>) {
+    let frame = vm_stack.last_mut().unwrap();
     let l2 = frame.popi64() as u32;
     let l1 = frame.popi64() as u32;
     frame.op_stack.push(StackFrameValue::Int((l1 >> l2) as i32));
     frame.pc += 1;
 }
 
-pub fn lushr(frame: &mut StackFrame) {
+pub fn lushr(vm_stack: &mut Vec<StackFrame>) {
+    let frame = vm_stack.last_mut().unwrap();
     let l2 = frame.popi64() ;
     let l1 = frame.popi64() ;
     frame
@@ -263,49 +293,56 @@ pub fn lushr(frame: &mut StackFrame) {
     frame.pc += 1;
 }
 
-pub fn iand(frame: &mut StackFrame) {
+pub fn iand(vm_stack: &mut Vec<StackFrame>) {
+    let frame = vm_stack.last_mut().unwrap();
     let l2 = frame.popi64() as i32;
     let l1 = frame.popi64() as i32;
     frame.op_stack.push(StackFrameValue::Int(l1 & l2));
     frame.pc += 1;
 }
 
-pub fn land(frame: &mut StackFrame) {
+pub fn land(vm_stack: &mut Vec<StackFrame>) {
+    let frame = vm_stack.last_mut().unwrap();
     let l2 = frame.popi64() ;
     let l1 = frame.popi64() ;
     frame.op_stack.push(StackFrameValue::Long(l1 & l2));
     frame.pc += 1;
 }
 
-pub fn ior(frame: &mut StackFrame) {
+pub fn ior(vm_stack: &mut Vec<StackFrame>) {
+    let frame = vm_stack.last_mut().unwrap();
     let l2 = frame.popi64() as i32;
     let l1 = frame.popi64() as i32;
     frame.op_stack.push(StackFrameValue::Int(l1 | l2));
     frame.pc += 1;
 }
 
-pub fn lor(frame: &mut StackFrame) {
+pub fn lor(vm_stack: &mut Vec<StackFrame>) {
+    let frame = vm_stack.last_mut().unwrap();
     let l2 = frame.popi64() ;
     let l1 = frame.popi64() ;
     frame.op_stack.push(StackFrameValue::Long(l1 | l2));
     frame.pc += 1;
 }
 
-pub fn ixor(frame: &mut StackFrame) {
+pub fn ixor(vm_stack: &mut Vec<StackFrame>) {
+    let frame = vm_stack.last_mut().unwrap();
     let l2 = frame.popi64() as i32;
     let l1 = frame.popi64() as i32;
     frame.op_stack.push(StackFrameValue::Int(l1 ^ l2));
     frame.pc += 1;
 }
 
-pub fn lxor(frame: &mut StackFrame) {
+pub fn lxor(vm_stack: &mut Vec<StackFrame>) {
+    let frame = vm_stack.last_mut().unwrap();
     let l2 = frame.popi64() ;
     let l1 = frame.popi64() ;
     frame.op_stack.push(StackFrameValue::Long(l1 ^ l2));
     frame.pc += 1;
 }
 
-pub fn iinc(frame: &mut StackFrame) {
+pub fn iinc(vm_stack: &mut Vec<StackFrame>) {
+    let frame = vm_stack.last_mut().unwrap();
     let index = frame.code[frame.pc + 1] as i32;
     let _const = frame.code[frame.pc + 2] as i8;
     let v: &StackFrameValue = frame.local.get(index as usize).unwrap();

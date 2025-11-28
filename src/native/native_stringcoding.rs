@@ -53,7 +53,7 @@ pub fn encode0(frame: &mut StackFrame) {
             let reference = get_reference(&new_array_id).unwrap();
             //info!("{:?}", bytes);
             match reference {
-                Reference::Array(array) => {
+                Reference::Array(mut array) => {
                     array.data = bytes;
                 }
                 _ => panic!(),
@@ -105,7 +105,7 @@ pub fn encode0(frame: &mut StackFrame) {
                 );
                 let reference = get_reference(&new_array_id).unwrap();
                 match reference {
-                    Reference::Array(array) => {
+                    Reference::Array(mut array) => {
                         array.data = chars;
                     }
                     _ => panic!(),

@@ -5,7 +5,8 @@ extern crate env_logger;
 
 
 
-pub fn pop(frame: &mut StackFrame) {
+pub fn pop(vm_stack: &mut Vec<StackFrame>) {
+    let frame = vm_stack.last_mut().unwrap();
     let v = frame.op_stack.last().unwrap();
     match v {
         StackFrameValue::Double(_d) =>{
@@ -21,7 +22,8 @@ pub fn pop(frame: &mut StackFrame) {
     frame.pc += 1;
 }
 
-pub fn pop2(frame: &mut StackFrame) {
+pub fn pop2(vm_stack: &mut Vec<StackFrame>) {
+    let frame = vm_stack.last_mut().unwrap();
     let v = frame.op_stack.last().unwrap();
     match v {
         StackFrameValue::Double(_d) =>{

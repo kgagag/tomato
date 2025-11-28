@@ -5,11 +5,13 @@ extern crate log;
 extern crate env_logger;
 
 
-pub fn monitorenter(frame: &mut StackFrame) {
+pub fn monitorenter(vm_stack: &mut Vec<StackFrame>) {
+    let frame = vm_stack.last_mut().unwrap();
     frame.pc += 1;
 }
 
 
-pub fn monitorexit(frame: &mut StackFrame) {
+pub fn monitorexit(vm_stack: &mut Vec<StackFrame>) {
+    let frame = vm_stack.last_mut().unwrap();
     frame.pc += 1;
 }

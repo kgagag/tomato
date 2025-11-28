@@ -1,7 +1,7 @@
 
 use std::env;
 use log::info;
-use tomato::{classfile::class::ConstantPoolInfo, common::stack_frame::{create_stack_frame, push_stack_frame}, interpreter::instructions::op_code::op_code::execute, runtime::runtime_data_area::get_or_load_class};
+use tomato::{classfile::class::ConstantPoolInfo, common::stack_frame::{StackFrame, create_stack_frame}, interpreter::instructions::op_code::op_code::do_opcode, runtime::runtime_data_area::get_or_load_class};
 fn main() {
     env::set_var("RUST_LOG", "DEBUG");
     env_logger::Builder::from_default_env()
@@ -29,8 +29,8 @@ pub fn run(main_class_path: String) {
                 //创建虚拟机栈，并创建第一个栈帧
                 if name == "main" {
                     let stack_frame = create_stack_frame(method_info).unwrap();
-                    let vm_stack_id = push_stack_frame(stack_frame);
-                    execute(vm_stack_id);
+                    let mut vm_stack : Vec<StackFrame>  = vec![stack_frame];    
+                    do_opcode(&mut vm_stack);
                 }
             }
             _=> panic!("wrong class data")

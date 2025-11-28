@@ -12,7 +12,8 @@ use crate::utils::u8c::u8s_to_u16;
 
 
 
-pub fn instanceof(frame: &mut StackFrame) {
+pub fn instanceof(vm_stack: &mut Vec<StackFrame>) {
+    let frame = vm_stack.last_mut().unwrap();
     let v = frame.op_stack.pop().unwrap();
     let target_class_name:String = match v {
         StackFrameValue::Reference(id) => {

@@ -9,7 +9,6 @@ use crate::classfile::class::ConstantPoolInfo;
 use crate::classfile::class::MethodInfo;
 use crate::common::reference::Reference;
 use crate::common::stack_frame::init_stack_frame;
-use crate::common::stack_frame::push_stack_frame;
 use crate::common::stack_frame::StackFrame;
 use crate::common::value::StackFrameValue;
 use crate::native::native::run_native;
@@ -17,11 +16,10 @@ use crate::runtime::runtime_data_area::get_class_name;
 use crate::runtime::runtime_data_area::get_method_from_pool;
 use crate::runtime::runtime_data_area::get_or_load_class;
 use crate::runtime::runtime_data_area::get_reference;
-use crate::runtime::runtime_data_area::VM_STACKS;
 use crate::utils::debug::dprint;
 use crate::utils::u8c::u8s_to_u16;
 
-pub fn get_method_for_invoke(frame: &StackFrame) -> Option<&MethodInfo> {
+pub fn get_method_for_invoke(frame: &StackFrame) -> Option<MethodInfo> {
     let this_class = get_or_load_class(&frame.class_name).clone();
     // 使用 match 代替 if let 以减少嵌套，并处理 unwrap 导致的潜在 panic
     let (class_index, name_and_type_index) = match this_class
@@ -86,7 +84,8 @@ pub fn get_method_for_invoke(frame: &StackFrame) -> Option<&MethodInfo> {
     method
 }
 
-pub fn invokespecial(frame: &mut StackFrame) {
+pub fn invokespecial(vm_stack: &mut Vec<StackFrame>) {
+    let frame: &mut StackFrame = vm_stack.last_mut().unwrap();
     let clone_frame = &frame.clone();
     frame.pc += 3;
     let method = get_method_for_invoke(clone_frame).unwrap();
@@ -94,7 +93,7 @@ pub fn invokespecial(frame: &mut StackFrame) {
     //非native 方法
     //push_stack_frame(new_frame);
     if method.access_flag & 0x0100 == 0 {
-        let mut new_frame = init_stack_frame(frame, method, 1);
+        let mut new_frame = init_stack_frame(frame, &method, 1);
         let v = frame.op_stack.pop();
         match v {
             Some(obj) => {
@@ -104,23 +103,24 @@ pub fn invokespecial(frame: &mut StackFrame) {
                 panic!("error");
             }
         }
-        push_stack_frame(new_frame);
+        vm_stack.push(new_frame);
     } else {
-        run_native(method, frame);
+        run_native(&method, frame);
     }
 }
 
-pub fn invokeinterface(frame: &mut StackFrame) {
-    let class_name = get_class_name(&frame.class);
+pub fn invokeinterface(vm_stack: &mut Vec<StackFrame>) {
+   // let frame: &mut StackFrame = vm_stack.last_mut().unwrap();
+    let class_name = get_class_name(&vm_stack.last_mut().unwrap().class);
     let this_class = get_or_load_class(&class_name).clone();
-    let cnt = frame.code[frame.pc + 3];
+    let cnt = vm_stack.last().unwrap().code[vm_stack.last().unwrap().pc + 3];
     let mut tmp: Vec<StackFrameValue> = Vec::new();
     for _i in 1..cnt {
-        tmp.push(frame.op_stack.pop().unwrap());
+        tmp.push(vm_stack.last_mut().unwrap().op_stack.pop().unwrap());
     }
-    let v = frame.op_stack.pop().unwrap();
+    let v = vm_stack.last_mut().unwrap().op_stack.pop().unwrap();
     for _i in 1..cnt {
-        frame.op_stack.push(tmp.pop().unwrap());
+        vm_stack.last_mut().unwrap().op_stack.push(tmp.pop().unwrap());
     }
     match v {
         StackFrameValue::Reference(id) => {
@@ -131,7 +131,7 @@ pub fn invokeinterface(frame: &mut StackFrame) {
                     let class = get_or_load_class(&class_name);
                     let (_class_index, name_and_type_index) = match this_class
                         .constant_pool
-                        .get(&u8s_to_u16(&frame.code[(frame.pc + 1)..(frame.pc + 3)]))
+                        .get(&u8s_to_u16(&vm_stack.last().unwrap().code[(vm_stack.last().unwrap().pc + 1)..(vm_stack.last().unwrap().pc + 3)]))
                     {
                         Some(ConstantPoolInfo::InterfaceMethodref(
                             class_index,
@@ -172,19 +172,20 @@ pub fn invokeinterface(frame: &mut StackFrame) {
                         );
                         curr_class = super_class;
                     }
-                    let mut new_frame: StackFrame = init_stack_frame(frame, method.unwrap(), 1);
+                    let mut new_frame: StackFrame = init_stack_frame(vm_stack.last_mut().unwrap(), &(method.unwrap()), 1);
                     new_frame.local[0] = v;
-                    push_stack_frame(new_frame);
+                    vm_stack.push(new_frame);
                 }
                 _ => panic!(),
             }
         }
         _ => panic!(),
     }
-    frame.pc += 4;
+    vm_stack.last_mut().unwrap().pc += 4;
 }
 
-pub fn invokevirtual(frame: &mut StackFrame) {
+pub fn invokevirtual(vm_stack: &mut Vec<StackFrame>) {
+    let frame: &mut StackFrame = vm_stack.last_mut().unwrap();
     let clone_frame = &frame.clone();
     let method = get_method_for_invoke(clone_frame).unwrap();
     //info!("{}--{}--{}",method.class_name,method.method_name,method.descriptor);
@@ -227,9 +228,9 @@ pub fn invokevirtual(frame: &mut StackFrame) {
         }
         _ => panic!(),
     };
-
-    if target_method.unwrap().access_flag & 0x0100 == 0 {
-        let mut new_frame = init_stack_frame(frame, target_method.unwrap(), 1);
+    let method = &target_method.unwrap();
+    if method.access_flag & 0x0100 == 0 {
+        let mut new_frame = init_stack_frame(frame, method, 1);
         let v = frame.op_stack.pop();
         match v {
             Some(obj) => {
@@ -239,22 +240,16 @@ pub fn invokevirtual(frame: &mut StackFrame) {
                 panic!("error");
             }
         }
-        push_stack_frame(new_frame);
+        //push_stack_frame(new_frame);
+       // vm_stack.push(new_frame);
+       vm_stack.push(new_frame);
     } else {
         run_native(method, frame);
     }
 }
 
-pub fn get_frames(vm_stack_id: &u32) -> &Vec<StackFrame> {
-    let data: std::sync::MutexGuard<'_, UnsafeCell<HashMap<u32, Vec<StackFrame>>>> =
-        VM_STACKS.lock().unwrap();
-    unsafe {
-        let map: &mut HashMap<u32, Vec<StackFrame>> = &mut *data.get();
-        return map.get(vm_stack_id).unwrap();
-    }
-}
-
-pub fn invokestatic(frame: &mut StackFrame) {
+pub fn invokestatic(vm_stack: &mut Vec<StackFrame>) {
+    let frame: &mut StackFrame = vm_stack.last_mut().unwrap();
     let clone_frame = &frame.clone();
     let method = get_method_for_invoke(clone_frame).unwrap();
     frame.pc += 3;
@@ -263,9 +258,10 @@ pub fn invokestatic(frame: &mut StackFrame) {
         let v = frame.op_stack.pop().unwrap();
         dprint(v);
     } else if method.access_flag & 0x0100 == 0 {
-        let new_frame = init_stack_frame(frame, method, 0);
-        push_stack_frame(new_frame);
+        let new_frame = init_stack_frame(frame, &method, 0);
+        //push_stack_frame(new_frame);
+        vm_stack.push(new_frame);
     } else {
-        run_native(method, frame);
+        run_native(&method, frame);
     }
 }

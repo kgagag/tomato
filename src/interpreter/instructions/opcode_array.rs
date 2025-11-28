@@ -2,8 +2,8 @@ use log::info;
 
 use crate::{classfile::class::ConstantPoolInfo, common::{param::DataType, reference::Reference, stack_frame::StackFrame, value::StackFrameValue}, runtime::runtime_data_area::{create_array, get_class_name, get_or_load_class, get_reference}, utils::u8c::u8s_to_u16};
 
-
-pub fn newarray(frame: &mut StackFrame) {
+pub fn newarray(vm_stack: &mut Vec<StackFrame>) {
+    let frame: &mut StackFrame = vm_stack.last_mut().unwrap();
     let v: StackFrameValue = frame.op_stack.pop().unwrap();
     ////info!("{:?}",v);
     let atype = frame.code.get(frame.pc + 1).unwrap();
@@ -60,7 +60,8 @@ fn extract_array_base_type_code(descriptor: &str) -> Option<u8> {
 }
 
 
-pub fn anewarray(frame: &mut StackFrame){
+pub fn anewarray(vm_stack: &mut Vec<StackFrame>){
+    let frame: &mut StackFrame = vm_stack.last_mut().unwrap();
     let v: StackFrameValue = frame.op_stack.pop().unwrap();
     let  len: u32 ;
     match v {
@@ -82,8 +83,9 @@ pub fn anewarray(frame: &mut StackFrame){
 
 
 
-pub fn multianewarray(frame: &mut StackFrame) {
+pub fn multianewarray(vm_stack: &mut Vec<StackFrame>) {
     //info!("{:?}", frame);
+    let frame: &mut StackFrame = vm_stack.last_mut().unwrap();
     let index = u8s_to_u16(&frame.code[frame.pc + 1..frame.pc + 3]);
     let class_name = get_class_name(&frame.class);
     let this_class = get_or_load_class(&class_name);
@@ -176,7 +178,7 @@ fn create_muti_array(reference_id:u64,len: u32 ,array_type: DataType) -> u64 {
    let newarr =  create_array(len, array_type);
    let reference = get_reference(&reference_id).unwrap();
    match reference {
-    Reference::Array(array) => {
+    Reference::Array(mut array) => {
         for i in 0 .. array.len{
             array.data.insert(i as usize, StackFrameValue::Reference(newarr))
         }
@@ -186,38 +188,46 @@ fn create_muti_array(reference_id:u64,len: u32 ,array_type: DataType) -> u64 {
     newarr
 }
 
-pub fn iastore(frame: &mut StackFrame) {
+pub fn iastore(vm_stack: &mut Vec<StackFrame>) {
+    let frame: &mut StackFrame = vm_stack.last_mut().unwrap();
     xastore(frame);
 }
 
-pub fn lastore(frame: &mut StackFrame) {
+pub fn lastore(vm_stack: &mut Vec<StackFrame>) {
+    let frame: &mut StackFrame = vm_stack.last_mut().unwrap();
     xastore(frame);
 }
-pub fn fastore(frame: &mut StackFrame) {
-    xastore(frame);
-}
-
-pub fn dastore(frame: &mut StackFrame) {
-    xastore(frame);
-}
-
-pub fn aastore(frame: &mut StackFrame) {
+pub fn fastore(vm_stack: &mut Vec<StackFrame>) {
+    let frame: &mut StackFrame = vm_stack.last_mut().unwrap();
     xastore(frame);
 }
 
-pub fn bastore(frame: &mut StackFrame) {
+pub fn dastore(vm_stack: &mut Vec<StackFrame>) {
+    let frame: &mut StackFrame = vm_stack.last_mut().unwrap();
     xastore(frame);
 }
 
-pub fn castore(frame: &mut StackFrame) {
+pub fn aastore(vm_stack: &mut Vec<StackFrame>) {
+    let frame: &mut StackFrame = vm_stack.last_mut().unwrap();
     xastore(frame);
 }
 
-pub fn sastore(frame: &mut StackFrame) {
+pub fn bastore(vm_stack: &mut Vec<StackFrame>) {
+    let frame: &mut StackFrame = vm_stack.last_mut().unwrap();
     xastore(frame);
 }
 
-fn xastore(frame: &mut StackFrame) {
+pub fn castore(vm_stack: &mut Vec<StackFrame>) {
+    let frame: &mut StackFrame = vm_stack.last_mut().unwrap();
+    xastore(frame);
+}
+
+pub fn sastore(vm_stack: &mut Vec<StackFrame>) {
+    let frame: &mut StackFrame = vm_stack.last_mut().unwrap();
+    xastore(frame);
+}
+
+fn xastore( frame: &mut StackFrame) {
     let v: StackFrameValue = frame.op_stack.pop().unwrap();
     let index = frame.op_stack.pop().unwrap();
     let array = frame.op_stack.pop().unwrap();
@@ -231,9 +241,9 @@ fn xastore(frame: &mut StackFrame) {
     }
     match array {
         StackFrameValue::Reference(reference_id) => {
-            let reference: &mut Reference = get_reference(&reference_id).unwrap();
+            let  reference = get_reference(&reference_id).unwrap();
             match reference {
-                Reference::Array(arr) => {
+                Reference::Array(mut arr) => {
                     arr.data[i] = v;
                 }
                 _ => panic!(),
@@ -244,40 +254,50 @@ fn xastore(frame: &mut StackFrame) {
     frame.pc += 1;
 }
 
-pub fn iaload(frame: &mut StackFrame) {
+pub fn iaload(vm_stack: &mut Vec<StackFrame>) {
+    let frame: &mut StackFrame = vm_stack.last_mut().unwrap();
     xaload(frame);
 }
 
-pub fn laload(frame: &mut StackFrame) {
+pub fn laload(vm_stack: &mut Vec<StackFrame>) {
+    let frame: &mut StackFrame = vm_stack.last_mut().unwrap();
     xaload(frame);
 }
 
-pub fn faload(frame: &mut StackFrame) {
+pub fn faload(vm_stack: &mut Vec<StackFrame>) {
+    let frame: &mut StackFrame = vm_stack.last_mut().unwrap();
     xaload(frame);
 }
 
-pub fn daload(frame: &mut StackFrame) {
+pub fn daload(vm_stack: &mut Vec<StackFrame>) {
+    let frame: &mut StackFrame = vm_stack.last_mut().unwrap();
     xaload(frame);
 }
 
-pub fn aaload(frame: &mut StackFrame) {
+pub fn aaload(vm_stack: &mut Vec<StackFrame>) {
+    let frame: &mut StackFrame = vm_stack.last_mut().unwrap();
     xaload(frame);
 }
 
-pub fn baload(frame: &mut StackFrame) {
+pub fn baload(vm_stack: &mut Vec<StackFrame>) {
+    let frame: &mut StackFrame = vm_stack.last_mut().unwrap();
     xaload(frame);
 }
 
-pub fn caload(frame: &mut StackFrame) {
+pub fn caload(vm_stack: &mut Vec<StackFrame>) {
+    let frame: &mut StackFrame = vm_stack.last_mut().unwrap();
     xaload(frame);
 }
 
-pub fn saload(frame: &mut StackFrame) {
+pub fn saload(vm_stack: &mut Vec<StackFrame>) {
+    let frame: &mut StackFrame = vm_stack.last_mut().unwrap();
     xaload(frame);
 }
 
-pub fn arraylength(frame: &mut StackFrame){
+pub fn arraylength(vm_stack: &mut Vec<StackFrame>){
+    let frame: &mut StackFrame = vm_stack.last_mut().unwrap();
     let v = frame.op_stack.pop().unwrap();
+    //info!("{:?}",v);
     match v {
         StackFrameValue::Reference(reference) =>{
             let aref = get_reference(&reference).unwrap();
@@ -296,13 +316,14 @@ pub fn arraylength(frame: &mut StackFrame){
 fn xaload(frame: &mut StackFrame) {
     let index = frame.op_stack.pop().unwrap();
     let array = frame.op_stack.pop().unwrap();
+    //info!("{:?}",array);
     let i;
     match index {
         StackFrameValue::Byte(l) => i = l as usize,
         StackFrameValue::Char(l) => i = l as usize,
         StackFrameValue::Int(l) => i = l as usize,
         StackFrameValue::Short(l) => i = l as usize,
-        StackFrameValue::CHARACTER(l) => i = l as usize,
+        StackFrameValue::Long(l) => i = l as usize,
         _ => panic!(),
     }
     match array {

@@ -5,7 +5,8 @@ use crate::{classfile::class::ConstantPoolInfo, common::{stack_frame::StackFrame
 /**
  * 创建对象的指令
  */
-pub fn _new(frame: &mut StackFrame) {
+pub fn _new(vm_stack: &mut Vec<StackFrame>) {
+    let frame = vm_stack.last_mut().unwrap();
     //获取要当前类的名称
     let class_name = get_class_name(&frame.class);
     // 加载类

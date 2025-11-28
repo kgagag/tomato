@@ -5,7 +5,8 @@ use crate::{classfile::class::ConstantPoolInfo, common::stack_frame::StackFrame,
 
 
 
-pub fn putstatic(frame: &mut StackFrame) {
+pub fn putstatic(vm_stack: &mut Vec<StackFrame>) {
+    let frame = vm_stack.last_mut().unwrap();
     let index: u16 = u16::from_be_bytes([frame.code[frame.pc + 1], frame.code[frame.pc + 2]]);
     let class_name = get_class_name(&frame.class);
     let this_class = get_or_load_class(&class_name);
@@ -44,7 +45,8 @@ pub fn putstatic(frame: &mut StackFrame) {
     frame.pc += 3;
 }
 
-pub fn getstatic(frame: &mut StackFrame) {
+pub fn getstatic(vm_stack: &mut Vec<StackFrame>) {
+    let frame = vm_stack.last_mut().unwrap();
     let index: u16 = u16::from_be_bytes([frame.code[frame.pc + 1], frame.code[frame.pc + 2]]);
     let class_name = get_class_name(&frame.class);
     let this_class = get_or_load_class(&class_name).clone();

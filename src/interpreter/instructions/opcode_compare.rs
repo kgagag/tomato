@@ -5,7 +5,8 @@ use crate::{common::{stack_frame::StackFrame, value::StackFrameValue}, utils::u8
 
 
 
-pub fn fcmpg(frame: &mut StackFrame) {
+pub fn fcmpg(vm_stack: &mut Vec<StackFrame>) {
+    let frame = vm_stack.last_mut().unwrap();
     let f2 = frame.popf64();
     let f1 = frame.popf64();
 
@@ -37,7 +38,8 @@ pub fn fcmpg(frame: &mut StackFrame) {
 
 
 
-pub fn lcmp(frame: &mut StackFrame) {
+pub fn lcmp(vm_stack: &mut Vec<StackFrame>) {
+    let frame = vm_stack.last_mut().unwrap();
     let l2 = frame.popi64();
     let l1 = frame.popi64();
     
@@ -51,7 +53,8 @@ pub fn lcmp(frame: &mut StackFrame) {
     frame.pc += 1;
 }
 
-pub fn fcmpl(frame: &mut StackFrame) {
+pub fn fcmpl(vm_stack: &mut Vec<StackFrame>) {
+    let frame = vm_stack.last_mut().unwrap();
     let f2 = frame.popf64();
     let f1 = frame.popf64();
 
@@ -69,7 +72,8 @@ pub fn fcmpl(frame: &mut StackFrame) {
 }
 
 
-pub fn dcmpg(frame: &mut StackFrame) {
+pub fn dcmpg(vm_stack: &mut Vec<StackFrame>) {
+    let frame = vm_stack.last_mut().unwrap();
     let d2 = frame.popf64();
     let d1 = frame.popf64();
 
@@ -100,7 +104,8 @@ pub fn dcmpg(frame: &mut StackFrame) {
 
 
 
-pub fn dcmpl(frame: &mut StackFrame) {
+pub fn dcmpl(vm_stack: &mut Vec<StackFrame>) {
+    let frame = vm_stack.last_mut().unwrap();
     let d2 = frame.popf64();
     let d1 = frame.popf64();
 
@@ -130,7 +135,8 @@ pub fn dcmpl(frame: &mut StackFrame) {
 }
 
 
-pub fn ifeq(frame: &mut StackFrame) {
+pub fn ifeq(vm_stack: &mut Vec<StackFrame>) {
+    let frame = vm_stack.last_mut().unwrap();
     let value = frame.popi64();
     let branch_offset = u8s_to_i16(&frame.code[frame.pc + 1.. frame.pc + 3]) as i32;
     if value == 0 {
@@ -140,7 +146,8 @@ pub fn ifeq(frame: &mut StackFrame) {
     }
 }
 
-pub fn ifne(frame: &mut StackFrame) {
+pub fn ifne(vm_stack: &mut Vec<StackFrame>) {
+    let frame = vm_stack.last_mut().unwrap();
     let value = frame.popi64();
     let branch_offset = u8s_to_i16(&frame.code[frame.pc + 1.. frame.pc + 3]) as i16;
     if value != 0 {
@@ -150,7 +157,8 @@ pub fn ifne(frame: &mut StackFrame) {
     }
 }
 
-pub fn iflt(frame: &mut StackFrame) {
+pub fn iflt(vm_stack: &mut Vec<StackFrame>) {
+    let frame = vm_stack.last_mut().unwrap();
     let value = frame.popi64();
     let branch_offset = u8s_to_i16(&frame.code[frame.pc + 1.. frame.pc + 3]);
     if value < 0 {
@@ -161,7 +169,8 @@ pub fn iflt(frame: &mut StackFrame) {
 }
 
 
-pub fn ifge(frame: &mut StackFrame) {
+pub fn ifge(vm_stack: &mut Vec<StackFrame>) {
+    let frame = vm_stack.last_mut().unwrap();
     let value = frame.popi64();
     let branch_offset = u8s_to_i16(&frame.code[frame.pc + 1.. frame.pc + 3]);
     if value >= 0 {
@@ -172,7 +181,8 @@ pub fn ifge(frame: &mut StackFrame) {
 }
 
 
-pub fn ifgt(frame: &mut StackFrame) {
+pub fn ifgt(vm_stack: &mut Vec<StackFrame>) {
+    let frame = vm_stack.last_mut().unwrap();
     let value = frame.popi64();
     let branch_offset = u8s_to_i16(&frame.code[frame.pc + 1.. frame.pc + 3]);
     if value > 0 {
@@ -182,7 +192,8 @@ pub fn ifgt(frame: &mut StackFrame) {
     }
 }
 
-pub fn ifle(frame: &mut StackFrame) {
+pub fn ifle(vm_stack: &mut Vec<StackFrame>) {
+    let frame = vm_stack.last_mut().unwrap();
     let value = frame.popi64();
     let branch_offset = u8s_to_i16(&frame.code[frame.pc + 1.. frame.pc + 3]);
     if value <= 0 {
@@ -193,7 +204,8 @@ pub fn ifle(frame: &mut StackFrame) {
 }
 
 
-pub fn if_icmpeq(frame: &mut StackFrame) {
+pub fn if_icmpeq(vm_stack: &mut Vec<StackFrame>) {
+    let frame = vm_stack.last_mut().unwrap();
     let value2 = frame.popi64();
     let value1 = frame.popi64();
     let branch_offset = u8s_to_i16(&frame.code[frame.pc + 1.. frame.pc + 3]);
@@ -205,7 +217,8 @@ pub fn if_icmpeq(frame: &mut StackFrame) {
 }
 
 
-pub fn if_icmpne(frame: &mut StackFrame) {
+pub fn if_icmpne(vm_stack: &mut Vec<StackFrame>) {
+    let frame = vm_stack.last_mut().unwrap();
     let value2 = frame.popi64();
     let value1 = frame.popi64();
     let branch_offset = u8s_to_u16(&frame.code[frame.pc + 1.. frame.pc + 3]);
@@ -217,7 +230,8 @@ pub fn if_icmpne(frame: &mut StackFrame) {
 }
 
 
-pub fn if_icmplt(frame: &mut StackFrame) {
+pub fn if_icmplt(vm_stack: &mut Vec<StackFrame>) {
+    let frame = vm_stack.last_mut().unwrap();
     let value2 = frame.popi64();
     let value1 = frame.popi64();
     let branch_offset = u8s_to_u16(&frame.code[frame.pc + 1.. frame.pc + 3]);
@@ -230,7 +244,8 @@ pub fn if_icmplt(frame: &mut StackFrame) {
 }
 
 
-pub fn if_icmpge(frame: &mut StackFrame) {
+pub fn if_icmpge(vm_stack: &mut Vec<StackFrame>) {
+    let frame = vm_stack.last_mut().unwrap();
     let value2 = frame.popi64();
     let value1 = frame.popi64();
     let branch_offset = u8s_to_u16(&frame.code[frame.pc + 1.. frame.pc + 3]);
@@ -242,7 +257,8 @@ pub fn if_icmpge(frame: &mut StackFrame) {
     }
 }
 
-pub fn if_icmpgt(frame: &mut StackFrame) {
+pub fn if_icmpgt(vm_stack: &mut Vec<StackFrame>) {
+    let frame = vm_stack.last_mut().unwrap();
     let value2 = frame.popi64();
     let value1 = frame.popi64();
     let branch_offset = u8s_to_u16(&frame.code[frame.pc + 1.. frame.pc + 3]);
@@ -254,7 +270,8 @@ pub fn if_icmpgt(frame: &mut StackFrame) {
     }
 }
 
-pub fn if_icmple(frame: &mut StackFrame) {
+pub fn if_icmple(vm_stack: &mut Vec<StackFrame>) {
+    let frame = vm_stack.last_mut().unwrap();
     let value2 = frame.popi64();
     let value1 = frame.popi64();
     let branch_offset = u8s_to_u16(&frame.code[frame.pc + 1.. frame.pc + 3]);
@@ -266,7 +283,8 @@ pub fn if_icmple(frame: &mut StackFrame) {
 }
 
 
-pub fn if_acmpeq(frame: &mut StackFrame) {
+pub fn if_acmpeq(vm_stack: &mut Vec<StackFrame>) {
+    let frame = vm_stack.last_mut().unwrap();
     let value2 = frame.pop_reference();
     let value1 = frame.pop_reference();
     let branch_offset = u8s_to_u16(&frame.code[frame.pc + 1.. frame.pc + 3]);
@@ -277,7 +295,8 @@ pub fn if_acmpeq(frame: &mut StackFrame) {
     }
 }
 
-pub fn if_acmpne(frame: &mut StackFrame) {
+pub fn if_acmpne(vm_stack: &mut Vec<StackFrame>) {
+    let frame = vm_stack.last_mut().unwrap();
     let value2 = frame.pop_reference();
     let value1 = frame.pop_reference();
     let branch_offset = u8s_to_u16(&frame.code[frame.pc + 1.. frame.pc + 3]);
@@ -289,7 +308,8 @@ pub fn if_acmpne(frame: &mut StackFrame) {
     }
 }
 
-pub fn ifnonnull(frame: &mut StackFrame) {
+pub fn ifnonnull(vm_stack: &mut Vec<StackFrame>) {
+    let frame = vm_stack.last_mut().unwrap();
     let value = frame.op_stack.pop().unwrap();
     // info!("{:?}",value);
     match value {
@@ -303,7 +323,8 @@ pub fn ifnonnull(frame: &mut StackFrame) {
     }
 }
 
-pub fn ifnull(frame: &mut StackFrame) {
+pub fn ifnull(vm_stack: &mut Vec<StackFrame>) {
+    let frame = vm_stack.last_mut().unwrap();
     let value = frame.op_stack.pop().unwrap();
     //info!("{:?}",value);
     match value {
@@ -321,7 +342,8 @@ pub fn ifnull(frame: &mut StackFrame) {
 /**
  * gpt4o 实现的 lookupswitch
  */
-pub fn lookupswitch(frame: &mut StackFrame) {
+pub fn lookupswitch(vm_stack: &mut Vec<StackFrame>) {
+    let frame = vm_stack.last_mut().unwrap();
     let mut pc0 = frame.pc;
     // 确保PC是4字节对齐的
     while pc0 % 4 != 0 {
@@ -357,7 +379,8 @@ pub fn lookupswitch(frame: &mut StackFrame) {
 /**
  *  * gpt4o 实现的 lookupswitch
  */
-pub fn tableswitch(frame: &mut StackFrame) {
+pub fn tableswitch(vm_stack: &mut Vec<StackFrame>) {
+    let frame = vm_stack.last_mut().unwrap();
     let mut pc0 = frame.pc;
 
     // 确保PC是4字节对齐的

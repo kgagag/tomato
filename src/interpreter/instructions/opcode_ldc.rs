@@ -7,7 +7,8 @@ extern crate log;
 
 
 
-pub fn ldc(frame: &mut StackFrame) {
+pub fn ldc(vm_stack: &mut Vec<StackFrame>) {
+    let frame = vm_stack.last_mut().unwrap();
     let index = frame.code[frame.pc + 1];
     let class_name = get_class_name(&frame.class);
     let this_class = get_or_load_class(&class_name);
@@ -30,7 +31,7 @@ pub fn ldc(frame: &mut StackFrame) {
                         put_into_class_constant_pool(class_name.clone(), obj_id);
                         frame.op_stack.push(StackFrameValue::Reference(obj_id));
                     }else {
-                        frame.op_stack.push(StackFrameValue::Reference(*class_obj.unwrap()));
+                        frame.op_stack.push(StackFrameValue::Reference(class_obj.unwrap()));
                     }
                 }
                 _ => panic!(),
@@ -60,12 +61,14 @@ pub fn ldc(frame: &mut StackFrame) {
     frame.pc += 2;
 }
 
-pub fn ldc_w(frame: &mut StackFrame) {
+pub fn ldc_w(vm_stack: &mut Vec<StackFrame>) {
+    let frame = vm_stack.last_mut().unwrap();
     frame.op_stack.push(frame.local.get(1).unwrap().clone());
     frame.pc += 1;
 }
 
-pub fn ldc2_w(frame: &mut StackFrame) {
+pub fn ldc2_w(vm_stack: &mut Vec<StackFrame>) {
+    let frame: &mut StackFrame = vm_stack.last_mut().unwrap();
     let index = u8s_to_u16(&frame.code[frame.pc + 1..frame.pc + 3]);
     let class_name = get_class_name(&frame.class);
     let this_class = get_or_load_class(&class_name);

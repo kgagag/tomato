@@ -3,7 +3,7 @@ use log::info;
 use std::cell::UnsafeCell;
 use std::collections::HashMap;
 
-use crate::{classfile::class::{AttributeInfo, Class, CodeAttribute, MethodInfo}, runtime::runtime_data_area::{get_or_load_class, VM_STACKS}};
+use crate::{classfile::class::{AttributeInfo, Class, CodeAttribute, MethodInfo}, runtime::runtime_data_area::{get_or_load_class}};
 
 use super::{param::DataType, value::{number_to_u32tuple, StackFrameValue}};
 /**
@@ -29,9 +29,6 @@ pub struct StackFrame {
     pub code: Vec<u8>,
 
     pub code_attr: CodeAttribute,
-
-    //所属虚拟机栈id
-    pub vm_stack_id: u32,
 
     pub method_name:String,
 
@@ -60,7 +57,6 @@ impl StackFrame {
             max_locals,
             code,
             code_attr,
-            vm_stack_id: 0,
             method_name,
             descriptor,
             class_name
@@ -146,7 +142,6 @@ pub fn init_stack_frame(
     start: usize,
 ) -> StackFrame {
     let mut new_stack_frame: StackFrame = create_stack_frame(method_info).unwrap();
-    new_stack_frame.vm_stack_id = frame.vm_stack_id;
     let mut i: usize = start;
     let mut param: Vec<StackFrameValue> = Vec::new();
     for _j in 0..method_info.param.len() {
@@ -257,29 +252,3 @@ pub fn create_stack_frame_with_class(
     None
 }
 
-pub fn push_stack_frame(mut stack_frame: StackFrame) -> u32 {
-    let data: std::sync::MutexGuard<'_, UnsafeCell<HashMap<u32, Vec<StackFrame>>>> =
-        VM_STACKS.lock().unwrap();
-    let mut vm_stack_id: u32 = stack_frame.vm_stack_id;
-    unsafe {
-        let map: &mut HashMap<u32, Vec<StackFrame>> = &mut *data.get();
-        if stack_frame.vm_stack_id == 0 {
-            for i in 0x1..0xFFFFFFFF_u32 {
-                if !map.contains_key(&i) {
-                    stack_frame.vm_stack_id = i;
-                    vm_stack_id = i;
-                    let stack_frames: Vec<StackFrame> = vec![stack_frame];
-                    map.insert(i, stack_frames);
-                    break;
-                }
-            }
-        } else {
-            let frames = map.get_mut(&stack_frame.vm_stack_id).unwrap();
-            //info!("before:{:?}", frames);
-            frames.push(stack_frame);
-            //info!("after:{:?}", frames);
-        }
-        drop(data);
-    }
-    vm_stack_id
-}

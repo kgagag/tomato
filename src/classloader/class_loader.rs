@@ -8,7 +8,7 @@ use crate::classfile::class::MethodInfo;
 use crate::common::param::DataType;
 use crate::common::stack_frame::*;
 use crate::common::value::StackFrameValue;
-use crate::interpreter::instructions::op_code::op_code::execute;
+use crate::interpreter::instructions::op_code::op_code::do_opcode;
 use crate::runtime::runtime_data_area::add_method;
 use crate::runtime::runtime_data_area::class_exists;
 use crate::runtime::runtime_data_area::init_class_id;
@@ -280,11 +280,8 @@ pub fn init(class: &mut Class, method_name: String) {
                 //创建虚拟机栈，并创建第一个栈帧
                 if name == &method_name {
                     let stack_frame = create_stack_frame_with_class(method_info, class).unwrap();
-                    // info!("{:?}",stack_frame);
-                    //let vm_stack_id = (&stack_frame).vm_stack_id;
-                    //    let stack_frame_clone = stack_frame.clone();
-                    let vm_stack_id = push_stack_frame(stack_frame);
-                    execute(vm_stack_id);
+                    let mut vm_stack : Vec<StackFrame>  = vec![stack_frame];
+                    do_opcode(&mut vm_stack);
                 }
             }
             _ => panic!("wrong class data"),

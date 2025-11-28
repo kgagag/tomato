@@ -5,47 +5,55 @@ extern crate log;
 use log::info;
 
 use crate::{common::{stack_frame::StackFrame, value::StackFrameValue}, utils::u8c::{u32_tuple_to_f64, u32_tuple_to_i64}};
-pub fn aload_1(frame: &mut StackFrame) {
+pub fn aload_1(vm_stack: &mut Vec<StackFrame>) {
+    let frame = vm_stack.last_mut().unwrap();
     frame.op_stack.push(frame.local.get(1).unwrap().clone());
     frame.pc += 1;
 }
 
-pub fn aload_2(frame: &mut StackFrame) {
+pub fn aload_2(vm_stack: &mut Vec<StackFrame>) {
+    let frame = vm_stack.last_mut().unwrap();
     frame.op_stack.push(frame.local.get(2).unwrap().clone());
     frame.pc += 1;
 }
 
-pub fn aload_3(frame: &mut StackFrame) {
+pub fn aload_3(vm_stack: &mut Vec<StackFrame>) {
+    let frame = vm_stack.last_mut().unwrap();
     frame.op_stack.push(frame.local.get(3).unwrap().clone());
     frame.pc += 1;
 }
 
-pub fn aload_0(frame: &mut StackFrame) {
+pub fn aload_0(vm_stack: &mut Vec<StackFrame>) {
+    let frame = vm_stack.last_mut().unwrap();
     let v = frame.local.get(0).unwrap().clone();
     frame.op_stack.push(v);
     frame.pc += 1;
 }
 
-pub fn iload(frame: &mut StackFrame) {
+pub fn iload(vm_stack: &mut Vec<StackFrame>) {
+    let frame = vm_stack.last_mut().unwrap();
     let index = frame.code[frame.pc + 1] as usize;
     frame.op_stack.push(frame.local.get(index).unwrap().clone());
     frame.pc += 2;
 }
 
-pub fn fload(frame: &mut StackFrame) {
+pub fn fload(vm_stack: &mut Vec<StackFrame>) {
+    let frame = vm_stack.last_mut().unwrap();
     let index = frame.code[frame.pc + 1] as usize;
     //info!("{:?}",frame);
     frame.op_stack.push(frame.local.get(index).unwrap().clone());
     frame.pc += 2;
 }
 
-pub fn aload(frame: &mut StackFrame) {
+pub fn aload(vm_stack: &mut Vec<StackFrame>) {
+    let frame = vm_stack.last_mut().unwrap();
     let index = frame.code[frame.pc + 1] as usize;
     frame.op_stack.push(frame.local.get(index).unwrap().clone());
     frame.pc += 2;
 }
 
-pub fn dload(frame: &mut StackFrame) {
+pub fn dload(vm_stack: &mut Vec<StackFrame>) {
+    let frame = vm_stack.last_mut().unwrap();
     let index = frame.code[frame.pc + 1] as usize;
     let v1 = frame.local.get(index).unwrap().clone();
     let v2: StackFrameValue = frame.local.get(index + 1).unwrap().clone();
@@ -73,7 +81,8 @@ pub fn dload(frame: &mut StackFrame) {
     frame.pc += 2;
 }
 
-pub fn lload(frame: &mut StackFrame) {
+pub fn lload(vm_stack: &mut Vec<StackFrame>) {
+    let frame = vm_stack.last_mut().unwrap();
     let index = frame.code[frame.pc + 1] as usize;
     let v1 = frame.local.get(index).unwrap().clone();
     let v2: StackFrameValue = frame.local.get(index + 1).unwrap().clone();
@@ -98,48 +107,57 @@ pub fn lload(frame: &mut StackFrame) {
     frame.op_stack.push(d);
     frame.pc += 2;
 }
-pub fn iload_0(frame: &mut StackFrame) {
+pub fn iload_0(vm_stack: &mut Vec<StackFrame>) {
+    let frame = vm_stack.last_mut().unwrap();
     frame.op_stack.push(frame.local.get(0).unwrap().clone());
     frame.pc += 1;
 }
 
-pub fn iload_1(frame: &mut StackFrame) {
+pub fn iload_1(vm_stack: &mut Vec<StackFrame>) {
+    let frame = vm_stack.last_mut().unwrap();
     let v = frame.local.get(1).unwrap().clone();
     frame.op_stack.push(v);
     frame.pc += 1;
 }
 
-pub fn iload_2(frame: &mut StackFrame) {
+pub fn iload_2(vm_stack: &mut Vec<StackFrame>) {
+    let frame = vm_stack.last_mut().unwrap();
     frame.op_stack.push(frame.local.get(2).unwrap().clone());
     frame.pc += 1;
 }
 
-pub fn iload_3(frame: &mut StackFrame) {
+pub fn iload_3(vm_stack: &mut Vec<StackFrame>) {
+    let frame = vm_stack.last_mut().unwrap();
     frame.op_stack.push(frame.local.get(3).unwrap().clone());
     frame.pc += 1;
 }
 
-pub fn fload_0(frame: &mut StackFrame) {
+pub fn fload_0(vm_stack: &mut Vec<StackFrame>) {
+    let frame = vm_stack.last_mut().unwrap();
     frame.op_stack.push(frame.local.get(0).unwrap().clone());
     frame.pc += 1;
 }
 
-pub fn fload_1(frame: &mut StackFrame) {
+pub fn fload_1(vm_stack: &mut Vec<StackFrame>) {
+    let frame = vm_stack.last_mut().unwrap();
     frame.op_stack.push(frame.local.get(1).unwrap().clone());
     frame.pc += 1;
 }
 
-pub fn fload_2(frame: &mut StackFrame) {
+pub fn fload_2(vm_stack: &mut Vec<StackFrame>) {
+    let frame = vm_stack.last_mut().unwrap();
     frame.op_stack.push(frame.local.get(2).unwrap().clone());
     frame.pc += 1;
 }
 
-pub fn fload_3(frame: &mut StackFrame) {
+pub fn fload_3(vm_stack: &mut Vec<StackFrame>) {
+    let frame = vm_stack.last_mut().unwrap();
     frame.op_stack.push(frame.local.get(3).unwrap().clone());
     frame.pc += 1;
 }
 
-pub fn lload_0(frame: &mut StackFrame) {
+pub fn lload_0(vm_stack: &mut Vec<StackFrame>) {
+    let frame = vm_stack.last_mut().unwrap();
     let v1 = frame.local.get(0).unwrap().clone();
     let v2 = frame.local.get(1).unwrap().clone();
     match v1 {
@@ -156,7 +174,8 @@ pub fn lload_0(frame: &mut StackFrame) {
     frame.pc += 1;
 }
 
-pub fn lload_1(frame: &mut StackFrame) {
+pub fn lload_1(vm_stack: &mut Vec<StackFrame>) {
+    let frame = vm_stack.last_mut().unwrap();
     let v1 = frame.local.get(1).unwrap().clone();
     let v2 = frame.local.get(2).unwrap().clone();
     match v1 {
@@ -173,7 +192,8 @@ pub fn lload_1(frame: &mut StackFrame) {
     frame.pc += 1;
 }
 
-pub fn lload_2(frame: &mut StackFrame) {
+pub fn lload_2(vm_stack: &mut Vec<StackFrame>) {
+    let frame = vm_stack.last_mut().unwrap();
     let v1 = frame.local.get(2).unwrap().clone();
     let v2 = frame.local.get(3).unwrap().clone();
     match v1 {
@@ -190,7 +210,8 @@ pub fn lload_2(frame: &mut StackFrame) {
     frame.pc += 1;
 }
 
-pub fn lload_3(frame: &mut StackFrame) {
+pub fn lload_3(vm_stack: &mut Vec<StackFrame>) {
+    let frame = vm_stack.last_mut().unwrap();
     let v1 = frame.local.get(3).unwrap().clone();
     let v2 = frame.local.get(4).unwrap().clone();
     match v1 {
@@ -207,7 +228,8 @@ pub fn lload_3(frame: &mut StackFrame) {
     frame.pc += 1;
 }
 
-pub fn dload_0(frame: &mut StackFrame) {
+pub fn dload_0(vm_stack: &mut Vec<StackFrame>) {
+    let frame = vm_stack.last_mut().unwrap();
     let v1 = frame.local.get(0).unwrap().clone();
     let v2 = frame.local.get(1).unwrap().clone();
     match v1 {
@@ -224,7 +246,8 @@ pub fn dload_0(frame: &mut StackFrame) {
     frame.pc += 1;
 }
 
-pub fn dload_1(frame: &mut StackFrame) {
+pub fn dload_1(vm_stack: &mut Vec<StackFrame>) {
+    let frame = vm_stack.last_mut().unwrap();
     let v1 = frame.local.get(1).unwrap().clone();
     let v2 = frame.local.get(2).unwrap().clone();
     match v1 {
@@ -241,7 +264,8 @@ pub fn dload_1(frame: &mut StackFrame) {
     frame.pc += 1;
 }
 
-pub fn dload_2(frame: &mut StackFrame) {
+pub fn dload_2(vm_stack: &mut Vec<StackFrame>) {
+    let frame = vm_stack.last_mut().unwrap();
     let v1 = frame.local.get(2).unwrap().clone();
     let v2 = frame.local.get(3).unwrap().clone();
     //info!("{:?}",frame);
@@ -260,7 +284,8 @@ pub fn dload_2(frame: &mut StackFrame) {
     frame.pc += 1;
 }
 
-pub fn dload_3(frame: &mut StackFrame) {
+pub fn dload_3(vm_stack: &mut Vec<StackFrame>) {
+    let frame = vm_stack.last_mut().unwrap();
     let v1 = frame.local.get(3).unwrap().clone();
     let v2 = frame.local.get(4).unwrap().clone();
     match v1 {

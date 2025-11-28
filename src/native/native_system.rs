@@ -26,9 +26,9 @@ pub fn array_copy(method: &MethodInfo, frame: &mut StackFrame) {
     let src = frame.op_stack.pop().unwrap();
     // info!("{:?}",src);
 
-    let src_array: &mut Array = match src {
+    let src_array:  Array = match src {
         StackFrameValue::Reference(reference_id) => {
-            let reference = get_reference(&reference_id).unwrap();
+            let  reference = get_reference(&reference_id).unwrap();
             match reference {
                 Reference::Array(array) => array,
                 _ => panic!(),
@@ -36,16 +36,7 @@ pub fn array_copy(method: &MethodInfo, frame: &mut StackFrame) {
         }
         _ => panic!(),
     };
-    let des_array: &mut Array = match des {
-        StackFrameValue::Reference(reference_id) => {
-            let reference = get_reference(&reference_id).unwrap();
-            match reference {
-                Reference::Array(array) => array,
-                _ => panic!(),
-            }
-        }
-        _ => panic!(),
-    };
+
 
     let src_start = match src_ops {
         StackFrameValue::Int(i) => i,
@@ -77,13 +68,27 @@ pub fn array_copy(method: &MethodInfo, frame: &mut StackFrame) {
         _ => panic!(),
     };
 
-    for i in 0..length {
-        des_array.data[(des_start + i) as usize] = src_array
-            .data
-            .get((src_start + i) as usize)
-            .unwrap()
-            .clone();
-    }
+     match des {
+        StackFrameValue::Reference(reference_id) => {
+            let reference = get_reference(&reference_id).unwrap();
+            match reference {
+                Reference::Array(mut des_array) => {
+                    for i in 0..length {
+                        des_array.data[(des_start + i) as usize] = src_array
+                            .data
+                            .get((src_start + i) as usize)
+                            .unwrap()
+                            .clone();
+                    }
+                }
+                _ => panic!(),
+            }
+        }
+        _ => panic!(),
+    };
+
+
+    
 }
 
 pub fn current_time_millis(frame: &mut StackFrame) {

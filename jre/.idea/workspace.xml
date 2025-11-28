@@ -5,7 +5,44 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="70c6e279-5046-4c44-ba52-f4228d3f6634" name="Changes" comment="&quot;调整目录&quot;">
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/Test.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/Test.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/Test.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/Test.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/Test15.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/Test15.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/common/stack_frame.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/common/stack_frame.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/interpreter/instructions/op_code.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/interpreter/instructions/op_code.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_array.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_array.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_checkcast.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_checkcast.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_compare.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_compare.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_const.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_const.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_convert.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_convert.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_dup.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_dup.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_exception.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_exception.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_field.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_field.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_goto.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_goto.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_instanceof.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_instanceof.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_invoke.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_invoke.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_ldc.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_ldc.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_load.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_load.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_math.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_math.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_new.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_new.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_nop.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_nop.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_pop.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_pop.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_push.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_push.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_return.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_return.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_static.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_static.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_store.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_store.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_swap.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_swap.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_thread.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_thread.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/memory/gc.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/memory/gc.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/native/native_net.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/native/native_net.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/native/native_object.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/native/native_object.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/native/native_socket_output_stream.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/native/native_socket_output_stream.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/native/native_stringcoding.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/native/native_stringcoding.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/native/native_system.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/native/native_system.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/runtime/runtime_data_area.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/runtime/runtime_data_area.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/utils/java.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/utils/java.rs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -51,27 +88,27 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_ADD_EXTERNAL_FILES": "true",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "ToolWindowRun.ShowToolbar": "false",
-    "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "dev",
-    "last_opened_file_path": "D:/jvm/tomato/jre",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "project.structure.last.edited": "SDKs",
-    "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.2",
-    "settings.editor.selected.configurable": "editor.preferences.fonts.default",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;ToolWindowRun.ShowToolbar&quot;: &quot;false&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;dev&quot;,
+    &quot;last_opened_file_path&quot;: &quot;E:/work2/tomato/jre&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;SDKs&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;editor.preferences.fonts.default&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="E:\jvm\tomato\jre\src\test" />
@@ -241,6 +278,8 @@
       <workItem from="1729401690294" duration="1843000" />
       <workItem from="1729429695012" duration="327000" />
       <workItem from="1731734824676" duration="1828000" />
+      <workItem from="1764311461617" duration="632000" />
+      <workItem from="1764337900279" duration="4968000" />
     </task>
     <task id="LOCAL-00001" summary="&quot;add test case&quot;">
       <option name="closed" value="true" />

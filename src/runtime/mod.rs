@@ -1,1 +1,3 @@
-pub mod runtime_data_area;
+pub mod metaspace;
+pub mod heap;
+pub mod global;

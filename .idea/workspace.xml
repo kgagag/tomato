@@ -1,9 +1,53 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="ALL" />
+  </component>
+  <component name="CargoProjects">
+    <cargoProject FILE="$PROJECT_DIR$/Cargo.toml">
+      <package file="$PROJECT_DIR$">
+        <feature name="default" enabled="true" />
+      </package>
+    </cargoProject>
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="83fa2691-cc4a-47b7-882a-e5eccbb0b396" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jre/src/test/Test103.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/tomato.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/tomato.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Cargo.lock" beforeDir="false" afterPath="$PROJECT_DIR$/Cargo.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Cargo.toml" beforeDir="false" afterPath="$PROJECT_DIR$/Cargo.toml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/jre/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/jre/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/jre/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/jre/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/classloader/class_loader.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/classloader/class_loader.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/object.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/object.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/stack_frame.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/stack_frame.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/interpreter/instructions/op_code.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/interpreter/instructions/op_code.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/interpreter/instructions/opcode_array.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/interpreter/instructions/opcode_array.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/interpreter/instructions/opcode_field.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/interpreter/instructions/opcode_field.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/interpreter/instructions/opcode_instanceof.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/interpreter/instructions/opcode_instanceof.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/interpreter/instructions/opcode_invoke.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/interpreter/instructions/opcode_invoke.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/interpreter/instructions/opcode_ldc.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/interpreter/instructions/opcode_ldc.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/interpreter/instructions/opcode_new.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/interpreter/instructions/opcode_new.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/interpreter/instructions/opcode_return.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/interpreter/instructions/opcode_return.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/interpreter/instructions/opcode_static.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/interpreter/instructions/opcode_static.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lib.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/memory/gc.rs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/memory/mod.rs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/native/native.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/native/native.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/native/native_array.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/native/native_array.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/native/native_class.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/native/native_class.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/native/native_net.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/native/native_net.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/native/native_object.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/native/native_object.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/native/native_socket_input_stream.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/native/native_socket_input_stream.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/native/native_socket_output_stream.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/native/native_socket_output_stream.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/native/native_stringcoding.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/native/native_stringcoding.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/native/native_system.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/native/native_system.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/runtime/mod.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/mod.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/runtime/runtime_data_area.rs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/utils/debug.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/debug.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/utils/java.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/java.rs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -12,6 +56,9 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MacroExpansionManager">
+    <option name="directoryName" value="nlIvK8dY" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -28,13 +75,27 @@
   "keyToString": {
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.rust.reset.selective.auto.import": "true",
     "WebServerToolWindowFactoryState": "false",
+    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
     "git-widget-placeholder": "dev",
-    "last_opened_file_path": "D:/tomato/test",
+    "junie.onboarding.icon.badge.shown": "true",
+    "last_opened_file_path": "D:/work2/tomato",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
+    "org.rust.cargo.project.model.PROJECT_DISCOVERY": "true",
+    "org.rust.cargo.project.model.impl.CargoExternalSystemProjectAware.subscribe.first.balloon": "",
+    "to.speed.mode.migration.done": "true",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
+  <component name="RustProjectSettings">
+    <option name="toolchainHomeDirectory" value="$USER_HOME$/.cargo/bin" />
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -45,6 +106,8 @@
       <updated>1719825660862</updated>
       <workItem from="1719825661925" duration="96000" />
       <workItem from="1721923236186" duration="41000" />
+      <workItem from="1764957141433" duration="237000" />
+      <workItem from="1764958459266" duration="2643000" />
     </task>
     <servers />
   </component>

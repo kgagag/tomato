@@ -6,13 +6,15 @@ extern crate env_logger;
 
 
 
-pub fn bipush(frame: &mut StackFrame) {
+pub fn bipush(vm_stack: &mut Vec<StackFrame>) { 
+    let frame = vm_stack.last_mut().unwrap();
     let u: u8 = frame.code[frame.pc + 1];
     frame.op_stack.push(StackFrameValue::Byte(u as i8));
     frame.pc += 2;
 }
 
-pub fn sipush(frame: &mut StackFrame) {
+pub fn sipush(vm_stack: &mut Vec<StackFrame>) {
+    let frame = vm_stack.last_mut().unwrap();
     //info!("{:?}",frame);
     let v = u8s_to_u16(&frame.code[frame.pc + 1..frame.pc + 3]) as i16;
     frame

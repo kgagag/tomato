@@ -2,9 +2,10 @@
 use log::info;
 use std::cell::UnsafeCell;
 use std::collections::HashMap;
-
-use crate::{classfile::class::{AttributeInfo, Class, CodeAttribute, MethodInfo}, runtime::runtime_data_area::{get_or_load_class, VM_STACKS}};
-
+use crate::runtime::global::VirtualMachine;
+use crate::classfile::class::AttributeInfo;
+use crate::classfile::class::MethodInfo;
+use crate::classfile::class::CodeAttribute;
 use super::{param::DataType, value::{number_to_u32tuple, StackFrameValue}};
 /**
  * 栈桢
@@ -19,9 +20,7 @@ pub struct StackFrame {
     pub local: Vec<StackFrameValue>,
     // //操作数栈
     pub op_stack: Vec<StackFrameValue>,
-    // //类
-    pub class: usize,
-
+   
     pub max_stack: u16,
 
     pub max_locals: u16,
@@ -31,7 +30,7 @@ pub struct StackFrame {
     pub code_attr: CodeAttribute,
 
     //所属虚拟机栈id
-    pub vm_stack_id: u32,
+    pub vm_stack_id: u64,
 
     pub method_name:String,
 
@@ -42,7 +41,6 @@ pub struct StackFrame {
 
 impl StackFrame {
     pub fn new(
-        class: usize,
         max_stack: u16,
         max_locals: u16,
         code: Vec<u8>,
@@ -53,7 +51,6 @@ impl StackFrame {
     ) -> StackFrame {
         let mut stake_frame = StackFrame {
             pc: 0,
-            class,
             local: Vec::new(),
             op_stack: Vec::new(),
             max_stack,
@@ -144,6 +141,7 @@ pub fn init_stack_frame(
     frame: &mut StackFrame,
     method_info: &MethodInfo,
     start: usize,
+    vm:&VirtualMachine
 ) -> StackFrame {
     let mut new_stack_frame: StackFrame = create_stack_frame(method_info).unwrap();
     new_stack_frame.vm_stack_id = frame.vm_stack_id;
@@ -152,7 +150,6 @@ pub fn init_stack_frame(
     for _j in 0..method_info.param.len() {
         param.push(frame.op_stack.pop().unwrap());
     }
-
     //param.reverse();
     if !method_info.param.is_empty()  {
         for j in 0..method_info.param.len() {
@@ -218,68 +215,20 @@ pub fn init_stack_frame(
 }
 
 pub fn create_stack_frame(method_info: &MethodInfo) -> Option<StackFrame> {
-    let class = get_or_load_class(&method_info.class_name);
     for attr in &method_info.attributes {
-        if let AttributeInfo::Code(code_attr) = attr {
-            return Some(StackFrame::new(
-                class.id,
-                code_attr.max_stack,
-                code_attr.max_locals,
-                code_attr.code.clone(),
-                code_attr.clone(),
-                method_info.method_name.clone(),
-                method_info.descriptor.clone(),
-                class.class_name.clone()
-            ));
-        }
-    }
-    None
-}
-
-pub fn create_stack_frame_with_class(
-    method_info: &MethodInfo,
-    class: &Class,
-) -> Option<StackFrame> {
-    for attr in &method_info.attributes {
-        if let AttributeInfo::Code(code_attr) = attr {
-            return Some(StackFrame::new(
-                class.id,
-                code_attr.max_stack,
-                code_attr.max_locals,
-                code_attr.code.clone(),
-                code_attr.clone(),
-                method_info.method_name.clone(),
-                method_info.descriptor.clone(),
-                class.class_name.clone()
-            ));
-        }
-    }
-    None
-}
-
-pub fn push_stack_frame(mut stack_frame: StackFrame) -> u32 {
-    let data: std::sync::MutexGuard<'_, UnsafeCell<HashMap<u32, Vec<StackFrame>>>> =
-        VM_STACKS.lock().unwrap();
-    let mut vm_stack_id: u32 = stack_frame.vm_stack_id;
-    unsafe {
-        let map: &mut HashMap<u32, Vec<StackFrame>> = &mut *data.get();
-        if stack_frame.vm_stack_id == 0 {
-            for i in 0x1..0xFFFFFFFF_u32 {
-                if !map.contains_key(&i) {
-                    stack_frame.vm_stack_id = i;
-                    vm_stack_id = i;
-                    let stack_frames: Vec<StackFrame> = vec![stack_frame];
-                    map.insert(i, stack_frames);
-                    break;
-                }
+        match attr {
+            AttributeInfo::Code(code_attr) => {
+                return Some(StackFrame::new(
+                    code_attr.max_stack,
+                    code_attr.max_locals,
+                    code_attr.code.clone(),
+                    code_attr.clone(),
+                    method_info.method_name.clone(),
+                    method_info.descriptor.clone(),
+                    method_info.class_name.clone(),
+                ));
             }
-        } else {
-            let frames = map.get_mut(&stack_frame.vm_stack_id).unwrap();
-            //info!("before:{:?}", frames);
-            frames.push(stack_frame);
-            //info!("after:{:?}", frames);
         }
-        drop(data);
     }
-    vm_stack_id
+    None
 }

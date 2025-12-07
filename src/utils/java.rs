@@ -1,11 +1,11 @@
-use crate::{classfile::class::Class, common::{object::Object, param::DataType, reference::Reference, value::StackFrameValue}, runtime::runtime_data_area::{self, create_array, create_object, get_or_load_class, get_reference}};
+use crate::{classfile::class::Class, common::{object::Object, param::DataType, reference::Reference, stack_frame::StackFrame, value::StackFrameValue}, runtime::{heap::{self, Heap}, metaspace::{self, Metaspace}}};
 
-pub fn create_class_object(class_name: &String) -> u64 {
-    let class0 = get_or_load_class(&String::from("java/lang/Class"));
-    let obj_id: u64 = create_object(class0.id as usize);
-    let id = create_string_object(class_name.clone());
-    let referencre: &mut Reference = get_reference(&obj_id).unwrap();
-    match referencre {
+pub fn create_class_object(thread_id : u64,class_name: &String,heap : &mut Heap , metaspace : &mut Metaspace,vm_stack: &mut Vec<StackFrame>) -> u64 {
+    let class0 = metaspace.load_class(  thread_id,&String::from("java/lang/Class"),heap, vm_stack);
+    let obj_id: u64 = heap.create_object(class0.class_name);
+    let id: u64 = create_string_object(class_name,thread_id,heap, metaspace,vm_stack);
+    let mut referencre = heap.get_reference_mut(&obj_id).unwrap();
+    match &mut *referencre {
         Reference::Object(object) => {
             object
                 .field
@@ -16,17 +16,17 @@ pub fn create_class_object(class_name: &String) -> u64 {
     obj_id
 }
 
-pub fn convert_to_rust_string(msg: StackFrameValue) ->Option<String>{
+pub fn convert_to_rust_string(msg: StackFrameValue,heap : &mut Heap) ->Option<String>{
     match msg {
         StackFrameValue::Reference(id) => {
-            let obj_refer = get_reference(&id).unwrap();
-            match obj_refer {
+            let mut obj_refer = heap.get_reference_mut(&id).unwrap();
+            match &mut *obj_refer {
                 Reference::Object(object) => {
                     let value = object.field.get("value").unwrap();
                     match value {
                         StackFrameValue::Reference(id) => {
-                            let arr = get_reference(id).unwrap();
-                            match arr {
+                            let mut arr = heap.get_reference_mut(id).unwrap();
+                            match &mut *arr {
                                 Reference::Array(array) => {
                                     let mut vc: Vec<char> = Vec::new();
                                     for i in 0..array.len {
@@ -61,12 +61,12 @@ pub fn convert_to_rust_string(msg: StackFrameValue) ->Option<String>{
 }
 
 
-pub fn create_string_object(str_value: String) -> u64 {
+pub fn create_string_object(str_value: &str,thread_id : u64,heap : &mut Heap , metaspace : &mut Metaspace,vm_stack: &mut Vec<StackFrame>) -> u64 {
     let char_array_id = {
         let chars: Vec<char> = str_value.chars().collect();
-        let char_array_id: u64 = create_array(chars.len() as u32, DataType::Array { element_type: (Box::new(DataType::Char)), depth: (1) });
-        let char_array_reference = get_reference(&char_array_id).unwrap();
-        match char_array_reference {
+        let char_array_id: u64 = heap.create_array(chars.len() as u32, DataType::Array { element_type: (Box::new(DataType::Char)), depth: (1) });
+        let mut char_array_reference = heap.get_reference_mut(&char_array_id).unwrap();
+        match &mut *char_array_reference {
             Reference::Array(array) => {
                 for i in 0..chars.len() {
                     array.data[i] = StackFrameValue::CHARACTER(*chars.get(i).unwrap());
@@ -77,18 +77,18 @@ pub fn create_string_object(str_value: String) -> u64 {
         char_array_id
     };
     let class_name = String::from("java/lang/String");
-    let class: &mut Class = runtime_data_area::get_or_load_class(&class_name);
-    let obj_id: u64 = runtime_data_area::create_object(class.id);
-    let reference = runtime_data_area::get_reference(&obj_id).unwrap();
-    let object: &mut Object = match reference {
+    let class = metaspace.load_class(  thread_id,&String::from("java/lang/Class"),heap, vm_stack);
+    let obj_id: u64 = heap.create_object(class.class_name);
+    let mut reference = heap.get_reference_mut(&obj_id).unwrap();
+    let object: &mut Object = match &mut *reference {
         Reference::Object(obj) => obj,
         _ => panic!(),
     };
-
     object.field.insert(
         String::from("value"),
         StackFrameValue::Reference(char_array_id),
     );
-    runtime_data_area::put_into_str_constant_pool(str_value.clone(), obj_id);
+    //metaspace::put_into_str_constant_pool(str_value.clone(), obj_id);
+    metaspace.register_string_constant(class_name, obj_id);
     obj_id
 }

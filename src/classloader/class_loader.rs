@@ -6,12 +6,13 @@ use crate::classfile::class::ExceptionTable;
 use crate::classfile::class::FieldInfo;
 use crate::classfile::class::MethodInfo;
 use crate::common::param::DataType;
-use crate::common::stack_frame::*;
+use crate::common::stack_frame::StackFrame;
 use crate::common::value::StackFrameValue;
-use crate::interpreter::instructions::op_code::op_code::execute;
-use crate::runtime::runtime_data_area::add_method;
-use crate::runtime::runtime_data_area::class_exists;
-use crate::runtime::runtime_data_area::init_class_id;
+use crate::interpreter::instructions::op_code;
+use crate::runtime;
+use crate::runtime::global::VMStackManager;
+use crate::runtime::heap::Heap;
+use crate::runtime::metaspace::Metaspace;
 use crate::utils::u8c::u8s_to_u16;
 use crate::utils::u8c::u8s_to_u32;
 use byteorder::{BigEndian, ReadBytesExt};
@@ -217,7 +218,7 @@ fn read_file_to_bytes(path: PathBuf) -> Result<Vec<u8>, std::io::Error> {
 /***
  * 类加载
  */
-pub fn load_class(name: &String) -> Class {
+pub fn load_class(name: &String,thread_id :u64,heap : &mut Heap , metaspace : &mut Metaspace, vm_tack : &mut Vec<StackFrame>) -> Class {
     let buffer: Vec<u8> = get_class_from_disk(name);
     let mut cursor = io::Cursor::new(buffer);
     let mut class: Class = Class::new();
@@ -236,9 +237,9 @@ pub fn load_class(name: &String) -> Class {
                 let name_constant = class.constant_pool.get(index).unwrap();
                 match name_constant {
                     ConstantPoolInfo::Utf8(class_name) => {
-                        if !class_exists(class_name) {
+                        if !metaspace.class_exists(class_name) {
                             info!("load class:{}",class_name);
-                            load_class(class_name);
+                            load_class(class_name,thread_id,heap, metaspace, vm_tack);
                         }
                     }
                     _ => panic!("wrong class data"),
@@ -256,43 +257,20 @@ pub fn load_class(name: &String) -> Class {
     class.method_info = get_method(&class.constant_pool, class.methods_count, &mut cursor);
     class.attributes_count = get_attribute_count(&mut cursor);
     class.attribute_info = get_attribute(&class.constant_pool, class.attributes_count, &mut cursor);
-    do_after_load(&mut class);
-    init_class_id(&mut class);
-    init(&mut class, "<clinit>".to_string());
+    do_after_load(&mut class,metaspace);
+    let clinit_method = metaspace.get_method(name, "<clinit>", "()V");
+    if clinit_method.is_some() {
+        runtime::global::VMStackManager::push_new_stack_frame(vm_tack,thread_id, clinit_method.unwrap());
+        op_code::op_code::run(thread_id,heap,metaspace,vm_tack); 
+    }
     class
 }
 
 /**
  * 类加载完成之后执行初始化静态方法
  */
-pub fn init(class: &mut Class, method_name: String) {
-    //let class= get_or_load_class(&clazz.class_name);
-    //创建VM
-    //找到main方法
-    for i in 0..*&class.method_info.len() {
-        let method_info = &class.method_info[i];
-        //let methond_index = (method_info.name_index as usize) - 1;
-        let u8_vec = class.constant_pool.get(&method_info.name_index).unwrap();
-        match u8_vec {
-            ConstantPoolInfo::Utf8(name) => {
-                //println!("method:{}", &name);
-                //info!("{}", name);
-                //创建虚拟机栈，并创建第一个栈帧
-                if name == &method_name {
-                    let stack_frame = create_stack_frame_with_class(method_info, class).unwrap();
-                    // info!("{:?}",stack_frame);
-                    //let vm_stack_id = (&stack_frame).vm_stack_id;
-                    //    let stack_frame_clone = stack_frame.clone();
-                    let vm_stack_id = push_stack_frame(stack_frame);
-                    execute(vm_stack_id);
-                }
-            }
-            _ => panic!("wrong class data"),
-        }
-    }
-}
 
-fn do_after_load(class: &mut Class) {
+fn do_after_load(class: &mut Class,metaspace : &mut Metaspace   ) {
     let this_class = class.constant_pool.get(&class.this_class).unwrap();
 
     //info!("this_class:{:?}", this_class);
@@ -361,7 +339,8 @@ fn do_after_load(class: &mut Class) {
                         println!("Error: {}", error);
                     }
                 }
-                add_method(method_info.clone());
+               // add_method(method_info.clone());
+               metaspace.add_method(method_info.clone());
             }
             _ => panic!("wrong constant data type"),
         }

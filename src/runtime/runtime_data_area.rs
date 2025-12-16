@@ -230,17 +230,17 @@ pub fn add_method(method_info: MethodInfo) {
     drop(data);
 }
 
-pub fn get_method_from_pool<'a>(
+pub fn get_method_from_pool(
     class_name: &String,
     method_name: &String,
     descriptor: &String,
-) -> Option<&'a MethodInfo> {
+) -> Option<MethodInfo> {
     let data = METHOD_DATA.lock().unwrap();
     unsafe {
         let key = format!("{}{}{}{}{}", class_name, ".", method_name, ".", descriptor);
         let map = &mut *data.get();
         drop(data);
-        return map.get(&key);
+        return map.get(&key).cloned();
     }
 }
 

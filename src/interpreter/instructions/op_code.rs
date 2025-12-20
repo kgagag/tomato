@@ -1,6 +1,7 @@
 pub mod op_code {
     use std::cell::UnsafeCell;
     use std::collections::HashMap;
+    use std::time::Instant;
 
     use log::info;
     use opcode_array::*;
@@ -57,6 +58,8 @@ pub mod op_code {
             let code = vm_stack.last().unwrap().code[vm_stack.last().unwrap().pc];
             let frame = vm_stack.last_mut().unwrap();
             // info!("{:x}--{}--{:?}--{:?}--{:?}--opstack:{:?}--local:{:?}",code,frame.pc,frame.class_name,frame.method_name,frame.descriptor,frame.op_stack,frame.local);
+            //info!("{:x}--{}--{:?}--{:?}--{:?}",code,frame.pc,frame.class_name,frame.method_name,frame.descriptor);
+            //let start = Instant::now();
             if code == 0xbb || code == 0xbc || code == 0xbd || code == 0xc5{
                 full_gc();
             } 
@@ -273,6 +276,11 @@ pub mod op_code {
             // }else {
             //     break;
             // }
+
+            //let duration = start.elapsed();
+            // 转换为纳秒
+            //let nanos = duration.as_nanos();
+            //info!("{:x}--{}--{:?}--{:?}--{:?}--{:?}",code,frame.pc,frame.class_name,frame.method_name,frame.descriptor,nanos);
         }
     }
 }

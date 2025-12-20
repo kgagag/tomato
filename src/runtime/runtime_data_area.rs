@@ -298,7 +298,7 @@ pub fn close_tcp(id:&u64) {
     unsafe {
         let map: &mut HashMap<u64, TcpStream> = &mut *data.get();
          let _res = map.get(id).unwrap().shutdown(Shutdown::Both);
-         warn!("{:?}",map.capacity());
+         //warn!("{:?}",map.capacity());
          //map.remove(id);
     }
 }

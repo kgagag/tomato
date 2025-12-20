@@ -2,8 +2,7 @@ use log::info;
 
 use crate::utils::u8c::*;
 
-#[derive(Debug, Clone)]
-#[derive(PartialEq)]
+#[derive(Debug, Clone, Copy,PartialEq)]
 pub enum StackFrameValue {
     Byte(i8),
     Char(i16),

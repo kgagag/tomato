@@ -1,5 +1,5 @@
 
-use std::env;
+use std::{env, time::Instant};
 use log::info;
 use tomato::{classfile::class::ConstantPoolInfo, common::stack_frame::{create_stack_frame, push_stack_frame}, interpreter::instructions::op_code::op_code::execute, runtime::runtime_data_area::get_or_load_class};
 fn main() {
@@ -8,7 +8,10 @@ fn main() {
         .format_timestamp(Some(env_logger::TimestampPrecision::Millis))
         .format_module_path(true)
         .init();
+    let start = Instant::now();
     run(String::from("test/Test"));
+    let duration = start.elapsed();
+    info!("执行时间: {:?}", duration.as_nanos());
 }
 
 /***

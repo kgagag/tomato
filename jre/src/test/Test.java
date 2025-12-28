@@ -205,12 +205,12 @@ public class Test {
         new Test100().test();
 
         */
-        long t1 = System.nanoTime();
+        //long t1 = System.nanoTime();
+        new Test8().test();
+        //long t2 = System.nanoTime();
 
-        long t2 = System.nanoTime();
-
-        long t3 = t2 - t1;
-        StringHelper.print20240503(t3 + "");
-        new SimpleHttpServer().test();
+        //long t3 = t2 - t1;
+        //StringHelper.print20240503(t3 + "");
+        //new SimpleHttpServer().test();
     }
 }

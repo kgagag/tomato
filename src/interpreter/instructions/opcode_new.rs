@@ -2,9 +2,17 @@ use std::{cell::RefCell, sync::Arc};
 
 use log::info;
 
-use crate::{classfile::class::ConstantPoolInfo, classloader::class_loader, common::{stack_frame::StackFrame, value::StackFrameValue}, runtime::{heap::{self, Heap}, metaspace::Metaspace, runtime_data_area::{create_object, get_class_name, get_or_load_class}}, utils::u8c::u8s_to_u16};
-
-
+use crate::{
+    classfile::class::ConstantPoolInfo,
+    classloader::class_loader,
+    common::{stack_frame::StackFrame, value::StackFrameValue},
+    runtime::{
+        heap::{self, Heap},
+        metaspace::Metaspace,
+        runtime_data_area::{create_object, get_class_name, get_or_load_class},
+    },
+    utils::u8c::u8s_to_u16,
+};
 
 /**
  * 创建对象的指令
@@ -17,23 +25,27 @@ pub fn _new(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Met
     // 加载类
     let this_class = class_loader::find_class(&class_name, &mut Vec::new(), heap, metaspace);
     //获取操作数
-    let classfile_pool_index = u8s_to_u16(&vm_stack[frame_index].code[(vm_stack[frame_index].pc + 1)..(vm_stack[frame_index].pc + 3)]);
+    let classfile_pool_index = u8s_to_u16(
+        &vm_stack[frame_index].code[(vm_stack[frame_index].pc + 1)..(vm_stack[frame_index].pc + 3)],
+    );
     let classfile_pool_class = &this_class.constant_pool.get(&classfile_pool_index).unwrap();
-    match classfile_pool_class {
+    let mut target_class_name = match classfile_pool_class {
         ConstantPoolInfo::Class(name_index) => {
             let class_name_utf8 = &this_class.constant_pool.get(name_index).unwrap();
             match class_name_utf8 {
-                ConstantPoolInfo::Utf8(class_name) => {
-                    let target_class = {class_loader::find_class(class_name,&mut Vec::new(),heap,metaspace)};
-                    let obj = heap.create_object(target_class);
-                    //初始化属性
-                    vm_stack[frame_index].op_stack.push(StackFrameValue::Reference(obj as u64));
-
-                    vm_stack[frame_index].pc += 3;
-                }
+                ConstantPoolInfo::Utf8(class_name) => class_name.clone(),
                 _ => panic!("wrong class data"),
             }
         }
         _ => panic!("wrong class data"),
-    }
+    };
+    let target_class =
+        { class_loader::find_class(&mut target_class_name, &mut Vec::new(), heap, metaspace) };
+    let obj = heap.create_object(target_class);
+    //初始化属性
+    vm_stack[frame_index]
+        .op_stack
+        .push(StackFrameValue::Reference(obj as u64));
+
+    vm_stack[frame_index].pc += 3;
 }

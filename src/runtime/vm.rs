@@ -1,6 +1,7 @@
 use std::{collections::HashMap};
 
 use crate::{common::stack_frame::StackFrame, runtime::{heap::Heap, metaspace::Metaspace}};
+use lazy_static::lazy_static;
 
 pub struct Vm{
     pub heap: Heap, 

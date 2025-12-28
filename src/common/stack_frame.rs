@@ -210,9 +210,10 @@ impl StackFrame {
 pub fn init_stack_frame(
     frame: &mut StackFrame,
     method_info: &MethodInfo,
+    class: &mut Class,
     start: usize,
 ) -> StackFrame {
-    let mut new_stack_frame: StackFrame = create_stack_frame(method_info).unwrap();
+    let mut new_stack_frame: StackFrame = create_stack_frame(method_info, class).unwrap();
     new_stack_frame.vm_stack_id = frame.vm_stack_id;
     let mut i: usize = start;
     let mut param: Vec<StackFrameValue> = Vec::new();
@@ -284,8 +285,7 @@ pub fn init_stack_frame(
     new_stack_frame
 }
 
-pub fn create_stack_frame(method_info: &MethodInfo) -> Option<StackFrame> {
-    let class = get_or_load_class(&method_info.class_name);
+pub fn create_stack_frame(method_info: &MethodInfo, class: &mut Class) -> Option<StackFrame> {
     for attr in &method_info.attributes {
         if let AttributeInfo::Code(code_attr) = attr {
             return Some(StackFrame::new(

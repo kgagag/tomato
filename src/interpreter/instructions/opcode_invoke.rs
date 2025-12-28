@@ -20,7 +20,7 @@ use crate::runtime::runtime_data_area::VM_STACKS;
 use crate::utils::debug::dprint;
 use crate::utils::u8c::u8s_to_u16;
 
-
+/* 
 
 pub fn invokespecial(frame: &mut StackFrame) {
     let method = frame.get_method_for_invoke().unwrap();
@@ -196,3 +196,4 @@ pub fn invokestatic(frame: &mut StackFrame) {
         run_native(&method, frame);
     }
 }
+*/

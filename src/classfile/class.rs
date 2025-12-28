@@ -104,6 +104,7 @@ pub struct MethodInfo {
     pub param: Vec<DataType>,
     pub attributes: Vec<AttributeInfo>,
     pub class_name: String,
+    pub class_id:u32,
     pub method_name: String,
     pub descriptor: String,
 }
@@ -119,6 +120,7 @@ pub struct FieldInfo {
     pub value: StackFrameValue,
     pub data_type: DataType,
     pub descriptor: String,
+    pub field_index:u16
 }
 
 #[derive(Debug, Clone)]

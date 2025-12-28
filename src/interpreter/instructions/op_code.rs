@@ -12,6 +12,7 @@ pub mod op_code {
     use opcode_dup::*;
     use opcode_exception::*;
     use opcode_field::*;
+    use opcode_goto::*;
     use opcode_instanceof::*;
     use opcode_invoke::*;
     use opcode_ldc::*;
@@ -19,50 +20,54 @@ pub mod op_code {
     use opcode_math::*;
     use opcode_new::*;
     use opcode_nop::*;
-    use opcode_goto::*;
     use opcode_pop::*;
     use opcode_push::*;
     use opcode_return::*;
     use opcode_static::*;
-    use opcode_swap::*;
     use opcode_store::*;
+    use opcode_swap::*;
     use opcode_thread::*;
-  
 
-    use opcode_nop::nop;
     use crate::common::stack_frame::StackFrame;
-    use crate::memory::gc::full_gc;
     use crate::interpreter::instructions::*;
+    use crate::memory::gc::full_gc;
+    use crate::runtime::heap::Heap;
+    use crate::runtime::metaspace::Metaspace;
     use crate::runtime::runtime_data_area::VM_STACKS;
+    use crate::runtime::vm;
+    use crate::runtime::vm::Vm;
+    use opcode_nop::nop;
     extern crate env_logger;
     extern crate log;
-   
-    pub fn execute(vm_stack_id : u32){
-        let data: std::sync::MutexGuard<'_, UnsafeCell<HashMap<u32, Vec<StackFrame>>>> = VM_STACKS.lock().unwrap();
+
+    pub fn execute(vm_stack_id: u8,vm:&mut Vm) {
+        //let mut vm = GLOBAL_VM.lock().unwrap();
+        // 使用指针获取多个可变引用
+        let vm_stack = vm.vm_stack.get_mut(&vm_stack_id).unwrap() as *mut _;
+        let heap = &mut vm.heap as *mut _;
+        let metaspace = &mut vm.metaspace as *mut _;
+        //drop(vm);
+        // 转换为可变引用（需要 unsafe）
         unsafe {
-            // 从 UnsafeCell 中获取 HashMap 的可变引用
-            let map = &mut *data.get();
-            drop(data);
-            let stack_frames_op = map.get_mut(&vm_stack_id);
-            if stack_frames_op.is_some() {
-                let stack_frames = stack_frames_op.unwrap();
-                if !stack_frames.is_empty()  {
-                    do_opcode( stack_frames);
-                }
-            }
+            let vm_stack = &mut *vm_stack; 
+            let heap = &mut *heap;
+            let metaspace = &mut *metaspace;
+            do_opcode(vm_stack, heap, metaspace);
         }
     }
 
-    pub fn do_opcode(vm_stack: &mut Vec<StackFrame>) {
-        while !vm_stack.is_empty() && vm_stack.last().unwrap().pc < vm_stack.last().unwrap().code.len() {
+
+    pub fn do_opcode(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Metaspace) {
+        while !vm_stack.is_empty()
+        {
             let code = vm_stack.last().unwrap().code[vm_stack.last().unwrap().pc];
             let frame = vm_stack.last_mut().unwrap();
-            // info!("{:x}--{}--{:?}--{:?}--{:?}--opstack:{:?}--local:{:?}",code,frame.pc,frame.class_name,frame.method_name,frame.descriptor,frame.op_stack,frame.local);
+            //info!("{:x}--{}--{:?}--{:?}--{:?}--opstack:{:?}--local:{:?}",code,frame.pc,frame.class_name,frame.method_name,frame.descriptor,frame.op_stack,frame.local);
             //info!("{:x}--{}--{:?}--{:?}--{:?}",code,frame.pc,frame.class_name,frame.method_name,frame.descriptor);
             //let start = Instant::now();
-            if code == 0xbb || code == 0xbc || code == 0xbd || code == 0xc5{
-                full_gc();
-            } 
+            // if code == 0xbb || code == 0xbc || code == 0xbd || code == 0xc5 {
+            //     full_gc();
+            // }
             match code {
                 0x00 => nop(frame),
                 0x01 => aconst_null(frame),
@@ -246,12 +251,12 @@ pub mod op_code {
                 0xb3 => putstatic(frame),
                 0xb4 => getfield(frame),
                 0xb5 => putfield(frame),
-                0xb6 => invokevirtual(frame),
-                0xb7 => invokespecial(frame),
-                0xb8 => invokestatic(frame),
-                0xb9 => invokeinterface(frame),
+                // 0xb6 => invokevirtual(frame),
+                // 0xb7 => invokespecial(frame),
+                // 0xb8 => invokestatic(frame),
+                // 0xb9 => invokeinterface(frame),
                 // 0xba => invokedynamic(frame),
-                0xbb => _new(frame),
+                0xbb => _new(vm_stack, heap, metaspace),
                 0xbc => newarray(frame),
                 0xbd => anewarray(frame),
                 0xbe => arraylength(frame),
@@ -261,9 +266,9 @@ pub mod op_code {
                 0xc2 => monitorenter(frame),
                 0xc3 => monitorexit(frame),
                 // 0xc4 => wide(frame),
-                 0xc5 => multianewarray(frame),
-                 0xc6 => ifnull(frame),
-                 0xc7 => ifnonnull(frame),
+                0xc5 => multianewarray(frame),
+                0xc6 => ifnull(frame),
+                0xc7 => ifnonnull(frame),
                 // 0xc8 => goto_w(frame),
                 // 0xc9 => jsr_w(frame),
                 _ => {

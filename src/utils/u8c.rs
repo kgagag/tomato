@@ -66,3 +66,19 @@ pub fn bytes_to_chars(bytes: Vec<u8>) -> Vec<char> {
     //info!("{:?}",string);
     string.chars().collect()
 }
+
+pub fn split_u32_to_u8(value: u32) -> [u8; 4] {
+    [
+        ((value >> 24) & 0xFF) as u8,  // 最高字节
+        ((value >> 16) & 0xFF) as u8,
+        ((value >> 8) & 0xFF) as u8,
+        (value & 0xFF) as u8,          // 最低字节
+    ]
+}
+
+pub fn combine_u8_to_u32(bytes: [u8; 4]) -> u32 {
+    (bytes[0] as u32) << 24 |
+    (bytes[1] as u32) << 16 |
+    (bytes[2] as u32) << 8 |
+    (bytes[3] as u32)
+}

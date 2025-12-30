@@ -22,7 +22,8 @@ pub struct Class {
     pub attribute_info: Vec<AttributeInfo>,
     pub id: usize,
     pub class_name: String,
-    pub super_class_name:String
+    pub super_class_name:String,
+    pub super_class_id:usize
 }
 
 impl Class {
@@ -47,6 +48,7 @@ impl Class {
             id: 0,
             class_name: String::new(),
             super_class_name:String::new(),
+            super_class_id:0
         }
     }
 }

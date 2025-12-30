@@ -19,8 +19,8 @@ impl Heap {
     //创建堆
     pub fn create() -> Heap {
         Heap {
-            memory: vec![0u8; 1024 * 1024 ],
-            address_map: vec![0u32; 1024 * 1024 ],
+            memory: vec![0u8; 1024 * 1024],
+            address_map: vec![0u32; 1024 * 1024],
             memory_block: vec![(0, 1024 * 1024)],
             address_map_index: 0,
             address_malloc_method: 0,
@@ -31,51 +31,47 @@ impl Heap {
 
     //分配内存,如果内存块足够，则分配成功,更新内存块信息
     pub fn malloc(&mut self, size: u32, is_array: bool, class_id: u32) -> usize {
-        let index = self.address_map_index;
-        for i in 0..self.memory_block.len() {
-            let (address, block_size) = self.memory_block.get(i).unwrap().clone();
-            if block_size >= size {
-                let new_address: u32 = address + size;
-                let new_block_size = block_size - size;
-                self.memory_block.remove(i);
-                if new_block_size > 0 {
-                    self.memory_block[i] = (new_address, new_block_size);
-                } else {
-                    self.memory_block.remove(i);
-                }
-                self.address_map[self.address_map_index] = address;
-                if self.address_malloc_method == 0 {
-                    if self.address_map_index < (self.address_map.len() - 1) {
-                        self.address_map_index += 1;
-                    } else {
-                        self.address_malloc_method = 1;
-                        //在address_map 中寻找指向0的位置
-                        for j in 0..self.address_map.len() {
-                            if self.address_map[j] == 0 {
-                                self.address_map_index = j;
-                                break;
-                            }
-                        }
-                    }
-                } else {
-                    //在address_map 中寻找指向0的位置
-                    for j in 0..self.address_map.len() {
-                        if self.address_map[j] == 0 {
-                            self.address_map_index = j;
-                            break;
-                        }
-                    }
-                }
+        // 查找合适的内存块
+        let mut delete_index = None;
+
+        for (i, (address, block_size)) in self.memory_block.iter().enumerate() {
+            if *block_size >= size {
+                delete_index = Some(i);
+                break;
             }
-            panic!("heap out of memory");
         }
 
+        let delete_index = match delete_index {
+            Some(idx) => idx,
+            None => panic!("heap out of memory"),
+        };
+
+        let (address, block_size) = self.memory_block[delete_index].clone();
+
+        // 分割剩余内存块
+        let new_address = address + size;
+        let new_block_size = block_size - size;
+
+        if new_block_size > 0 {
+            self.memory_block.push((new_address, new_block_size));
+        }
+
+        // 移除已分配的内存块
+        self.memory_block.remove(delete_index);
+
+        // 更新address_map
+        let index = self.address_map_index;
+        self.address_map[index] = address;
+
+        // 更新address_map_index
+        self.update_address_map_index();
+
+        // 设置内存标记
         if is_array {
-            //第1个字节第1位设置为1
             self.memory[index] = 0b10000000;
         }
 
-        //设置class_id(从第3个u8开始)
+        // 设置class_id
         let cid = u8c::split_u32_to_u8(class_id);
         self.memory[index + 0x2] = cid[0x0];
         self.memory[index + 0x3] = cid[0x1];
@@ -83,6 +79,35 @@ impl Heap {
         self.memory[index + 0x5] = cid[0x3];
 
         index
+    }
+
+    // 更新address_map_index
+    fn update_address_map_index(&mut self) {
+        if self.address_malloc_method == 0 {
+            // 顺序分配模式
+            if self.address_map_index < self.address_map.len() - 1 {
+                self.address_map_index += 1;
+            } else {
+                // 切换到寻找空闲位置模式
+                self.address_malloc_method = 1;
+                self.find_next_available_index();
+            }
+        } else {
+            // 寻找空闲位置模式
+            self.find_next_available_index();
+        }
+    }
+
+    // 寻找下一个可用的address_map索引
+    fn find_next_available_index(&mut self) {
+        for j in 0..self.address_map.len() {
+            if self.address_map[j] == 0 {
+                self.address_map_index = j;
+                return;
+            }
+        }
+        // 如果没有找到空闲位置，可以在这里处理（例如扩展address_map或panic）
+        // 暂时保持当前索引不变
     }
 
     pub fn create_object(&mut self, class: &mut Class) -> usize {
@@ -121,7 +146,12 @@ impl Heap {
                 _ => panic!(),
             }
         }
-        //分配内存
+
+        if size == 0 {
+            size = 0x8;
+        } else {
+            size = ((size + 7) / 8) * 8;
+        }
         self.malloc(size, false, class.id as u32)
     }
 }

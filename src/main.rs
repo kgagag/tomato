@@ -49,7 +49,7 @@ pub fn run(main_class_path: String) {
             let vm_stack_id = vm.push_stack_frame(stack_frame);
             let vm_stack = vm.vm_stack.get_mut(&vm_stack_id).unwrap();
             let heap = &mut vm.heap;
-            let metaspace = &mut vm.metaspace;
+            let metaspace: &mut metaspace::Metaspace = &mut vm.metaspace;
             do_opcode(vm_stack, heap, metaspace);
             break;
         }

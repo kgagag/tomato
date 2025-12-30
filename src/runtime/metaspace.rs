@@ -33,8 +33,6 @@ impl Metaspace {
         for (key, value) in &self.method_area {
             println!("{}", key);
         }
-
-
         return self.method_area.get(&key);
     }
 }

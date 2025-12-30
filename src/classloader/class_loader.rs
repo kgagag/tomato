@@ -218,10 +218,16 @@ pub fn load_class(name: &String,vm_stack: &mut Vec<StackFrame>, heap: &mut Heap,
                 let name_constant = class.constant_pool.get(index).unwrap();
                 match name_constant {
                     ConstantPoolInfo::Utf8(class_name) => {
-                        if !class_exists(class_name) {
-                            info!("load class:{}", class_name);
-                            load_class(class_name,vm_stack, heap, metaspace);
-                        }
+                        let super_class_op = metaspace.class_map.get(class_name);
+                        if ! super_class_op.is_none() {
+                            let super_class =  load_class(class_name,vm_stack, heap, metaspace);
+                            class.super_class_id = super_class.id;
+                            class.super_class_name = super_class.class_name;
+                        }else {
+                           let super_class =  &metaspace.classes[*super_class_op.unwrap()];
+                           class.super_class_id = super_class.id;
+                           class.super_class_name = super_class.class_name.clone();
+                        } 
                     }
                     _ => panic!("wrong class data"),
                 }
@@ -304,21 +310,22 @@ pub fn parse_method(class: &mut Class, method_info_map: &mut HashMap<String, Met
     }
 
     // java.lang.Object 没有父类
-    if class.super_class != 0 {
-        let super_class = class.constant_pool.get(&class.super_class).unwrap();
-        match super_class {
-            ConstantPoolInfo::Class(name_index) => {
-                let class_name = class.constant_pool.get(name_index).unwrap();
-                match class_name {
-                    ConstantPoolInfo::Utf8(name) => {
-                        class.super_class_name = name.clone();
-                    }
-                    _ => panic!("wrong constant data type"),
-                }
-            }
-            _ => panic!("wrong constant data type"),
-        }
-    }
+    // if class.super_class != 0 {
+    //     let super_class = class.constant_pool.get(&class.super_class).unwrap();
+    //     match super_class {
+    //         ConstantPoolInfo::Class(name_index) => {
+    //             let class_name = class.constant_pool.get(name_index).unwrap();
+    //             match class_name {
+    //                 ConstantPoolInfo::Utf8(name) => {
+    //                     class.super_class_name = name.clone();
+    //                 }
+    //                 _ => panic!("wrong constant data type"),
+    //             }
+    //         }
+    //         _ => panic!("wrong constant data type"),
+    //     }
+    // }
+    
     //补充方法方法参数解析后信息
     for i in 0..class.methods_count {
         let method_info = class.method_info.get_mut(i as usize).unwrap();

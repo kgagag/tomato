@@ -12,10 +12,7 @@ fn main() {
         .format_timestamp(Some(env_logger::TimestampPrecision::Millis))
         .format_module_path(true)
         .init();
-    let start = Instant::now();
-    run(String::from("test/Test104"));
-    let duration = start.elapsed();
-    info!("执行时间: {:?}", duration.as_nanos());
+    run(String::from("test/Test"));
 }
 
 /***
@@ -50,7 +47,10 @@ pub fn run(main_class_path: String) {
             let vm_stack = vm.vm_stack.get_mut(&vm_stack_id).unwrap();
             let heap = &mut vm.heap;
             let metaspace: &mut metaspace::Metaspace = &mut vm.metaspace;
+            let start = Instant::now();
             do_opcode(vm_stack, heap, metaspace);
+            let duration = start.elapsed();
+            info!("执行时间: {:?}", duration.as_nanos());
             break;
         }
     }

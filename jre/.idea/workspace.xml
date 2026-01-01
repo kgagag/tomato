@@ -5,35 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="70c6e279-5046-4c44-ba52-f4228d3f6634" name="Changes" comment="&quot;调整目录&quot;">
-      <change afterPath="$PROJECT_DIR$/src/test/Test104.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/test/Test.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/Test.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/Test.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/Test.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/Test103.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/Test103.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/classfile/class.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/classfile/class.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/classloader/class_loader.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/classloader/class_loader.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/common/array.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/common/array.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/common/object.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/common/object.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/common/stack_frame.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/common/stack_frame.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../src/common/value.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/common/value.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../src/interpreter/instructions/op_code.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/interpreter/instructions/op_code.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_array.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_array.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_field.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_field.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_invoke.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_invoke.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_ldc.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_ldc.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_new.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_new.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_return.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_return.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../src/main.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/memory/gc.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/memory/gc.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/native/native_class.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/native/native_class.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/native/native_object.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/native/native_object.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/native/native_socket_input_stream.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/native/native_socket_input_stream.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/native/native_socket_output_stream.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/native/native_socket_output_stream.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/native/native_stringcoding.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/native/native_stringcoding.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/runtime/heap.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/runtime/heap.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/runtime/metaspace.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/runtime/metaspace.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/runtime/runtime_data_area.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/runtime/runtime_data_area.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/utils/java.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/utils/java.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/utils/u8c.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/utils/u8c.rs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -111,7 +88,7 @@
       <recent name="test" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.Test104">
+  <component name="RunManager" selected="Application.Test103">
     <configuration name="OddEvenPrinter" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="test.OddEvenPrinter" />
       <module name="jre" />
@@ -179,9 +156,9 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.Test104" />
         <item itemvalue="Application.Test103" />
         <item itemvalue="Application.Test" />
+        <item itemvalue="Application.Test104" />
         <item itemvalue="Application.Test102" />
         <item itemvalue="Application.OddEvenPrinter" />
       </list>
@@ -267,7 +244,7 @@
       <workItem from="1766885609612" duration="4583000" />
       <workItem from="1767095658968" duration="2808000" />
       <workItem from="1767197890535" duration="1192000" />
-      <workItem from="1767275454169" duration="1022000" />
+      <workItem from="1767275454169" duration="2393000" />
     </task>
     <task id="LOCAL-00001" summary="&quot;add test case&quot;">
       <option name="closed" value="true" />

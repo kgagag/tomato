@@ -10,13 +10,11 @@ pub fn putstatic(frame: &mut StackFrame) {
     let class_name = get_class_name(&frame.class);
     let this_class = get_or_load_class(&class_name);
     let field_ref = this_class.constant_pool.get(&index).expect("Field reference not found");
-
     if let ConstantPoolInfo::Fieldref(class_index, name_and_type_index) = field_ref {
         let class_name_utf8 = match this_class.constant_pool.get(class_index) {
             Some(ConstantPoolInfo::Class(class_name_index)) => this_class.constant_pool.get(class_name_index),
             _ => panic!(),
         }.expect("Class name UTF-8 not found");
-
         if let ConstantPoolInfo::Utf8(class_name) = class_name_utf8 {
             let mut target_class = get_or_load_class(class_name);
             let name_and_type = this_class.constant_pool.get(name_and_type_index).expect("Name and type not found");

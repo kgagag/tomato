@@ -60,7 +60,7 @@ pub mod op_code {
         while !vm_stack.is_empty()
         {
             let code = vm_stack.last().unwrap().code[vm_stack.last().unwrap().pc];
-            let frame = vm_stack.last_mut().unwrap();
+            let frame: &mut StackFrame = vm_stack.last_mut().unwrap();
             //info!("{:x}--{}--{:?}--{:?}--{:?}--opstack:{:?}--local:{:?}",code,frame.pc,frame.class_name,frame.method_name,frame.descriptor,frame.op_stack,frame.local);
             //info!("{:x}--{}--{:?}--{:?}--{:?}",code,frame.pc,frame.class_name,frame.method_name,frame.descriptor);
             //let start = Instant::now();
@@ -240,20 +240,20 @@ pub mod op_code {
                 // 0xa9 => ret(frame),
                 0xaa => tableswitch(frame),
                 0xab => lookupswitch(frame),
-                0xac => ireturn(frame),
-                0xad => lreturn(frame),
-                0xae => freturn(frame),
-                0xaf => dreturn(frame),
-                0xb0 => areturn(frame),
-                0xb1 => _return(frame),
+                0xac => ireturn(vm_stack),
+                0xad => lreturn(vm_stack),
+                0xae => freturn(vm_stack),
+                0xaf => dreturn(vm_stack),
+                0xb0 => areturn(vm_stack),
+                0xb1 => _return(vm_stack),
                 0xb2 => getstatic(frame),
                 0xb3 => putstatic(frame),
                 0xb4 => getfield(vm_stack, heap, metaspace),
                 0xb5 => putfield(vm_stack, heap, metaspace),
-                // 0xb6 => invokevirtual(frame),
+                0xb6 => invokevirtual(vm_stack, heap, metaspace),
                 0xb7 => invokespecial(vm_stack, heap, metaspace),
-                // 0xb8 => invokestatic(frame),
-                // 0xb9 => invokeinterface(frame),
+                0xb8 => invokestatic(vm_stack, heap, metaspace),
+                0xb9 => invokeinterface(vm_stack, heap, metaspace),
                 // 0xba => invokedynamic(frame),
                 0xbb => _new(vm_stack, heap, metaspace),
                 0xbc => newarray(frame),

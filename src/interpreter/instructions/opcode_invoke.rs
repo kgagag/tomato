@@ -76,12 +76,13 @@ pub fn invokespecial(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace:
         )
     };
     //let target_class: &mut class::Class = class_loader::find_class(&target_class_name, vm_stack, heap, metaspace);
-    let (method,class) = metaspace.get_method_from_root(&target_class_name, &method_name, &descriptor);
+    let (method, class) =
+        metaspace.get_method_from_root(&target_class_name, &method_name, &descriptor);
     //先移动
     vm_stack[frame_index].pc += 3;
     let mut method = method.unwrap();
     if method.access_flag & 0x0100 == 0 {
-        let mut new_frame = init_stack_frame(&mut vm_stack[frame_index], &method,class, 1);
+        let mut new_frame = init_stack_frame(&mut vm_stack[frame_index], &method, class, 1);
         let v = vm_stack[frame_index].op_stack.pop();
         match v {
             Some(obj) => {
@@ -97,126 +98,175 @@ pub fn invokespecial(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace:
     }
 }
 
-/*
 pub fn invokeinterface(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Metaspace) {
     let frame_index = vm_stack.len() - 1;
+    let frame = &mut vm_stack[frame_index];
     //let class_name =metaspace.classes[];
-    let this_class = &mut metaspace.classes[vm_stack[frame_index].class];
-    let cnt = vm_stack[frame_index].code[vm_stack[frame_index].pc + 3];
+    let cnt = frame.code[frame.pc + 3];
     let mut tmp: Vec<StackFrameValue> = Vec::new();
     for _i in 1..cnt {
-        tmp.push(vm_stack[frame_index].op_stack.pop().unwrap());
+        tmp.push(frame.op_stack.pop().unwrap());
     }
-    let v = vm_stack[frame_index].op_stack.pop().unwrap();
+    let v = frame.op_stack.pop().unwrap();
     for _i in 1..cnt {
-        vm_stack[frame_index].op_stack.push(tmp.pop().unwrap());
+        frame.op_stack.push(tmp.pop().unwrap());
     }
-    match v {
-        StackFrameValue::Reference(id) => {
-            let reference = get_reference(&id).unwrap();
-            match reference {
-                Reference::Object(object) => {
-                    let class_name = get_class_name(&object.class);
-                    let class = get_or_load_class(&class_name);
-                    let (_class_index, name_and_type_index) = match this_class
-                        .constant_pool
-                        .get(&u8s_to_u16(&vm_stack[frame_index].code[(vm_stack[frame_index].pc + 1)..(vm_stack[frame_index].pc + 3)]))
-                    {
-                        Some(ConstantPoolInfo::InterfaceMethodref(
-                            class_index,
-                            name_and_type_index,
-                        )) => (class_index, name_and_type_index),
-                        _ => panic!(),
-                    };
 
-                    let (method_name, descriptor) =
-                        match this_class.constant_pool.get(name_and_type_index) {
-                            Some(ConstantPoolInfo::NameAndType(name_index, descriptor_index)) => {
-                                let method_name = match this_class.constant_pool.get(name_index) {
-                                    Some(ConstantPoolInfo::Utf8(name)) => name,
-                                    _ => panic!(),
-                                };
-                                let descriptor =
-                                    match this_class.constant_pool.get(descriptor_index) {
-                                        Some(ConstantPoolInfo::Utf8(desc)) => desc,
-                                        _ => panic!(),
-                                    };
-                                (method_name, descriptor)
-                            }
-                            _ => panic!(),
-                        };
-
-                    let mut method = metaspace.get_method_from_pool(
-                        &class.class_name,
-                        &method_name,
-                        &descriptor,
-                    );
-                    let mut curr_class = class;
-                    while method.is_none() {
-                        let super_class = get_or_load_class(&curr_class.super_class_name);
-                        method = metaspace.get_method_from_pool(
-                            &super_class.class_name,
-                            &method_name,
-                            &descriptor,
-                        );
-                        curr_class = super_class;
-                    }
-                    let mut new_frame: StackFrame = init_stack_frame(frame, &method.unwrap(), 1);
-                    new_frame.local[0] = v;
-                    push_stack_frame(new_frame);
-                }
-                _ => panic!(),
+    let (method_name, descriptor) = {
+        let this_class: &mut class::Class = &mut metaspace.classes[frame.class];
+        let (_class_index, name_and_type_index) = match this_class
+            .constant_pool
+            .get(&u8s_to_u16(&frame.code[(frame.pc + 1)..(frame.pc + 3)]))
+        {
+            Some(ConstantPoolInfo::InterfaceMethodref(class_index, name_and_type_index)) => {
+                (class_index, name_and_type_index)
             }
+            _ => panic!(),
+        };
+
+        let (method_name, descriptor) = match this_class.constant_pool.get(name_and_type_index) {
+            Some(ConstantPoolInfo::NameAndType(name_index, descriptor_index)) => {
+                let method_name = match this_class.constant_pool.get(name_index) {
+                    Some(ConstantPoolInfo::Utf8(name)) => name,
+                    _ => panic!(),
+                };
+                let descriptor = match this_class.constant_pool.get(descriptor_index) {
+                    Some(ConstantPoolInfo::Utf8(desc)) => desc,
+                    _ => panic!(),
+                };
+                (method_name, descriptor)
+            }
+            _ => panic!(),
+        };
+
+        (method_name.clone(), descriptor.clone())
+    };
+
+    let class_name = {
+        match v {
+            StackFrameValue::Reference(id) => {
+                let class_id = heap.get_class(id);
+                metaspace.classes[class_id as usize].class_name.clone()
+            }
+            _ => panic!(),
         }
-        _ => panic!(),
-    }
+    };
+    let (method, class) = metaspace.get_method_from_root(&class_name, &method_name, &descriptor);
+    let mut new_frame: StackFrame = init_stack_frame(frame, &method.unwrap(), class, 1);
+    new_frame.local[0] = v;
+    push_stack_frame(new_frame);
     frame.pc += 4;
 }
 
+// pub fn invokevirtual(frame: &mut StackFrame) {
+//     let method = frame.get_method_for_invoke().unwrap();
+//     frame.pc += 3;
+//     let param_len = method.param.len();
+//     let sfv = frame
+//         .op_stack
+//         .get(frame.op_stack.len() - param_len - 1)
+//         .unwrap();
+//     let target_method = match sfv {
+//         StackFrameValue::Reference(id) => {
+//             let reference = get_reference(id).unwrap();
+//             match reference {
+//                 Reference::Object(object) => {
+//                     let class_name = get_class_name(&object.class);
+//                     let mut curr_class_name = class_name.clone();
+//                     let mut target_method = get_method_from_pool(
+//                         &curr_class_name,
+//                         &method.method_name,
+//                         &method.descriptor,
+//                     );
+//                     while target_method.is_none() {
+//                         let clazz = get_or_load_class(&(curr_class_name.clone()));
+//                         curr_class_name = clazz.super_class_name.clone();
+//                         target_method = get_method_from_pool(
+//                             &curr_class_name,
+//                             &method.method_name,
+//                             &method.descriptor,
+//                         )
+//                     }
+//                     target_method
+//                 }
+//                 Reference::Array(_array) =>{
+//                     Some(method)
+//                 }
+//             }
+//         }
+//         _ => panic!(),
+//     };
 
-pub fn invokevirtual(frame: &mut StackFrame) {
-    let method = frame.get_method_for_invoke().unwrap();
-    frame.pc += 3;
-    let param_len = method.param.len();
-    let sfv = frame
-        .op_stack
-        .get(frame.op_stack.len() - param_len - 1)
-        .unwrap();
-    let target_method = match sfv {
-        StackFrameValue::Reference(id) => {
-            let reference = get_reference(id).unwrap();
-            match reference {
-                Reference::Object(object) => {
-                    let class_name = get_class_name(&object.class);
-                    let mut curr_class_name = class_name.clone();
-                    let mut target_method = get_method_from_pool(
-                        &curr_class_name,
-                        &method.method_name,
-                        &method.descriptor,
-                    );
-                    while target_method.is_none() {
-                        let clazz = get_or_load_class(&(curr_class_name.clone()));
-                        curr_class_name = clazz.super_class_name.clone();
-                        target_method = get_method_from_pool(
-                            &curr_class_name,
-                            &method.method_name,
-                            &method.descriptor,
-                        )
-                    }
-                    target_method
-                }
-                Reference::Array(_array) =>{
-                    Some(method)
-                }
+//     let m= target_method.unwrap();
+//     if m.access_flag & 0x0100 == 0 {
+//         let mut new_frame = init_stack_frame(frame, &m, 1);
+//         let v = frame.op_stack.pop();
+//         match v {
+//             Some(obj) => {
+//                 new_frame.local[0] = obj;
+//             }
+//             None => {
+//                 panic!("error");
+//             }
+//         }
+//         push_stack_frame(new_frame);
+//     } else {
+//         run_native(&m, frame);
+//     }
+// }
+
+pub fn invokevirtual(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Metaspace) {
+    let frame_index = vm_stack.len() - 1;
+    let (target_class_name,method_name, descriptor) = {
+        let this_class = &metaspace.classes[vm_stack[frame_index].class];
+        let (class_index, name_and_type_index) = match this_class.constant_pool.get(&u8s_to_u16(
+            &vm_stack[frame_index].code
+                [(vm_stack[frame_index].pc + 1)..(vm_stack[frame_index].pc + 3)],
+        )) {
+            Some(ConstantPoolInfo::Methodref(class_index, name_and_type_index)) => {
+                (class_index, name_and_type_index)
             }
-        }
-        _ => panic!(),
-    };
+            _ => panic!(),
+        };
 
-    let m= target_method.unwrap();
-    if m.access_flag & 0x0100 == 0 {
-        let mut new_frame = init_stack_frame(frame, &m, 1);
-        let v = frame.op_stack.pop();
+        // 通过链式调用减少嵌套
+        let target_class_name = this_class
+            .constant_pool
+            .get(class_index)
+            .and_then(|cp_info| match cp_info {
+                ConstantPoolInfo::Class(name_index) => this_class.constant_pool.get(name_index),
+                _ => None,
+            })
+            .and_then(|name_info| match name_info {
+                ConstantPoolInfo::Utf8(target_class_name) => Some(target_class_name),
+                _ => None,
+            });
+
+        // 继续减少嵌套并简化逻辑
+        let (method_name, descriptor) = match this_class.constant_pool.get(name_and_type_index) {
+            Some(ConstantPoolInfo::NameAndType(name_index, descriptor_index)) => {
+                let method_name = match this_class.constant_pool.get(name_index) {
+                    Some(ConstantPoolInfo::Utf8(name)) => name,
+                    _ => panic!(),
+                };
+                let descriptor = match this_class.constant_pool.get(descriptor_index) {
+                    Some(ConstantPoolInfo::Utf8(desc)) => desc,
+                    _ => panic!(),
+                };
+                //metaspace.get_method_from_root(class_name, method_name, descriptor)
+                (method_name, descriptor)
+            }
+            _ => panic!(),
+        };
+        (target_class_name.unwrap().clone(),method_name.clone(), descriptor.clone())
+    };
+    let (method, class) = metaspace.get_method_from_root(&target_class_name, &method_name, &descriptor);
+    let mut method = method.unwrap();
+    //先移动
+    vm_stack[frame_index].pc += 3;
+    if method.access_flag & 0x0100 == 0 {
+        let mut new_frame = init_stack_frame(&mut vm_stack[frame_index], &method, class, 1);
+        let v = vm_stack[frame_index].op_stack.pop();
         match v {
             Some(obj) => {
                 new_frame.local[0] = obj;
@@ -227,31 +277,70 @@ pub fn invokevirtual(frame: &mut StackFrame) {
         }
         push_stack_frame(new_frame);
     } else {
-        run_native(&m, frame);
+        run_native(&mut method, &mut vm_stack[frame_index]);
     }
 }
 
-pub fn get_frames(vm_stack_id: &u32) -> &Vec<StackFrame> {
-    let data: std::sync::MutexGuard<'_, UnsafeCell<HashMap<u32, Vec<StackFrame>>>> =
-        VM_STACKS.lock().unwrap();
-    unsafe {
-        let map: &mut HashMap<u32, Vec<StackFrame>> = &mut *data.get();
-        return map.get(vm_stack_id).unwrap();
-    }
-}
 
-pub fn invokestatic(frame: &mut StackFrame) {
-    let method = frame.get_method_for_invoke().unwrap();
-    frame.pc += 3;
+
+pub fn invokestatic(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Metaspace) {
+    let frame_index = vm_stack.len() - 1;
+    let (target_class_name,method_name, descriptor) = {
+        let this_class = &metaspace.classes[vm_stack[frame_index].class];
+        let (class_index, name_and_type_index) = match this_class.constant_pool.get(&u8s_to_u16(
+            &vm_stack[frame_index].code
+                [(vm_stack[frame_index].pc + 1)..(vm_stack[frame_index].pc + 3)],
+        )) {
+            Some(ConstantPoolInfo::Methodref(class_index, name_and_type_index)) => {
+                (class_index, name_and_type_index)
+            }
+            _ => panic!(),
+        };
+
+        // 通过链式调用减少嵌套
+        let target_class_name = this_class
+            .constant_pool
+            .get(class_index)
+            .and_then(|cp_info| match cp_info {
+                ConstantPoolInfo::Class(name_index) => this_class.constant_pool.get(name_index),
+                _ => None,
+            })
+            .and_then(|name_info| match name_info {
+                ConstantPoolInfo::Utf8(target_class_name) => Some(target_class_name),
+                _ => None,
+            });
+
+        // 继续减少嵌套并简化逻辑
+        let (method_name, descriptor) = match this_class.constant_pool.get(name_and_type_index) {
+            Some(ConstantPoolInfo::NameAndType(name_index, descriptor_index)) => {
+                let method_name = match this_class.constant_pool.get(name_index) {
+                    Some(ConstantPoolInfo::Utf8(name)) => name,
+                    _ => panic!(),
+                };
+                let descriptor = match this_class.constant_pool.get(descriptor_index) {
+                    Some(ConstantPoolInfo::Utf8(desc)) => desc,
+                    _ => panic!(),
+                };
+                //metaspace.get_method_from_root(class_name, method_name, descriptor)
+                (method_name, descriptor)
+            }
+            _ => panic!(),
+        };
+        (target_class_name.unwrap().clone(),method_name.clone(), descriptor.clone())
+    };
+    let (method, class) = metaspace.get_method_from_root(&target_class_name, &method_name, &descriptor);
+    let mut method = method.unwrap();
+    //先移动
+    vm_stack[frame_index].pc += 3;
     //我写的辅助调试输出的工具
     if method.method_name == "print20240503" {
-        let v = frame.op_stack.pop().unwrap();
+        let v = vm_stack[frame_index].op_stack.pop().unwrap();
         dprint(v);
     } else if method.access_flag & 0x0100 == 0 {
-        let new_frame = init_stack_frame(frame, &method, 0);
+        let new_frame = init_stack_frame(&mut vm_stack[frame_index], &method,&class, 0);
         push_stack_frame(new_frame);
     } else {
-        run_native(&method, frame);
+        run_native(&method, &mut vm_stack[frame_index]);
     }
 }
-*/
+

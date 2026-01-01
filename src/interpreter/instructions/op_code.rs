@@ -30,7 +30,6 @@ pub mod op_code {
 
     use crate::common::stack_frame::StackFrame;
     use crate::interpreter::instructions::*;
-    use crate::memory::gc::full_gc;
     use crate::runtime::heap::Heap;
     use crate::runtime::metaspace::Metaspace;
     use crate::runtime::runtime_data_area::VM_STACKS;
@@ -249,10 +248,10 @@ pub mod op_code {
                 0xb1 => _return(frame),
                 0xb2 => getstatic(frame),
                 0xb3 => putstatic(frame),
-                0xb4 => getfield(frame),
-                0xb5 => putfield(frame),
+                0xb4 => getfield(vm_stack, heap, metaspace),
+                0xb5 => putfield(vm_stack, heap, metaspace),
                 // 0xb6 => invokevirtual(frame),
-                // 0xb7 => invokespecial(frame),
+                0xb7 => invokespecial(vm_stack, heap, metaspace),
                 // 0xb8 => invokestatic(frame),
                 // 0xb9 => invokeinterface(frame),
                 // 0xba => invokedynamic(frame),

@@ -1,10 +1,9 @@
+use core::panic;
 use std::{collections::HashMap, iter::FlatMap, sync::Arc};
 
 use log::info;
 
-use crate::{
-    classfile::class::{Class, MethodInfo}
-};
+use crate::{classfile::class::{self, Class, MethodInfo}, common::param::DataType};
 
 #[derive(Debug)]
 pub struct Metaspace {
@@ -23,17 +22,53 @@ impl Metaspace {
         }
     }
 
-    pub fn get_method_from_pool(&self,
-    class_name: &String,
-    method_name: &String,
-    descriptor: &String,
+    /**
+     * 不支持查找父类字段
+     */
+    pub fn get_field_tupple(&mut self, class_name: &String, field_name: &String) -> (u16, u32,DataType) {
+        let class_id = self.class_map.get(class_name).unwrap();
+        let class = &self.classes[*class_id];
+        let field = class.field_info.get(field_name).unwrap();
+        (field.field_index, field.offset,field.data_type.clone())
+    }
+
+    pub fn get_method_from_pool(
+        &mut self,
+        class_name: &String,
+        method_name: &String,
+        descriptor: &String,
     ) -> Option<&MethodInfo> {
         let key = format!("{}{}{}{}{}", class_name, ".", method_name, ".", descriptor);
-        info!("get_method_from_pool key:{}", key);
-        for (key, value) in &self.method_area {
-            println!("{}", key);
-        }
         return self.method_area.get(&key);
     }
-}
 
+
+     pub fn get_method_from_root(
+        &mut self,
+        class_name: &String,
+        method_name: &String,
+        descriptor: &String,
+    ) -> (Option<&MethodInfo>,&Class) {
+        let key = format!("{}{}{}{}{}", class_name, ".", method_name, ".", descriptor);
+        let mut m =  self.method_area.get(&key);
+        if m.is_some() {
+            return (m,&self.classes[*self.class_map.get(class_name).unwrap()]);
+        }
+        let mut curr_class_name = class_name.clone();
+        while m.is_none() {
+            let class_id = self.class_map.get(&curr_class_name).unwrap();
+            let class = &self.classes[*class_id];  
+            if class.super_class_name.is_empty() {
+                break;
+            }
+            let sub_key = format!("{}{}{}{}{}", class.super_class_name, ".", method_name, ".", descriptor); 
+            m = self.method_area.get(&sub_key);
+            if m.is_some() {
+                return (m,class);
+            }
+            curr_class_name = class.super_class_name.clone();
+        }
+        panic!("method not found");
+    }
+
+}

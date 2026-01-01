@@ -67,6 +67,37 @@ pub fn bytes_to_chars(bytes: Vec<u8>) -> Vec<char> {
     string.chars().collect()
 }
 
+pub fn split_u64_to_u8(value: u64) -> [u8; 8] {
+    [
+        ((value >> 56) & 0xFF) as u8,  // 最高字节（第7字节）
+        ((value >> 48) & 0xFF) as u8,  // 第6字节
+        ((value >> 40) & 0xFF) as u8,  // 第5字节
+        ((value >> 32) & 0xFF) as u8,  // 第4字节
+        ((value >> 24) & 0xFF) as u8,  // 第3字节
+        ((value >> 16) & 0xFF) as u8,  // 第2字节
+        ((value >> 8) & 0xFF) as u8,   // 第1字节
+        (value & 0xFF) as u8,          // 最低字节（第0字节）
+    ]
+}
+
+
+pub fn combine_u8_to_u32(bytes: [u8; 4]) -> u32 {
+    (bytes[0] as u32) << 24 |
+    (bytes[1] as u32) << 16 |
+    (bytes[2] as u32) << 8 |
+    (bytes[3] as u32)
+}
+
+pub fn split_i32_to_u8(value: i32) -> [u8; 4] {
+    [
+        ((value >> 24) & 0xFF) as u8,  // 最高字节
+        ((value >> 16) & 0xFF) as u8,
+        ((value >> 8) & 0xFF) as u8,
+        (value & 0xFF) as u8,          // 最低字节
+    ]
+}
+
+
 pub fn split_u32_to_u8(value: u32) -> [u8; 4] {
     [
         ((value >> 24) & 0xFF) as u8,  // 最高字节
@@ -76,9 +107,23 @@ pub fn split_u32_to_u8(value: u32) -> [u8; 4] {
     ]
 }
 
-pub fn combine_u8_to_u32(bytes: [u8; 4]) -> u32 {
-    (bytes[0] as u32) << 24 |
-    (bytes[1] as u32) << 16 |
-    (bytes[2] as u32) << 8 |
-    (bytes[3] as u32)
+
+pub fn split_i64_to_u8(value: i64) -> [u8; 8] {
+    [
+        ((value >> 56) & 0xFF) as u8,  // 最高字节
+        ((value >> 48) & 0xFF) as u8,
+        ((value >> 40) & 0xFF) as u8,
+        ((value >> 32) & 0xFF) as u8,
+        ((value >> 24) & 0xFF) as u8,
+        ((value >> 16) & 0xFF) as u8,
+        ((value >> 8) & 0xFF) as u8,
+        (value & 0xFF) as u8,          // 最低字节
+    ]
+}
+
+pub fn split_i16_to_u8(value: i16) -> [u8; 2] {
+    [
+        ((value >> 8) & 0xFF) as u8,  // 高字节
+        (value & 0xFF) as u8,         // 低字节
+    ]
 }

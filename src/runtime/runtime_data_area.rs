@@ -25,38 +25,38 @@ lazy_static! {
     pub static ref METHOD_DATA: Mutex<UnsafeCell<HashMap<String,MethodInfo>>> = Mutex::new(UnsafeCell::new(HashMap::new()));
 
     //字符串常量池
-    pub static ref STR_CONSTANT_POOL: Mutex<HashMap<String, u64>> = Mutex::new(HashMap::new());
+    pub static ref STR_CONSTANT_POOL: Mutex<HashMap<String, u32>> = Mutex::new(HashMap::new());
 
     // 类对象常量池，是否可以跟字符串常量池合并？
-    pub static ref CLASS_CONSTANT_POOL: Mutex<UnsafeCell<HashMap<String, u64>>> = Mutex::new(UnsafeCell::new(HashMap::new()));
+    pub static ref CLASS_CONSTANT_POOL: Mutex<UnsafeCell<HashMap<String, u32>>> = Mutex::new(UnsafeCell::new(HashMap::new()));
 
     //对象存储
-    pub static ref OBJECT_DATA: Mutex<UnsafeCell<HashMap<u64, Reference>>> = Mutex::new(UnsafeCell::new(HashMap::new()));
+    pub static ref OBJECT_DATA: Mutex<UnsafeCell<HashMap<u32, Reference>>> = Mutex::new(UnsafeCell::new(HashMap::new()));
 
-    static ref GLOBAL_COUNTER: Arc<Mutex<u64>> = Arc::new(Mutex::new(0));
+    static ref GLOBAL_COUNTER: Arc<Mutex<u32>> = Arc::new(Mutex::new(0));
 
     //虚拟机栈
     pub static ref VM_STACKS: Mutex<UnsafeCell<HashMap<u32, Vec<StackFrame>>>> = Mutex::new(UnsafeCell::new(HashMap::new()));
 
     //TCP 连接
-    pub static ref TCP_CONNECT: Mutex<UnsafeCell<HashMap<u64, TcpStream>>> = Mutex::new(UnsafeCell::new(HashMap::new()));
+    pub static ref TCP_CONNECT: Mutex<UnsafeCell<HashMap<u32, TcpStream>>> = Mutex::new(UnsafeCell::new(HashMap::new()));
 
 
 }
 
 // 增加计数器的函数
-fn increment_counter() -> u64 {
+fn increment_counter() -> u32 {
     // 使用 lock() 获取 Mutex 的锁，确保线程安全
     let mut counter = GLOBAL_COUNTER.lock().unwrap();
     *counter += 1;
     *counter
 }
 
-pub fn get_constant_pool_str(str: &String) -> Option<u64> {
+pub fn get_constant_pool_str(str: &String) -> Option<u32> {
     // 获取全局变量的Mutex锁
-    let data: std::sync::MutexGuard<'_, HashMap<String, u64>> = STR_CONSTANT_POOL.lock().unwrap();
+    let data: std::sync::MutexGuard<'_, HashMap<String, u32>> = STR_CONSTANT_POOL.lock().unwrap();
     //data.get(str).copied()
-    let id: Option<&u64> = data.get(str);
+    let id: Option<&u32> = data.get(str);
     if id.is_some() {
         let reference = get_reference(id.unwrap());
         if reference.is_some() {
@@ -66,9 +66,9 @@ pub fn get_constant_pool_str(str: &String) -> Option<u64> {
     None
 }
 
-pub fn put_into_class_constant_pool(string: String, obj_id: u64) {
+pub fn put_into_class_constant_pool(string: String, obj_id: u32) {
     // 获取全局变量的Mutex锁
-    let data: std::sync::MutexGuard<'_, UnsafeCell<HashMap<String, u64>>> =
+    let data: std::sync::MutexGuard<'_, UnsafeCell<HashMap<String, u32>>> =
         CLASS_CONSTANT_POOL.lock().unwrap();
     unsafe {
         // 从 UnsafeCell 中获取 HashMap 的可变引用
@@ -79,9 +79,9 @@ pub fn put_into_class_constant_pool(string: String, obj_id: u64) {
     }
 }
 
-pub fn get_constant_pool_class(str: &String) -> Option<&u64> {
+pub fn get_constant_pool_class(str: &String) -> Option<&u32> {
     // 获取全局变量的Mutex锁
-    let data: std::sync::MutexGuard<'_, UnsafeCell<HashMap<String, u64>>> =
+    let data: std::sync::MutexGuard<'_, UnsafeCell<HashMap<String, u32>>> =
         CLASS_CONSTANT_POOL.lock().unwrap();
     unsafe {
         // 从 UnsafeCell 中获取 HashMap 的可变引用
@@ -100,9 +100,9 @@ pub fn get_constant_pool_class(str: &String) -> Option<&u64> {
     }
 }
 
-pub fn put_into_str_constant_pool(string: String, obj_id: u64) {
+pub fn put_into_str_constant_pool(string: String, obj_id: u32) {
     // 获取全局变量的Mutex锁
-    let mut data: std::sync::MutexGuard<'_, HashMap<String, u64>> =
+    let mut data: std::sync::MutexGuard<'_, HashMap<String, u32>> =
         STR_CONSTANT_POOL.lock().unwrap();
     // 从 UnsafeCell 中获取 HashMap 的可变引用
     //let  map =*data;
@@ -124,7 +124,7 @@ pub fn class_exists(class_name: &String) -> bool {
     }
 }
 
-pub fn create_object<'a>(class: usize) -> u64 {
+pub fn create_object<'a>(class: usize) -> u32 {
     let data = OBJECT_DATA.lock().unwrap();
     let obj;
     unsafe {
@@ -138,7 +138,7 @@ pub fn create_object<'a>(class: usize) -> u64 {
     }
 }
 
-pub fn create_array(len: u32, array_type: DataType) -> u64 {
+pub fn create_array(len: u32, array_type: DataType) -> u32 {
     let data = OBJECT_DATA.lock().unwrap();
     let array;
     unsafe {
@@ -156,7 +156,7 @@ pub fn create_array(len: u32, array_type: DataType) -> u64 {
  * @id java对象的id
  * 返回引用类型数据
  */
-pub fn get_reference<'a>(id: &u64) -> Option<&'a mut Reference> {
+pub fn get_reference<'a>(id: &u32) -> Option<&'a mut Reference> {
     let data = OBJECT_DATA.lock().unwrap();
     unsafe {
         let map = &mut *data.get();
@@ -272,31 +272,31 @@ pub fn push_frame_data(vm_stack_id: u32, value: StackFrameValue) {
     drop(data);
 }
 
-pub fn put_tcp(id:&u64,tcp_stream:TcpStream) {
+pub fn put_tcp(id:&u32,tcp_stream:TcpStream) {
     // 获取全局变量的Mutex锁
-    let data: std::sync::MutexGuard<'_, UnsafeCell<HashMap<u64, TcpStream>>> = TCP_CONNECT.lock().unwrap();
+    let data: std::sync::MutexGuard<'_, UnsafeCell<HashMap<u32, TcpStream>>> = TCP_CONNECT.lock().unwrap();
     unsafe {
-        let map: &mut HashMap<u64, TcpStream> = &mut *data.get();
+        let map: &mut HashMap<u32, TcpStream> = &mut *data.get();
         map.insert(*id, tcp_stream);
     }
 }
 
-pub fn get_tcp <'a>(id:&u64) -> &'a TcpStream{
+pub fn get_tcp <'a>(id:&u32) -> &'a TcpStream{
     // 获取全局变量的Mutex锁
-    let data: std::sync::MutexGuard<'_, UnsafeCell<HashMap<u64, TcpStream>>> = TCP_CONNECT.lock().unwrap();
+    let data: std::sync::MutexGuard<'_, UnsafeCell<HashMap<u32, TcpStream>>> = TCP_CONNECT.lock().unwrap();
     unsafe {
-        let map: &mut HashMap<u64, TcpStream> = &mut *data.get();
+        let map: &mut HashMap<u32, TcpStream> = &mut *data.get();
         return map.get(id).unwrap()
     }
 }
 
 
 
-pub fn close_tcp(id:&u64) {
+pub fn close_tcp(id:&u32) {
     // 获取全局变量的Mutex锁
-    let data: std::sync::MutexGuard<'_, UnsafeCell<HashMap<u64, TcpStream>>> = TCP_CONNECT.lock().unwrap();
+    let data: std::sync::MutexGuard<'_, UnsafeCell<HashMap<u32, TcpStream>>> = TCP_CONNECT.lock().unwrap();
     unsafe {
-        let map: &mut HashMap<u64, TcpStream> = &mut *data.get();
+        let map: &mut HashMap<u32, TcpStream> = &mut *data.get();
          let _res = map.get(id).unwrap().shutdown(Shutdown::Both);
          //warn!("{:?}",map.capacity());
          //map.remove(id);

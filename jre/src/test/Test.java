@@ -206,7 +206,7 @@ public class Test {
 
         */
         //long t1 = System.nanoTime();
-        new Test1().test();
+        new Test103().test();
         //long t2 = System.nanoTime();
 
         //long t3 = t2 - t1;

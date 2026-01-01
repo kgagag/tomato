@@ -23,7 +23,7 @@ pub struct Class {
     pub id: usize,
     pub class_name: String,
     pub super_class_name:String,
-    pub super_class_id:usize
+    pub super_class_id:usize,
 }
 
 impl Class {
@@ -48,7 +48,7 @@ impl Class {
             id: 0,
             class_name: String::new(),
             super_class_name:String::new(),
-            super_class_id:0
+            super_class_id:0,
         }
     }
 }
@@ -122,7 +122,8 @@ pub struct FieldInfo {
     pub value: StackFrameValue,
     pub data_type: DataType,
     pub descriptor: String,
-    pub field_index:u16
+    pub field_index:u16,
+    pub offset:u32
 }
 
 #[derive(Debug, Clone)]

@@ -45,7 +45,7 @@ pub fn _new(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Met
     //初始化属性
     vm_stack[frame_index]
         .op_stack
-        .push(StackFrameValue::Reference(obj as u64));
+        .push(StackFrameValue::Reference(obj as u32));
 
     vm_stack[frame_index].pc += 3;
 }

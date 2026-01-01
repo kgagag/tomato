@@ -11,7 +11,7 @@ pub enum StackFrameValue {
     Int(i32),
     Long(i64),
     Short(i16),
-    Reference(u64),
+    Reference(u32),
     Boolean(bool),
     U32(u32),
     U64(u64),
@@ -48,5 +48,62 @@ pub fn number_u64(v: &StackFrameValue) -> u64 {
         StackFrameValue::CHARACTER(data) => *data as u64,
         StackFrameValue::U32(data) => *data as u64,
         _ => panic!("wrong value type"),
+    }
+}
+
+pub fn as_i32(v: &StackFrameValue) -> i32 {
+    match v {
+        StackFrameValue::Int(data) => *data,
+        _ => panic!("Expected Int, got {:?}", v),
+    }
+}
+
+pub fn as_i8(v: &StackFrameValue) -> i8 {
+    match v {
+        StackFrameValue::Byte(data) => *data,
+        _ => panic!("Expected Byte, got {:?}", v),
+    }
+}
+
+pub fn as_char(v: &StackFrameValue) -> char {
+    match v {
+        StackFrameValue::Char(data) => *data,
+        StackFrameValue::CHARACTER(data) => *data,
+        _ => panic!("Expected Char, got {:?}", v),
+    }
+}
+
+pub fn as_f64(v: &StackFrameValue) -> f64 {
+    match v {
+        StackFrameValue::Double(data) => *data,
+        _ => panic!("Expected Double, got {:?}", v),
+    }
+}
+
+pub fn as_f32(v: &StackFrameValue) -> f32 {
+    match v {
+        StackFrameValue::Float(data) => *data,
+        _ => panic!("Expected Float, got {:?}", v),
+    }
+}
+
+pub fn as_i64(v: &StackFrameValue) -> i64 {
+    match v {
+        StackFrameValue::Long(data) => *data,
+        _ => panic!("Expected Long, got {:?}", v),
+    }
+}
+
+pub fn as_i16(v: &StackFrameValue) -> i16 {
+    match v {
+        StackFrameValue::Short(data) => *data,
+        _ => panic!("Expected Short, got {:?}", v),
+    }
+}
+
+pub fn as_u32(v: &StackFrameValue) -> u32 {
+    match v {
+        StackFrameValue::U32(data) => *data,
+        _ => panic!("Expected U32, got {:?}", v),
     }
 }

@@ -43,7 +43,7 @@ pub fn get_primitive_class(frame: &mut StackFrame) {
                                     _ => panic!(),
                                 }
                             }
-                            let class_object: u64;
+                            let class_object: u32;
                             if v == vec!['f', 'l', 'o', 'a', 't'] {
                                 class_object =
                                     create_class_object(&String::from("java/lang/Float"));

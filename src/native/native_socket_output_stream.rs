@@ -32,7 +32,7 @@ pub fn write0( frame: &mut StackFrame) {
                    let fdsfv =  object.field.get("fd").unwrap();
                    match fdsfv {
                        StackFrameValue::Int(fd) =>{
-                          let mut stream = runtime_data_area::get_tcp(&(*fd as u64));
+                          let mut stream = runtime_data_area::get_tcp(&(*fd as u32));
                           let _ = stream.write_all(&bytes).unwrap();
                           let _ = stream.flush().unwrap();
                        }
@@ -57,7 +57,7 @@ pub fn close0( frame: &mut StackFrame){
                    let fdsfv =  object.field.get("fd").unwrap();
                    match fdsfv {
                        StackFrameValue::Int(fd) =>{
-                          runtime_data_area::close_tcp(&(*fd as u64));
+                          runtime_data_area::close_tcp(&(*fd as u32));
                        }
                        _=> panic!()
                    }

@@ -211,6 +211,14 @@ pub fn load_class(name: &String,vm_stack: &mut Vec<StackFrame>, heap: &mut Heap,
     class.access_flags = get_access_flag(&mut cursor);
     class.this_class = get_this_class(&mut cursor);
     class.super_class = get_super_class(&mut cursor);
+    class.interface_count = get_interface_count(&mut cursor);
+    class.interfaces = get_interface(class.interface_count, &mut cursor);
+    class.fields_count = get_field_count(&mut cursor);
+    class.field_info = get_field(&class.constant_pool, class.fields_count, &mut cursor);
+    class.methods_count = get_method_count(&mut cursor);
+    class.method_info = get_method(&class.constant_pool, class.methods_count, &mut cursor);
+    class.attributes_count = get_attribute_count(&mut cursor);
+    class.attribute_info = get_attribute(&class.constant_pool, class.attributes_count, &mut cursor);
     if class.super_class != 0x00 {
         let class_constant = class.constant_pool.get(&class.super_class).unwrap();
         match class_constant {
@@ -219,10 +227,16 @@ pub fn load_class(name: &String,vm_stack: &mut Vec<StackFrame>, heap: &mut Heap,
                 match name_constant {
                     ConstantPoolInfo::Utf8(class_name) => {
                         let super_class_op = metaspace.class_map.get(class_name);
-                        if ! super_class_op.is_none() {
+                        if super_class_op.is_none() {
                             let super_class =  load_class(class_name,vm_stack, heap, metaspace);
                             class.super_class_id = super_class.id;
                             class.super_class_name = super_class.class_name;
+                            for (key, value) in &super_class.field_info {
+                                //TODO 处理私有变量
+                                if !class.field_info.contains_key(key) {
+                                    class.field_info.insert(key.clone(), value.clone());
+                                }
+                            }  
                         }else {
                            let super_class =  &metaspace.classes[*super_class_op.unwrap()];
                            class.super_class_id = super_class.id;
@@ -236,14 +250,6 @@ pub fn load_class(name: &String,vm_stack: &mut Vec<StackFrame>, heap: &mut Heap,
         }
         // load_class(name)
     }
-    class.interface_count = get_interface_count(&mut cursor);
-    class.interfaces = get_interface(class.interface_count, &mut cursor);
-    class.fields_count = get_field_count(&mut cursor);
-    class.field_info = get_field(&class.constant_pool, class.fields_count, &mut cursor);
-    class.methods_count = get_method_count(&mut cursor);
-    class.method_info = get_method(&class.constant_pool, class.methods_count, &mut cursor);
-    class.attributes_count = get_attribute_count(&mut cursor);
-    class.attribute_info = get_attribute(&class.constant_pool, class.attributes_count, &mut cursor);
     //do_after_load(&mut class);
     //init_class_id(&mut class);
     //init(name, "<clinit>".to_string(), heap, metaspace);
@@ -289,7 +295,7 @@ pub fn init(class_name:  &String, method_name: String, heap: &mut Heap, metaspac
     }
 }
 
-pub fn parse_method(class: &mut Class, method_info_map: &mut HashMap<String, MethodInfo>) {
+pub fn parse_method_field(class: &mut Class, method_info_map: &mut HashMap<String, MethodInfo>) {
     let this_class = class.constant_pool.get(&class.this_class).unwrap();
 
     //info!("this_class:{:?}", this_class);
@@ -308,23 +314,6 @@ pub fn parse_method(class: &mut Class, method_info_map: &mut HashMap<String, Met
         }
         _ => panic!("wrong constant data type"),
     }
-
-    // java.lang.Object 没有父类
-    // if class.super_class != 0 {
-    //     let super_class = class.constant_pool.get(&class.super_class).unwrap();
-    //     match super_class {
-    //         ConstantPoolInfo::Class(name_index) => {
-    //             let class_name = class.constant_pool.get(name_index).unwrap();
-    //             match class_name {
-    //                 ConstantPoolInfo::Utf8(name) => {
-    //                     class.super_class_name = name.clone();
-    //                 }
-    //                 _ => panic!("wrong constant data type"),
-    //             }
-    //         }
-    //         _ => panic!("wrong constant data type"),
-    //     }
-    // }
     
     //补充方法方法参数解析后信息
     for i in 0..class.methods_count {
@@ -375,12 +364,21 @@ pub fn parse_method(class: &mut Class, method_info_map: &mut HashMap<String, Met
         }
     }
 
+    let mut field_index = 0;
+    let mut field_offset:u32 = 0;
+
     //补充方法方法参数解析后信息
     for (_key, field_info) in class.field_info.iter_mut() {
         let descriptor = class
             .constant_pool
             .get(&field_info.descriptor_index)
             .unwrap();
+
+        field_info.field_index = field_index;
+        field_info.offset = field_offset;
+
+        field_index += 1;
+
         match descriptor {
             ConstantPoolInfo::Utf8(str) => {
                 field_info.descriptor = str.clone();
@@ -394,33 +392,45 @@ pub fn parse_method(class: &mut Class, method_info_map: &mut HashMap<String, Met
                                 DataType::Array {
                                     element_type: _,
                                     depth: _,
-                                } => field_info.value = StackFrameValue::Null,
+                                } => {
+                                    field_info.value = StackFrameValue::Null;
+                                    field_offset += 4;
+                                }
                                 DataType::Byte => {
                                     field_info.value = StackFrameValue::Byte(0);
+                                    field_offset += 1;
                                 }
                                 DataType::Char => {
                                     field_info.value = StackFrameValue::Char(0);
+                                    field_offset += 2;
                                 }
                                 DataType::Double => {
                                     field_info.value = StackFrameValue::Double(0.0);
+                                    field_offset += 8;
                                 }
                                 DataType::Float => {
                                     field_info.value = StackFrameValue::Float(0.0);
+                                    field_offset += 4;
                                 }
                                 DataType::Int => {
                                     field_info.value = StackFrameValue::Int(0);
+                                    field_offset += 4;
                                 }
                                 DataType::Long => {
                                     field_info.value = StackFrameValue::Long(0);
+                                    field_offset += 8;
                                 }
                                 DataType::Reference(_s) => {
                                     field_info.value = StackFrameValue::Null;
+                                    field_offset += 4;
                                 }
                                 DataType::Short => {
                                     field_info.value = StackFrameValue::Short(0);
+                                    field_offset += 2;
                                 }
                                 DataType::Boolean => {
                                     field_info.value = StackFrameValue::Boolean(false);
+                                    field_offset += 1;
                                 }
                                 DataType::Unknown => panic!(),
                             }
@@ -437,6 +447,7 @@ pub fn parse_method(class: &mut Class, method_info_map: &mut HashMap<String, Met
             _ => panic!("wrong constant data type"),
         }
     }
+
 }
 
 /**
@@ -657,7 +668,7 @@ pub fn get_field(
     cursor: &mut Cursor<Vec<u8>>,
 ) -> HashMap<String, FieldInfo> {
     let mut v: HashMap<String, FieldInfo> = HashMap::new();
-    for j in 0..cnt {
+    for _j in 0..cnt {
         let mut f: FieldInfo = FieldInfo {
             access_flag: cursor.read_u16::<BigEndian>().unwrap(),
             name_index: cursor.read_u16::<BigEndian>().unwrap(),
@@ -668,7 +679,8 @@ pub fn get_field(
             field_name: String::from(""),
             data_type: DataType::Unknown,
             descriptor: String::from(""),
-            field_index: j
+            field_index: 0,
+            offset: 0
         };
 
         let name_utf8 = constant_pool.get(&f.name_index).unwrap();
@@ -1054,7 +1066,7 @@ pub fn find_class<'a,'b>(class_name: &'a String,vm_stack: &'b mut Vec<StackFrame
             let id  =  metaspace.classes.len();
             class.id = id;
             metaspace.classes.push(class);
-            parse_method(&mut metaspace.classes[id], &mut metaspace.method_area);
+            parse_method_field(&mut metaspace.classes[id], &mut metaspace.method_area);
             metaspace.class_map.insert(class_name.clone(), id);
             init(class_name, "<clinit>".to_string(),heap,metaspace);
             (&mut metaspace.classes[id],true)

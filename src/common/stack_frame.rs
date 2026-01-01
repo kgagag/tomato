@@ -124,7 +124,7 @@ impl StackFrame {
         }
     }
 
-    pub fn pop_reference(&mut self) -> u64 {
+    pub fn pop_reference(&mut self) -> u32 {
         let value = self.op_stack.pop().unwrap();
         match value {
             StackFrameValue::Reference(data) => data,
@@ -210,7 +210,7 @@ impl StackFrame {
 pub fn init_stack_frame(
     frame: &mut StackFrame,
     method_info: &MethodInfo,
-    class: &mut Class,
+    class: & Class,
     start: usize,
 ) -> StackFrame {
     let mut new_stack_frame: StackFrame = create_stack_frame(method_info, class).unwrap();
@@ -285,43 +285,33 @@ pub fn init_stack_frame(
     new_stack_frame
 }
 
-pub fn create_stack_frame(method_info: &MethodInfo, class: &mut Class) -> Option<StackFrame> {
+pub fn create_stack_frame(method_info: &MethodInfo, class: &Class) -> Option<StackFrame> {
     for attr in &method_info.attributes {
-        if let AttributeInfo::Code(code_attr) = attr {
-            return Some(StackFrame::new(
-                class.id,
-                code_attr.max_stack,
-                code_attr.max_locals,
-                code_attr.code.clone(),
-                code_attr.clone(),
-                method_info.method_name.clone(),
-                method_info.descriptor.clone(),
-                class.class_name.clone()
-            ));
+        match attr {
+            AttributeInfo::Code(code_attr) => {
+                return Some(StackFrame::new(
+                    class.id,
+                    code_attr.max_stack,
+                    code_attr.max_locals,
+                    code_attr.code.clone(),
+                    code_attr.clone(),
+                    method_info.method_name.clone(),
+                    method_info.descriptor.clone(),
+                    class.class_name.clone()
+                ));
+            }
+            _ => continue, // 跳过不是 Code 类型的属性
         }
     }
     None
 }
 
+// 移除重复的 create_stack_frame_with_class 函数，或改为调用上面的函数
 pub fn create_stack_frame_with_class(
     method_info: &MethodInfo,
     class: &Class,
 ) -> Option<StackFrame> {
-    for attr in &method_info.attributes {
-        if let AttributeInfo::Code(code_attr) = attr {
-            return Some(StackFrame::new(
-                class.id,
-                code_attr.max_stack,
-                code_attr.max_locals,
-                code_attr.code.clone(),
-                code_attr.clone(),
-                method_info.method_name.clone(),
-                method_info.descriptor.clone(),
-                class.class_name.clone()
-            ));
-        }
-    }
-    None
+    create_stack_frame(method_info, class)
 }
 
 pub fn push_stack_frame(mut stack_frame: StackFrame) -> u32 {

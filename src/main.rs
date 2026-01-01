@@ -13,7 +13,7 @@ fn main() {
         .format_module_path(true)
         .init();
     let start = Instant::now();
-    run(String::from("test/Test"));
+    run(String::from("test/Test104"));
     let duration = start.elapsed();
     info!("执行时间: {:?}", duration.as_nanos());
 }

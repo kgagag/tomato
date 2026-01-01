@@ -154,6 +154,171 @@ impl Heap {
         }
         self.malloc(size, false, class.id as u32)
     }
+
+    pub fn get_field_i32(&self, reference_id: u32, offset: u32) -> i32 {
+        // 参数直接传递值而不是引用，减少解引用开销
+        let start_index = (self.address_map[reference_id as usize] + 6 + offset) as usize;
+
+        // 直接使用数组索引而不是slice创建，减少中间步骤
+        let bytes = [
+            self.memory[start_index],
+            self.memory[start_index + 1],
+            self.memory[start_index + 2],
+            self.memory[start_index + 3],
+        ];
+
+        i32::from_be_bytes(bytes)
+    }
+
+    pub fn get_field_ptr(&self, reference_id: u32, offset: u32) -> u32 {
+        let start_index = (self.address_map[reference_id as usize] + 6 + offset) as usize;
+        let bytes = [
+            self.memory[start_index],
+            self.memory[start_index + 1],
+            self.memory[start_index + 2],
+            self.memory[start_index + 3],
+        ];
+        u32::from_be_bytes(bytes)
+    }
+
+    pub fn get_field_i8(&self, reference_id: u32, offset: u32) -> i8 {
+        let start_index = (self.address_map[reference_id as usize] + 6 + offset) as usize;
+        i8::from_be_bytes([self.memory[start_index]])
+    }
+
+    pub fn get_field_i16(&self, reference_id: u32, offset: u32) -> i16 {
+        let start_index = (self.address_map[reference_id as usize] + 6 + offset) as usize;
+        let bytes = [self.memory[start_index], self.memory[start_index + 1]];
+        i16::from_be_bytes(bytes)
+    }
+
+    pub fn get_field_i64(&self, reference_id: u32, offset: u32) -> i64 {
+        let start_index = (self.address_map[reference_id as usize] + 6 + offset) as usize;
+        let bytes = [
+            self.memory[start_index],
+            self.memory[start_index + 1],
+            self.memory[start_index + 2],
+            self.memory[start_index + 3],
+            self.memory[start_index + 4],
+            self.memory[start_index + 5],
+            self.memory[start_index + 6],
+            self.memory[start_index + 7],
+        ];
+        i64::from_be_bytes(bytes)
+    }
+
+    pub fn get_field_f32(&self, reference_id: u32, offset: u32) -> f32 {
+        let start_index = (self.address_map[reference_id as usize] + 6 + offset) as usize;
+        let bytes = [
+            self.memory[start_index],
+            self.memory[start_index + 1],
+            self.memory[start_index + 2],
+            self.memory[start_index + 3],
+        ];
+        f32::from_be_bytes(bytes)
+    }
+
+    pub fn get_field_f64(&self, reference_id: u32, offset: u32) -> f64 {
+        let start_index = (self.address_map[reference_id as usize] + 6 + offset) as usize;
+        let bytes = [
+            self.memory[start_index],
+            self.memory[start_index + 1],
+            self.memory[start_index + 2],
+            self.memory[start_index + 3],
+            self.memory[start_index + 4],
+            self.memory[start_index + 5],
+            self.memory[start_index + 6],
+            self.memory[start_index + 7],
+        ];
+        f64::from_be_bytes(bytes)
+    }
+
+    pub fn get_class(&self, reference_id: u32) -> u32 {
+        let start_index = (self.address_map[reference_id as usize] + 2 as u32) as usize;
+        let bytes = [
+            self.memory[start_index],
+            self.memory[start_index + 1],
+            self.memory[start_index + 2],
+            self.memory[start_index + 3],
+        ];
+        u32::from_be_bytes(bytes)
+    }
+
+    pub fn put_field_i64(&mut self, reference_id: u32, offset: u32, value: &i64) {
+        let array = u8c::split_i64_to_u8(*value);
+        let start_index = (self.address_map[reference_id as usize] + 6 + offset) as usize;
+        self.memory[start_index] = array[0];
+        self.memory[start_index + 1] = array[1];
+        self.memory[start_index + 2] = array[2];
+        self.memory[start_index + 3] = array[3];
+        self.memory[start_index + 4] = array[4];
+        self.memory[start_index + 5] = array[5];
+        self.memory[start_index + 6] = array[6];
+        self.memory[start_index + 7] = array[7];
+    }
+
+    pub fn put_field_i32(&mut self, reference_id: u32, offset: u32, value: &i32) {
+        let array = u8c::split_i32_to_u8(*value);
+        let start_index = (self.address_map[reference_id as usize] + 6 + offset) as usize;
+        self.memory[start_index] = array[0];
+        self.memory[start_index + 1] = array[1];
+        self.memory[start_index + 2] = array[2];
+        self.memory[start_index + 3] = array[3];
+    }
+
+    pub fn put_field_f32(&mut self, reference_id: u32, offset: u32, value: &f32) {
+        let array = u8c::split_u32_to_u8(*value as u32);
+        let start_index = (self.address_map[reference_id as usize] + 6 + offset) as usize;
+        self.memory[start_index] = array[0];
+        self.memory[start_index + 1] = array[1];
+        self.memory[start_index + 2] = array[2];
+        self.memory[start_index + 3] = array[3];
+    }
+
+     pub fn put_field_f64(&mut self, reference_id: u32, offset: u32, value: &f64) {
+        let array = u8c::split_u64_to_u8(*value as u64);
+        let start_index = (self.address_map[reference_id as usize] + 6 + offset) as usize;
+        self.memory[start_index] = array[0];
+        self.memory[start_index + 1] = array[1];
+        self.memory[start_index + 2] = array[2];
+        self.memory[start_index + 3] = array[3];
+        self.memory[start_index + 4] = array[4];
+        self.memory[start_index + 5] = array[5];
+        self.memory[start_index + 6] = array[6];
+        self.memory[start_index + 7] = array[7];
+    }
+
+
+    pub fn put_field_reference(&mut self, reference_id: u32, offset: u32, value: &u32) {
+        let array = u8c::split_u32_to_u8(*value as u32);
+        let start_index = (self.address_map[reference_id as usize] + 6 + offset) as usize;
+        self.memory[start_index] = array[0];
+        self.memory[start_index + 1] = array[1];
+        self.memory[start_index + 2] = array[2];
+        self.memory[start_index + 3] = array[3];
+    }
+
+    pub fn put_field_u32(&mut self, reference_id: u32, offset: u32, value: &u32) {
+        let array = u8c::split_i32_to_u8(*value as i32);
+        let start_index = (self.address_map[reference_id as usize] + 6 + offset) as usize;
+        self.memory[start_index] = array[0];
+        self.memory[start_index + 1] = array[1];
+        self.memory[start_index + 2] = array[2];
+        self.memory[start_index + 3] = array[3];
+    }
+
+    pub fn put_field_i16(&mut self, reference_id: u32, offset: u32, value: &i16) {
+        let array = u8c::split_i16_to_u8(*value);
+        let start_index = (self.address_map[reference_id as usize] + 6 + offset) as usize;
+        info!("%%%%%%%%%%%%{},{}&&&&&&&&&&&&&&&&&",array[0],array[1]);
+        self.memory[start_index] = array[0];
+        self.memory[start_index + 1] = array[1];
+    }
+
+    pub fn put_field_i8(&mut self, reference_id: u32, offset: u32, value: &i8) {
+        let start_index = (self.address_map[reference_id as usize] + 6 + offset) as usize;
+        self.memory[start_index] = *value as u8
+    }
 }
 
 // 设计对象

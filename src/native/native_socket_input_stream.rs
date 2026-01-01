@@ -10,7 +10,7 @@ pub fn close0( frame: &mut StackFrame){
                    let fdsfv =  object.field.get("fd").unwrap();
                    match fdsfv {
                        StackFrameValue::Int(fd) =>{
-                          runtime_data_area::close_tcp(&(*fd as u64));
+                          runtime_data_area::close_tcp(&(*fd as u32));
                        }
                        _=> panic!()
                    }

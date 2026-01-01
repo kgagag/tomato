@@ -43,7 +43,7 @@ pub fn encode0(frame: &mut StackFrame) {
                     _ => panic!(),
                 }
             }
-            let new_array_id: u64 = runtime_data_area::create_array(
+            let new_array_id: u32 = runtime_data_area::create_array(
                 new_len as u32,
                 DataType::Array {
                     element_type: Box::new(DataType::Byte),
@@ -96,7 +96,7 @@ pub fn encode0(frame: &mut StackFrame) {
                 for i in 0.. char_vec.len(){
                     chars.push(StackFrameValue::CHARACTER(*char_vec.get(i).unwrap()))
                 }
-                let new_array_id: u64 = runtime_data_area::create_array(
+                let new_array_id: u32 = runtime_data_area::create_array(
                     char_vec.len() as u32,
                     DataType::Array {
                         element_type: Box::new(DataType::Char),

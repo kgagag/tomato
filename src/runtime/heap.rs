@@ -3,7 +3,12 @@ use std::{collections::HashMap, f32::consts::E};
 use dashmap::DashMap;
 use log::info;
 
-use crate::{classfile::class::Class, common::param::DataType, memory, utils::u8c};
+use crate::{
+    classfile::class::Class,
+    common::{param::DataType, value},
+    memory,
+    utils::u8c,
+};
 
 pub struct Heap {
     memory: Vec<u8>,
@@ -202,7 +207,7 @@ impl Heap {
         let object_id = self.malloc(size);
         let start = self.address_map[object_id] as usize;
         //self.memory[start] = 0b10000000;
-        self.memory[start + 2] = atype ;
+        self.memory[start + 2] = atype;
         let lena = u8c::split_u32_to_u8(len);
         self.memory[start + 3] = lena[0];
         self.memory[start + 4] = lena[1];
@@ -226,7 +231,6 @@ impl Heap {
         let object_id = self.malloc(size);
         let start = self.address_map[object_id] as usize;
         self.memory[start] = 0b01000000;
-       
 
         let cid = u8c::split_u32_to_u8(class_id);
         self.memory[start + 2] = cid[0];
@@ -240,6 +244,137 @@ impl Heap {
         self.memory[start + 8] = lena[2];
         self.memory[start + 9] = lena[3];
         object_id
+    }
+
+    /**
+     * 设置基本类型数组元素
+     */
+    pub fn put_basic_array_element(&mut self, reference_id: u32, index: usize, value: u64) {
+        let start_index = self.address_map[reference_id as usize] as usize;
+        let atype = self.memory[start_index + 2];
+        let offset = 7;
+        if atype == 4 {
+            // array_type = DataType::Boolean;
+            //1
+            self.memory[start_index + offset + index] = value as u8;
+        } else if atype == 5 {
+            // array_type = DataType::Char;
+            //2
+            let value = value as u16;
+            let array = u8c::split_u16_to_u8(value);
+            self.memory[start_index + offset + index] = array[0];
+            self.memory[start_index + offset + index + 1] = array[1];
+        } else if atype == 6 {
+            // array_type = DataType::Float;
+            //4
+            let value: u32 = value as u32;
+            let array = u8c::split_u32_to_u8(value);
+            self.memory[start_index + offset + index] = array[0];
+            self.memory[start_index + offset + index + 1] = array[1];
+            self.memory[start_index + offset + index + 2] = array[2];
+            self.memory[start_index + offset + index + 3] = array[3];
+        } else if atype == 7 {
+            //  array_type = DataType::Double;
+            // 8
+            let array = u8c::split_u64_to_u8(value);
+            self.memory[start_index + offset + index] = array[0];
+            self.memory[start_index + offset + index + 1] = array[1];
+            self.memory[start_index + offset + index + 2] = array[2];
+            self.memory[start_index + offset + index + 3] = array[3];
+            self.memory[start_index + offset + index + 4] = array[4];
+            self.memory[start_index + offset + index + 5] = array[5];
+            self.memory[start_index + offset + index + 6] = array[6];
+            self.memory[start_index + offset + index + 7] = array[7];
+        } else if atype == 8 {
+            //  array_type = DataType::Byte;
+            // 1
+            self.memory[start_index + offset + index] = value as u8;
+        } else if atype == 9 {
+            // array_type = DataType::Short;
+            // 2
+            let value = value as u16;
+            let array = u8c::split_u16_to_u8(value);
+            self.memory[start_index + offset + index] = array[0];
+            self.memory[start_index + offset + index + 1] = array[1];
+        } else if atype == 10 {
+            // array_type = DataType::Int;
+            // 4
+            let value: u32 = value as u32;
+            let array = u8c::split_u32_to_u8(value);
+            self.memory[start_index + offset + index] = array[0];
+            self.memory[start_index + offset + index + 1] = array[1];
+            self.memory[start_index + offset + index + 2] = array[2];
+            self.memory[start_index + offset + index + 3] = array[3];
+        } else if atype == 11 {
+            // array_type = DataType::Long;
+            //8
+            let array = u8c::split_u64_to_u8(value);
+            self.memory[start_index + offset + index] = array[0];
+            self.memory[start_index + offset + index + 1] = array[1];
+            self.memory[start_index + offset + index + 2] = array[2];
+            self.memory[start_index + offset + index + 3] = array[3];
+            self.memory[start_index + offset + index + 4] = array[4];
+            self.memory[start_index + offset + index + 5] = array[5];
+            self.memory[start_index + offset + index + 6] = array[6];
+            self.memory[start_index + offset + index + 7] = array[7];
+        } else {
+            panic!("wrong atype");
+        }
+    }
+
+    /**
+     * 读取基本类型数组元素
+     */
+    pub fn get_basic_array_element(&self, reference_id: u32, index: usize) -> (u8, u64) {
+        let start_index = self.address_map[reference_id as usize] as usize;
+        let atype = self.memory[start_index + 2];
+        let offset = 7;
+
+        match atype {
+            4 | 8 => {
+                // Boolean or Byte (1 byte)
+                let value = self.memory[start_index + offset + index] as u64;
+                (atype, value)
+            }
+            5 | 9 => {
+                // Char or Short (2 bytes)
+                let start = start_index + offset + index * 2;
+                let bytes = [self.memory[start], self.memory[start + 1]];
+                let value = u16::from_be_bytes(bytes) as u64;
+                (atype, value)
+            }
+            6 | 10 => {
+                // Float or Int (4 bytes)
+                let start = start_index + offset + index * 4;
+                let bytes = [
+                    self.memory[start],
+                    self.memory[start + 1],
+                    self.memory[start + 2],
+                    self.memory[start + 3],
+                ];
+                let value = u32::from_be_bytes(bytes) as u64;
+                (atype, value)
+            }
+            7 | 11 => {
+                // Double or Long (8 bytes)
+                let start = start_index + offset + index * 8;
+                let bytes = [
+                    self.memory[start],
+                    self.memory[start + 1],
+                    self.memory[start + 2],
+                    self.memory[start + 3],
+                    self.memory[start + 4],
+                    self.memory[start + 5],
+                    self.memory[start + 6],
+                    self.memory[start + 7],
+                ];
+                let value = u64::from_be_bytes(bytes);
+                (atype, value)
+            }
+            _ => {
+                panic!("wrong atype: {}", atype);
+            }
+        }
     }
 
     pub fn get_field_i32(&self, reference_id: u32, offset: u32) -> i32 {

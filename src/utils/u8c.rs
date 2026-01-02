@@ -127,3 +127,10 @@ pub fn split_i16_to_u8(value: i16) -> [u8; 2] {
         (value & 0xFF) as u8,         // 低字节
     ]
 }
+
+pub fn split_u16_to_u8(value: u16) -> [u8; 2] {
+    [
+        ((value >> 8) & 0xFF) as u8,  // 高字节
+        (value & 0xFF) as u8,         // 低字节
+    ]
+}

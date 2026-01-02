@@ -4,30 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="70c6e279-5046-4c44-ba52-f4228d3f6634" name="Changes" comment="&quot;调整目录&quot;">
-      <change afterPath="$PROJECT_DIR$/src/test/Test105.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/test/Test.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/Test.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/test/Test1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/Test1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/test/Test6.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/Test6.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/test/Test7.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/Test7.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/Test.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/Test.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/Test1.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/Test1.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/Test10.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/Test10.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/Test11.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/Test11.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/Test6.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/Test6.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/Test7.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/Test7.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/Test9.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/Test9.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/classloader/class_loader.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/classloader/class_loader.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/interpreter/instructions/op_code.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/interpreter/instructions/op_code.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_array.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_array.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_field.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_field.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_invoke.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_invoke.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_new.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_new.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_return.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_return.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/runtime/heap.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/runtime/heap.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/runtime/metaspace.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/runtime/metaspace.rs" afterDir="false" />
-    </list>
+    <list default="true" id="70c6e279-5046-4c44-ba52-f4228d3f6634" name="Changes" comment="&quot;调整目录&quot;" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -262,7 +239,7 @@
       <workItem from="1767197890535" duration="1192000" />
       <workItem from="1767275454169" duration="2393000" />
       <workItem from="1767346854139" duration="7292000" />
-      <workItem from="1767359300252" duration="5866000" />
+      <workItem from="1767359300252" duration="6461000" />
     </task>
     <task id="LOCAL-00001" summary="&quot;add test case&quot;">
       <option name="closed" value="true" />

@@ -211,94 +211,137 @@ fn create_muti_array(reference_id: u32, len: u32, array_type: DataType) -> u32 {
     newarr
 }
 
-pub fn iastore(frame: &mut StackFrame) {
-    xastore(frame);
+pub fn iastore(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Metaspace) {
+    xastore(vm_stack, heap, metaspace);
 }
 
-pub fn lastore(frame: &mut StackFrame) {
-    xastore(frame);
+pub fn lastore(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Metaspace) {
+    xastore(vm_stack, heap, metaspace);
 }
-pub fn fastore(frame: &mut StackFrame) {
-    xastore(frame);
-}
-
-pub fn dastore(frame: &mut StackFrame) {
-    xastore(frame);
+pub fn fastore(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Metaspace) {
+    xastore(vm_stack, heap, metaspace);
 }
 
-pub fn aastore(frame: &mut StackFrame) {
-    xastore(frame);
+pub fn dastore(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Metaspace) {
+    xastore(vm_stack, heap, metaspace);
 }
 
-pub fn bastore(frame: &mut StackFrame) {
-    xastore(frame);
+pub fn aastore(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Metaspace) {
+    xastore(vm_stack, heap, metaspace);
 }
 
-pub fn castore(frame: &mut StackFrame) {
-    xastore(frame);
+pub fn bastore(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Metaspace) {
+    xastore(vm_stack, heap, metaspace);
 }
 
-pub fn sastore(frame: &mut StackFrame) {
-    xastore(frame);
+pub fn castore(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Metaspace) {
+   xastore(vm_stack, heap, metaspace);
 }
 
-fn xastore(frame: &mut StackFrame) {
+pub fn sastore(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Metaspace) {
+    xastore(vm_stack, heap, metaspace);
+}
+
+fn xastore(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, _metaspace: &mut Metaspace) {
+    let frame_index = vm_stack.len() - 1;
+    let frame = &mut vm_stack[frame_index];
     let v: StackFrameValue = frame.op_stack.pop().unwrap();
     let index = frame.op_stack.pop().unwrap();
     let array = frame.op_stack.pop().unwrap();
-    let i: usize;
+    let index = {
     match index {
-        StackFrameValue::Byte(l) => i = l as usize,
-        StackFrameValue::Char(l) => i = l as usize,
-        StackFrameValue::Int(l) => i = l as usize,
-        StackFrameValue::Short(l) => i = l as usize,
+        StackFrameValue::Byte(i) => i  as usize,
+        StackFrameValue::Char(i) => i  as usize,
+        StackFrameValue::Int(i) => i  as usize,
+        StackFrameValue::Short(i) => i as usize,
         _ => panic!(),
-    }
+    }};
     match array {
         StackFrameValue::Reference(reference_id) => {
-            let reference: &mut Reference = get_reference(&reference_id).unwrap();
-            match reference {
-                Reference::Array(arr) => {
-                    arr.data[i] = v;
-                }
-                _ => panic!(),
+            //todo 实现不同类型的put_basic_array_element
+            match v {
+                StackFrameValue::Byte(val) => {
+                    heap.put_basic_array_element(reference_id, index, val as u64);
+                },
+                StackFrameValue::Char(val) => {
+                    heap.put_basic_array_element(reference_id, index, val as u64);
+                },
+                StackFrameValue::Double(val) =>{
+                    heap.put_basic_array_element(reference_id, index, val as u64);
+                },
+                StackFrameValue::Float(val) => {
+                    heap.put_basic_array_element(reference_id, index, val as u64);
+                },
+                StackFrameValue::Int(val) => {
+                    heap.put_basic_array_element(reference_id, index, val as u64);
+                },
+                StackFrameValue::Long(val) => {
+                    heap.put_basic_array_element(reference_id, index, val as u64);
+                },
+                StackFrameValue::Short(val) => {
+                    heap.put_basic_array_element(reference_id, index, val as u64);
+                },
+                StackFrameValue::Boolean(val) => {
+                    heap.put_basic_array_element(reference_id, index, val as u64);
+                },
+                StackFrameValue::U32(val) => {
+                    heap.put_basic_array_element(reference_id, index, val as u64);
+                },
+                StackFrameValue::U64(val) => {
+                    heap.put_basic_array_element(reference_id, index, val as u64);
+                },
+                StackFrameValue::CHARACTER(val) => {
+                    heap.put_basic_array_element(reference_id, index, val as u64);
+                },
+                _=>panic!("wrong value type")
             }
+
+            //算出开始位置
+            // 位置 = 元素大小 * i
+            //
+            // let reference: &mut Reference = get_reference(&reference_id).unwrap();
+            // match reference {
+            //     Reference::Array(arr) => {
+            //         arr.data[i] = v;
+            //     }
+            //     _ => panic!(),
+            // }
         }
         _ => panic!(),
     }
     frame.pc += 1;
 }
 
-pub fn iaload(frame: &mut StackFrame) {
-    xaload(frame);
+pub fn iaload(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Metaspace) {
+    xaload(vm_stack, heap, metaspace);
 }
 
-pub fn laload(frame: &mut StackFrame) {
-    xaload(frame);
+pub fn laload(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Metaspace) {
+    xaload(vm_stack, heap, metaspace);
 }
 
-pub fn faload(frame: &mut StackFrame) {
-    xaload(frame);
+pub fn faload(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Metaspace) {
+    xaload(vm_stack, heap, metaspace);
 }
 
-pub fn daload(frame: &mut StackFrame) {
-    xaload(frame);
+pub fn daload(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Metaspace) {
+    xaload(vm_stack, heap, metaspace);
 }
 
-pub fn aaload(frame: &mut StackFrame) {
-    xaload(frame);
+pub fn aaload(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Metaspace) {
+    xaload(vm_stack, heap, metaspace);
 }
 
-pub fn baload(frame: &mut StackFrame) {
-    xaload(frame);
+pub fn baload(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Metaspace) {
+    xaload(vm_stack, heap, metaspace);
 }
 
-pub fn caload(frame: &mut StackFrame) {
-    xaload(frame);
+pub fn caload(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Metaspace) {
+    xaload(vm_stack, heap, metaspace);
 }
 
-pub fn saload(frame: &mut StackFrame) {
-    xaload(frame);
+pub fn saload(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Metaspace) {
+    xaload(vm_stack, heap, metaspace);
 }
 
 pub fn arraylength(frame: &mut StackFrame) {
@@ -316,7 +359,9 @@ pub fn arraylength(frame: &mut StackFrame) {
     frame.pc += 1;
 }
 
-fn xaload(frame: &mut StackFrame) {
+fn xaload(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Metaspace) {
+    let frame_index = vm_stack.len() - 1;
+    let frame = &mut vm_stack[frame_index];
     let index = frame.op_stack.pop().unwrap();
     let array = frame.op_stack.pop().unwrap();
     let i;
@@ -330,12 +375,36 @@ fn xaload(frame: &mut StackFrame) {
     }
     match array {
         StackFrameValue::Reference(reference_id) => {
-            let reference = get_reference(&reference_id).unwrap();
-            match reference {
-                Reference::Array(arr) => {
-                    frame.op_stack.push(arr.data.get(i).unwrap().clone());
-                }
-                _ => panic!(),
+            let (atype, value) = heap.get_basic_array_element(reference_id, i);
+            match atype {
+                4 => { // boolean
+                    frame.op_stack.push(StackFrameValue::Boolean(value != 0));
+                },
+                5 => { // char
+                  //  frame.op_stack.push(StackFrameValue::CHARACTER(value as u16 as char));
+                },
+                6 => { // float
+                    frame.op_stack.push(StackFrameValue::Float(f32::from_bits(value as u32)));
+                },
+                7 => { // double
+                    frame.op_stack.push(StackFrameValue::Double(f64::from_bits(value)));
+                },
+                8 => { // byte
+                    frame.op_stack.push(StackFrameValue::Byte(value as i8));
+                },
+                9 => { // short
+                    frame.op_stack.push(StackFrameValue::Short(value as i16));
+                },
+                10 => { // int
+                    frame.op_stack.push(StackFrameValue::Int(value as i32));
+                },
+                11 => { // long
+                    frame.op_stack.push(StackFrameValue::Long(value as i64));
+                },
+                12 => { // object/array reference
+                    frame.op_stack.push(StackFrameValue::Reference(value as u32));
+                },
+                _ => panic!("wrong atype"),
             }
         }
         _ => panic!(),

@@ -1,10 +1,5 @@
 use log::info;
 use log::warn;
-use tiny_http::Method;
-
-use std::cell::UnsafeCell;
-use std::collections::HashMap;
-
 use crate::classfile::class;
 use crate::classfile::class::ConstantPoolInfo;
 use crate::classloader::class_loader;
@@ -14,17 +9,10 @@ use crate::common::stack_frame::create_stack_frame;
 use crate::common::stack_frame::init_stack_frame;
 use crate::common::stack_frame::push_stack_frame;
 use crate::common::stack_frame::StackFrame;
-use crate::common::value::number_to_u32tuple;
 use crate::common::value::StackFrameValue;
 use crate::native::native::run_native;
 use crate::runtime::heap::Heap;
-use crate::runtime::metaspace;
 use crate::runtime::metaspace::Metaspace;
-use crate::runtime::runtime_data_area::get_class_name;
-use crate::runtime::runtime_data_area::get_method_from_pool;
-use crate::runtime::runtime_data_area::get_or_load_class;
-use crate::runtime::runtime_data_area::get_reference;
-use crate::runtime::runtime_data_area::VM_STACKS;
 use crate::utils::debug::dprint;
 use crate::utils::u8c::u8s_to_u16;
 

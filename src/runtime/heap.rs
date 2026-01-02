@@ -12,7 +12,7 @@ pub struct Heap {
     address_map_index: usize,
     address_malloc_method: u8,
     str_pool: HashMap<String, u32>,
-    class_pool: HashMap<String, u32>,
+    class_pool: HashMap<u32, u32>,
 }
 
 impl Heap {
@@ -310,7 +310,6 @@ impl Heap {
     pub fn put_field_i16(&mut self, reference_id: u32, offset: u32, value: &i16) {
         let array = u8c::split_i16_to_u8(*value);
         let start_index = (self.address_map[reference_id as usize] + 6 + offset) as usize;
-        info!("%%%%%%%%%%%%{},{}&&&&&&&&&&&&&&&&&",array[0],array[1]);
         self.memory[start_index] = array[0];
         self.memory[start_index + 1] = array[1];
     }
@@ -318,6 +317,11 @@ impl Heap {
     pub fn put_field_i8(&mut self, reference_id: u32, offset: u32, value: &i8) {
         let start_index = (self.address_map[reference_id as usize] + 6 + offset) as usize;
         self.memory[start_index] = *value as u8
+    }
+
+    //get_constant_pool_class
+    pub fn get_constant_pool_class(&self,class_id:&u32) -> Option<&u32> {
+       self.class_pool.get(class_id)
     }
 }
 

@@ -262,6 +262,7 @@ impl Heap {
             //2
             let value = value as u16;
             let array = u8c::split_u16_to_u8(value);
+            let index = index * 2;
             self.memory[start_index + offset + index] = array[0];
             self.memory[start_index + offset + index + 1] = array[1];
         } else if atype == 6 {
@@ -269,6 +270,7 @@ impl Heap {
             //4
             let value: u32 = value as u32;
             let array = u8c::split_u32_to_u8(value);
+            let index = index * 4;
             self.memory[start_index + offset + index] = array[0];
             self.memory[start_index + offset + index + 1] = array[1];
             self.memory[start_index + offset + index + 2] = array[2];
@@ -277,6 +279,7 @@ impl Heap {
             //  array_type = DataType::Double;
             // 8
             let array = u8c::split_u64_to_u8(value);
+            let index = index * 8;
             self.memory[start_index + offset + index] = array[0];
             self.memory[start_index + offset + index + 1] = array[1];
             self.memory[start_index + offset + index + 2] = array[2];
@@ -293,6 +296,7 @@ impl Heap {
             // array_type = DataType::Short;
             // 2
             let value = value as u16;
+            let index = index * 2;
             let array = u8c::split_u16_to_u8(value);
             self.memory[start_index + offset + index] = array[0];
             self.memory[start_index + offset + index + 1] = array[1];
@@ -301,6 +305,7 @@ impl Heap {
             // 4
             let value: u32 = value as u32;
             let array = u8c::split_u32_to_u8(value);
+            let index = index * 4;
             self.memory[start_index + offset + index] = array[0];
             self.memory[start_index + offset + index + 1] = array[1];
             self.memory[start_index + offset + index + 2] = array[2];
@@ -309,6 +314,7 @@ impl Heap {
             // array_type = DataType::Long;
             //8
             let array = u8c::split_u64_to_u8(value);
+            let index = index * 8;
             self.memory[start_index + offset + index] = array[0];
             self.memory[start_index + offset + index + 1] = array[1];
             self.memory[start_index + offset + index + 2] = array[2];

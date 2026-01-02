@@ -376,6 +376,7 @@ fn xaload(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Metas
     match array {
         StackFrameValue::Reference(reference_id) => {
             let (atype, value) = heap.get_basic_array_element(reference_id, i);
+            info!("array type: {}, value: {}", atype, value);
             match atype {
                 4 => { // boolean
                     frame.op_stack.push(StackFrameValue::Boolean(value != 0));

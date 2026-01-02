@@ -17,6 +17,6 @@ public class Test10 {
     }
 
     public static void main(String[] args) {
-        System.out.println(Test10.test());
+        Test10.test();
     }
 }

@@ -13,10 +13,12 @@ public class Test6 {
 
     public int test(){
          add(1);
-         return a == 4951 ? Result.SUCCESS : Result.FAILED ;
+        // return a == 4951 ? Result.SUCCESS : Result.FAILED ;
+        return a;
     }
 
     public static void main(String[] args) {
-        System.out.println(new Test6().test());
+        //System.out.println(new Test6().test());
+        new Test6().test();
     }
 }

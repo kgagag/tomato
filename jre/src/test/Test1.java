@@ -9,9 +9,14 @@ public class Test1 {
         int a = 1000;
         int b = 666;
         if(add(a, b) == 1666){
-            return 100;
+            return Result.SUCCESS;
         }
-        return 99;
+        return Result.FAILED;
         // return add(a, b);
+    }
+
+    public static void main(String[] args) {
+        Test1 test1 = new Test1();
+        test1.test();
     }
 }

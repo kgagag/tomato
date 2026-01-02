@@ -30,7 +30,7 @@ impl Heap {
     }
 
     //分配内存,如果内存块足够，则分配成功,更新内存块信息
-    pub fn malloc(&mut self, size: u32, is_array: bool, class_id: u32) -> usize {
+    pub fn malloc(&mut self, size: u32) -> usize {
         // 查找合适的内存块
         let mut delete_index = None;
 
@@ -65,19 +65,6 @@ impl Heap {
 
         // 更新address_map_index
         self.update_address_map_index();
-
-        // 设置内存标记
-        if is_array {
-            self.memory[index] = 0b10000000;
-        }
-
-        // 设置class_id
-        let cid = u8c::split_u32_to_u8(class_id);
-        self.memory[index + 0x2] = cid[0x0];
-        self.memory[index + 0x3] = cid[0x1];
-        self.memory[index + 0x4] = cid[0x2];
-        self.memory[index + 0x5] = cid[0x3];
-
         index
     }
 
@@ -110,8 +97,12 @@ impl Heap {
         // 暂时保持当前索引不变
     }
 
+    // 设计对象
+
+    //非数组
+    // 对象头（2个字节，第1位 0） class_id（4个字节）+ 对象数据 + 对齐
     pub fn create_object(&mut self, class: &mut Class) -> usize {
-        let mut size: u32 = 0;
+        let mut size: u32 = 6;
         for (_key, value) in &class.field_info {
             match &value.data_type {
                 DataType::Byte => {
@@ -147,12 +138,108 @@ impl Heap {
             }
         }
 
-        if size == 0 {
+        if size < 0x8 {
             size = 0x8;
         } else {
             size = ((size + 7) / 8) * 8;
         }
-        self.malloc(size, false, class.id as u32)
+        let object_id = self.malloc(size);
+        let start = self.address_map[object_id] as usize;
+
+        self.memory[start] = 0b10000000;
+        // 设置class_id
+        let cid = u8c::split_u32_to_u8(class.id as u32);
+        self.memory[start + 0x2] = cid[0x0];
+        self.memory[start + 0x3] = cid[0x1];
+        self.memory[start + 0x4] = cid[0x2];
+        self.memory[start + 0x5] = cid[0x3];
+
+        object_id
+    }
+
+    /**
+     * 创建基本类型数组对象
+     * 对象头（2个字节，第1位 0） + data_type 1个字节 + 数组长度 8 + 数组数据 + 对齐
+     */
+    pub fn create_basic_array(&mut self, atype: u8, len: u32) -> usize {
+        let start_size = 7;
+        let size = {
+            if atype == 4 {
+                // array_type = DataType::Boolean;
+                1
+            } else if atype == 5 {
+                // array_type = DataType::Char;
+                2
+            } else if atype == 6 {
+                // array_type = DataType::Float;
+                4
+            } else if atype == 7 {
+                //  array_type = DataType::Double;
+                8
+            } else if atype == 8 {
+                //  array_type = DataType::Byte;
+                1
+            } else if atype == 9 {
+                // array_type = DataType::Short;
+                2
+            } else if atype == 10 {
+                // array_type = DataType::Int;
+                4
+            } else if atype == 11 {
+                // array_type = DataType::Long;
+                8
+            } else {
+                panic!("wrong atype");
+            }
+        };
+
+        let mut size = start_size + size * len;
+        if size < 0x8 {
+            size = 0x8;
+        } else {
+            size = ((size + 7) / 8) * 8;
+        }
+        let object_id = self.malloc(size);
+        let start = self.address_map[object_id] as usize;
+        //self.memory[start] = 0b10000000;
+        self.memory[start + 2] = atype ;
+        let lena = u8c::split_u32_to_u8(len);
+        self.memory[start + 3] = lena[0];
+        self.memory[start + 4] = lena[1];
+        self.memory[start + 5] = lena[2];
+        self.memory[start + 6] = lena[3];
+        object_id
+    }
+
+    /**
+     * 创建引用类型数组对象
+     * 对象头（2个字节，第1位 0,第2位 1） + class_id 4个字节 + 数组长度 + 数组数据 + 对齐
+     */
+    pub fn create_reference_array(&mut self, class_id: u32, len: u32) -> usize {
+        let start_size = 10;
+        let mut size = start_size + 4 * len;
+        if size < 0x8 {
+            size = 0x8;
+        } else {
+            size = ((size + 7) / 8) * 8;
+        }
+        let object_id = self.malloc(size);
+        let start = self.address_map[object_id] as usize;
+        self.memory[start] = 0b01000000;
+       
+
+        let cid = u8c::split_u32_to_u8(class_id);
+        self.memory[start + 2] = cid[0];
+        self.memory[start + 3] = cid[1];
+        self.memory[start + 4] = cid[2];
+        self.memory[start + 5] = cid[3];
+
+        let lena = u8c::split_u32_to_u8(len);
+        self.memory[start + 6] = lena[0];
+        self.memory[start + 7] = lena[1];
+        self.memory[start + 8] = lena[2];
+        self.memory[start + 9] = lena[3];
+        object_id
     }
 
     pub fn get_field_i32(&self, reference_id: u32, offset: u32) -> i32 {
@@ -275,7 +362,7 @@ impl Heap {
         self.memory[start_index + 3] = array[3];
     }
 
-     pub fn put_field_f64(&mut self, reference_id: u32, offset: u32, value: &f64) {
+    pub fn put_field_f64(&mut self, reference_id: u32, offset: u32, value: &f64) {
         let array = u8c::split_u64_to_u8(*value as u64);
         let start_index = (self.address_map[reference_id as usize] + 6 + offset) as usize;
         self.memory[start_index] = array[0];
@@ -287,7 +374,6 @@ impl Heap {
         self.memory[start_index + 6] = array[6];
         self.memory[start_index + 7] = array[7];
     }
-
 
     pub fn put_field_reference(&mut self, reference_id: u32, offset: u32, value: &u32) {
         let array = u8c::split_u32_to_u8(*value as u32);
@@ -320,15 +406,7 @@ impl Heap {
     }
 
     //get_constant_pool_class
-    pub fn get_constant_pool_class(&self,class_id:&u32) -> Option<&u32> {
-       self.class_pool.get(class_id)
+    pub fn get_constant_pool_class(&self, class_id: &u32) -> Option<&u32> {
+        self.class_pool.get(class_id)
     }
 }
-
-// 设计对象
-
-//非数组
-// 对象头（2个字节，第1位 0） class_id（4个字节）+ 对象数据 + 对齐
-
-//数组
-// 对象头（2个字节，第1位 1） ...

@@ -80,7 +80,7 @@ pub fn invokespecial(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace:
                 panic!("error");
             }
         }
-        push_stack_frame(new_frame);
+        vm_stack.push(new_frame);
     } else {
         run_native(&mut method, &mut vm_stack[frame_index]);
     }
@@ -263,7 +263,8 @@ pub fn invokevirtual(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace:
                 panic!("error");
             }
         }
-        push_stack_frame(new_frame);
+        //heappush_stack_frame(new_frame);
+        vm_stack.push(new_frame);
     } else {
         run_native(&mut method, &mut vm_stack[frame_index]);
     }
@@ -316,8 +317,11 @@ pub fn invokestatic(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: 
         };
         (target_class_name.unwrap().clone(),method_name.clone(), descriptor.clone())
     };
+
+     //确保加载
+    class_loader::find_class(&target_class_name, vm_stack, heap, metaspace);
     let (method, class) = metaspace.get_method_from_root(&target_class_name, &method_name, &descriptor);
-    let mut method = method.unwrap();
+    let method = method.unwrap();
     //先移动
     vm_stack[frame_index].pc += 3;
     //我写的辅助调试输出的工具
@@ -326,7 +330,7 @@ pub fn invokestatic(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: 
         dprint(v);
     } else if method.access_flag & 0x0100 == 0 {
         let new_frame = init_stack_frame(&mut vm_stack[frame_index], &method,&class, 0);
-        push_stack_frame(new_frame);
+        vm_stack.push(new_frame);
     } else {
         run_native(&method, &mut vm_stack[frame_index]);
     }

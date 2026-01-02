@@ -50,12 +50,14 @@ impl Metaspace {
         descriptor: &String,
     ) -> (Option<&MethodInfo>,&Class) {
         let key = format!("{}{}{}{}{}", class_name, ".", method_name, ".", descriptor);
-        let mut m =  self.method_area.get(&key);
+        let mut m: Option<&MethodInfo> =  self.method_area.get(&key);
         if m.is_some() {
+           // info!("####{:?}#####",class_name);
             return (m,&self.classes[*self.class_map.get(class_name).unwrap()]);
         }
         let mut curr_class_name = class_name.clone();
         while m.is_none() {
+            //info!("==={:?}===",curr_class_name);
             let class_id = self.class_map.get(&curr_class_name).unwrap();
             let class = &self.classes[*class_id];  
             if class.super_class_name.is_empty() {

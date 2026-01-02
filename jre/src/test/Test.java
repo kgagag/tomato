@@ -7,10 +7,11 @@ import java.io.IOException;
 public class Test {
     public static void main(String[] args) throws IOException {
 
-        /*
-        long t1 = System.currentTimeMillis();
+
+        //long t1 = System.currentTimeMillis();
         //  两个int相加
         new Test1().test();
+
         // 两个 float 相加
         new Test2().test();
         //  两个高精度 double 相加
@@ -21,12 +22,15 @@ public class Test {
         new Test5().test();
         //递归修改成员变量
         new Test6().test();
+
         // 修改成员变量
         new Test7().test();
+
         // for 循环执行 100次 invokeVirtual
         new Test8().test();
         // 7层方法调用栈
         new Test9().test();
+
         //测试递归
         Test10.test();
 
@@ -42,7 +46,7 @@ public class Test {
 
         // 测试一维数组赋值读取
         new Test14().test();
-
+        /*
         //   测试多维数组赋值读取
         new Test15().test();
 

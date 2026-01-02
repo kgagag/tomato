@@ -1,3 +1,4 @@
+use crate::classfile::class;
 use crate::classfile::class::AttributeInfo;
 use crate::classfile::class::Class;
 use crate::classfile::class::CodeAttribute;
@@ -228,9 +229,9 @@ pub fn load_class(name: &String,vm_stack: &mut Vec<StackFrame>, heap: &mut Heap,
                     ConstantPoolInfo::Utf8(class_name) => {
                         let super_class_op = metaspace.class_map.get(class_name);
                         if super_class_op.is_none() {
-                            let super_class =  load_class(class_name,vm_stack, heap, metaspace);
+                            let super_class =  find_class(class_name,vm_stack, heap, metaspace);
                             class.super_class_id = super_class.id;
-                            class.super_class_name = super_class.class_name;
+                            class.super_class_name = super_class.class_name.clone();
                             for (key, value) in &super_class.field_info {
                                 //TODO 处理私有变量
                                 if !class.field_info.contains_key(key) {
@@ -260,16 +261,7 @@ pub fn load_class(name: &String,vm_stack: &mut Vec<StackFrame>, heap: &mut Heap,
  * 类加载完成之后执行初始化静态方法
  */
 pub fn init(class_name:  &String, method_name: String, heap: &mut Heap, metaspace: &mut Metaspace) {
-    let class_id=
-    {
-         info!("init class:{} method:{}", class_name, method_name);
-         let a = metaspace.class_map.contains_key(class_name);
-         for (key, value) in &metaspace.class_map {
-            println!("{}: {}", key, value);
-        } 
-         metaspace.class_map.get(class_name).unwrap().clone()
-    };
-    
+    let class_id=*metaspace.class_map.get(class_name).unwrap();
     let class = &metaspace.classes[class_id];
     //创建VM
     //找到main方法

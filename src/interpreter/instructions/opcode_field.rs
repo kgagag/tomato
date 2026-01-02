@@ -23,7 +23,6 @@ pub fn putfield(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut
     let this_class = &metaspace.classes[frame.class];
     let field_ref: &ConstantPoolInfo = this_class.constant_pool.get(&(index)).unwrap();
     let value: StackFrameValue = frame.op_stack.pop().unwrap();
-    info!("######{:?}#####", value);
     let stack_frame_value: StackFrameValue = frame.op_stack.pop().unwrap();
     let object_id = {
         match stack_frame_value {
@@ -173,7 +172,6 @@ pub fn getfield(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut
         DataType::Int => {
             let value = heap.get_field_i32(object_id, offset);
             frame.op_stack.push(StackFrameValue::Int(value));
-            info!("========={:?}=============", value);
         }
         DataType::Long => {
             let value = heap.get_field_i64(object_id, offset);
@@ -201,7 +199,6 @@ pub fn getfield(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut
         }
         DataType::Short => {
             let value = heap.get_field_i16(object_id, offset);
-            info!("========={:?}=============", value);
             frame.op_stack.push(StackFrameValue::Short(value));
         }
         DataType::Boolean => {

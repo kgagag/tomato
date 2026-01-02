@@ -20,7 +20,7 @@ use crate::{
 pub fn _new(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Metaspace) {
     let frame_index = vm_stack.len() - 1;
     //获取要当前类的名称
-    info!("{:?}", vm_stack[frame_index].class);
+    //info!("{:?}", vm_stack[frame_index].class);
     let class_name = &vm_stack[frame_index].class_name;
     // 加载类
     let this_class = class_loader::find_class(&class_name, &mut Vec::new(), heap, metaspace);

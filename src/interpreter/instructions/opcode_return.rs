@@ -26,6 +26,7 @@ pub fn ireturn(vm_stack:&mut Vec<StackFrame>) {
     //日志埋点
     debug(&mut vm_stack[frame_index],value::as_i32(&v));
     vm_stack.pop();
+    let frame_index: usize = vm_stack.len() - 1;
     vm_stack[frame_index].op_stack.push(v);
 }
 
@@ -34,6 +35,7 @@ pub fn lreturn(vm_stack:&mut Vec<StackFrame>) {
     vm_stack[frame_index].pc += 1;
     let v: StackFrameValue = vm_stack[frame_index].op_stack.pop().unwrap();
     vm_stack.pop();
+    let frame_index: usize = vm_stack.len() - 1;
     vm_stack[frame_index].op_stack.push(v);
 }
 
@@ -42,6 +44,7 @@ pub fn freturn(vm_stack:&mut Vec<StackFrame>) {
     vm_stack[frame_index].pc += 1;
     let v: StackFrameValue = vm_stack[frame_index].op_stack.pop().unwrap();
     vm_stack.pop();
+    let frame_index: usize = vm_stack.len() - 1;
     vm_stack[frame_index].op_stack.push(v);
 }
 
@@ -50,6 +53,7 @@ pub fn dreturn(vm_stack:&mut Vec<StackFrame>) {
     vm_stack[frame_index].pc += 1;
     let v: StackFrameValue = vm_stack[frame_index].op_stack.pop().unwrap();
     vm_stack.pop();
+    let frame_index: usize = vm_stack.len() - 1;
     vm_stack[frame_index].op_stack.push(v);
 }
 
@@ -58,5 +62,6 @@ pub fn areturn(vm_stack:&mut Vec<StackFrame>) {
     vm_stack[frame_index].pc += 1;
     let v: StackFrameValue = vm_stack[frame_index].op_stack.pop().unwrap();
     vm_stack.pop();
+    let frame_index: usize = vm_stack.len() - 1;
     vm_stack[frame_index].op_stack.push(v);
 }

@@ -5,11 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="70c6e279-5046-4c44-ba52-f4228d3f6634" name="Changes" comment="&quot;调整目录&quot;">
-      <change afterPath="$PROJECT_DIR$/src/test/Test106.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/test/Test15.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/Test15.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/Test.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/Test.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/Test15.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/Test15.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/Test106.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/Test106.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_array.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_array.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../src/runtime/heap.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/runtime/heap.rs" afterDir="false" />
     </list>
@@ -249,7 +246,7 @@
       <workItem from="1767346854139" duration="7292000" />
       <workItem from="1767359300252" duration="6461000" />
       <workItem from="1767380843039" duration="1133000" />
-      <workItem from="1767416045006" duration="4152000" />
+      <workItem from="1767416045006" duration="6730000" />
     </task>
     <task id="LOCAL-00001" summary="&quot;add test case&quot;">
       <option name="closed" value="true" />

@@ -221,9 +221,9 @@ impl Heap {
 
     /**
      * 创建引用类型数组对象
-     * 对象头（2个字节，第1位 0,第2位 1） + class_id 4个字节 + 维度 1个字节 + 数组长度 + 数组数据 + 对齐
+     * 对象头（2个字节，第1位 0,第2位 1 如果atype != 12 第3位为0否则为1） + class_id 4个字节 + 维度 1个字节 + 数组长度 + 数组数据 + 对齐
      */
-    pub fn create_reference_array(&mut self, class_id: u32, len: u32, dimension: u8) -> usize {
+    pub fn create_reference_array(&mut self, class_id: u32, len: u32, dimension: u8, atype:u8) -> usize {
         let start_size = 11;
         let mut size = start_size + 4 * len;
         if size < 0x8 {
@@ -231,17 +231,27 @@ impl Heap {
         } else {
             size = ((size + 7) / 8) * 8;
         }
+
         let object_id = self.malloc(size);
         let start = self.address_map[object_id] as usize;
+        
         //第二位必须是0 ，用于区分基本类型数组和引用类型数组
-        self.memory[start] = 0b01000000;
+        //如果为引用类型数组第3位为1，如果为基本类型的多维数组，第3位为0
+        if atype == 12 {
+            self.memory[start] = 0b01100000;
+        }else{
+            self.memory[start] = 0b01000000;
+        }
 
-        let cid = u8c::split_u32_to_u8(class_id);
-        self.memory[start + 2] = cid[0];
-        self.memory[start + 3] = cid[1];
-        self.memory[start + 4] = cid[2];
-        self.memory[start + 5] = cid[3];
-
+        //如果为基本类型的多维数组这里暂时不设置
+        if atype != 12 {
+            let cid = u8c::split_u32_to_u8(class_id);
+            self.memory[start + 2] = cid[0];
+            self.memory[start + 3] = cid[1];
+            self.memory[start + 4] = cid[2];
+            self.memory[start + 5] = cid[3];
+        }
+        
         self.memory[start + 6] = dimension;
 
         let lena = u8c::split_u32_to_u8(len);

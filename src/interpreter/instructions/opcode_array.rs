@@ -102,7 +102,8 @@ pub fn anewarray(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mu
         }
     };
     let class_id = class_loader::find_class(&class_name, vm_stack, heap, metaspace).id;
-    let reference = heap.create_reference_array(class_id as u32, len, 0);
+    //12 = 引用类型数组
+    let reference = heap.create_reference_array(class_id as u32, len, 0,12);
     vm_stack[frame_index]
         .op_stack
         .push(StackFrameValue::Reference(reference as u32));
@@ -143,11 +144,11 @@ pub fn multianewarray(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace
     };
 
     let mut queue: VecDeque<usize> = VecDeque::new();
-    let mut reference_id = None ;
+    let mut reference_id = None;
+    let op_len = vm_stack[frame_index].op_stack.len();
     for i in 0..dimenssion {
         let len = {
-            let len_value = vm_stack[frame_index].op_stack.pop().unwrap();
-            info!("============={:?}=====",len_value);
+            let len_value = vm_stack[frame_index].op_stack[op_len - (dimenssion - i) as usize];
             match len_value {
                 StackFrameValue::Byte(l) => l as u32,
                 StackFrameValue::Char(l) => l as u32,
@@ -158,15 +159,10 @@ pub fn multianewarray(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace
         };
 
         if queue.len() == 0 {
-            let reference = {
-                //不是引用类型
-                if atype != 12 {
-                    heap.create_basic_array(atype, len, i)
-                } else {
-                    heap.create_reference_array(class_id.unwrap() as u32, len, i)
-                }
-            };
-            reference_id = Some(reference);
+            for _ in 0..len {
+                reference_id = Some(heap.create_reference_array(0, len, dimenssion - i,atype));
+                queue.push_back(reference_id.unwrap());
+            }
         } else {
             let size = queue.len();
             for index in 0..size {
@@ -175,29 +171,40 @@ pub fn multianewarray(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace
                 for _ in 0..len {
                     //不是引用类型
                     if atype != 12 {
-                        let id = heap.create_basic_array(atype, len, i);
-                        heap.put_basic_array_element(reference as u32, index, id as u64 );
+                        if i == dimenssion - 1 {
+                            let id = heap.create_basic_array(atype, len, dimenssion - i);
+                            heap.put_array_element(reference as u32, index, id as u64);
+                            queue.push_back(id);
+                        } else {
+                            let id: usize = heap.create_reference_array(0, len, dimenssion - i,atype);
+                            heap.put_array_element(reference as u32, index, id as u64);
+                            queue.push_back(id);
+                        }
                     } else {
-                        let id =  heap.create_reference_array(class_id.unwrap() as u32, len, i);
-                        //heap.put_basic_array_element(reference as u32, index, id as u64);
-                        heap.put_reference_array_element(reference as u32, index, id as u64);
+                        let id = heap.create_reference_array(class_id.unwrap() as u32, len, dimenssion - i,atype);
+                        heap.put_array_element(reference as u32, index, id as u64);
+                        queue.push_back(id);
                     }
                 }
             }
         }
     }
 
-    if reference_id.is_none(){
+    if reference_id.is_none() {
         panic!("reference id is none");
     }
-    
+
+    //全部弹出
+    for _i in 0..dimenssion {
+       _ = vm_stack[frame_index].op_stack.pop()
+    }
+
     vm_stack[frame_index]
         .op_stack
         .push(StackFrameValue::Reference(reference_id.unwrap() as u32));
 
     vm_stack[frame_index].pc += 4;
 }
-
 
 pub fn iastore(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Metaspace) {
     xastore(vm_stack, heap, metaspace);

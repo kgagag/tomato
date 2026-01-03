@@ -2,14 +2,13 @@ package test;
 
 public class Test106 {
     public int test(){
-      int[][] array = new int[10][8];
-      array[4][5] = 1;
-//        if(array[4][5] == 1){
-//            return Result.SUCCESS;
-//        }else {
-//            return Result.FAILED;
-//        }
-        return 0;
+      int[][] array = new int[3][5];
+      array[2][2] = 1;
+        if(array[2][2] == 1){
+            return Result.SUCCESS;
+        }else {
+            return Result.FAILED;
+        }
     }
 
     public static void main(String[] args) {

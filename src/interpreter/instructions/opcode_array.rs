@@ -1,3 +1,5 @@
+use std::collections::VecDeque;
+
 use log::info;
 
 use crate::{
@@ -32,33 +34,47 @@ pub fn newarray(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut
             _ => panic!(),
         }
     };
-    let reference = heap.create_basic_array(*atype, len);
+    let reference = heap.create_basic_array(*atype, len, 0);
     frame
         .op_stack
         .push(StackFrameValue::Reference(reference as u32));
     frame.pc += 2;
 }
 
-fn extract_array_base_type_code(descriptor: &str) -> Option<u8> {
-    let base_type_char = descriptor.chars().skip_while(|&c| c == '[').next()?;
+fn extract_array_base_type_info(descriptor: &str) -> Option<(u8, Option<String>)> {
+    // 跳过所有的'['，找到第一个非数组的字符
+    let start_pos = descriptor.chars().position(|c| c != '[').unwrap_or(0);
 
-    match base_type_char {
-        'Z' => Some(4),  // boolean
-        'C' => Some(5),  // char
-        'F' => Some(6),  // float
-        'D' => Some(7),  // double
-        'B' => Some(8),  // byte
-        'S' => Some(9),  // short
-        'I' => Some(10), // int
-        'J' => Some(11), // long
-        'L' => Some(12), // object/array of objects, use a placeholder value
-        _ => None,       // Unsupported or error in the descriptor
+    let remaining = &descriptor[start_pos..];
+    let first_char = remaining.chars().next()?;
+
+    match first_char {
+        'Z' => Some((4, None)),  // boolean
+        'C' => Some((5, None)),  // char
+        'F' => Some((6, None)),  // float
+        'D' => Some((7, None)),  // double
+        'B' => Some((8, None)),  // byte
+        'S' => Some((9, None)),  // short
+        'I' => Some((10, None)), // int
+        'J' => Some((11, None)), // long
+        'L' => {
+            // 提取类名：L<class>; 格式
+            // 去掉开头的'L'和结尾的';'
+            if remaining.ends_with(';') && remaining.len() > 2 {
+                let class_name = &remaining[1..remaining.len() - 1];
+                Some((12, Some(class_name.to_string())))
+            } else {
+                // 无效的类描述符
+                panic!("Invalid class descriptor")
+            }
+        }
+        _ => None, // 不支持的描述符
     }
 }
 
 pub fn anewarray(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Metaspace) {
     let frame_index = vm_stack.len() - 1;
-    let (class_name,len) = {
+    let (class_name, len) = {
         let frame = &mut vm_stack[frame_index];
         let v: StackFrameValue = frame.op_stack.pop().unwrap();
         let len: u32;
@@ -78,7 +94,7 @@ pub fn anewarray(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mu
                 let class_utf8_attr: &ConstantPoolInfo =
                     this_class.constant_pool.get(&name_index).unwrap();
                 match class_utf8_attr {
-                    ConstantPoolInfo::Utf8(class_name_str) => (class_name_str.clone(),len),
+                    ConstantPoolInfo::Utf8(class_name_str) => (class_name_str.clone(), len),
                     _ => panic!("class constant not found"),
                 }
             }
@@ -86,130 +102,102 @@ pub fn anewarray(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mu
         }
     };
     let class_id = class_loader::find_class(&class_name, vm_stack, heap, metaspace).id;
-    let reference = heap.create_reference_array(class_id as u32, len);
+    let reference = heap.create_reference_array(class_id as u32, len, 0);
     vm_stack[frame_index]
         .op_stack
         .push(StackFrameValue::Reference(reference as u32));
     vm_stack[frame_index].pc += 3;
 }
 
-pub fn multianewarray(frame: &mut StackFrame) {
-    //info!("{:?}", frame);
-    let index = u8s_to_u16(&frame.code[frame.pc + 1..frame.pc + 3]);
-    let class_name = get_class_name(&frame.class);
-    let this_class = get_or_load_class(&class_name);
-    let attr = this_class.constant_pool.get(&index).unwrap();
-    match attr {
-        ConstantPoolInfo::Class(i) => {
-            let class_utf8_attr: &ConstantPoolInfo = this_class.constant_pool.get(&i).unwrap();
-            match class_utf8_attr {
-                ConstantPoolInfo::Utf8(class_name_str) => {
-                    let atype = extract_array_base_type_code(&class_name_str).unwrap();
-                    let array_type: DataType;
-                    if atype == 4 {
-                        array_type = DataType::Boolean;
-                    } else if atype == 5 {
-                        array_type = DataType::Char;
-                    } else if atype == 6 {
-                        array_type = DataType::Float;
-                    } else if atype == 7 {
-                        array_type = DataType::Double;
-                    } else if atype == 8 {
-                        array_type = DataType::Byte;
-                    } else if atype == 9 {
-                        array_type = DataType::Short;
-                    } else if atype == 10 {
-                        array_type = DataType::Int;
-                    } else if atype == 11 {
-                        array_type = DataType::Long;
-                    } else if atype == 12 {
-                        array_type = DataType::Reference(class_name_str.clone());
-                    } else {
-                        panic!("wrong atype");
+pub fn multianewarray(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Metaspace) {
+    let frame_index = vm_stack.len() - 1;
+    let (atype, dimenssion, array_class_name) = {
+        let frame = &mut vm_stack[frame_index];
+        let index = u8s_to_u16(&frame.code[frame.pc + 1..frame.pc + 3]);
+        let this_class = &metaspace.classes[frame.class];
+        let attr = this_class.constant_pool.get(&index).unwrap();
+        match attr {
+            ConstantPoolInfo::Class(i) => {
+                let class_utf8_attr: &ConstantPoolInfo = this_class.constant_pool.get(&i).unwrap();
+                match class_utf8_attr {
+                    ConstantPoolInfo::Utf8(class_name_str) => {
+                        let (atype, array_class_name) =
+                            extract_array_base_type_info(&class_name_str).unwrap();
+                        (atype, frame.code[frame.pc + 3], array_class_name)
                     }
-                    let dimenssion: u8 = frame.code[frame.pc + 3];
-                    let mut len: u32;
-
-                    let len_value = frame.op_stack.pop().unwrap();
-
-                    match len_value {
-                        StackFrameValue::Byte(l) => {
-                            len = l as u32;
-                        }
-                        StackFrameValue::Char(l) => {
-                            len = l as u32;
-                        }
-                        StackFrameValue::Int(l) => {
-                            len = l as u32;
-                        }
-                        StackFrameValue::Short(l) => {
-                            len = l as u32;
-                        }
-                        _ => panic!(),
-                    }
-
-                    let reference = create_array(
-                        len as u32,
-                        DataType::Array {
-                            element_type: (Box::new(array_type.clone())),
-                            depth: (dimenssion),
-                        },
-                    );
-                    let mut v: Vec<u32> = Vec::new();
-                    v.push(reference);
-                    for i in 1..dimenssion {
-                        let len_value: StackFrameValue = frame.op_stack.pop().unwrap();
-                        match len_value {
-                            StackFrameValue::Byte(l) => {
-                                len = l as u32;
-                            }
-                            StackFrameValue::Char(l) => {
-                                len = l as u32;
-                            }
-                            StackFrameValue::Int(l) => {
-                                len = l as u32;
-                            }
-                            StackFrameValue::Short(l) => {
-                                len = l as u32;
-                            }
-                            _ => panic!(),
-                        }
-                        // 创建数组
-                        let b = create_muti_array(
-                            v.pop().unwrap(),
-                            len,
-                            DataType::Array {
-                                element_type: (Box::new(array_type.clone())),
-                                depth: (dimenssion - i),
-                            },
-                        );
-                        v.push(b);
-                    }
-                    frame.op_stack.push(StackFrameValue::Reference(reference));
+                    _ => panic!(),
                 }
+            }
+            _ => panic!(),
+        }
+    };
+
+    let class_id = {
+        if atype == 12 {
+            let class_id =
+                class_loader::find_class(&array_class_name.unwrap(), vm_stack, heap, metaspace).id;
+            Some(class_id)
+        } else {
+            None
+        }
+    };
+
+    let mut queue: VecDeque<usize> = VecDeque::new();
+    let mut reference_id = None ;
+    for i in 0..dimenssion {
+        let len = {
+            let len_value = vm_stack[frame_index].op_stack.pop().unwrap();
+            info!("============={:?}=====",len_value);
+            match len_value {
+                StackFrameValue::Byte(l) => l as u32,
+                StackFrameValue::Char(l) => l as u32,
+                StackFrameValue::Int(l) => l as u32,
+                StackFrameValue::Short(l) => l as u32,
                 _ => panic!(),
             }
-        }
-        _ => panic!(),
-    }
-    frame.pc += 4;
-}
+        };
 
-fn create_muti_array(reference_id: u32, len: u32, array_type: DataType) -> u32 {
-    let newarr = create_array(len, array_type);
-    let reference = get_reference(&reference_id).unwrap();
-    match reference {
-        Reference::Array(array) => {
-            for i in 0..array.len {
-                array
-                    .data
-                    .insert(i as usize, StackFrameValue::Reference(newarr))
+        if queue.len() == 0 {
+            let reference = {
+                //不是引用类型
+                if atype != 12 {
+                    heap.create_basic_array(atype, len, i)
+                } else {
+                    heap.create_reference_array(class_id.unwrap() as u32, len, i)
+                }
+            };
+            reference_id = Some(reference);
+        } else {
+            let size = queue.len();
+            for index in 0..size {
+                let reference = queue.pop_front().unwrap();
+                //在这个reference中创建新的数组,个数为len
+                for _ in 0..len {
+                    //不是引用类型
+                    if atype != 12 {
+                        let id = heap.create_basic_array(atype, len, i);
+                        heap.put_basic_array_element(reference as u32, index, id as u64 );
+                    } else {
+                        let id =  heap.create_reference_array(class_id.unwrap() as u32, len, i);
+                        //heap.put_basic_array_element(reference as u32, index, id as u64);
+                        heap.put_reference_array_element(reference as u32, index, id as u64);
+                    }
+                }
             }
         }
-        _ => panic!(),
     }
-    newarr
+
+    if reference_id.is_none(){
+        panic!("reference id is none");
+    }
+    
+    vm_stack[frame_index]
+        .op_stack
+        .push(StackFrameValue::Reference(reference_id.unwrap() as u32));
+
+    vm_stack[frame_index].pc += 4;
 }
+
 
 pub fn iastore(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Metaspace) {
     xastore(vm_stack, heap, metaspace);
@@ -235,7 +223,7 @@ pub fn bastore(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut 
 }
 
 pub fn castore(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Metaspace) {
-   xastore(vm_stack, heap, metaspace);
+    xastore(vm_stack, heap, metaspace);
 }
 
 pub fn sastore(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Metaspace) {
@@ -249,63 +237,53 @@ fn xastore(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, _metaspace: &mut Met
     let index = frame.op_stack.pop().unwrap();
     let array = frame.op_stack.pop().unwrap();
     let index = {
-    match index {
-        StackFrameValue::Byte(i) => i  as usize,
-        StackFrameValue::Char(i) => i  as usize,
-        StackFrameValue::Int(i) => i  as usize,
-        StackFrameValue::Short(i) => i as usize,
-        _ => panic!(),
-    }};
+        match index {
+            StackFrameValue::Byte(i) => i as usize,
+            StackFrameValue::Char(i) => i as usize,
+            StackFrameValue::Int(i) => i as usize,
+            StackFrameValue::Short(i) => i as usize,
+            _ => panic!(),
+        }
+    };
     match array {
         StackFrameValue::Reference(reference_id) => {
             //todo 实现不同类型的put_basic_array_element
             match v {
                 StackFrameValue::Byte(val) => {
-                    heap.put_basic_array_element(reference_id, index, val as u64);
-                },
+                    heap.put_array_element(reference_id, index, val as u64);
+                }
                 StackFrameValue::Char(val) => {
-                    heap.put_basic_array_element(reference_id, index, val as u64);
-                },
-                StackFrameValue::Double(val) =>{
-                    heap.put_basic_array_element(reference_id, index, val as u64);
-                },
+                    heap.put_array_element(reference_id, index, val as u64);
+                }
+                StackFrameValue::Double(val) => {
+                    heap.put_array_element(reference_id, index, val as u64);
+                }
                 StackFrameValue::Float(val) => {
-                    heap.put_basic_array_element(reference_id, index, val as u64);
-                },
+                    heap.put_array_element(reference_id, index, val as u64);
+                }
                 StackFrameValue::Int(val) => {
-                    heap.put_basic_array_element(reference_id, index, val as u64);
-                },
+                    heap.put_array_element(reference_id, index, val as u64);
+                }
                 StackFrameValue::Long(val) => {
-                    heap.put_basic_array_element(reference_id, index, val as u64);
-                },
+                    heap.put_array_element(reference_id, index, val as u64);
+                }
                 StackFrameValue::Short(val) => {
-                    heap.put_basic_array_element(reference_id, index, val as u64);
-                },
+                    heap.put_array_element(reference_id, index, val as u64);
+                }
                 StackFrameValue::Boolean(val) => {
-                    heap.put_basic_array_element(reference_id, index, val as u64);
-                },
+                    heap.put_array_element(reference_id, index, val as u64);
+                }
                 StackFrameValue::U32(val) => {
-                    heap.put_basic_array_element(reference_id, index, val as u64);
-                },
+                    heap.put_array_element(reference_id, index, val as u64);
+                }
                 StackFrameValue::U64(val) => {
-                    heap.put_basic_array_element(reference_id, index, val as u64);
-                },
+                    heap.put_array_element(reference_id, index, val as u64);
+                }
                 StackFrameValue::CHARACTER(val) => {
-                    heap.put_basic_array_element(reference_id, index, val as u64);
-                },
-                _=>panic!("wrong value type")
+                    heap.put_array_element(reference_id, index, val as u64);
+                }
+                _ => panic!("wrong value type"),
             }
-
-            //算出开始位置
-            // 位置 = 元素大小 * i
-            //
-            // let reference: &mut Reference = get_reference(&reference_id).unwrap();
-            // match reference {
-            //     Reference::Array(arr) => {
-            //         arr.data[i] = v;
-            //     }
-            //     _ => panic!(),
-            // }
         }
         _ => panic!(),
     }
@@ -375,36 +353,49 @@ fn xaload(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Metas
     }
     match array {
         StackFrameValue::Reference(reference_id) => {
-            let (atype, value) = heap.get_basic_array_element(reference_id, i);
-            info!("array type: {}, value: {}", atype, value);
+            let (atype, value) = heap.get_array_element(reference_id, i);
             match atype {
-                4 => { // boolean
+                4 => {
+                    // boolean
                     frame.op_stack.push(StackFrameValue::Boolean(value != 0));
-                },
+                }
                 5 => { // char
-                  //  frame.op_stack.push(StackFrameValue::CHARACTER(value as u16 as char));
-                },
-                6 => { // float
-                    frame.op_stack.push(StackFrameValue::Float(f32::from_bits(value as u32)));
-                },
-                7 => { // double
-                    frame.op_stack.push(StackFrameValue::Double(f64::from_bits(value)));
-                },
-                8 => { // byte
+                     //  frame.op_stack.push(StackFrameValue::CHARACTER(value as u16 as char));
+                }
+                6 => {
+                    // float
+                    frame
+                        .op_stack
+                        .push(StackFrameValue::Float(f32::from_bits(value as u32)));
+                }
+                7 => {
+                    // double
+                    frame
+                        .op_stack
+                        .push(StackFrameValue::Double(f64::from_bits(value)));
+                }
+                8 => {
+                    // byte
                     frame.op_stack.push(StackFrameValue::Byte(value as i8));
-                },
-                9 => { // short
+                }
+                9 => {
+                    // short
                     frame.op_stack.push(StackFrameValue::Short(value as i16));
-                },
-                10 => { // int
+                }
+                10 => {
+                    // int
                     frame.op_stack.push(StackFrameValue::Int(value as i32));
-                },
-                11 => { // long
+                }
+                11 => {
+                    // long
                     frame.op_stack.push(StackFrameValue::Long(value as i64));
-                },
-                12 => { // object/array reference
-                    frame.op_stack.push(StackFrameValue::Reference(value as u32));
-                },
+                }
+                12 => {
+                    // object/array reference
+                    frame
+                        .op_stack
+                        .push(StackFrameValue::Reference(value as u32));
+                }
                 _ => panic!("wrong atype"),
             }
         }

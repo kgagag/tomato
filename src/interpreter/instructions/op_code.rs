@@ -62,7 +62,7 @@ pub mod op_code {
             let code = vm_stack.last().unwrap().code[vm_stack.last().unwrap().pc];
             let frame: &mut StackFrame = vm_stack.last_mut().unwrap();
             //info!("{:x}--{}--{:?}--{:?}--{:?}--opstack:{:?}--local:{:?}",code,frame.pc,frame.class_name,frame.method_name,frame.descriptor,frame.op_stack,frame.local);
-            //info!("{:x}--{}--{:?}--{:?}--{:?}",code,frame.pc,frame.class_name,frame.method_name,frame.descriptor);
+            info!("{:x}--{}--{:?}--{:?}--{:?}",code,frame.pc,frame.class_name,frame.method_name,frame.descriptor);
             //let start = Instant::now();
             // if code == 0xbb || code == 0xbc || code == 0xbd || code == 0xc5 {
             //     full_gc();
@@ -265,7 +265,7 @@ pub mod op_code {
                 0xc2 => monitorenter(frame),
                 0xc3 => monitorexit(frame),
                 // 0xc4 => wide(frame),
-                0xc5 => multianewarray(frame),
+                0xc5 => multianewarray(vm_stack, heap, metaspace),
                 0xc6 => ifnull(frame),
                 0xc7 => ifnonnull(frame),
                 // 0xc8 => goto_w(frame),

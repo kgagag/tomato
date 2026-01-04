@@ -63,7 +63,7 @@ pub mod op_code {
             let frame: &mut StackFrame = vm_stack.last_mut().unwrap();
             let code = frame.code[frame.pc];
             //\info!("{:x}--{}--{:?}--{:?}--{:?}--opstack:{:?}--local:{:?}",code,frame.pc,frame.class_name,frame.method_name,frame.descriptor,frame.op_stack,frame.local);
-            //info!("{:x}--{}--{:?}--{:?}--{:?}",code,frame.pc,frame.class_name,frame.method_name,frame.descriptor);
+            info!("{:x}--{}--{:?}--{:?}--{:?}",code,frame.pc,frame.class_name,frame.method_name,frame.descriptor);
             //let start = Instant::now();
             // if code == 0xbb || code == 0xbc || code == 0xbd || code == 0xc5 {
             //     full_gc();

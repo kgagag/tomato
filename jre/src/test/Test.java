@@ -65,7 +65,7 @@ public class Test {
         InterfaceTest interfaceTest = new Test22();
         interfaceTest.test(20240320, 5);
         new Test23().test();
-/*
+
         //测试数组作为参数
         new Test24().test(new int[20240320], new long[5]);
         new Test25().test(new int[]{0, 20240320}, new int[]{0, 0, 5});
@@ -81,6 +81,7 @@ public class Test {
         //普通继承
         new Test31().test();
 
+        /*
         // 先实现接口后继承
         new Test33().test(20240320, 5);
 

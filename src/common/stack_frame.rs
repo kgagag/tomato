@@ -298,9 +298,8 @@ pub fn create_stack_frame(method_info: &MethodInfo, class: &Class) -> Option<Sta
                     method_info.method_name.clone(),
                     method_info.descriptor.clone(),
                     class.class_name.clone()
-                ));
+                ))
             }
-            _ => continue, // 跳过不是 Code 类型的属性
         }
     }
     None

@@ -7,13 +7,8 @@
     <list default="true" id="70c6e279-5046-4c44-ba52-f4228d3f6634" name="Changes" comment="&quot;调整目录&quot;">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/test/Test.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/Test.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/test/Test106.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/Test106.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/Test.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/Test.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/Test106.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/Test106.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/Test15.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/Test15.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/interpreter/instructions/op_code.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/interpreter/instructions/op_code.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_array.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_array.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/runtime/heap.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/runtime/heap.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/Test24.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/Test24.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -91,7 +86,7 @@
       <recent name="test" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.Test">
+  <component name="RunManager" selected="Application.Test24">
     <configuration name="Test" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="test.Test" />
       <module name="jre" />
@@ -118,19 +113,6 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="Test15" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="test.Test15" />
-      <module name="jre" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="test.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="Test16" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="test.Test16" />
       <module name="jre" />
@@ -144,8 +126,21 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="Test9" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="test.Test9" />
+    <configuration name="Test23" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="test.Test23" />
+      <module name="jre" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="test.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Test24" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="test.Test24" />
       <module name="jre" />
       <extension name="coverage">
         <pattern>
@@ -159,11 +154,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.Test24" />
         <item itemvalue="Application.Test" />
+        <item itemvalue="Application.Test23" />
         <item itemvalue="Application.Test106" />
         <item itemvalue="Application.Test16" />
-        <item itemvalue="Application.Test15" />
-        <item itemvalue="Application.Test9" />
       </list>
     </recent_temporary>
   </component>
@@ -252,7 +247,7 @@
       <workItem from="1767359300252" duration="6461000" />
       <workItem from="1767380843039" duration="1133000" />
       <workItem from="1767416045006" duration="8596000" />
-      <workItem from="1767482120127" duration="1942000" />
+      <workItem from="1767482120127" duration="3963000" />
     </task>
     <task id="LOCAL-00001" summary="&quot;add test case&quot;">
       <option name="closed" value="true" />

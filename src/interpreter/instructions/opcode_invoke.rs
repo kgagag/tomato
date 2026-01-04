@@ -1,5 +1,3 @@
-use log::info;
-use log::warn;
 use crate::classfile::class;
 use crate::classfile::class::ConstantPoolInfo;
 use crate::classloader::class_loader;
@@ -15,6 +13,8 @@ use crate::runtime::heap::Heap;
 use crate::runtime::metaspace::Metaspace;
 use crate::utils::debug::dprint;
 use crate::utils::u8c::u8s_to_u16;
+use log::info;
+use log::warn;
 
 pub fn invokespecial(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Metaspace) {
     let frame_index = vm_stack.len() - 1;
@@ -87,63 +87,69 @@ pub fn invokespecial(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace:
 }
 
 pub fn invokeinterface(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Metaspace) {
-    let frame_index = vm_stack.len() - 1;
-    let frame = &mut vm_stack[frame_index];
-    //let class_name =metaspace.classes[];
-    let cnt = frame.code[frame.pc + 3];
-    let mut tmp: Vec<StackFrameValue> = Vec::new();
-    for _i in 1..cnt {
-        tmp.push(frame.op_stack.pop().unwrap());
-    }
-    let v = frame.op_stack.pop().unwrap();
-    for _i in 1..cnt {
-        frame.op_stack.push(tmp.pop().unwrap());
-    }
-
-    let (method_name, descriptor) = {
-        let this_class: &mut class::Class = &mut metaspace.classes[frame.class];
-        let (_class_index, name_and_type_index) = match this_class
-            .constant_pool
-            .get(&u8s_to_u16(&frame.code[(frame.pc + 1)..(frame.pc + 3)]))
-        {
-            Some(ConstantPoolInfo::InterfaceMethodref(class_index, name_and_type_index)) => {
-                (class_index, name_and_type_index)
-            }
-            _ => panic!(),
-        };
-
-        let (method_name, descriptor) = match this_class.constant_pool.get(name_and_type_index) {
-            Some(ConstantPoolInfo::NameAndType(name_index, descriptor_index)) => {
-                let method_name = match this_class.constant_pool.get(name_index) {
-                    Some(ConstantPoolInfo::Utf8(name)) => name,
-                    _ => panic!(),
-                };
-                let descriptor = match this_class.constant_pool.get(descriptor_index) {
-                    Some(ConstantPoolInfo::Utf8(desc)) => desc,
-                    _ => panic!(),
-                };
-                (method_name, descriptor)
-            }
-            _ => panic!(),
-        };
-
-        (method_name.clone(), descriptor.clone())
-    };
-
-    let class_name = {
-        match v {
-            StackFrameValue::Reference(id) => {
-                let class_id = heap.get_class(id);
-                metaspace.classes[class_id as usize].class_name.clone()
-            }
-            _ => panic!(),
+    let frame_index: usize = vm_stack.len() - 1;
+    let mut new_frame = {
+        let frame = &mut vm_stack[frame_index];
+        //let class_name =metaspace.classes[];
+        let cnt = frame.code[frame.pc + 3];
+        let mut tmp: Vec<StackFrameValue> = Vec::new();
+        for _i in 1..cnt {
+            tmp.push(frame.op_stack.pop().unwrap());
         }
+        let v = frame.op_stack.pop().unwrap();
+        for _i in 1..cnt {
+            frame.op_stack.push(tmp.pop().unwrap());
+        }
+
+        let (method_name, descriptor) = {
+            let this_class: &mut class::Class = &mut metaspace.classes[frame.class];
+            let (_class_index, name_and_type_index) = match this_class
+                .constant_pool
+                .get(&u8s_to_u16(&frame.code[(frame.pc + 1)..(frame.pc + 3)]))
+            {
+                Some(ConstantPoolInfo::InterfaceMethodref(class_index, name_and_type_index)) => {
+                    (class_index, name_and_type_index)
+                }
+                _ => panic!(),
+            };
+
+            let (method_name, descriptor) = match this_class.constant_pool.get(name_and_type_index)
+            {
+                Some(ConstantPoolInfo::NameAndType(name_index, descriptor_index)) => {
+                    let method_name = match this_class.constant_pool.get(name_index) {
+                        Some(ConstantPoolInfo::Utf8(name)) => name,
+                        _ => panic!(),
+                    };
+                    let descriptor = match this_class.constant_pool.get(descriptor_index) {
+                        Some(ConstantPoolInfo::Utf8(desc)) => desc,
+                        _ => panic!(),
+                    };
+                    (method_name, descriptor)
+                }
+                _ => panic!(),
+            };
+
+            (method_name.clone(), descriptor.clone())
+        };
+
+        let class_name = {
+            match v {
+                StackFrameValue::Reference(id) => {
+                    let class_id = heap.get_class(id);
+                    metaspace.classes[class_id as usize].class_name.clone()
+                }
+                _ => panic!(),
+            }
+        };
+        let (method, class) =
+            metaspace.get_method_from_root(&class_name, &method_name, &descriptor);
+        let mut new_frame: StackFrame = init_stack_frame(frame, &method.unwrap(), class, 1);
+        new_frame.local[0] = v;
+        new_frame
     };
-    let (method, class) = metaspace.get_method_from_root(&class_name, &method_name, &descriptor);
-    let mut new_frame: StackFrame = init_stack_frame(frame, &method.unwrap(), class, 1);
-    new_frame.local[0] = v;
-    push_stack_frame(new_frame);
-    frame.pc += 4;
+    //push_stack_frame(new_frame);
+    vm_stack.push(new_frame);
+    vm_stack[frame_index].pc += 4;
 }
 
 // pub fn invokevirtual(frame: &mut StackFrame) {
@@ -205,7 +211,7 @@ pub fn invokeinterface(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspac
 
 pub fn invokevirtual(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Metaspace) {
     let frame_index = vm_stack.len() - 1;
-    let (target_class_name,method_name, descriptor) = {
+    let (target_class_name, method_name, descriptor) = {
         let this_class = &metaspace.classes[vm_stack[frame_index].class];
         let (class_index, name_and_type_index) = match this_class.constant_pool.get(&u8s_to_u16(
             &vm_stack[frame_index].code
@@ -246,9 +252,14 @@ pub fn invokevirtual(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace:
             }
             _ => panic!(),
         };
-        (target_class_name.unwrap().clone(),method_name.clone(), descriptor.clone())
+        (
+            target_class_name.unwrap().clone(),
+            method_name.clone(),
+            descriptor.clone(),
+        )
     };
-    let (method, class) = metaspace.get_method_from_root(&target_class_name, &method_name, &descriptor);
+    let (method, class) =
+        metaspace.get_method_from_root(&target_class_name, &method_name, &descriptor);
     let mut method = method.unwrap();
     //先移动
     vm_stack[frame_index].pc += 3;
@@ -270,11 +281,9 @@ pub fn invokevirtual(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace:
     }
 }
 
-
-
 pub fn invokestatic(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Metaspace) {
     let frame_index = vm_stack.len() - 1;
-    let (target_class_name,method_name, descriptor) = {
+    let (target_class_name, method_name, descriptor) = {
         let this_class = &metaspace.classes[vm_stack[frame_index].class];
         let (class_index, name_and_type_index) = match this_class.constant_pool.get(&u8s_to_u16(
             &vm_stack[frame_index].code
@@ -315,12 +324,17 @@ pub fn invokestatic(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: 
             }
             _ => panic!(),
         };
-        (target_class_name.unwrap().clone(),method_name.clone(), descriptor.clone())
+        (
+            target_class_name.unwrap().clone(),
+            method_name.clone(),
+            descriptor.clone(),
+        )
     };
 
-     //确保加载
+    //确保加载
     class_loader::find_class(&target_class_name, vm_stack, heap, metaspace);
-    let (method, class) = metaspace.get_method_from_root(&target_class_name, &method_name, &descriptor);
+    let (method, class) =
+        metaspace.get_method_from_root(&target_class_name, &method_name, &descriptor);
     let method = method.unwrap();
     //先移动
     vm_stack[frame_index].pc += 3;
@@ -329,10 +343,9 @@ pub fn invokestatic(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: 
         let v = vm_stack[frame_index].op_stack.pop().unwrap();
         dprint(v);
     } else if method.access_flag & 0x0100 == 0 {
-        let new_frame = init_stack_frame(&mut vm_stack[frame_index], &method,&class, 0);
+        let new_frame = init_stack_frame(&mut vm_stack[frame_index], &method, &class, 0);
         vm_stack.push(new_frame);
     } else {
         run_native(&method, &mut vm_stack[frame_index]);
     }
 }
-

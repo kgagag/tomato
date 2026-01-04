@@ -47,10 +47,13 @@ public class Test {
         // 测试一维数组赋值读取
         new Test14().test();
 
+        new Test106().test();
+
         //   测试多维数组赋值读取
         new Test15().test();
- /*
+
          new Test16().test();
+
         // 测试计算数组长度
         new Test18().test();
         // 一维数组循环赋值
@@ -62,7 +65,7 @@ public class Test {
         InterfaceTest interfaceTest = new Test22();
         interfaceTest.test(20240320, 5);
         new Test23().test();
-
+/*
         //测试数组作为参数
         new Test24().test(new int[20240320], new long[5]);
         new Test25().test(new int[]{0, 20240320}, new int[]{0, 0, 5});
@@ -210,7 +213,7 @@ public class Test {
 
         */
         //long t1 = System.nanoTime();
-        new Test103().test();
+        //new Test103().test();
         //long t2 = System.nanoTime();
 
         //long t3 = t2 - t1;

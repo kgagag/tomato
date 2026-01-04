@@ -143,12 +143,20 @@ pub fn multianewarray(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace
         }
     };
 
-    let mut queue: VecDeque<usize> = VecDeque::new();
-    let mut reference_id = None;
-    let op_len = vm_stack[frame_index].op_stack.len();
+    let mut queue: VecDeque<(u32,usize)> = VecDeque::new();
+        
+    let mut sfv_vec = Vec::new();
+         //全部弹出
+    for _i in 0..dimenssion {
+       // _ = vm_stack[frame_index].op_stack.pop()
+       let sfv = vm_stack[frame_index].op_stack.pop().unwrap();
+       sfv_vec.push(sfv);
+    }
+
+
     for i in 0..dimenssion {
         let len = {
-            let len_value = vm_stack[frame_index].op_stack[op_len - (dimenssion - i) as usize];
+            let len_value = sfv_vec.pop().unwrap();
             match len_value {
                 StackFrameValue::Byte(l) => l as u32,
                 StackFrameValue::Char(l) => l as u32,
@@ -157,52 +165,37 @@ pub fn multianewarray(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace
                 _ => panic!(),
             }
         };
-
         if queue.len() == 0 {
-            for _ in 0..len {
-                reference_id = Some(heap.create_reference_array(0, len, dimenssion - i,atype));
-                queue.push_back(reference_id.unwrap());
-            }
+              let  reference_id: usize = heap.create_reference_array(0, len, dimenssion - i,atype);
+                //info!("create array reference:{}", reference_id);
+                vm_stack[frame_index].op_stack.push(StackFrameValue::Reference(reference_id as u32));
+                queue.push_back((len,reference_id));
         } else {
             let size = queue.len();
-            for index in 0..size {
-                let reference = queue.pop_front().unwrap();
+            for _j in 0..size {
+                let (plen,reference) = queue.pop_front().unwrap();
                 //在这个reference中创建新的数组,个数为len
-                for _ in 0..len {
+                for index in 0..plen {
                     //不是引用类型
                     if atype != 12 {
                         if i == dimenssion - 1 {
                             let id = heap.create_basic_array(atype, len, dimenssion - i);
-                            heap.put_array_element(reference as u32, index, id as u64);
-                            queue.push_back(id);
+                            heap.put_array_element(reference as u32, index as usize, id as u64);
+                            queue.push_back((len,id));
                         } else {
                             let id: usize = heap.create_reference_array(0, len, dimenssion - i,atype);
-                            heap.put_array_element(reference as u32, index, id as u64);
-                            queue.push_back(id);
+                            heap.put_array_element(reference as u32, index as usize, id as u64);
+                            queue.push_back((len,id));
                         }
                     } else {
                         let id = heap.create_reference_array(class_id.unwrap() as u32, len, dimenssion - i,atype);
-                        heap.put_array_element(reference as u32, index, id as u64);
-                        queue.push_back(id);
+                        heap.put_array_element(reference as u32, index as usize, id as u64);
+                        queue.push_back((len,id));
                     }
                 }
             }
         }
     }
-
-    if reference_id.is_none() {
-        panic!("reference id is none");
-    }
-
-    //全部弹出
-    for _i in 0..dimenssion {
-       _ = vm_stack[frame_index].op_stack.pop()
-    }
-
-    vm_stack[frame_index]
-        .op_stack
-        .push(StackFrameValue::Reference(reference_id.unwrap() as u32));
-
     vm_stack[frame_index].pc += 4;
 }
 
@@ -329,15 +322,13 @@ pub fn saload(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut M
     xaload(vm_stack, heap, metaspace);
 }
 
-pub fn arraylength(frame: &mut StackFrame) {
+pub fn arraylength(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap) {
+    let frame_index = vm_stack.len() - 1;
+    let frame = &mut vm_stack[frame_index];
     let v = frame.op_stack.pop().unwrap();
     match v {
         StackFrameValue::Reference(reference) => {
-            let aref = get_reference(&reference).unwrap();
-            match aref {
-                Reference::Array(array) => frame.op_stack.push(StackFrameValue::U32(array.len)),
-                _ => panic!(),
-            }
+            frame.op_stack.push(StackFrameValue::U32(heap.get_array_length(reference)))
         }
         _ => panic!(),
     }

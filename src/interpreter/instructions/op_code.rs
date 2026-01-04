@@ -59,10 +59,11 @@ pub mod op_code {
     pub fn do_opcode(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Metaspace) {
         while !vm_stack.is_empty()
         {
-            let code = vm_stack.last().unwrap().code[vm_stack.last().unwrap().pc];
+            //let code = vm_stack.last().unwrap().code[vm_stack.last().unwrap().pc];
             let frame: &mut StackFrame = vm_stack.last_mut().unwrap();
-            //info!("{:x}--{}--{:?}--{:?}--{:?}--opstack:{:?}--local:{:?}",code,frame.pc,frame.class_name,frame.method_name,frame.descriptor,frame.op_stack,frame.local);
-            info!("{:x}--{}--{:?}--{:?}--{:?}",code,frame.pc,frame.class_name,frame.method_name,frame.descriptor);
+            let code = frame.code[frame.pc];
+            //\info!("{:x}--{}--{:?}--{:?}--{:?}--opstack:{:?}--local:{:?}",code,frame.pc,frame.class_name,frame.method_name,frame.descriptor,frame.op_stack,frame.local);
+            //info!("{:x}--{}--{:?}--{:?}--{:?}",code,frame.pc,frame.class_name,frame.method_name,frame.descriptor);
             //let start = Instant::now();
             // if code == 0xbb || code == 0xbc || code == 0xbd || code == 0xc5 {
             //     full_gc();
@@ -258,7 +259,7 @@ pub mod op_code {
                 0xbb => _new(vm_stack, heap, metaspace),
                 0xbc => newarray(vm_stack, heap, metaspace),
                 0xbd => anewarray(vm_stack, heap, metaspace),
-                0xbe => arraylength(frame),
+                0xbe => arraylength(vm_stack, heap),
                 0xbf => athrow(frame),
                 0xc0 => checkcast(frame),
                 0xc1 => instanceof(frame),

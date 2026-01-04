@@ -164,7 +164,7 @@ impl Heap {
 
     /**
      * 创建基本类型数组对象
-     * 对象头（2个字节，第1位 0,第 2 位 0） + data_type 1个字节 +维度 1个字）+ 数组长度 4 + 数组数据 + 对齐
+     * 对象头（2个字节，第1位 0,第 2 位 0）+ 数组长度 4 +维度 1个字 + data_type 1个字节 + 数组数据 + 对齐
      */
     pub fn create_basic_array(&mut self, atype: u8, len: u32, dimension: u8) -> usize {
         let start_size = 8;
@@ -205,23 +205,28 @@ impl Heap {
         }
         let object_id = self.malloc(size);
         let start = self.address_map[object_id] as usize;
+
+         //设置数组长度
+        let lena = u8c::split_u32_to_u8(len);
+        self.memory[start + 2] = lena[0];
+        self.memory[start + 3] = lena[1];
+        self.memory[start + 4] = lena[2];
+        self.memory[start + 5] = lena[3];
+
+        //设置数组维度
+        self.memory[start + 6] = dimension;
+
         //self.memory[start] = 0b10000000;
         //设置数组类型
-        self.memory[start + 2] = atype;
-        //设置数组维度
-        self.memory[start + 3] = dimension;
-        //设置数组长度
-        let lena = u8c::split_u32_to_u8(len);
-        self.memory[start + 3] = lena[0];
-        self.memory[start + 4] = lena[1];
-        self.memory[start + 5] = lena[2];
-        self.memory[start + 6] = lena[3];
+        self.memory[start + 7] = atype;
+       
+       
         object_id
     }
 
     /**
      * 创建引用类型数组对象
-     * 对象头（2个字节，第1位 0,第2位 1 如果atype != 12 第3位为0否则为1） + class_id 4个字节 + 维度 1个字节 + 数组长度 + 数组数据 + 对齐
+     * 对象头（2个字节，第1位 0,第2位 1 如果atype != 12 第3位为0否则为1）  + 数组长度4个字节 +  维度 1个字节   + class_id 4个字节  + 数组数据 + 对齐
      */
     pub fn create_reference_array(&mut self, class_id: u32, len: u32, dimension: u8, atype:u8) -> usize {
         let start_size = 11;
@@ -243,22 +248,24 @@ impl Heap {
             self.memory[start] = 0b01000000;
         }
 
+
+        let lena = u8c::split_u32_to_u8(len);
+        self.memory[start + 2] = lena[0];
+        self.memory[start + 3] = lena[1];
+        self.memory[start + 4] = lena[2];
+        self.memory[start + 5] = lena[3];
+
+         self.memory[start + 6] = dimension;
+
         //如果为基本类型的多维数组这里暂时不设置
         if atype != 12 {
             let cid = u8c::split_u32_to_u8(class_id);
-            self.memory[start + 2] = cid[0];
-            self.memory[start + 3] = cid[1];
-            self.memory[start + 4] = cid[2];
-            self.memory[start + 5] = cid[3];
+            self.memory[start + 7] = cid[0];
+            self.memory[start + 8] = cid[1];
+            self.memory[start + 9] = cid[2];
+            self.memory[start + 10] = cid[3];
         }
-        
-        self.memory[start + 6] = dimension;
 
-        let lena = u8c::split_u32_to_u8(len);
-        self.memory[start + 7] = lena[0];
-        self.memory[start + 8] = lena[1];
-        self.memory[start + 9] = lena[2];
-        self.memory[start + 10] = lena[3];
         object_id
     }
 
@@ -267,7 +274,7 @@ impl Heap {
      */
     pub fn put_basic_array_element(&mut self, reference_id: u32, index: usize, value: u64) {
         let start_index = self.address_map[reference_id as usize] as usize;
-        let atype = self.memory[start_index + 2];
+        let atype = self.memory[start_index + 7];
         let offset = 8;
         if atype == 4 {
             // array_type = DataType::Boolean;
@@ -340,7 +347,7 @@ impl Heap {
             self.memory[start_index + offset + index + 6] = array[6];
             self.memory[start_index + offset + index + 7] = array[7];
         } else {
-            panic!("wrong atype");
+            panic!("wrong atype :{},atype_index:{}",atype,start_index + 2);
         }
     }
 
@@ -348,6 +355,7 @@ impl Heap {
      * 设置引用类型数组元素
      */
     pub fn put_reference_array_element(&mut self, reference_id: u32, index: usize, value: u64) {
+        //info!("========{},{},{}=========",reference_id,index,value);
         let start_index = self.address_map[reference_id as usize] as usize;
         let offset = 11;
         let value: u32 = value as u32;
@@ -386,13 +394,27 @@ impl Heap {
         }
     }
 
+     /**
+     * 读取数组长度
+     */
+    pub fn get_array_length(&self, reference_id: u32) -> u32 {
+        let start_index = self.address_map[reference_id as usize] as usize;
+        let bytes = [
+                    self.memory[start_index + 2],
+                    self.memory[start_index + 3],
+                    self.memory[start_index + 4],
+                    self.memory[start_index + 5],
+                ];
+        u32::from_be_bytes(bytes)
+    }
+
 
     /**
      * 读取基本类型数组元素
      */
     pub fn get_basic_array_element(&self, reference_id: u32, index: usize) -> (u8, u64) {
         let start_index = self.address_map[reference_id as usize] as usize;
-        let atype = self.memory[start_index + 2];
+        let atype = self.memory[start_index + 7];
         let offset = 8;
         match atype {
             4 | 8 => {

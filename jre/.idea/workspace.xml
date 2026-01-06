@@ -7,8 +7,21 @@
     <list default="true" id="70c6e279-5046-4c44-ba52-f4228d3f6634" name="Changes" comment="&quot;调整目录&quot;">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/test/Test.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/Test.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/Test106.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/Test106.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/Test29.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/Test29.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/Test31.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/Test31.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/Test.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/Test.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/Test24.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/Test24.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/Test106.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/Test106.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/Test29.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/Test29.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/Test31.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/Test31.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/classloader/class_loader.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/classloader/class_loader.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/common/value.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/common/value.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/interpreter/instructions/op_code.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/interpreter/instructions/op_code.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_array.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_array.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_ldc.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_ldc.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_new.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_new.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/runtime/heap.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/runtime/heap.rs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -63,7 +76,7 @@
     &quot;ToolWindowRun.ShowToolbar&quot;: &quot;false&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
     &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;last_opened_file_path&quot;: &quot;E:/work4/tomato/jre&quot;,
+    &quot;last_opened_file_path&quot;: &quot;E:/work5/tomato&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -86,7 +99,7 @@
       <recent name="test" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.Test24">
+  <component name="RunManager" selected="Application.Test6">
     <configuration name="Test" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="test.Test" />
       <module name="jre" />
@@ -113,32 +126,6 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="Test16" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="test.Test16" />
-      <module name="jre" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="test.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="Test23" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="test.Test23" />
-      <module name="jre" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="test.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="Test24" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="test.Test24" />
       <module name="jre" />
@@ -152,13 +139,39 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="Test29" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="test.Test29" />
+      <module name="jre" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="test.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Test6" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="test.Test6" />
+      <module name="jre" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="test.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.Test24" />
+        <item itemvalue="Application.Test6" />
         <item itemvalue="Application.Test" />
-        <item itemvalue="Application.Test23" />
         <item itemvalue="Application.Test106" />
-        <item itemvalue="Application.Test16" />
+        <item itemvalue="Application.Test29" />
+        <item itemvalue="Application.Test24" />
       </list>
     </recent_temporary>
   </component>
@@ -247,7 +260,12 @@
       <workItem from="1767359300252" duration="6461000" />
       <workItem from="1767380843039" duration="1133000" />
       <workItem from="1767416045006" duration="8596000" />
-      <workItem from="1767482120127" duration="3963000" />
+      <workItem from="1767482120127" duration="7078000" />
+      <workItem from="1767496177692" duration="157000" />
+      <workItem from="1767518610681" duration="1504000" />
+      <workItem from="1767531697973" duration="2269000" />
+      <workItem from="1767577983200" duration="5471000" />
+      <workItem from="1767668968499" duration="5051000" />
     </task>
     <task id="LOCAL-00001" summary="&quot;add test case&quot;">
       <option name="closed" value="true" />

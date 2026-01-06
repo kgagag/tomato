@@ -66,7 +66,8 @@ impl Metaspace {
             let sub_key = format!("{}{}{}{}{}", class.super_class_name, ".", method_name, ".", descriptor); 
             m = self.method_area.get(&sub_key);
             if m.is_some() {
-                return (m,class);
+                let supper_class = &self.classes[*self.class_map.get(&class.super_class_name).unwrap()];
+                return (m,supper_class);
             }
             curr_class_name = class.super_class_name.clone();
         }

@@ -10,14 +10,8 @@ use crate::common::param::DataType;
 use crate::common::stack_frame::*;
 use crate::common::value::StackFrameValue;
 use crate::interpreter::instructions::op_code::op_code::do_opcode;
-use crate::interpreter::instructions::op_code::op_code::execute;
 use crate::runtime::heap::Heap;
-use crate::runtime::metaspace;
 use crate::runtime::metaspace::Metaspace;
-use crate::runtime::runtime_data_area::add_method;
-use crate::runtime::runtime_data_area::class_exists;
-use crate::runtime::runtime_data_area::init_class_id;
-use crate::runtime::vm::Vm;
 use crate::utils::u8c::u8s_to_u16;
 use crate::utils::u8c::u8s_to_u32;
 use byteorder::{BigEndian, ReadBytesExt};
@@ -115,6 +109,178 @@ fn parse_descriptor(descriptor: &Vec<u8>) -> Result<Option<Vec<DataType>>, Strin
     }
 }
 
+fn parse_field_descriptor(descriptor: Vec<u8>) -> DataType {
+    let mut index: usize = 0;
+    let descriptor_length = descriptor.len();
+    let descriptor_char = descriptor[index] as char;
+    //info!("descriptor_char:{:?}", &descriptor_char);
+    match descriptor_char {
+        'B' => DataType::Byte,
+        'C' => DataType::Char,
+        'D' => DataType::Double,
+        'F' => DataType::Float,
+        'I' => DataType::Int,
+        'J' => DataType::Long,
+        'L' => {
+            // Handle reference type parameters
+            let mut class_name = String::new();
+            while index < descriptor_length {
+                index += 1;
+                if descriptor[index] as char == ';' {
+                    break;
+                }
+                class_name.push(descriptor[index] as char);
+            }
+            DataType::Reference(class_name)
+        }
+        'S' => DataType::Short,
+        'Z' => DataType::Boolean,
+        '[' => {
+            // Handle array type parameters
+            let mut array_depth = 1;
+            while index + 1 < descriptor_length && descriptor[index + 1] as char == '[' {
+                array_depth += 1;
+                index += 1;
+            }
+            index = index + 1;
+            let element_type = match descriptor[index] as char {
+                'B' => DataType::Byte,
+                'C' => DataType::Char,
+                'D' => DataType::Double,
+                'F' => DataType::Float,
+                'I' => DataType::Int,
+                'J' => DataType::Long,
+                'L' => {
+                    let mut class_name = String::new();
+                    while index < descriptor_length {
+                        index += 1;
+                        if descriptor[index] as char == ';' {
+                            break;
+                        }
+                        class_name.push(descriptor[index] as char);
+                    }
+                    DataType::Reference(class_name)
+                }
+                'S' => DataType::Short,
+                'Z' => DataType::Boolean,
+                _ => {
+                    warn!("Unknown array element type:{:?}", descriptor_char);
+                    panic!()
+                }
+            };
+            DataType::Array {
+                element_type: Box::new(element_type),
+                depth: array_depth,
+            }
+        }
+        _ => panic!(""),
+    }
+}
+
+// fn parse_descriptor(descriptor: &[u8]) -> Result<Option<Vec<DataType>>, String> {
+//     let mut index = 0;
+//     let descriptor_length = descriptor.len();
+//     let mut parameters: Vec<DataType> = Vec::new();
+
+//     // 将字节转换为字符一次
+//     let descriptor_chars: Vec<char> = descriptor.iter().map(|&b| b as char).collect();
+
+//     while index < descriptor_length {
+//         let ch = descriptor_chars[index];
+
+//         match ch {
+//             '(' => {
+//                 index += 1;
+//                 continue;
+//             }
+//             ')' => break,
+//             '[' => {
+//                 // 处理数组类型
+//                 let start_idx = index;
+//                 while index < descriptor_length && descriptor_chars[index] == '[' {
+//                     index += 1;
+//                 }
+
+//                 if index >= descriptor_length {
+//                     return Err("Unexpected end of descriptor".to_string());
+//                 }
+
+//                 let array_depth = index - start_idx;
+//                 let ch = descriptor_chars[index];
+
+//                 let element_type = match ch {
+//                     'L' => {
+//                         // 查找分号
+//                         if let Some(semicolon_idx) =
+//                             descriptor_chars[index..].iter().position(|&c| c == ';')
+//                         {
+//                             let class_start = index + 1;
+//                             let class_end = index + semicolon_idx;
+
+//                             // 直接从字节构建字符串，避免字符转换
+//                             let class_name = String::from_utf8_lossy(
+//                                 &descriptor[class_start..class_end]
+//                             ).into_owned();
+
+//                             index = index + semicolon_idx;
+//                             DataType::Reference(class_name)
+//                         } else {
+//                             return Err("Missing semicolon in reference type".to_string());
+//                         }
+//                     }
+//                     'B' => DataType::Byte,
+//                     'C' => DataType::Char,
+//                     'D' => DataType::Double,
+//                     'F' => DataType::Float,
+//                     'I' => DataType::Int,
+//                     'J' => DataType::Long,
+//                     'S' => DataType::Short,
+//                     'Z' => DataType::Boolean,
+//                     _ => return Err(format!("Unknown array element type: {}", ch)),
+//                 };
+
+//                 parameters.push(DataType::Array {
+//                     element_type: Box::new(element_type),
+//                     depth: array_depth as u8,
+//                 });
+//             }
+//             'L' => {
+//                 // 处理引用类型
+//                 if let Some(semicolon_idx) =
+//                     descriptor_chars[index..].iter().position(|&c| c == ';')
+//                 {
+//                     let class_start = index + 1;
+//                     let class_end = index + semicolon_idx;
+
+//                     let class_name = String::from_utf8_lossy(
+//                         &descriptor[class_start..class_end]
+//                     ).into_owned();
+
+//                     parameters.push(DataType::Reference(class_name));
+//                     index = index + semicolon_idx;
+//                 } else {
+//                     return Err("Missing semicolon in reference type".to_string());
+//                 }
+//             }
+//             'B' => parameters.push(DataType::Byte),
+//             'C' => parameters.push(DataType::Char),
+//             'D' => parameters.push(DataType::Double),
+//             'F' => parameters.push(DataType::Float),
+//             'I' => parameters.push(DataType::Int),
+//             'J' => parameters.push(DataType::Long),
+//             'S' => parameters.push(DataType::Short),
+//             'Z' => parameters.push(DataType::Boolean),
+//             _ => {
+//                 // 忽略其他字符或返回错误
+//             }
+//         }
+
+//         index += 1;
+//     }
+
+//     Ok(if parameters.is_empty() { None } else { Some(parameters) })
+// }
+
 // fn read_class_from_jar(jar_path: &str, class_name: &str) -> Result<Vec<u8>, String> {
 //     let file: File =
 //         File::open(jar_path).map_err(|e| format!("Error opening JAR file: {}", e))?;
@@ -200,7 +366,12 @@ fn get_class_from_disk(name: &String) -> Vec<u8> {
 /***
  * 类加载
  */
-pub fn load_class(name: &String,vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Metaspace) -> Class {
+pub fn load_class(
+    name: &String,
+    vm_stack: &mut Vec<StackFrame>,
+    heap: &mut Heap,
+    metaspace: &mut Metaspace,
+) -> Class {
     let buffer: Vec<u8> = get_class_from_disk(name);
     let mut cursor = io::Cursor::new(buffer);
     let mut class: Class = Class::new();
@@ -229,7 +400,7 @@ pub fn load_class(name: &String,vm_stack: &mut Vec<StackFrame>, heap: &mut Heap,
                     ConstantPoolInfo::Utf8(class_name) => {
                         let super_class_op = metaspace.class_map.get(class_name);
                         if super_class_op.is_none() {
-                            let super_class =  find_class(class_name,vm_stack, heap, metaspace);
+                            let super_class = find_class(class_name, vm_stack, heap, metaspace);
                             class.super_class_id = super_class.id;
                             class.super_class_name = super_class.class_name.clone();
                             for (key, value) in &super_class.field_info {
@@ -237,12 +408,12 @@ pub fn load_class(name: &String,vm_stack: &mut Vec<StackFrame>, heap: &mut Heap,
                                 if !class.field_info.contains_key(key) {
                                     class.field_info.insert(key.clone(), value.clone());
                                 }
-                            }  
-                        }else {
-                           let super_class =  &metaspace.classes[*super_class_op.unwrap()];
-                           class.super_class_id = super_class.id;
-                           class.super_class_name = super_class.class_name.clone();
-                        } 
+                            }
+                        } else {
+                            let super_class = &metaspace.classes[*super_class_op.unwrap()];
+                            class.super_class_id = super_class.id;
+                            class.super_class_name = super_class.class_name.clone();
+                        }
                     }
                     _ => panic!("wrong class data"),
                 }
@@ -260,8 +431,8 @@ pub fn load_class(name: &String,vm_stack: &mut Vec<StackFrame>, heap: &mut Heap,
 /**
  * 类加载完成之后执行初始化静态方法
  */
-pub fn init(class_name:  &String, method_name: String, heap: &mut Heap, metaspace: &mut Metaspace) {
-    let class_id=*metaspace.class_map.get(class_name).unwrap();
+pub fn init(class_name: &String, method_name: String, heap: &mut Heap, metaspace: &mut Metaspace) {
+    let class_id = *metaspace.class_map.get(class_name).unwrap();
     let class = &metaspace.classes[class_id];
     //创建VM
     //找到main方法
@@ -272,7 +443,8 @@ pub fn init(class_name:  &String, method_name: String, heap: &mut Heap, metaspac
         match u8_vec {
             ConstantPoolInfo::Utf8(name) => {
                 if name == &method_name {
-                    let mut stack_frame = create_stack_frame_with_class(method_info, class).unwrap();
+                    let mut stack_frame =
+                        create_stack_frame_with_class(method_info, class).unwrap();
                     let mut vm_stack = Vec::new();
                     stack_frame.vm_stack_id = 0;
                     vm_stack.push(stack_frame);
@@ -289,8 +461,6 @@ pub fn init(class_name:  &String, method_name: String, heap: &mut Heap, metaspac
 
 pub fn parse_method_field(class: &mut Class, method_info_map: &mut HashMap<String, MethodInfo>) {
     let this_class = class.constant_pool.get(&class.this_class).unwrap();
-
-    //info!("this_class:{:?}", this_class);
     // 设置 class_name
     match this_class {
         ConstantPoolInfo::Class(name_index) => {
@@ -306,10 +476,9 @@ pub fn parse_method_field(class: &mut Class, method_info_map: &mut HashMap<Strin
         }
         _ => panic!("wrong constant data type"),
     }
-    
     //补充方法方法参数解析后信息
     for i in 0..class.methods_count {
-        let method_info = class.method_info.get_mut(i as usize).unwrap();
+        let method_info = &mut class.method_info[i as usize];
         method_info.class_name = (class.class_name).clone();
         let descriptor = class
             .constant_pool
@@ -326,7 +495,7 @@ pub fn parse_method_field(class: &mut Class, method_info_map: &mut HashMap<Strin
                 }
                 method_info.descriptor = str.clone();
                 //info!("method_info.descripto:{:?}", &method_info.descriptor);
-                let result = parse_descriptor(&(str.clone().into_bytes()));
+                let result = parse_descriptor(&(method_info.descriptor.clone()).into_bytes());
                 match result {
                     Ok(Some(parameters)) => {
                         for param in parameters {
@@ -357,89 +526,60 @@ pub fn parse_method_field(class: &mut Class, method_info_map: &mut HashMap<Strin
     }
 
     let mut field_index = 0;
-    let mut field_offset:u32 = 0;
+    let mut field_offset: u32 = 0;
 
     //补充方法方法参数解析后信息
     for (_key, field_info) in class.field_info.iter_mut() {
-        let descriptor = class
-            .constant_pool
-            .get(&field_info.descriptor_index)
-            .unwrap();
-
         field_info.field_index = field_index;
         field_info.offset = field_offset;
-
         field_index += 1;
-
-        match descriptor {
-            ConstantPoolInfo::Utf8(str) => {
-                field_info.descriptor = str.clone();
-                let result: Result<Option<Vec<DataType>>, String> =
-                    parse_descriptor(&(str.clone().into_bytes()));
-                match result {
-                    Ok(Some(parameters)) => {
-                        if let Some(param) = parameters.into_iter().next() {
-                            field_info.data_type = param.clone();
-                            match param {
-                                DataType::Array {
-                                    element_type: _,
-                                    depth: _,
-                                } => {
-                                    field_info.value = StackFrameValue::Null;
-                                    field_offset += 4;
-                                }
-                                DataType::Byte => {
-                                    field_info.value = StackFrameValue::Byte(0);
-                                    field_offset += 1;
-                                }
-                                DataType::Char => {
-                                    field_info.value = StackFrameValue::Char(0);
-                                    field_offset += 2;
-                                }
-                                DataType::Double => {
-                                    field_info.value = StackFrameValue::Double(0.0);
-                                    field_offset += 8;
-                                }
-                                DataType::Float => {
-                                    field_info.value = StackFrameValue::Float(0.0);
-                                    field_offset += 4;
-                                }
-                                DataType::Int => {
-                                    field_info.value = StackFrameValue::Int(0);
-                                    field_offset += 4;
-                                }
-                                DataType::Long => {
-                                    field_info.value = StackFrameValue::Long(0);
-                                    field_offset += 8;
-                                }
-                                DataType::Reference(_s) => {
-                                    field_info.value = StackFrameValue::Null;
-                                    field_offset += 4;
-                                }
-                                DataType::Short => {
-                                    field_info.value = StackFrameValue::Short(0);
-                                    field_offset += 2;
-                                }
-                                DataType::Boolean => {
-                                    field_info.value = StackFrameValue::Boolean(false);
-                                    field_offset += 1;
-                                }
-                                DataType::Unknown => panic!(),
-                            }
-                        }
-                    }
-                    Ok(None) => {
-                        //println!("No parameters");
-                    }
-                    Err(error) => {
-                        println!("Error: {}", error);
-                    }
-                }
+        match &field_info.data_type {
+            DataType::Array {
+                element_type: _,
+                depth: _,
+            } => {
+                field_info.value = StackFrameValue::Null;
+                field_offset += 4;
             }
-            _ => panic!("wrong constant data type"),
+            DataType::Byte => {
+                field_info.value = StackFrameValue::Byte(0);
+                field_offset += 1;
+            }
+            DataType::Char => {
+                field_info.value = StackFrameValue::Char(0);
+                field_offset += 2;
+            }
+            DataType::Double => {
+                field_info.value = StackFrameValue::Double(0.0);
+                field_offset += 8;
+            }
+            DataType::Float => {
+                field_info.value = StackFrameValue::Float(0.0);
+                field_offset += 4;
+            }
+            DataType::Int => {
+                field_info.value = StackFrameValue::Int(0);
+                field_offset += 4;
+            }
+            DataType::Long => {
+                field_info.value = StackFrameValue::Long(0);
+                field_offset += 8;
+            }
+            DataType::Reference(_s) => {
+                field_info.value = StackFrameValue::Null;
+                field_offset += 4;
+            }
+            DataType::Short => {
+                field_info.value = StackFrameValue::Short(0);
+                field_offset += 2;
+            }
+            DataType::Boolean => {
+                field_info.value = StackFrameValue::Boolean(false);
+                field_offset += 1;
+            }
+            DataType::Unknown => panic!(),
         }
     }
-
 }
 
 /**
@@ -669,18 +809,28 @@ pub fn get_field(
             atrributes: Vec::new(),
             value: StackFrameValue::Null,
             field_name: String::from(""),
-            data_type: DataType::Unknown,
+            data_type: { DataType::Unknown },
             descriptor: String::from(""),
             field_index: 0,
-            offset: 0
+            offset: 0,
         };
-
         let name_utf8 = constant_pool.get(&f.name_index).unwrap();
         let field_name = match name_utf8 {
             ConstantPoolInfo::Utf8(name) => name.clone(),
             _ => panic!(),
         };
         f.field_name = field_name;
+
+        let descriptor = constant_pool.get(&f.descriptor_index).unwrap();
+        //info!("{}===={:?}=====",class.class_name,descriptor);
+        match descriptor {
+            ConstantPoolInfo::Utf8(str) => {
+                f.descriptor = str.clone();
+                f.data_type = parse_field_descriptor(f.descriptor.clone().into_bytes());
+            }
+            _ => panic!(""),
+        }
+
         f.atrributes = get_attribute(constant_pool, f.attribute_count, cursor);
         v.insert(f.field_name.clone(), f);
     }
@@ -1050,24 +1200,27 @@ fn read_constant_pool_info<R: Read>(
     constant_pool
 }
 
-pub fn find_class<'a,'b>(class_name: &'a String,vm_stack: &'b mut Vec<StackFrame>, heap: &'b mut Heap, metaspace: &'a mut Metaspace) -> &'a mut Class {
-    let (class,flag) = {
+pub fn find_class<'a, 'b>(
+    class_name: &'a String,
+    vm_stack: &'b mut Vec<StackFrame>,
+    heap: &'b mut Heap,
+    metaspace: &'a mut Metaspace,
+) -> &'a mut Class {
+    let (class, flag) = {
         let class_op = metaspace.class_map.get(class_name);
         if class_op.is_none() {
-            let mut class = load_class(class_name,vm_stack,heap,metaspace);
-            let id  =  metaspace.classes.len();
+            let mut class = load_class(class_name, vm_stack, heap, metaspace);
+            let id = metaspace.classes.len();
             class.id = id;
             metaspace.classes.push(class);
             parse_method_field(&mut metaspace.classes[id], &mut metaspace.method_area);
             metaspace.class_map.insert(class_name.clone(), id);
-            init(class_name, "<clinit>".to_string(),heap,metaspace);
-            (&mut metaspace.classes[id],true)
+            init(class_name, "<clinit>".to_string(), heap, metaspace);
+            (&mut metaspace.classes[id], true)
         } else {
-            (&mut metaspace.classes[class_op.unwrap().clone()],false)
+            (&mut metaspace.classes[class_op.unwrap().clone()], false)
         }
     };
-    if flag {
-        
-    }
+    if flag {}
     class
 }

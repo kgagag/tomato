@@ -6,7 +6,6 @@ public class Test29 {
     }
 
     public static void main(String[] args) {
-        Test29 test27 = new Test29();
-        System.out.println(test27.test(new int[][]{{1}},new int[][]{{2}}));
+        new Test29().test(new int[][]{{1}}, new int[][]{{2}});
     }
 }

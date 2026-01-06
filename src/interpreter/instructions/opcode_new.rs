@@ -40,7 +40,7 @@ pub fn _new(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Met
         _ => panic!("wrong class data"),
     };
     let target_class =
-        { class_loader::find_class(&mut target_class_name, &mut Vec::new(), heap, metaspace) };
+        { class_loader::find_class(&mut target_class_name, vm_stack, heap, metaspace) };
     let obj = heap.create_object(target_class);
     //初始化属性
     vm_stack[frame_index]

@@ -59,12 +59,13 @@ pub mod op_code {
     pub fn do_opcode(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Metaspace) {
         while !vm_stack.is_empty()
         {
+            //let start = Instant::now();
             //let code = vm_stack.last().unwrap().code[vm_stack.last().unwrap().pc];
             let frame: &mut StackFrame = vm_stack.last_mut().unwrap();
             let code = frame.code[frame.pc];
+
             //\info!("{:x}--{}--{:?}--{:?}--{:?}--opstack:{:?}--local:{:?}",code,frame.pc,frame.class_name,frame.method_name,frame.descriptor,frame.op_stack,frame.local);
-            info!("{:x}--{}--{:?}--{:?}--{:?}",code,frame.pc,frame.class_name,frame.method_name,frame.descriptor);
-            //let start = Instant::now();
+            //info!("{:x}--{}--{:?}--{:?}--{:?}",code,frame.pc,frame.class_name,frame.method_name,frame.descriptor);
             // if code == 0xbb || code == 0xbc || code == 0xbd || code == 0xc5 {
             //     full_gc();
             // }
@@ -282,10 +283,10 @@ pub mod op_code {
             //     break;
             // }
 
-            //let duration = start.elapsed();
-            // 转换为纳秒
-            //let nanos = duration.as_nanos();
-            //info!("{:x}--{}--{:?}--{:?}--{:?}--{:?}",code,frame.pc,frame.class_name,frame.method_name,frame.descriptor,nanos);
+            // let duration = start.elapsed();
+            // //转换为纳秒
+            // let nanos = duration.as_nanos();
+            // info!("{:x}--{}",code,nanos);
         }
     }
 }

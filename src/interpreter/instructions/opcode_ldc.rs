@@ -22,7 +22,6 @@ extern crate log;
 
 pub fn ldc(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Metaspace) {
     let frame_index = vm_stack.len() - 1;
-
     let (float_value, int_value, string_index, class_index) = {
         let frame = &mut vm_stack[frame_index];
         let index = frame.code[frame.pc + 1];
@@ -60,6 +59,7 @@ pub fn ldc(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Meta
             .op_stack
             .push(StackFrameValue::Int(int_value));
     } else if let Some(string_index) = string_index {
+
     } else if let Some(class_name) = class_index {
         //确保这个类已被加载
         let class_id: usize = class_loader::find_class(&class_name, vm_stack, heap, metaspace).id;

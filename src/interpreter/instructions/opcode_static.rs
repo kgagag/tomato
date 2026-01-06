@@ -80,7 +80,6 @@ pub fn getstatic(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mu
             .constant_pool
             .get(&index)
             .expect("Field reference not found");
-
         if let ConstantPoolInfo::Fieldref(class_index, name_and_type_index) = field_ref {
             let class_name_utf8 = match this_class.constant_pool.get(class_index) {
                 Some(ConstantPoolInfo::Class(class_name_index)) => {

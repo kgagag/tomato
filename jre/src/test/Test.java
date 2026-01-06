@@ -47,8 +47,6 @@ public class Test {
         // 测试一维数组赋值读取
         new Test14().test();
 
-        new Test106().test();
-
         //   测试多维数组赋值读取
         new Test15().test();
 
@@ -67,8 +65,8 @@ public class Test {
         new Test23().test();
 
         //测试数组作为参数
-        new Test24().test(new int[20240320], new long[5]);
-        new Test25().test(new int[]{0, 20240320}, new int[]{0, 0, 5});
+        new Test24().test(new int[2025], new long[5]);
+        new Test25().test(new int[]{0, 2025}, new int[]{0, 0, 5});
 
         // 减法
         new Test26().test(Result.SUCCESS, 0);
@@ -76,12 +74,10 @@ public class Test {
         //测试二维数组作为参数
         new Test27().test(new int[100][100], new int[50][50]);
         new Test28().test(new int[100][100], new int[50][50]);
-        new Test29().test(new int[][]{{1}}, new int[][]{{2}});
 
+        new Test29().test(new int[][]{{1}}, new int[][]{{2}});
         //普通继承
         new Test31().test();
-
-        /*
         // 先实现接口后继承
         new Test33().test(20240320, 5);
 
@@ -97,7 +93,7 @@ public class Test {
 
         // 力扣 第31 题
         new LeetCode_31().test();
-
+/*
         //创建String 对象
         new Test37().test();
         new Test39().test();

@@ -86,8 +86,8 @@ pub fn anewarray(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mu
             StackFrameValue::U32(l) => len = l,
             _ => panic!(),
         }
-        let this_class = &metaspace.classes[frame.class];
-        let index = u8s_to_u16(&frame.code[frame.pc + 1..frame.pc + 3]);
+        let this_class: &crate::classfile::class::Class = &metaspace.classes[frame.class];
+        let index: u16 = u8s_to_u16(&frame.code[frame.pc + 1..frame.pc + 3]);
         let class_constant = this_class.constant_pool.get(&index).unwrap();
         match class_constant {
             ConstantPoolInfo::Class(name_index) => {
@@ -101,7 +101,15 @@ pub fn anewarray(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mu
             _ => panic!("class constant not found"),
         }
     };
-    let class_id = class_loader::find_class(&class_name, vm_stack, heap, metaspace).id;
+
+    let class_id = {
+        if metaspace.class_map.contains_key(&class_name){
+            class_loader::find_class(&class_name, vm_stack, heap, metaspace).id
+        }else{
+            0
+        }
+    };
+    //let class_id = class_loader::find_class(&class_name, vm_stack, heap, metaspace).id;
     //12 = 引用类型数组
     let reference = heap.create_reference_array(class_id as u32, len, 0,12);
     vm_stack[frame_index]
@@ -282,7 +290,10 @@ fn xastore(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, _metaspace: &mut Met
                 StackFrameValue::CHARACTER(val) => {
                     heap.put_array_element(reference_id, index, val as u64);
                 }
-                _ => panic!("wrong value type"),
+                StackFrameValue::Reference(val) =>{
+                    heap.put_array_element(reference_id, index, val as u64);
+                }
+                _=> panic!("")
             }
         }
         _ => panic!(),

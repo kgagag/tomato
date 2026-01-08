@@ -23,10 +23,10 @@ pub fn _new(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Met
     let classfile_pool_index = u8s_to_u16(
         &vm_stack[frame_index].code[(vm_stack[frame_index].pc + 1)..(vm_stack[frame_index].pc + 3)],
     );
-    let classfile_pool_class = &this_class.constant_pool.get(&classfile_pool_index).unwrap();
+    let classfile_pool_class = &this_class.constant_pool[classfile_pool_index as usize];
     let mut target_class_name = match classfile_pool_class {
         ConstantPoolInfo::Class(name_index) => {
-            let class_name_utf8 = &this_class.constant_pool.get(name_index).unwrap();
+            let class_name_utf8 = &this_class.constant_pool[*name_index as usize];
             match class_name_utf8 {
                 ConstantPoolInfo::Utf8(class_name) => class_name.clone(),
                 _ => panic!("wrong class data"),

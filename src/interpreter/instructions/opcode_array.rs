@@ -88,11 +88,11 @@ pub fn anewarray(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mu
         }
         let this_class: &crate::classfile::class::Class = &metaspace.classes[frame.class];
         let index: u16 = u8s_to_u16(&frame.code[frame.pc + 1..frame.pc + 3]);
-        let class_constant = this_class.constant_pool.get(&index).unwrap();
+        let class_constant = &this_class.constant_pool[index as usize];
         match class_constant {
             ConstantPoolInfo::Class(name_index) => {
                 let class_utf8_attr: &ConstantPoolInfo =
-                    this_class.constant_pool.get(&name_index).unwrap();
+                    &this_class.constant_pool[*name_index as usize];
                 match class_utf8_attr {
                     ConstantPoolInfo::Utf8(class_name_str) => (class_name_str.clone(), len),
                     _ => panic!("class constant not found"),
@@ -124,10 +124,10 @@ pub fn multianewarray(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace
         let frame = &mut vm_stack[frame_index];
         let index = u8s_to_u16(&frame.code[frame.pc + 1..frame.pc + 3]);
         let this_class = &metaspace.classes[frame.class];
-        let attr = this_class.constant_pool.get(&index).unwrap();
+        let attr = &this_class.constant_pool[index as usize];
         match attr {
             ConstantPoolInfo::Class(i) => {
-                let class_utf8_attr: &ConstantPoolInfo = this_class.constant_pool.get(&i).unwrap();
+                let class_utf8_attr: &ConstantPoolInfo = &this_class.constant_pool[*i as usize];
                 match class_utf8_attr {
                     ConstantPoolInfo::Utf8(class_name_str) => {
                         let (atype, array_class_name) =

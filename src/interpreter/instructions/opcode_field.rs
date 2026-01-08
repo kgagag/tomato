@@ -21,7 +21,7 @@ pub fn putfield(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut
     let frame = &mut vm_stack[frame_index];
     let index: u16 = u16::from_be_bytes([frame.code[frame.pc + 1], frame.code[frame.pc + 2]]);
     let this_class = &metaspace.classes[frame.class];
-    let field_ref: &ConstantPoolInfo = this_class.constant_pool.get(&(index)).unwrap();
+    let field_ref: &ConstantPoolInfo = &this_class.constant_pool[index as usize];
     let value: StackFrameValue = frame.op_stack.pop().unwrap();
     let stack_frame_value: StackFrameValue = frame.op_stack.pop().unwrap();
     let object_id = {
@@ -34,11 +34,11 @@ pub fn putfield(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut
         ConstantPoolInfo::Fieldref(_class_index, name_and_type_index) => {
             let class_name = {
                 let class_constant: &ConstantPoolInfo =
-                    this_class.constant_pool.get(_class_index).unwrap();
+                    &this_class.constant_pool[*_class_index as usize];
                 match class_constant {
                     ConstantPoolInfo::Class(name_index) => {
                         let class_name_utf8: &ConstantPoolInfo =
-                            this_class.constant_pool.get(name_index).unwrap();
+                            &this_class.constant_pool[*name_index as usize];
                         match class_name_utf8 {
                             ConstantPoolInfo::Utf8(class_name) => {
                                 //需要找到对象id , 参数index , offset
@@ -54,11 +54,11 @@ pub fn putfield(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut
             };
             let field_name = {
                 let name_and_type: &ConstantPoolInfo =
-                    this_class.constant_pool.get(name_and_type_index).unwrap();
+                    &this_class.constant_pool[*name_and_type_index as usize];
                 match name_and_type {
                     ConstantPoolInfo::NameAndType(name_index, _descritor_index) => {
                         let field_name_utf8: &ConstantPoolInfo =
-                            this_class.constant_pool.get(name_index).unwrap();
+                            &this_class.constant_pool[*name_index as usize];
                         match field_name_utf8 {
                             ConstantPoolInfo::Utf8(field_name) => {
                                 //需要找到对象id , 参数index , offset
@@ -122,7 +122,7 @@ pub fn getfield(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut
     let frame = &mut vm_stack[frame_index];
     let index: u16 = u16::from_be_bytes([frame.code[frame.pc + 1], frame.code[frame.pc + 2]]);
     let this_class = &mut metaspace.classes[frame.class];
-    let field_ref: &ConstantPoolInfo = this_class.constant_pool.get(&(index)).unwrap();
+    let field_ref: &ConstantPoolInfo = &this_class.constant_pool[index as usize];
     let stack_frame_value: StackFrameValue = frame.op_stack.pop().unwrap();
     let object_id = match stack_frame_value {
         StackFrameValue::Reference(id) => id,
@@ -130,15 +130,15 @@ pub fn getfield(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut
     };
     let (class_name, field_name) = match field_ref {
         ConstantPoolInfo::Fieldref(class_index, name_and_type_index) => {
-            let class_ref: &ConstantPoolInfo = this_class.constant_pool.get(class_index).unwrap();
+            let class_ref: &ConstantPoolInfo = &this_class.constant_pool[*class_index as usize];
             let name_and_type: &ConstantPoolInfo =
-                this_class.constant_pool.get(name_and_type_index).unwrap();
+                &this_class.constant_pool[*name_and_type_index as usize];
 
             let class_name = {
                 match class_ref {
                     ConstantPoolInfo::Class(class_name_index) => {
                         let class_name_utf8: &ConstantPoolInfo =
-                            this_class.constant_pool.get(class_name_index).unwrap();
+                            &this_class.constant_pool[*class_name_index as usize];
                         match class_name_utf8 {
                             ConstantPoolInfo::Utf8(class_name) => class_name,
                             _ => panic!(),
@@ -152,7 +152,7 @@ pub fn getfield(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut
                 match name_and_type {
                     ConstantPoolInfo::NameAndType(name_index, _descritor_index) => {
                         let field_name_utf8: &ConstantPoolInfo =
-                            this_class.constant_pool.get(name_index).unwrap();
+                            &this_class.constant_pool[*name_index as usize];
                         match field_name_utf8 {
                             ConstantPoolInfo::Utf8(field_name) => field_name,
                             _ => panic!(),

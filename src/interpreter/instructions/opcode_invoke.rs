@@ -20,21 +20,20 @@ pub fn invokespecial(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace:
     let frame_index = vm_stack.len() - 1;
     let (target_class_name, method_name, descriptor) = {
         let this_class = &metaspace.classes[vm_stack[frame_index].class];
-        let (class_index, name_and_type_index) = match this_class.constant_pool.get(&u8s_to_u16(
+        let (class_index, name_and_type_index) = match &this_class.constant_pool[u8s_to_u16(
             &vm_stack[frame_index].code
                 [(vm_stack[frame_index].pc + 1)..(vm_stack[frame_index].pc + 3)],
-        )) {
-            Some(ConstantPoolInfo::Methodref(class_index, name_and_type_index)) => {
+        ) as usize]{
+            ConstantPoolInfo::Methodref(class_index, name_and_type_index) => {
                 (class_index, name_and_type_index)
             }
             _ => panic!(),
         };
         // 通过链式调用减少嵌套
-        let target_class_name = this_class
-            .constant_pool
-            .get(class_index)
+        let target_class_name = Some(&this_class
+            .constant_pool[*class_index as usize])
             .and_then(|cp_info| match cp_info {
-                ConstantPoolInfo::Class(name_index) => this_class.constant_pool.get(name_index),
+                ConstantPoolInfo::Class(name_index) => Some(&this_class.constant_pool[*name_index as usize]),
                 _ => None,
             })
             .and_then(|name_info| match name_info {
@@ -43,14 +42,14 @@ pub fn invokespecial(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace:
             });
 
         // 继续减少嵌套并简化逻辑
-        let (method_name, descriptor) = match this_class.constant_pool.get(name_and_type_index) {
-            Some(ConstantPoolInfo::NameAndType(name_index, descriptor_index)) => {
-                let method_name = match this_class.constant_pool.get(name_index) {
-                    Some(ConstantPoolInfo::Utf8(name)) => name,
+        let (method_name, descriptor) = match &this_class.constant_pool[*name_and_type_index as usize] {
+            ConstantPoolInfo::NameAndType(name_index, descriptor_index)=> {
+                let method_name = match &this_class.constant_pool[*name_index as usize] {
+                    ConstantPoolInfo::Utf8(name) => name,
                     _ => panic!(),
                 };
-                let descriptor = match this_class.constant_pool.get(descriptor_index) {
-                    Some(ConstantPoolInfo::Utf8(desc)) => desc,
+                let descriptor = match &this_class.constant_pool[*descriptor_index as usize] {
+                    ConstantPoolInfo::Utf8(desc) => desc,
                     _ => panic!(),
                 };
                 (method_name, descriptor)
@@ -103,25 +102,25 @@ pub fn invokeinterface(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspac
 
         let (method_name, descriptor) = {
             let this_class: &mut class::Class = &mut metaspace.classes[frame.class];
-            let (_class_index, name_and_type_index) = match this_class
+            let (_class_index, name_and_type_index) = match &this_class
                 .constant_pool
-                .get(&u8s_to_u16(&frame.code[(frame.pc + 1)..(frame.pc + 3)]))
+                [u8s_to_u16(&frame.code[(frame.pc + 1)..(frame.pc + 3)]) as usize]
             {
-                Some(ConstantPoolInfo::InterfaceMethodref(class_index, name_and_type_index)) => {
+                ConstantPoolInfo::InterfaceMethodref(class_index, name_and_type_index) => {
                     (class_index, name_and_type_index)
                 }
                 _ => panic!(),
             };
 
-            let (method_name, descriptor) = match this_class.constant_pool.get(name_and_type_index)
+            let (method_name, descriptor) = match &this_class.constant_pool[*name_and_type_index as usize]
             {
-                Some(ConstantPoolInfo::NameAndType(name_index, descriptor_index)) => {
-                    let method_name = match this_class.constant_pool.get(name_index) {
-                        Some(ConstantPoolInfo::Utf8(name)) => name,
+                ConstantPoolInfo::NameAndType(name_index, descriptor_index) => {
+                    let method_name = match &this_class.constant_pool[*name_index as usize] {
+                        ConstantPoolInfo::Utf8(name) => name,
                         _ => panic!(),
                     };
-                    let descriptor = match this_class.constant_pool.get(descriptor_index) {
-                        Some(ConstantPoolInfo::Utf8(desc)) => desc,
+                    let descriptor = match &this_class.constant_pool[*descriptor_index as usize] {
+                        ConstantPoolInfo::Utf8(desc) => desc,
                         _ => panic!(),
                     };
                     (method_name, descriptor)
@@ -213,22 +212,22 @@ pub fn invokevirtual(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace:
     let frame_index = vm_stack.len() - 1;
     let (target_class_name, method_name, descriptor) = {
         let this_class = &metaspace.classes[vm_stack[frame_index].class];
-        let (class_index, name_and_type_index) = match this_class.constant_pool.get(&u8s_to_u16(
+        let (class_index, name_and_type_index) = match &this_class.constant_pool[u8s_to_u16(
             &vm_stack[frame_index].code
                 [(vm_stack[frame_index].pc + 1)..(vm_stack[frame_index].pc + 3)],
-        )) {
-            Some(ConstantPoolInfo::Methodref(class_index, name_and_type_index)) => {
+        ) as usize] {
+            ConstantPoolInfo::Methodref(class_index, name_and_type_index) => {
                 (class_index, name_and_type_index)
             }
             _ => panic!(),
         };
 
         // 通过链式调用减少嵌套
-        let target_class_name = this_class
+        let target_class_name = Some(&this_class
             .constant_pool
-            .get(class_index)
+            [*class_index as usize])
             .and_then(|cp_info| match cp_info {
-                ConstantPoolInfo::Class(name_index) => this_class.constant_pool.get(name_index),
+                ConstantPoolInfo::Class(name_index) => Some(&this_class.constant_pool[*name_index as usize]),
                 _ => None,
             })
             .and_then(|name_info| match name_info {
@@ -237,14 +236,14 @@ pub fn invokevirtual(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace:
             });
 
         // 继续减少嵌套并简化逻辑
-        let (method_name, descriptor) = match this_class.constant_pool.get(name_and_type_index) {
-            Some(ConstantPoolInfo::NameAndType(name_index, descriptor_index)) => {
-                let method_name = match this_class.constant_pool.get(name_index) {
-                    Some(ConstantPoolInfo::Utf8(name)) => name,
+        let (method_name, descriptor) = match &this_class.constant_pool[*name_and_type_index as usize] {
+            ConstantPoolInfo::NameAndType(name_index, descriptor_index) => {
+                let method_name = match &this_class.constant_pool[*name_index as usize] {
+                    ConstantPoolInfo::Utf8(name) => name,
                     _ => panic!(),
                 };
-                let descriptor = match this_class.constant_pool.get(descriptor_index) {
-                    Some(ConstantPoolInfo::Utf8(desc)) => desc,
+                let descriptor = match &this_class.constant_pool[*descriptor_index as usize] {
+                    ConstantPoolInfo::Utf8(desc)=> desc,
                     _ => panic!(),
                 };
                 //metaspace.get_method_from_root(class_name, method_name, descriptor)
@@ -285,22 +284,22 @@ pub fn invokestatic(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: 
     let frame_index = vm_stack.len() - 1;
     let (target_class_name, method_name, descriptor) = {
         let this_class = &metaspace.classes[vm_stack[frame_index].class];
-        let (class_index, name_and_type_index) = match this_class.constant_pool.get(&u8s_to_u16(
+        let (class_index, name_and_type_index) = match &this_class.constant_pool[u8s_to_u16(
             &vm_stack[frame_index].code
                 [(vm_stack[frame_index].pc + 1)..(vm_stack[frame_index].pc + 3)],
-        )) {
-            Some(ConstantPoolInfo::Methodref(class_index, name_and_type_index)) => {
+        ) as usize] {
+           ConstantPoolInfo::Methodref(class_index, name_and_type_index) => {
                 (class_index, name_and_type_index)
             }
             _ => panic!(),
         };
 
         // 通过链式调用减少嵌套
-        let target_class_name = this_class
+        let target_class_name = Some(&this_class
             .constant_pool
-            .get(class_index)
+            [*class_index as usize])
             .and_then(|cp_info| match cp_info {
-                ConstantPoolInfo::Class(name_index) => this_class.constant_pool.get(name_index),
+                ConstantPoolInfo::Class(name_index) => Some(&this_class.constant_pool[*name_index as usize]),
                 _ => None,
             })
             .and_then(|name_info| match name_info {
@@ -309,14 +308,14 @@ pub fn invokestatic(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: 
             });
 
         // 继续减少嵌套并简化逻辑
-        let (method_name, descriptor) = match this_class.constant_pool.get(name_and_type_index) {
-            Some(ConstantPoolInfo::NameAndType(name_index, descriptor_index)) => {
-                let method_name = match this_class.constant_pool.get(name_index) {
-                    Some(ConstantPoolInfo::Utf8(name)) => name,
+        let (method_name, descriptor) = match &this_class.constant_pool[*name_and_type_index as usize] {
+            ConstantPoolInfo::NameAndType(name_index, descriptor_index) => {
+                let method_name = match &this_class.constant_pool[*name_index as usize] {
+                    ConstantPoolInfo::Utf8(name) => name,
                     _ => panic!(),
                 };
-                let descriptor = match this_class.constant_pool.get(descriptor_index) {
-                    Some(ConstantPoolInfo::Utf8(desc)) => desc,
+                let descriptor = match &this_class.constant_pool[*descriptor_index as usize] {
+                    ConstantPoolInfo::Utf8(desc) => desc,
                     _ => panic!(),
                 };
                 //metaspace.get_method_from_root(class_name, method_name, descriptor)

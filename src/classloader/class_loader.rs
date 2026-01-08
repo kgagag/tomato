@@ -392,15 +392,15 @@ pub fn load_class(
     class.attributes_count = get_attribute_count(&mut cursor);
     class.attribute_info = get_attribute(&class.constant_pool, class.attributes_count, &mut cursor);
     if class.super_class != 0x00 {
-        let class_constant = class.constant_pool.get(&class.super_class).unwrap();
+        let class_constant = &class.constant_pool[class.super_class as usize];
         match class_constant {
             ConstantPoolInfo::Class(index) => {
-                let name_constant = class.constant_pool.get(index).unwrap();
+                let name_constant = & class.constant_pool[*index as usize];
                 match name_constant {
                     ConstantPoolInfo::Utf8(class_name) => {
                         let super_class_op = metaspace.class_map.get(class_name);
                         if super_class_op.is_none() {
-                            let super_class = find_class(class_name, vm_stack, heap, metaspace);
+                            let super_class = find_class(&class_name, vm_stack, heap, metaspace);
                             class.super_class_id = super_class.id;
                             class.super_class_name = super_class.class_name.clone();
                             for (key, value) in &super_class.field_info {
@@ -439,7 +439,7 @@ pub fn init(class_name: &String, method_name: String, heap: &mut Heap, metaspace
     for i in 0..*&class.method_info.len() {
         let method_info = &class.method_info[i];
         //let methond_index = (method_info.name_index as usize) - 1;
-        let u8_vec = class.constant_pool.get(&method_info.name_index).unwrap();
+        let u8_vec = &class.constant_pool[method_info.name_index as usize];
         match u8_vec {
             ConstantPoolInfo::Utf8(name) => {
                 if name == &method_name {
@@ -460,12 +460,12 @@ pub fn init(class_name: &String, method_name: String, heap: &mut Heap, metaspace
 }
 
 pub fn parse_method_field(class: &mut Class, method_info_map: &mut HashMap<String, MethodInfo>) {
-    let this_class = class.constant_pool.get(&class.this_class).unwrap();
+    let this_class = &class.constant_pool[class.this_class as usize];
     // 设置 class_name
     match this_class {
         ConstantPoolInfo::Class(name_index) => {
             //info!("name_index:{:?}", name_index);
-            let class_name = class.constant_pool.get(name_index).unwrap();
+            let class_name =&class.constant_pool[*name_index as usize];
             //info!("class_name:{:?}", class_name);
             match class_name {
                 ConstantPoolInfo::Utf8(name) => {
@@ -480,13 +480,11 @@ pub fn parse_method_field(class: &mut Class, method_info_map: &mut HashMap<Strin
     for i in 0..class.methods_count {
         let method_info = &mut class.method_info[i as usize];
         method_info.class_name = (class.class_name).clone();
-        let descriptor = class
-            .constant_pool
-            .get(&method_info.descriptor_index)
-            .unwrap();
+        let descriptor = &class
+            .constant_pool[method_info.descriptor_index as usize];
         match descriptor {
             ConstantPoolInfo::Utf8(str) => {
-                let method_name = class.constant_pool.get(&method_info.name_index).unwrap();
+                let method_name = &class.constant_pool[method_info.name_index as usize];
                 match method_name {
                     ConstantPoolInfo::Utf8(name) => {
                         method_info.method_name = name.clone();
@@ -795,7 +793,7 @@ pub fn get_field_count(cursor: &mut Cursor<Vec<u8>>) -> u16 {
 }
 
 pub fn get_field(
-    constant_pool: &HashMap<u16, ConstantPoolInfo>,
+    constant_pool: &Vec<ConstantPoolInfo>,
     cnt: u16,
     cursor: &mut Cursor<Vec<u8>>,
 ) -> HashMap<String, FieldInfo> {
@@ -814,14 +812,14 @@ pub fn get_field(
             field_index: 0,
             offset: 0,
         };
-        let name_utf8 = constant_pool.get(&f.name_index).unwrap();
+        let name_utf8 = &constant_pool[f.name_index as usize];
         let field_name = match name_utf8 {
             ConstantPoolInfo::Utf8(name) => name.clone(),
             _ => panic!(),
         };
         f.field_name = field_name;
 
-        let descriptor = constant_pool.get(&f.descriptor_index).unwrap();
+        let descriptor = &constant_pool[f.descriptor_index as usize];
         //info!("{}===={:?}=====",class.class_name,descriptor);
         match descriptor {
             ConstantPoolInfo::Utf8(str) => {
@@ -842,7 +840,7 @@ pub fn get_method_count(cursor: &mut Cursor<Vec<u8>>) -> u16 {
 }
 
 pub fn get_method(
-    constant_pool: &HashMap<u16, ConstantPoolInfo>,
+    constant_pool: &Vec<ConstantPoolInfo>,
     cnt: u16,
     cursor: &mut Cursor<Vec<u8>>,
 ) -> Vec<MethodInfo> {
@@ -871,7 +869,7 @@ pub fn get_attribute_count(cursor: &mut Cursor<Vec<u8>>) -> u16 {
 }
 
 pub fn get_attribute(
-    constant_pool: &HashMap<u16, ConstantPoolInfo>,
+    constant_pool: &Vec<ConstantPoolInfo>,
     cnt: u16,
     cursor: &mut Cursor<Vec<u8>>,
 ) -> Vec<AttributeInfo> {
@@ -884,7 +882,7 @@ pub fn get_attribute(
             attr_info.push(cursor.read_u8().unwrap());
         }
         let mut index: usize = 0;
-        let cons = constant_pool.get(&attribute_name_index).unwrap();
+        let cons = &constant_pool[attribute_name_index as usize];
         match cons {
             ConstantPoolInfo::Utf8(attr_name) => {
                 if "Code" == attr_name {
@@ -929,15 +927,16 @@ pub fn get_attribute(
 }
 
 fn read_constant_pool_info<R: Read>(
-    mut constant_pool_count: u16,
+    constant_pool_count: u16,
     reader: &mut R,
-) -> HashMap<u16, ConstantPoolInfo> {
-    let mut constant_pool = HashMap::new();
-
-    let mut index: u16 = 1;
-    while constant_pool_count - 1 > 0 {
+) -> Vec<ConstantPoolInfo> {
+    let mut constant_pool = Vec::new();
+    constant_pool.push(ConstantPoolInfo::Utf8(String::from("")));
+    let mut index = 1;
+    while index <= constant_pool_count - 1 {
         let tag = reader.read_u8().expect("Failed to read constant tag");
         // info!("constant_pool_tag:{:?}", tag);
+        //info!("====={},{}====",index,tag);
         match tag {
             1 => {
                 let length = reader
@@ -948,12 +947,11 @@ fn read_constant_pool_info<R: Read>(
                     .read_exact(&mut data)
                     .expect("Failed to read UTF-8 data");
                 let utf8_string = String::from_utf8(data).expect("Invalid UTF-8 string");
-                constant_pool.insert(index, ConstantPoolInfo::Utf8(utf8_string));
+                constant_pool.push(ConstantPoolInfo::Utf8(utf8_string));
                 index += 1;
             }
             3 => {
-                constant_pool.insert(
-                    index,
+                constant_pool.push(
                     ConstantPoolInfo::Integer(
                         reader
                             .read_i32::<BigEndian>()
@@ -963,8 +961,7 @@ fn read_constant_pool_info<R: Read>(
                 index += 1;
             }
             4 => {
-                constant_pool.insert(
-                    index,
+                constant_pool.push(
                     ConstantPoolInfo::Float(
                         reader
                             .read_f32::<BigEndian>()
@@ -974,30 +971,31 @@ fn read_constant_pool_info<R: Read>(
                 index += 1;
             }
             5 => {
-                constant_pool.insert(
-                    index,
+                constant_pool.push(
                     ConstantPoolInfo::Long(
                         reader.read_i64::<BigEndian>().expect("Failed to read long"),
                     ),
                 );
-                constant_pool_count -= 1;
+                 constant_pool.push(
+                    ConstantPoolInfo::Integer(0),
+                );
                 index += 2;
             }
             6 => {
-                constant_pool.insert(
-                    index,
+                constant_pool.push(
                     ConstantPoolInfo::Double(
                         reader
                             .read_f64::<BigEndian>()
                             .expect("Failed to read double"),
                     ),
                 );
-                constant_pool_count -= 1;
+                 constant_pool.push(
+                    ConstantPoolInfo::Integer(0),
+                );
                 index += 2;
             }
             7 => {
-                constant_pool.insert(
-                    index,
+                constant_pool.push(
                     ConstantPoolInfo::Class(
                         reader
                             .read_u16::<BigEndian>()
@@ -1007,15 +1005,14 @@ fn read_constant_pool_info<R: Read>(
                 index += 1;
             }
             8 => {
-                constant_pool.insert(
-                    index,
+                constant_pool.push(
                     ConstantPoolInfo::String(
                         reader
                             .read_u16::<BigEndian>()
                             .expect("Failed to read string index"),
                     ),
                 );
-                index += 1;
+                 index += 1;
             }
             9 => {
                 let class_index = reader
@@ -1024,11 +1021,10 @@ fn read_constant_pool_info<R: Read>(
                 let name_and_type_index = reader
                     .read_u16::<BigEndian>()
                     .expect("Failed to read fieldref name and type index");
-                constant_pool.insert(
-                    index,
+                constant_pool.push(
                     ConstantPoolInfo::Fieldref(class_index, name_and_type_index),
                 );
-                index += 1;
+                 index += 1;
             }
             10 => {
                 let class_index = reader
@@ -1037,11 +1033,10 @@ fn read_constant_pool_info<R: Read>(
                 let name_and_type_index = reader
                     .read_u16::<BigEndian>()
                     .expect("Failed to read methodref name and type index");
-                constant_pool.insert(
-                    index,
+                constant_pool.push(
                     ConstantPoolInfo::Methodref(class_index, name_and_type_index),
                 );
-                index += 1;
+                 index += 1;
             }
             11 => {
                 let class_index = reader
@@ -1050,11 +1045,10 @@ fn read_constant_pool_info<R: Read>(
                 let name_and_type_index = reader
                     .read_u16::<BigEndian>()
                     .expect("Failed to read interface methodref name and type index");
-                constant_pool.insert(
-                    index,
+                constant_pool.push(
                     ConstantPoolInfo::InterfaceMethodref(class_index, name_and_type_index),
                 );
-                index += 1;
+                 index += 1;
             }
             12 => {
                 let name_index = reader
@@ -1063,11 +1057,10 @@ fn read_constant_pool_info<R: Read>(
                 let descriptor_index = reader
                     .read_u16::<BigEndian>()
                     .expect("Failed to read name and type descriptor index");
-                constant_pool.insert(
-                    index,
+                constant_pool.push(
                     ConstantPoolInfo::NameAndType(name_index, descriptor_index),
                 );
-                index += 1;
+                 index += 1;
             }
             15 => {
                 let reference_kind = reader
@@ -1076,22 +1069,20 @@ fn read_constant_pool_info<R: Read>(
                 let reference_index = reader
                     .read_u16::<BigEndian>()
                     .expect("Failed to read method handle reference index");
-                constant_pool.insert(
-                    index,
+                constant_pool.push(
                     ConstantPoolInfo::MethodHandle(reference_kind, reference_index),
                 );
-                index += 1;
+                 index += 1;
             }
             16 => {
-                constant_pool.insert(
-                    index,
+                constant_pool.push(
                     ConstantPoolInfo::MethodType(
                         reader
                             .read_u16::<BigEndian>()
                             .expect("Failed to read method type descriptor index"),
                     ),
                 );
-                index += 1;
+                 index += 1;
             }
             18 => {
                 let bootstrap_method_attr_index = reader
@@ -1100,36 +1091,33 @@ fn read_constant_pool_info<R: Read>(
                 let name_and_type_index = reader
                     .read_u16::<BigEndian>()
                     .expect("Failed to read invoke dynamic name and type index");
-                constant_pool.insert(
-                    index,
+                constant_pool.push(
                     ConstantPoolInfo::InvokeDynamic(
                         bootstrap_method_attr_index,
                         name_and_type_index,
                     ),
                 );
-                index += 1;
+                 index += 1;
             }
             19 => {
-                constant_pool.insert(
-                    index,
+                constant_pool.push(
                     ConstantPoolInfo::Module(
                         reader
                             .read_u16::<BigEndian>()
                             .expect("Failed to read module index"),
                     ),
                 );
-                index += 1;
+                 index += 1;
             }
             20 => {
-                constant_pool.insert(
-                    index,
+                constant_pool.push(
                     ConstantPoolInfo::Package(
                         reader
                             .read_u16::<BigEndian>()
                             .expect("Failed to read package index"),
                     ),
                 );
-                index += 1;
+                 index += 1;
             }
             21 => {
                 let method_handle_reference_kind = reader
@@ -1138,14 +1126,13 @@ fn read_constant_pool_info<R: Read>(
                 let method_handle_reference_index = reader
                     .read_u16::<BigEndian>()
                     .expect("Failed to read method handle reference index");
-                constant_pool.insert(
-                    index,
+                constant_pool.push(
                     ConstantPoolInfo::MethodPointer(
                         method_handle_reference_kind,
                         method_handle_reference_index,
                     ),
                 );
-                index += 1;
+                 index += 1;
             }
             22 => {
                 let invoke_static_dynamic_name_and_type_index = reader
@@ -1155,14 +1142,13 @@ fn read_constant_pool_info<R: Read>(
                     reader.read_u16::<BigEndian>().expect(
                         "Failed to read invoke static dynamic bootstrap method attribute index",
                     );
-                constant_pool.insert(
-                    index,
+                constant_pool.push(
                     ConstantPoolInfo::InvokeStaticDynamic(
                         invoke_static_dynamic_bootstrap_method_attr_index,
                         invoke_static_dynamic_name_and_type_index,
                     ),
                 );
-                index += 1;
+                 index += 1;
             }
             23 => {
                 let bootstrap_method_attr_index = reader
@@ -1171,30 +1157,28 @@ fn read_constant_pool_info<R: Read>(
                 let name_and_type_index = reader
                     .read_u16::<BigEndian>()
                     .expect("Failed to read bootstrap method name and type index");
-                constant_pool.insert(
-                    index,
+                constant_pool.push(
                     ConstantPoolInfo::BootstrapMethod(
                         bootstrap_method_attr_index,
                         name_and_type_index,
                     ),
                 );
-                index += 1;
+                 index += 1;
             }
             24 => {
                 let method_type_reference_index = reader
                     .read_u16::<BigEndian>()
                     .expect("Failed to read method type reference index");
-                constant_pool.insert(
-                    index,
+                constant_pool.push(
                     ConstantPoolInfo::MethodTypeReference(method_type_reference_index),
                 );
-                index += 1;
+                 index += 1;
             }
             // 添加更多常量类型的处理
             _ => panic!("Invalid constant pool tag: {}", tag),
         }
         //index += 1;
-        constant_pool_count -= 1;
+       // constant_pool_count -= 1;
     }
 
     constant_pool

@@ -29,11 +29,11 @@ pub fn instanceof(frame: &mut StackFrame) {
     let oprand = u8s_to_u16(&frame.code[(frame.pc + 1)..(frame.pc + 3)]);
     frame.pc += 3;
     let this_class = get_or_load_class(&frame.class_name).clone();
-    let class_ref: &ConstantPoolInfo = this_class.constant_pool.get(&oprand).unwrap();
+    let class_ref: &ConstantPoolInfo = &this_class.constant_pool[oprand as usize];
     match class_ref {
         ConstantPoolInfo::Class(utf8_name_index) => {
             let utfo_ref: &ConstantPoolInfo =
-                this_class.constant_pool.get(&utf8_name_index).unwrap();
+                &this_class.constant_pool[*utf8_name_index as usize];
             match utfo_ref {
                 ConstantPoolInfo::Utf8(name) => {
                     if &target_class_name == name{

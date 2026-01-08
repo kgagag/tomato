@@ -138,22 +138,21 @@ impl StackFrame {
     pub fn get_method_for_invoke(&self) -> Option<MethodInfo> {
         let this_class = get_or_load_class(&self.class_name).clone();
         // 使用 match 代替 if let 以减少嵌套，并处理 unwrap 导致的潜在 panic
-        let (class_index, name_and_type_index) = match this_class
-            .constant_pool
-            .get(&u8s_to_u16(&self.code[(self.pc + 1)..(self.pc + 3)]))
+        let (class_index, name_and_type_index) = match &this_class
+            .constant_pool[u8s_to_u16(&self.code[(self.pc + 1)..(self.pc + 3)]) as usize]
         {
-            Some(ConstantPoolInfo::Methodref(class_index, name_and_type_index)) => {
+            ConstantPoolInfo::Methodref(class_index, name_and_type_index) => {
                 (class_index, name_and_type_index)
             }
             _ => return None,
         };
 
         // 通过链式调用减少嵌套
-        let target_class_name = this_class
+        let target_class_name =Some(&this_class
             .constant_pool
-            .get(class_index)
+            [*class_index as usize])
             .and_then(|cp_info| match cp_info {
-                ConstantPoolInfo::Class(name_index) => this_class.constant_pool.get(name_index),
+                ConstantPoolInfo::Class(name_index) => Some(&this_class.constant_pool[*name_index as usize]),
                 _ => None,
             })
             .and_then(|name_info| match name_info {
@@ -167,14 +166,14 @@ impl StackFrame {
         };
 
         // 继续减少嵌套并简化逻辑
-        let (method_name, descriptor) = match this_class.constant_pool.get(name_and_type_index) {
-            Some(ConstantPoolInfo::NameAndType(name_index, descriptor_index)) => {
-                let method_name = match this_class.constant_pool.get(name_index) {
-                    Some(ConstantPoolInfo::Utf8(name)) => name,
+        let (method_name, descriptor) = match &this_class.constant_pool[*name_and_type_index as usize] {
+            ConstantPoolInfo::NameAndType(name_index, descriptor_index) => {
+                let method_name = match &this_class.constant_pool[*name_index as usize] {
+                    ConstantPoolInfo::Utf8(name) => name,
                     _ => return None,
                 };
-                let descriptor = match this_class.constant_pool.get(descriptor_index) {
-                    Some(ConstantPoolInfo::Utf8(desc)) => desc,
+                let descriptor = match &this_class.constant_pool[*descriptor_index as usize] {
+                    ConstantPoolInfo::Utf8(desc) => desc,
                     _ => return None,
                 };
                 (method_name, descriptor)

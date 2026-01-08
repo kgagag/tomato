@@ -19,32 +19,26 @@ pub fn putstatic(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mu
         frame.pc += 3;
         //let class_name = get_class_name(&frame.class);
         let this_class = &mut metaspace.classes[frame.class];
-        let field_ref = this_class
+        let field_ref = &this_class
             .constant_pool
-            .get(&index)
-            .expect("Field reference not found");
-
+            [index as usize];
         if let ConstantPoolInfo::Fieldref(class_index, name_and_type_index) = field_ref {
-            let class_name_utf8 = match this_class.constant_pool.get(class_index) {
-                Some(ConstantPoolInfo::Class(class_name_index)) => {
-                    this_class.constant_pool.get(class_name_index)
+            let class_name_utf8 = match &this_class.constant_pool[*class_index as usize] {
+                ConstantPoolInfo::Class(class_name_index) => {
+                    &this_class.constant_pool[*class_name_index as usize]
                 }
                 _ => panic!(),
-            }
-            .expect("Class name UTF-8 not found");
+            };
+           
 
             let (class_name, field_name) = {
                 if let ConstantPoolInfo::Utf8(class_name) = class_name_utf8 {
-                    let name_and_type: &ConstantPoolInfo = this_class
-                        .constant_pool
-                        .get(name_and_type_index)
-                        .expect("Name and type not found");
+                    let name_and_type: &ConstantPoolInfo = &this_class
+                        .constant_pool[*name_and_type_index as usize];
                     // let mut target_class = class_loader::find_class(class_name,vm_stack,heap,metaspace);
                     if let ConstantPoolInfo::NameAndType(name_index, _) = name_and_type {
-                        let field_name_utf8 = this_class
-                            .constant_pool
-                            .get(name_index)
-                            .expect("Field name UTF-8 not found");
+                        let field_name_utf8 = &this_class
+                            .constant_pool[*name_index as usize];
                         if let ConstantPoolInfo::Utf8(field_name) = field_name_utf8 {
                             (class_name, field_name)
                         } else {
@@ -76,29 +70,21 @@ pub fn getstatic(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mu
         let index: u16 = u16::from_be_bytes([frame.code[frame.pc + 1], frame.code[frame.pc + 2]]);
         frame.pc += 3;
         let this_class = &metaspace.classes[frame.class];
-        let field_ref = this_class
-            .constant_pool
-            .get(&index)
-            .expect("Field reference not found");
+        let field_ref = &this_class
+            .constant_pool[index as usize];
         if let ConstantPoolInfo::Fieldref(class_index, name_and_type_index) = field_ref {
-            let class_name_utf8 = match this_class.constant_pool.get(class_index) {
-                Some(ConstantPoolInfo::Class(class_name_index)) => {
-                    this_class.constant_pool.get(class_name_index)
+            let class_name_utf8 = match &this_class.constant_pool[*class_index as usize] {
+                ConstantPoolInfo::Class(class_name_index)=> {
+                    &this_class.constant_pool[*class_name_index as usize]
                 }
                 _ => panic!(),
-            }
-            .expect("Class name UTF-8 not found");
-
+            };
             if let ConstantPoolInfo::Utf8(class_name) = class_name_utf8 {
-                let name_and_type = this_class
-                    .constant_pool
-                    .get(name_and_type_index)
-                    .expect("Name and type not found");
+                let name_and_type = &this_class
+                    .constant_pool[*name_and_type_index as usize];
                 if let ConstantPoolInfo::NameAndType(name_index, _) = name_and_type {
-                    let field_name_utf8 = this_class
-                        .constant_pool
-                        .get(name_index)
-                        .expect("Field name UTF-8 not found");
+                    let field_name_utf8 = &this_class
+                        .constant_pool[*name_index as usize];
                     if let ConstantPoolInfo::Utf8(field_name) = field_name_utf8 {
                         (class_name.clone(), field_name.clone())
                     } else {

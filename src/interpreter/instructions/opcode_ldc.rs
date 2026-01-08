@@ -26,12 +26,12 @@ pub fn ldc(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Meta
         let frame = &mut vm_stack[frame_index];
         let index = frame.code[frame.pc + 1];
         let this_class = &mut metaspace.classes[frame.class];
-        let constant_pool_data = this_class.constant_pool.get(&(index as u16)).unwrap();
+        let constant_pool_data = &this_class.constant_pool[index as usize];
         match constant_pool_data {
             ConstantPoolInfo::Float(f) => (Some(f.clone()), None, None, None),
             ConstantPoolInfo::Integer(i) => (None, Some(i.clone()), None, None),
             ConstantPoolInfo::Class(class_index) => {
-                let constant_utf8_class = this_class.constant_pool.get(class_index).unwrap();
+                let constant_utf8_class = &this_class.constant_pool[*class_index as usize];
                 match constant_utf8_class {
                     ConstantPoolInfo::Utf8(class_name) => {
                         (None, None, Some(class_name.clone()), None)
@@ -40,7 +40,7 @@ pub fn ldc(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Meta
                 }
             }
             ConstantPoolInfo::String(index) => {
-                let utf8_constant = this_class.constant_pool.get(index).unwrap();
+                let utf8_constant = &this_class.constant_pool[*index as usize];
                 match utf8_constant {
                     ConstantPoolInfo::Utf8(str) => (None, None, None, Some(str.clone())),
                     _ => panic!(),
@@ -87,7 +87,7 @@ pub fn ldc2_w(vm_stack: &mut Vec<StackFrame>,heap:&mut Heap,metaspace: &mut Meta
     let index = u8s_to_u16(&vm_stack[frame_index].code[vm_stack[frame_index].pc + 1..vm_stack[frame_index].pc + 3]);
     let class_name =vm_stack[frame_index].class_name.clone();
     let this_class = class_loader::find_class(&class_name,vm_stack,heap,metaspace);
-    let constant_pool_data = this_class.constant_pool.get(&index).unwrap();
+    let constant_pool_data = &this_class.constant_pool[index as usize];
     match constant_pool_data {
         ConstantPoolInfo::Long(l) => {
             vm_stack[frame_index].op_stack.push(StackFrameValue::Long(*l));

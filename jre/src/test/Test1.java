@@ -16,7 +16,9 @@ public class Test1 {
     }
 
     public static void main(String[] args) {
+        long t1 = System.nanoTime();
         Test1 test1 = new Test1();
         test1.test();
+        System.out.println(System.nanoTime() - t1);
     }
 }

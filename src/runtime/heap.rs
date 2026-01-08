@@ -145,7 +145,7 @@ impl Heap {
                 }
                 DataType::Reference(id) => {
                     // 修正：使用正确的格式化语法
-                    info!("Reference id: {}", id);
+                    //info!("Reference id: {}", id);
                     size += 8;
                 }
                 DataType::Short => {

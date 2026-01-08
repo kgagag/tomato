@@ -11,7 +11,7 @@ public class Test {
         //long t1 = System.currentTimeMillis();
         //  两个int相加
         new Test1().test();
-
+/*
         // 两个 float 相加
         new Test2().test();
         //  两个高精度 double 相加
@@ -93,7 +93,7 @@ public class Test {
 
         // 力扣 第31 题
         new LeetCode_31().test();
-/*
+
         //创建String 对象
         new Test37().test();
         new Test39().test();

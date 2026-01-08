@@ -57,11 +57,14 @@ pub mod op_code {
 
 
     pub fn do_opcode(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Metaspace) {
+        //let mut map = HashMap::new();
         while !vm_stack.is_empty()
         {
-            //let start = Instant::now();
+            let start = Instant::now();
+
             //let code = vm_stack.last().unwrap().code[vm_stack.last().unwrap().pc];
-            let frame: &mut StackFrame = vm_stack.last_mut().unwrap();
+            let frame_index = vm_stack.len() - 1;
+            let frame: &mut StackFrame = &mut vm_stack[frame_index];
             let code = frame.code[frame.pc];
 
             //\info!("{:x}--{}--{:?}--{:?}--{:?}--opstack:{:?}--local:{:?}",code,frame.pc,frame.class_name,frame.method_name,frame.descriptor,frame.op_stack,frame.local);
@@ -283,10 +286,14 @@ pub mod op_code {
             //     break;
             // }
 
-            // let duration = start.elapsed();
-            // //转换为纳秒
-            // let nanos = duration.as_nanos();
+             //let duration = start.elapsed();
+            //转换为纳秒
+             //let nanos = duration.as_nanos();
+             //map.insert(code, nanos);
             // info!("{:x}--{}",code,nanos);
         }
+        // for (k,v) in &map{
+        //     info!("{:x}--{}",k,v);
+        // }
     }
 }

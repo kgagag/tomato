@@ -3,7 +3,7 @@ use log::info;
 use std::cell::UnsafeCell;
 use std::collections::HashMap;
 
-use crate::{classfile::class::{AttributeInfo, Class, CodeAttribute, ConstantPoolInfo, MethodInfo}, runtime::runtime_data_area::{VM_STACKS, get_method_from_pool, get_or_load_class}, utils::u8c::u8s_to_u16};
+use crate::{classfile::class::{AttributeInfo, Class, CodeAttribute, ConstantPoolInfo, MethodInfo}, common::op_stack::OpStack, runtime::runtime_data_area::{VM_STACKS, get_method_from_pool, get_or_load_class}, utils::u8c::u8s_to_u16};
 
 use super::{param::DataType, value::{number_to_u32tuple, StackFrameValue}};
 /**
@@ -18,7 +18,7 @@ pub struct StackFrame {
     // //局部变量表
     pub local: Vec<StackFrameValue>,
     // //操作数栈
-    pub op_stack: Vec<StackFrameValue>,
+    pub op_stack : OpStack,
     // //类
     pub class: usize,
 
@@ -28,7 +28,7 @@ pub struct StackFrame {
 
     pub code: Vec<u8>,
 
-    pub code_attr: CodeAttribute,
+    //pub code_attr: CodeAttribute,
 
     //所属虚拟机栈id
     pub vm_stack_id: u32,
@@ -46,7 +46,7 @@ impl StackFrame {
         max_stack: u16,
         max_locals: u16,
         code: Vec<u8>,
-        code_attr: CodeAttribute,
+        //code_attr: CodeAttribute,
         method_name:String,
         descriptor:String,
         class_name:String
@@ -55,11 +55,11 @@ impl StackFrame {
             pc: 0,
             class,
             local: Vec::new(),
-            op_stack: Vec::new(),
+            op_stack: OpStack::new(max_stack > 128),
             max_stack,
             max_locals,
             code,
-            code_attr,
+            //code_attr,
             vm_stack_id: 0,
             method_name,
             descriptor,
@@ -108,7 +108,7 @@ impl StackFrame {
             StackFrameValue::Double(data) => data as i64,
             StackFrameValue::Float(data) => data as i64,
             _ => {
-                panic!("wrong value type");
+                panic!("wrong value type:{:?}",value);
             }
         }
     }
@@ -215,15 +215,16 @@ pub fn init_stack_frame(
     let mut new_stack_frame: StackFrame = create_stack_frame(method_info, class).unwrap();
     new_stack_frame.vm_stack_id = frame.vm_stack_id;
     let mut i: usize = start;
-    let mut param: Vec<StackFrameValue> = Vec::new();
-    for _j in 0..method_info.param.len() {
-        param.push(frame.op_stack.pop().unwrap());
-    }
-
+    // let mut param: Vec<StackFrameValue> = Vec::new();
+    // for _j in 0..method_info.param.len() {
+    //     param.push(frame.op_stack.pop().unwrap());
+    // }
+    let op_stack_len = frame.op_stack.len();
+    let param_len =  method_info.param.len();
     //param.reverse();
     if !method_info.param.is_empty()  {
         for j in 0..method_info.param.len() {
-            let v = param.pop().unwrap();
+            let v = frame.op_stack.get(op_stack_len - param_len + j);
             let param: &DataType = method_info.param.get(j).unwrap();
             match param {
                 DataType::Byte => {
@@ -281,6 +282,11 @@ pub fn init_stack_frame(
             }
         }
     }
+
+    for _j in 0..method_info.param.len() {
+        _=  frame.op_stack.pop()
+    }
+
     new_stack_frame
 }
 
@@ -293,7 +299,7 @@ pub fn create_stack_frame(method_info: &MethodInfo, class: &Class) -> Option<Sta
                     code_attr.max_stack,
                     code_attr.max_locals,
                     code_attr.code.clone(),
-                    code_attr.clone(),
+                   // code_attr.clone(),
                     method_info.method_name.clone(),
                     method_info.descriptor.clone(),
                     class.class_name.clone()

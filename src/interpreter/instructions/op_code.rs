@@ -60,7 +60,7 @@ pub mod op_code {
         //let mut map = HashMap::new();
         while !vm_stack.is_empty()
         {
-            let start = Instant::now();
+            //let start = Instant::now();
 
             //let code = vm_stack.last().unwrap().code[vm_stack.last().unwrap().pc];
             let frame_index = vm_stack.len() - 1;
@@ -290,7 +290,7 @@ pub mod op_code {
             //转换为纳秒
              //let nanos = duration.as_nanos();
              //map.insert(code, nanos);
-            // info!("{:x}--{}",code,nanos);
+             //info!("{:x}--{}",code,nanos);
         }
         // for (k,v) in &map{
         //     info!("{:x}--{}",k,v);

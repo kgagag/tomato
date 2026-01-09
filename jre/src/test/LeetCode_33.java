@@ -35,8 +35,8 @@ public class LeetCode_33 {
 
     public static void main(String[] args) {
        //long t1 =  System.nanoTime();
-        //LeetCode_33 leetCode33 = new LeetCode_33();
-        //leetCode33.test();
+        LeetCode_33 leetCode33 = new LeetCode_33();
+        leetCode33.test();
       //  System.out.println(System.nanoTime() - t1);
     }
 }

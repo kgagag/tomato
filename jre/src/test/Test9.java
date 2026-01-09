@@ -41,6 +41,7 @@ public class Test9 {
 
     public static void main(String[] args) {
         Test9 test8 = new Test9();
+        test8.test();
     }
 
 }

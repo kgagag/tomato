@@ -4,7 +4,7 @@ public class Test6 {
 
     int a = 1;
     public void add(int i){
-        if(i >= 100){
+        if(i >= 1000){
             return;
         }
         a += i;

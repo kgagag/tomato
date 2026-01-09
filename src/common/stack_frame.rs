@@ -18,7 +18,7 @@ pub struct StackFrame {
     // //局部变量表
     pub local: Vec<StackFrameValue>,
     // //操作数栈
-    pub op_stack : OpStack,
+    pub op_stack : Vec<StackFrameValue>,
     // //类
     pub class: usize,
 
@@ -55,7 +55,7 @@ impl StackFrame {
             pc: 0,
             class,
             local: Vec::new(),
-            op_stack: OpStack::new(max_stack > 128),
+            op_stack: Vec::new(),
             max_stack,
             max_locals,
             code,
@@ -224,7 +224,7 @@ pub fn init_stack_frame(
     //param.reverse();
     if !method_info.param.is_empty()  {
         for j in 0..method_info.param.len() {
-            let v = frame.op_stack.get(op_stack_len - param_len + j);
+            let v = frame.op_stack[op_stack_len - param_len + j];
             let param: &DataType = method_info.param.get(j).unwrap();
             match param {
                 DataType::Byte => {

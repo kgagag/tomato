@@ -5,24 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="70c6e279-5046-4c44-ba52-f4228d3f6634" name="Changes" comment="&quot;调整目录&quot;">
-      <change afterPath="$PROJECT_DIR$/../src/common/op_stack.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/test/LeetCode_33.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/LeetCode_33.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/test/Test1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/Test1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/test/Test20.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/Test20.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/LeetCode_33.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/LeetCode_33.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/Test1.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/Test1.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/Test20.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/Test20.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/Test6.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/Test6.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/Test9.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/Test9.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/common/mod.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/common/mod.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../src/common/stack_frame.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/common/stack_frame.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/interpreter/instructions/op_code.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/interpreter/instructions/op_code.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_dup.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_dup.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_pop.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_pop.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_return.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_return.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_swap.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_swap.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main.rs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -270,7 +254,7 @@
       <workItem from="1767813166355" duration="499000" />
       <workItem from="1767843940647" duration="7404000" />
       <workItem from="1767894022289" duration="2628000" />
-      <workItem from="1767929906258" duration="721000" />
+      <workItem from="1767929906258" duration="1315000" />
     </task>
     <task id="LOCAL-00001" summary="&quot;add test case&quot;">
       <option name="closed" value="true" />

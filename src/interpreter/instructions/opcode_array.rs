@@ -6,10 +6,7 @@ use crate::{
     classfile::class::ConstantPoolInfo,
     classloader::{self, class_loader},
     common::{
-        param::DataType,
-        reference::{self, Reference},
-        stack_frame::StackFrame,
-        value::StackFrameValue,
+        error::Throwable, param::DataType, reference::{self, Reference}, stack_frame::StackFrame, value::StackFrameValue
     },
     runtime::{
         heap::{self, Heap},
@@ -19,7 +16,7 @@ use crate::{
     utils::u8c::u8s_to_u16,
 };
 
-pub fn newarray(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Metaspace) {
+pub fn newarray(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Metaspace) ->Result<(),Throwable>{
     let frame_index = vm_stack.len() - 1;
     let frame = &mut vm_stack[frame_index];
     let v: StackFrameValue = frame.op_stack.pop().unwrap();
@@ -39,6 +36,7 @@ pub fn newarray(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut
         .op_stack
         .push(StackFrameValue::Reference(reference as u32));
     frame.pc += 2;
+     Ok(())
 }
 
 fn extract_array_base_type_info(descriptor: &str) -> Option<(u8, Option<String>)> {
@@ -72,7 +70,7 @@ fn extract_array_base_type_info(descriptor: &str) -> Option<(u8, Option<String>)
     }
 }
 
-pub fn anewarray(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Metaspace) {
+pub fn anewarray(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Metaspace) ->Result<(),Throwable> {
     let frame_index = vm_stack.len() - 1;
     let (class_name, len) = {
         let frame = &mut vm_stack[frame_index];
@@ -104,7 +102,8 @@ pub fn anewarray(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mu
 
     let class_id = {
         if metaspace.class_map.contains_key(&class_name){
-            class_loader::find_class(&class_name, vm_stack, heap, metaspace).id
+           let class =   class_loader::find_class(&class_name, vm_stack, heap, metaspace)?;
+           class.id
         }else{
             0
         }
@@ -116,9 +115,10 @@ pub fn anewarray(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mu
         .op_stack
         .push(StackFrameValue::Reference(reference as u32));
     vm_stack[frame_index].pc += 3;
+    Ok(())
 }
 
-pub fn multianewarray(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Metaspace) {
+pub fn multianewarray(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Metaspace) ->Result<(),Throwable>{
     let frame_index = vm_stack.len() - 1;
     let (atype, dimenssion, array_class_name) = {
         let frame = &mut vm_stack[frame_index];
@@ -143,25 +143,22 @@ pub fn multianewarray(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace
 
     let class_id = {
         if atype == 12 {
-            let class_id =
-                class_loader::find_class(&array_class_name.unwrap(), vm_stack, heap, metaspace).id;
-            Some(class_id)
+            let class_name = &array_class_name.unwrap();
+            let class = class_loader::find_class(class_name, vm_stack, heap, metaspace)?;
+            Some(class.id)
         } else {
             None
         }
     };
 
     let mut queue: VecDeque<(u32,usize)> = VecDeque::new();
-        
     let mut sfv_vec = Vec::new();
-         //全部弹出
+    //全部弹出
     for _i in 0..dimenssion {
        // _ = vm_stack[frame_index].op_stack.pop()
        let sfv = vm_stack[frame_index].op_stack.pop().unwrap();
        sfv_vec.push(sfv);
     }
-
-
     for i in 0..dimenssion {
         let len = {
             let len_value = sfv_vec.pop().unwrap();
@@ -205,40 +202,49 @@ pub fn multianewarray(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace
         }
     }
     vm_stack[frame_index].pc += 4;
+    Ok(())
 }
 
-pub fn iastore(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Metaspace) {
-    xastore(vm_stack, heap, metaspace);
+pub fn iastore(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Metaspace) ->Result<(),Throwable>{
+    xastore(vm_stack, heap, metaspace)?;
+     Ok(())
 }
 
-pub fn lastore(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Metaspace) {
-    xastore(vm_stack, heap, metaspace);
+pub fn lastore(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Metaspace) ->Result<(),Throwable>{
+    xastore(vm_stack, heap, metaspace)?;
+    Ok(())
 }
-pub fn fastore(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Metaspace) {
-    xastore(vm_stack, heap, metaspace);
-}
-
-pub fn dastore(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Metaspace) {
-    xastore(vm_stack, heap, metaspace);
+pub fn fastore(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Metaspace) ->Result<(),Throwable>{
+    xastore(vm_stack, heap, metaspace)?;
+    Ok(())    
 }
 
-pub fn aastore(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Metaspace) {
-    xastore(vm_stack, heap, metaspace);
+pub fn dastore(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Metaspace) ->Result<(),Throwable>{
+    xastore(vm_stack, heap, metaspace)?;
+     Ok(())    
 }
 
-pub fn bastore(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Metaspace) {
-    xastore(vm_stack, heap, metaspace);
+pub fn aastore(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Metaspace) ->Result<(),Throwable>{
+    xastore(vm_stack, heap, metaspace)?;
+    Ok(())
 }
 
-pub fn castore(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Metaspace) {
-    xastore(vm_stack, heap, metaspace);
+pub fn bastore(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Metaspace) ->Result<(),Throwable>{
+    xastore(vm_stack, heap, metaspace)?;
+    Ok(())
 }
 
-pub fn sastore(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Metaspace) {
-    xastore(vm_stack, heap, metaspace);
+pub fn castore(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Metaspace) ->Result<(),Throwable>{
+    xastore(vm_stack, heap, metaspace)?;
+    Ok(())
 }
 
-fn xastore(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, _metaspace: &mut Metaspace) {
+pub fn sastore(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Metaspace) ->Result<(),Throwable>{
+    xastore(vm_stack, heap, metaspace)?;
+    Ok(())
+}
+
+fn xastore(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, _metaspace: &mut Metaspace) ->Result<(),Throwable>{
     let frame_index = vm_stack.len() - 1;
     let frame = &mut vm_stack[frame_index];
     let v: StackFrameValue = frame.op_stack.pop().unwrap();
@@ -299,41 +305,50 @@ fn xastore(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, _metaspace: &mut Met
         _ => panic!(),
     }
     frame.pc += 1;
+    Ok(())
 }
 
-pub fn iaload(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Metaspace) {
-    xaload(vm_stack, heap, metaspace);
+pub fn iaload(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Metaspace) ->Result<(),Throwable>{
+    xaload(vm_stack, heap, metaspace)?;
+    Ok(())
 }
 
-pub fn laload(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Metaspace) {
-    xaload(vm_stack, heap, metaspace);
+pub fn laload(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Metaspace) ->Result<(),Throwable>{
+    xaload(vm_stack, heap, metaspace)?;
+    Ok(())
 }
 
-pub fn faload(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Metaspace) {
-    xaload(vm_stack, heap, metaspace);
+pub fn faload(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Metaspace) ->Result<(),Throwable>{
+    xaload(vm_stack, heap, metaspace)?;
+    Ok(())
 }
 
-pub fn daload(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Metaspace) {
-    xaload(vm_stack, heap, metaspace);
+pub fn daload(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Metaspace) ->Result<(),Throwable>{
+    xaload(vm_stack, heap, metaspace)?;
+    Ok(())
 }
 
-pub fn aaload(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Metaspace) {
-    xaload(vm_stack, heap, metaspace);
+pub fn aaload(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Metaspace) ->Result<(),Throwable>{
+    xaload(vm_stack, heap, metaspace)?;
+    Ok(())
 }
 
-pub fn baload(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Metaspace) {
-    xaload(vm_stack, heap, metaspace);
+pub fn baload(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Metaspace) ->Result<(),Throwable>{
+    xaload(vm_stack, heap, metaspace)?;
+    Ok(())
 }
 
-pub fn caload(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Metaspace) {
-    xaload(vm_stack, heap, metaspace);
+pub fn caload(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Metaspace) ->Result<(),Throwable>{
+    xaload(vm_stack, heap, metaspace)?;
+    Ok(())
 }
 
-pub fn saload(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Metaspace) {
-    xaload(vm_stack, heap, metaspace);
+pub fn saload(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Metaspace) ->Result<(),Throwable>{
+    xaload(vm_stack, heap, metaspace)?;
+    Ok(())
 }
 
-pub fn arraylength(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap) {
+pub fn arraylength(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap) ->Result<(),Throwable>{
     let frame_index = vm_stack.len() - 1;
     let frame = &mut vm_stack[frame_index];
     let v = frame.op_stack.pop().unwrap();
@@ -344,9 +359,10 @@ pub fn arraylength(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap) {
         _ => panic!(),
     }
     frame.pc += 1;
+    Ok(())
 }
 
-fn xaload(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Metaspace) {
+fn xaload(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Metaspace) ->Result<(),Throwable>{
     let frame_index = vm_stack.len() - 1;
     let frame = &mut vm_stack[frame_index];
     let index = frame.op_stack.pop().unwrap();
@@ -411,4 +427,5 @@ fn xaload(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Metas
         _ => panic!(),
     }
     frame.pc += 1;
+    Ok(())
 }

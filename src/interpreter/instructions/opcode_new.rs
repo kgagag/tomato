@@ -5,7 +5,7 @@ use log::info;
 use crate::{
     classfile::class::ConstantPoolInfo,
     classloader::class_loader,
-    common::{stack_frame::StackFrame, value::StackFrameValue},
+    common::{error::Throwable, stack_frame::StackFrame, value::StackFrameValue},
     runtime::{
         heap::{self, Heap},
         metaspace::Metaspace,
@@ -17,7 +17,7 @@ use crate::{
 /**
  * 创建对象的指令
  */
-pub fn _new(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Metaspace) {
+pub fn _new(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Metaspace) -> Result<(), Throwable> {
     let frame_index = vm_stack.len() - 1;
     let this_class = &mut  metaspace.classes[vm_stack[frame_index].class];
     let classfile_pool_index = u8s_to_u16(
@@ -35,7 +35,7 @@ pub fn _new(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Met
         _ => panic!("wrong class data"),
     };
     let target_class =
-        { class_loader::find_class(&mut target_class_name, vm_stack, heap, metaspace) };
+        { class_loader::find_class(&mut target_class_name, vm_stack, heap, metaspace)? };
     let obj = heap.create_object(target_class);
     //初始化属性
     vm_stack[frame_index]
@@ -43,4 +43,5 @@ pub fn _new(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Met
         .push(StackFrameValue::Reference(obj as u32));
 
     vm_stack[frame_index].pc += 3;
+    Ok(())
 }

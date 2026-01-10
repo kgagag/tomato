@@ -2,11 +2,12 @@ use std::array;
 use std::f32::consts::E;
 use std::thread::panicking;
 
+use crate::common::error::Throwable;
 use crate::common::stack_frame::StackFrame;
 
 
 
-pub fn checkcast(frame: &mut StackFrame) {
+pub fn checkcast(frame: &mut StackFrame) ->Result<(),Throwable> {
     // let sfv =frame.op_stack.pop().unwrap();
     // let this_class_name = get_class_name(&frame.class);
     // let this_class = get_or_load_class(&this_class_name);
@@ -49,4 +50,5 @@ pub fn checkcast(frame: &mut StackFrame) {
     // }
     
     frame.pc += 3;
+    Ok(())
 }

@@ -6,6 +6,8 @@ use crate::classfile::class::ConstantPoolInfo;
 use crate::classfile::class::ExceptionTable;
 use crate::classfile::class::FieldInfo;
 use crate::classfile::class::MethodInfo;
+use crate::common::error::JvmError;
+use crate::common::error::Throwable;
 use crate::common::param::DataType;
 use crate::common::stack_frame::*;
 use crate::common::value::StackFrameValue;
@@ -330,7 +332,7 @@ fn parse_field_descriptor(descriptor: Vec<u8>) -> DataType {
 //     }
 // }
 
-fn get_class_from_disk(name: &String) -> Vec<u8> {
+fn get_class_from_disk(name: &String) -> Result<Vec<u8>,Throwable> {
     match env::current_dir() {
         Ok(path) => {
             let mut jre_class_path = path.as_path().to_str().unwrap().to_string();
@@ -342,7 +344,7 @@ fn get_class_from_disk(name: &String) -> Vec<u8> {
                 let mut file = fs::File::open(jre_class_path).unwrap();
                 let mut buffer = Vec::new();
                 let _ = file.read_to_end(&mut buffer);
-                buffer
+                Ok(buffer)
             } else {
                 let mut user_class_path = path.as_path().to_str().unwrap().to_string();
                 user_class_path.push_str("/test/out/");
@@ -353,9 +355,10 @@ fn get_class_from_disk(name: &String) -> Vec<u8> {
                     let mut file = fs::File::open(user_class_path).unwrap();
                     let mut buffer = Vec::new();
                     let _ = file.read_to_end(&mut buffer);
-                    buffer
+                    Ok(buffer)
                 } else {
-                    panic!("class ：{} not found", name)
+                    //Err(ClassLoadingError::ClassNotFound(format!("Class {} not found", name)))
+                    Err(Throwable::Error(JvmError::NoClassDefFound { class_name: (name.clone()), cause: (Some(format!("Class {} not found", name))), message: (format!("Class {} not found", name))}))
                 }
             }
         }
@@ -371,8 +374,8 @@ pub fn load_class(
     vm_stack: &mut Vec<StackFrame>,
     heap: &mut Heap,
     metaspace: &mut Metaspace,
-) -> Class {
-    let buffer: Vec<u8> = get_class_from_disk(name);
+) -> Result<Class,Throwable> {
+    let buffer: Vec<u8> = get_class_from_disk(name)?;
     let mut cursor = io::Cursor::new(buffer);
     let mut class: Class = Class::new();
     class.magic = get_magic(&mut cursor);
@@ -400,12 +403,14 @@ pub fn load_class(
                     ConstantPoolInfo::Utf8(class_name) => {
                         let super_class_op = metaspace.class_map.get(class_name);
                         if super_class_op.is_none() {
-                            let super_class = find_class(&class_name, vm_stack, heap, metaspace);
+                            let super_class = find_class(&class_name, vm_stack, heap, metaspace)?;
                             class.super_class_id = super_class.id;
                             class.super_class_name = super_class.class_name.clone();
                             for (key, value) in &super_class.field_info {
                                 //TODO 处理私有变量
-                                if !class.field_info.contains_key(key) {
+                                // 明确告诉编译器 key 的类型
+                                let key_ref: &String = key;
+                                if !class.field_info.contains_key(key_ref) {
                                     class.field_info.insert(key.clone(), value.clone());
                                 }
                             }
@@ -425,7 +430,7 @@ pub fn load_class(
     //do_after_load(&mut class);
     //init_class_id(&mut class);
     //init(name, "<clinit>".to_string(), heap, metaspace);
-    class
+    Ok(class)
 }
 
 /**
@@ -1189,11 +1194,11 @@ pub fn find_class<'a, 'b>(
     vm_stack: &'b mut Vec<StackFrame>,
     heap: &'b mut Heap,
     metaspace: &'a mut Metaspace,
-) -> &'a mut Class {
+) -> Result<&'a mut Class,Throwable> {
     let (class, flag) = {
         let class_op = metaspace.class_map.get(class_name);
         if class_op.is_none() {
-            let mut class = load_class(class_name, vm_stack, heap, metaspace);
+            let mut class = load_class(class_name, vm_stack, heap, metaspace)?;
             let id = metaspace.classes.len();
             class.id = id;
             metaspace.classes.push(class);
@@ -1206,5 +1211,5 @@ pub fn find_class<'a, 'b>(
         }
     };
     if flag {}
-    class
+    Ok(class)
 }

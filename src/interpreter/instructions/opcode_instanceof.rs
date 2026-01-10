@@ -2,6 +2,7 @@ use log::info;
 use log::warn;
 
 use crate::classfile::class::ConstantPoolInfo;
+use crate::common::error::Throwable;
 use crate::common::reference::Reference;
 use crate::common::stack_frame::StackFrame;
 use crate::common::value::StackFrameValue;
@@ -12,7 +13,7 @@ use crate::utils::u8c::u8s_to_u16;
 
 
 
-pub fn instanceof(frame: &mut StackFrame) {
+pub fn instanceof(frame: &mut StackFrame) ->Result<(),Throwable>{
     let v = frame.op_stack.pop().unwrap();
     let target_class_name:String = match v {
         StackFrameValue::Reference(id) => {
@@ -47,4 +48,5 @@ pub fn instanceof(frame: &mut StackFrame) {
         }
         _ => panic!(),
     }
+    Ok(())
 }

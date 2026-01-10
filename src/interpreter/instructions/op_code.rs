@@ -1,6 +1,7 @@
 pub mod op_code {
     use std::cell::UnsafeCell;
     use std::collections::HashMap;
+    use std::result;
     use std::time::Instant;
 
     use log::info;
@@ -28,6 +29,7 @@ pub mod op_code {
     use opcode_swap::*;
     use opcode_thread::*;
 
+    use crate::common::error::Throwable;
     use crate::common::stack_frame::StackFrame;
     use crate::interpreter::instructions::*;
     use crate::runtime::heap::Heap;
@@ -56,9 +58,9 @@ pub mod op_code {
     }
 
 
-    pub fn do_opcode(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Metaspace) {
+    pub fn do_opcode(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Metaspace) ->Result<(),Throwable> {
         //let mut map = HashMap::new();
-        while !vm_stack.is_empty()
+       let a = while !vm_stack.is_empty()
         {
             //let start = Instant::now();
 
@@ -72,7 +74,7 @@ pub mod op_code {
             // if code == 0xbb || code == 0xbc || code == 0xbd || code == 0xc5 {
             //     full_gc();
             // }
-            match code {
+        let result = match code {
                 0x00 => nop(frame),
                 0x01 => aconst_null(frame),
                 0x02 => iconst_m1(frame),
@@ -92,8 +94,7 @@ pub mod op_code {
                 0x10 => bipush(frame),
                 0x11 => sipush(frame),
                 0x12 => ldc(vm_stack, heap, metaspace),
-                0x13 => ldc_w(frame),
-                0x14 => ldc2_w(vm_stack, heap, metaspace),
+                0x14 =>  ldc2_w(vm_stack, heap, metaspace),
                 0x15 => iload(frame),
                 0x16 => lload(frame),
                 0x17 => fload(frame),
@@ -251,8 +252,8 @@ pub mod op_code {
                 0xaf => dreturn(vm_stack),
                 0xb0 => areturn(vm_stack),
                 0xb1 => _return(vm_stack),
-                0xb2 => getstatic(vm_stack, heap, metaspace),
-                0xb3 => putstatic(vm_stack, heap, metaspace),
+                0xb2 =>getstatic(vm_stack, heap, metaspace),
+                0xb3 =>putstatic(vm_stack, heap, metaspace),
                 0xb4 => getfield(vm_stack, heap, metaspace),
                 0xb5 => putfield(vm_stack, heap, metaspace),
                 0xb6 => invokevirtual(vm_stack, heap, metaspace),
@@ -260,7 +261,7 @@ pub mod op_code {
                 0xb8 => invokestatic(vm_stack, heap, metaspace),
                 0xb9 => invokeinterface(vm_stack, heap, metaspace),
                 // 0xba => invokedynamic(frame),
-                0xbb => _new(vm_stack, heap, metaspace),
+                0xbb =>_new(vm_stack, heap, metaspace),
                 0xbc => newarray(vm_stack, heap, metaspace),
                 0xbd => anewarray(vm_stack, heap, metaspace),
                 0xbe => arraylength(vm_stack, heap),
@@ -279,7 +280,10 @@ pub mod op_code {
                     // 处理未知指令的情况，可以抛出错误或执行默认操作
                     panic!("Unknown instruction code: 0x{:02X}", code);
                 }
-            }
+            };
+
+            //Ok(())
+
             // if(!vm_stack.is_empty()){
             //     frame = frame
             // }else {
@@ -291,9 +295,11 @@ pub mod op_code {
              //let nanos = duration.as_nanos();
              //map.insert(code, nanos);
              //info!("{:x}--{}",code,nanos);
-        }
+        };
         // for (k,v) in &map{
         //     info!("{:x}--{}",k,v);
         // }
+        Ok(())
     }
+    
 }

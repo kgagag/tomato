@@ -1,11 +1,11 @@
 use log::info;
 
-use crate::{common::{stack_frame::StackFrame, value::StackFrameValue}, utils::u8c::{u8s_to_i16, u8s_to_u16}};
+use crate::{common::{error::Throwable, stack_frame::StackFrame, value::StackFrameValue}, utils::u8c::{u8s_to_i16, u8s_to_u16}};
 
 
 
 
-pub fn fcmpg(frame: &mut StackFrame) {
+pub fn fcmpg(frame: &mut StackFrame) ->Result<(),Throwable> {
     let f2 = frame.popf64();
     let f1 = frame.popf64();
 
@@ -32,12 +32,13 @@ pub fn fcmpg(frame: &mut StackFrame) {
 
     frame.op_stack.push(StackFrameValue::Int(result));
     frame.pc += 1;
+    Ok(())
 }
 
 
 
 
-pub fn lcmp(frame: &mut StackFrame) {
+pub fn lcmp(frame: &mut StackFrame) ->Result<(),Throwable>{
     let l2 = frame.popi64();
     let l1 = frame.popi64();
     
@@ -49,9 +50,10 @@ pub fn lcmp(frame: &mut StackFrame) {
     
     frame.op_stack.push(StackFrameValue::Int(result));
     frame.pc += 1;
+    Ok(())
 }
 
-pub fn fcmpl(frame: &mut StackFrame) {
+pub fn fcmpl(frame: &mut StackFrame) ->Result<(),Throwable>{
     let f2 = frame.popf64();
     let f1 = frame.popf64();
 
@@ -66,10 +68,11 @@ pub fn fcmpl(frame: &mut StackFrame) {
 
     frame.op_stack.push(StackFrameValue::Int(result));
     frame.pc += 1;
+    Ok(())
 }
 
 
-pub fn dcmpg(frame: &mut StackFrame) {
+pub fn dcmpg(frame: &mut StackFrame) ->Result<(),Throwable>{
     let d2 = frame.popf64();
     let d1 = frame.popf64();
 
@@ -93,14 +96,14 @@ pub fn dcmpg(frame: &mut StackFrame) {
             }
         }
     };
-
     frame.op_stack.push(StackFrameValue::Int(result));
     frame.pc += 1;
+    Ok(())
 }
 
 
 
-pub fn dcmpl(frame: &mut StackFrame) {
+pub fn dcmpl(frame: &mut StackFrame) ->Result<(),Throwable>{
     let d2 = frame.popf64();
     let d1 = frame.popf64();
 
@@ -124,13 +127,13 @@ pub fn dcmpl(frame: &mut StackFrame) {
             }
         }
     };
-
     frame.op_stack.push(StackFrameValue::Int(result));
     frame.pc += 1;
+    Ok(())
 }
 
 
-pub fn ifeq(frame: &mut StackFrame) {
+pub fn ifeq(frame: &mut StackFrame) ->Result<(),Throwable>{
     let value = frame.popi64();
     let branch_offset = u8s_to_i16(&frame.code[frame.pc + 1.. frame.pc + 3]) as i32;
     if value == 0 {
@@ -138,9 +141,10 @@ pub fn ifeq(frame: &mut StackFrame) {
     } else {
         frame.pc += 3; // 跳转失败，继续执行下一条指令
     }
+    Ok(())
 }
 
-pub fn ifne(frame: &mut StackFrame) {
+pub fn ifne(frame: &mut StackFrame) ->Result<(),Throwable>{
     let value = frame.popi64();
     let branch_offset = u8s_to_i16(&frame.code[frame.pc + 1.. frame.pc + 3]) as i16;
     if value != 0 {
@@ -148,9 +152,10 @@ pub fn ifne(frame: &mut StackFrame) {
     } else {
         frame.pc += 3; // 跳转失败，继续执行下一条指令
     }
+    Ok(())
 }
 
-pub fn iflt(frame: &mut StackFrame) {
+pub fn iflt(frame: &mut StackFrame) ->Result<(),Throwable>{
     let value = frame.popi64();
     let branch_offset = u8s_to_i16(&frame.code[frame.pc + 1.. frame.pc + 3]);
     if value < 0 {
@@ -158,10 +163,11 @@ pub fn iflt(frame: &mut StackFrame) {
     } else {
         frame.pc += 3; // 跳转失败，继续执行下一条指令
     }
+    Ok(())
 }
 
 
-pub fn ifge(frame: &mut StackFrame) {
+pub fn ifge(frame: &mut StackFrame) ->Result<(),Throwable>{
     let value = frame.popi64();
     let branch_offset = u8s_to_i16(&frame.code[frame.pc + 1.. frame.pc + 3]);
     if value >= 0 {
@@ -169,10 +175,11 @@ pub fn ifge(frame: &mut StackFrame) {
     } else {
         frame.pc += 3; // 跳转失败，继续执行下一条指令
     }
+    Ok(())
 }
 
 
-pub fn ifgt(frame: &mut StackFrame) {
+pub fn ifgt(frame: &mut StackFrame) ->Result<(),Throwable>{
     let value = frame.popi64();
     let branch_offset = u8s_to_i16(&frame.code[frame.pc + 1.. frame.pc + 3]);
     if value > 0 {
@@ -180,9 +187,10 @@ pub fn ifgt(frame: &mut StackFrame) {
     } else {
         frame.pc += 3; // 跳转失败，继续执行下一条指令
     }
+    Ok(())
 }
 
-pub fn ifle(frame: &mut StackFrame) {
+pub fn ifle(frame: &mut StackFrame) ->Result<(),Throwable>{
     let value = frame.popi64();
     let branch_offset = u8s_to_i16(&frame.code[frame.pc + 1.. frame.pc + 3]);
     if value <= 0 {
@@ -190,10 +198,11 @@ pub fn ifle(frame: &mut StackFrame) {
     } else {
         frame.pc += 3; // 跳转失败，继续执行下一条指令
     }
+    Ok(())
 }
 
 
-pub fn if_icmpeq(frame: &mut StackFrame) {
+pub fn if_icmpeq(frame: &mut StackFrame) ->Result<(),Throwable>{
     let value2 = frame.popi64();
     let value1 = frame.popi64();
     let branch_offset = u8s_to_i16(&frame.code[frame.pc + 1.. frame.pc + 3]);
@@ -202,10 +211,11 @@ pub fn if_icmpeq(frame: &mut StackFrame) {
     } else {
         frame.pc += 3; // 跳转失败，继续执行下一条指令
     }
+    Ok(())
 }
 
 
-pub fn if_icmpne(frame: &mut StackFrame) {
+pub fn if_icmpne(frame: &mut StackFrame) ->Result<(),Throwable>{
     let value2 = frame.popi64();
     let value1 = frame.popi64();
     let branch_offset = u8s_to_u16(&frame.code[frame.pc + 1.. frame.pc + 3]);
@@ -214,10 +224,11 @@ pub fn if_icmpne(frame: &mut StackFrame) {
     } else {
         frame.pc += 3; // 跳转失败，继续执行下一条指令
     }
+    Ok(())
 }
 
 
-pub fn if_icmplt(frame: &mut StackFrame) {
+pub fn if_icmplt(frame: &mut StackFrame) ->Result<(),Throwable>{
     let value2 = frame.popi64();
     let value1 = frame.popi64();
     let branch_offset = u8s_to_u16(&frame.code[frame.pc + 1.. frame.pc + 3]);
@@ -227,10 +238,11 @@ pub fn if_icmplt(frame: &mut StackFrame) {
     } else {
         frame.pc += 3; // 跳转失败，继续执行下一条指令
     }
+    Ok(())
 }
 
 
-pub fn if_icmpge(frame: &mut StackFrame) {
+pub fn if_icmpge(frame: &mut StackFrame) ->Result<(),Throwable>{
     let value2 = frame.popi64();
     let value1 = frame.popi64();
     let branch_offset = u8s_to_u16(&frame.code[frame.pc + 1.. frame.pc + 3]);
@@ -240,9 +252,10 @@ pub fn if_icmpge(frame: &mut StackFrame) {
     } else {
         frame.pc += 3; // 跳转失败，继续执行下一条指令
     }
+    Ok(())
 }
 
-pub fn if_icmpgt(frame: &mut StackFrame) {
+pub fn if_icmpgt(frame: &mut StackFrame) ->Result<(),Throwable>{
     let value2 = frame.popi64();
     let value1 = frame.popi64();
     let branch_offset = u8s_to_u16(&frame.code[frame.pc + 1.. frame.pc + 3]);
@@ -252,9 +265,10 @@ pub fn if_icmpgt(frame: &mut StackFrame) {
     } else {
         frame.pc += 3; // 跳转失败，继续执行下一条指令
     }
+    Ok(())
 }
 
-pub fn if_icmple(frame: &mut StackFrame) {
+pub fn if_icmple(frame: &mut StackFrame) ->Result<(),Throwable>{
     let value2 = frame.popi64();
     let value1 = frame.popi64();
     let branch_offset = u8s_to_u16(&frame.code[frame.pc + 1.. frame.pc + 3]);
@@ -263,10 +277,11 @@ pub fn if_icmple(frame: &mut StackFrame) {
     } else {
         frame.pc += 3; // 跳转失败，继续执行下一条指令
     }
+    Ok(())
 }
 
 
-pub fn if_acmpeq(frame: &mut StackFrame) {
+pub fn if_acmpeq(frame: &mut StackFrame) ->Result<(),Throwable>{
     let value2 = frame.pop_reference();
     let value1 = frame.pop_reference();
     let branch_offset = u8s_to_u16(&frame.code[frame.pc + 1.. frame.pc + 3]);
@@ -275,9 +290,10 @@ pub fn if_acmpeq(frame: &mut StackFrame) {
     } else {
         frame.pc += 3; // 跳转失败，继续执行下一条指令
     }
+    Ok(())
 }
 
-pub fn if_acmpne(frame: &mut StackFrame) {
+pub fn if_acmpne(frame: &mut StackFrame) ->Result<(),Throwable>{
     let value2 = frame.pop_reference();
     let value1 = frame.pop_reference();
     let branch_offset = u8s_to_u16(&frame.code[frame.pc + 1.. frame.pc + 3]);
@@ -287,9 +303,10 @@ pub fn if_acmpne(frame: &mut StackFrame) {
     } else {
         frame.pc += 3; // 跳转失败，继续执行下一条指令
     }
+    Ok(())
 }
 
-pub fn ifnonnull(frame: &mut StackFrame) {
+pub fn ifnonnull(frame: &mut StackFrame) ->Result<(),Throwable>{
     let value = frame.op_stack.pop().unwrap();
     // info!("{:?}",value);
     match value {
@@ -301,9 +318,10 @@ pub fn ifnonnull(frame: &mut StackFrame) {
             frame.pc = (frame.pc as i32 + branch_offset as i32) as usize;
         }
     }
+    Ok(())
 }
 
-pub fn ifnull(frame: &mut StackFrame) {
+pub fn ifnull(frame: &mut StackFrame) ->Result<(),Throwable>{
     let value = frame.op_stack.pop().unwrap();
     //info!("{:?}",value);
     match value {
@@ -315,13 +333,14 @@ pub fn ifnull(frame: &mut StackFrame) {
             frame.pc += 3; // 跳转失败，继续执行下一条指令
         }
     }
+    Ok(())
 }
 
 
 /**
  * gpt4o 实现的 lookupswitch
  */
-pub fn lookupswitch(frame: &mut StackFrame) {
+pub fn lookupswitch(frame: &mut StackFrame) ->Result<(),Throwable>{
     let mut pc0 = frame.pc;
     // 确保PC是4字节对齐的
     while pc0 % 4 != 0 {
@@ -345,19 +364,20 @@ pub fn lookupswitch(frame: &mut StackFrame) {
         pc0 += 8;
         if key == match_key {
             frame.pc = (frame.pc as i32 + match_offset) as usize;
-            return;
+            //return;
+            return Ok(());
         }
     }
-
     // 没有匹配，跳转到默认地址
     frame.pc = (frame.pc as i32 + default_offset) as usize;
+    Ok(())
 }
 
 
 /**
  *  * gpt4o 实现的 lookupswitch
  */
-pub fn tableswitch(frame: &mut StackFrame) {
+pub fn tableswitch(frame: &mut StackFrame) ->Result<(),Throwable>{
     let mut pc0 = frame.pc;
 
     // 确保PC是4字节对齐的
@@ -388,6 +408,7 @@ pub fn tableswitch(frame: &mut StackFrame) {
         let offset = u8s_to_i32(&frame.code[pc0 + index * 4..pc0 + (index + 1) * 4]);
         frame.pc = (frame.pc as i32 + offset) as usize;
     }
+    Ok(())
 }
 
 

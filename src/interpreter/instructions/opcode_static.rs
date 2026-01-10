@@ -4,14 +4,14 @@ use log::info;
 use crate::{
     classfile::class::ConstantPoolInfo,
     classloader::class_loader,
-    common::stack_frame::StackFrame,
+    common::{error::Throwable, stack_frame::StackFrame},
     runtime::{
         heap::Heap,
         metaspace::Metaspace
     },
 };
 
-pub fn putstatic(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Metaspace) {
+pub fn putstatic(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Metaspace) ->Result<(),Throwable> {
     let frame_index = vm_stack.len() - 1;
     let (class_name, field_name) = {
         let frame = &mut vm_stack[frame_index];
@@ -57,14 +57,14 @@ pub fn putstatic(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mu
         }
     };
     //找到这个class,，然后给他的static 字段赋值
-    let target_class = class_loader::find_class(&class_name, vm_stack, heap, metaspace);
+    let target_class = class_loader::find_class(&class_name, vm_stack, heap, metaspace)?;
     let field = target_class.field_info.get_mut(&field_name).unwrap();
     field.value = vm_stack[frame_index].op_stack.pop().unwrap();
+    Ok(())
 }
 
-pub fn getstatic(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Metaspace) {
+pub fn getstatic(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Metaspace) ->Result<(),Throwable>{
     let frame_index = vm_stack.len() - 1;
-
     let (class_name, field_name) = {
         let frame = &mut vm_stack[frame_index];
         let index: u16 = u16::from_be_bytes([frame.code[frame.pc + 1], frame.code[frame.pc + 2]]);
@@ -100,7 +100,8 @@ pub fn getstatic(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mu
             panic!("Unexpected field reference");
         }
     };
-    let target_class = class_loader::find_class(&class_name, vm_stack, heap, metaspace);
+    let target_class = class_loader::find_class(&class_name, vm_stack, heap, metaspace)?;
     let field_info = target_class.field_info.get_mut(&field_name).unwrap();
     vm_stack[frame_index].op_stack.push(field_info.value);
+    Ok(())
 }

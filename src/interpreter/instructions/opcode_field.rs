@@ -3,11 +3,7 @@ use log::info;
 use crate::{
     classfile::class::{Class, ConstantPoolInfo, FieldInfo},
     common::{
-        object::Object,
-        param::DataType,
-        reference::Reference,
-        stack_frame::StackFrame,
-        value::{self, number_u64, StackFrameValue},
+        error::Throwable, object::Object, param::DataType, reference::Reference, stack_frame::StackFrame, value::{self, StackFrameValue, number_u64}
     },
     runtime::{
         heap::{self, Heap},
@@ -16,7 +12,7 @@ use crate::{
     },
 };
 
-pub fn putfield(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Metaspace) {
+pub fn putfield(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Metaspace)->Result<(),Throwable> {
     let frame_index = vm_stack.len() - 1;
     let frame = &mut vm_stack[frame_index];
     let index: u16 = u16::from_be_bytes([frame.code[frame.pc + 1], frame.code[frame.pc + 2]]);
@@ -115,9 +111,10 @@ pub fn putfield(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut
         _ => panic!(),
     }
     frame.pc += 3;
+    Ok(())
 }
 
-pub fn getfield(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Metaspace) {
+pub fn getfield(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Metaspace) ->Result<(),Throwable>{
     let frame_index = vm_stack.len() - 1;
     let frame = &mut vm_stack[frame_index];
     let index: u16 = u16::from_be_bytes([frame.code[frame.pc + 1], frame.code[frame.pc + 2]]);
@@ -217,4 +214,5 @@ pub fn getfield(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut
         }
     }
     frame.pc += 3;
+    Ok(())
 }

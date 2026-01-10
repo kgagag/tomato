@@ -5,7 +5,7 @@ use log::info;
 use crate::{
     classfile::class::ConstantPoolInfo,
     classloader::class_loader,
-    common::{stack_frame::StackFrame, value::StackFrameValue},
+    common::{error::Throwable, stack_frame::StackFrame, value::StackFrameValue},
     runtime::{
         heap::{self, Heap},
         metaspace::Metaspace,
@@ -20,7 +20,7 @@ use crate::{
 extern crate env_logger;
 extern crate log;
 
-pub fn ldc(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Metaspace) {
+pub fn ldc(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Metaspace) ->Result<(), Throwable> {
     let frame_index = vm_stack.len() - 1;
     let (float_value, int_value, string_index, class_index) = {
         let frame = &mut vm_stack[frame_index];
@@ -62,7 +62,7 @@ pub fn ldc(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Meta
 
     } else if let Some(class_name) = class_index {
         //确保这个类已被加载
-        let class_id: usize = class_loader::find_class(&class_name, vm_stack, heap, metaspace).id;
+        let class_id: usize = (class_loader::find_class(&class_name, vm_stack, heap, metaspace)?).id;
         let class_obj = heap.get_constant_pool_class(&(class_id as u32));
         if class_obj.is_none() {
             let obj_id: u32 = java::create_class_object(&class_name);
@@ -75,6 +75,7 @@ pub fn ldc(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Meta
         }
     }
      vm_stack[frame_index].pc += 2;
+     Ok(())
 }
 
 pub fn ldc_w(frame: &mut StackFrame) {
@@ -82,11 +83,11 @@ pub fn ldc_w(frame: &mut StackFrame) {
     frame.pc += 1;
 }
 
-pub fn ldc2_w(vm_stack: &mut Vec<StackFrame>,heap:&mut Heap,metaspace: &mut Metaspace) {
+pub fn ldc2_w(vm_stack: &mut Vec<StackFrame>,heap:&mut Heap,metaspace: &mut Metaspace) ->Result<(), Throwable> {
     let frame_index = vm_stack.len() - 1;
     let index = u8s_to_u16(&vm_stack[frame_index].code[vm_stack[frame_index].pc + 1..vm_stack[frame_index].pc + 3]);
     let class_name =vm_stack[frame_index].class_name.clone();
-    let this_class = class_loader::find_class(&class_name,vm_stack,heap,metaspace);
+    let this_class = class_loader::find_class(&class_name,vm_stack,heap,metaspace)?;
     let constant_pool_data = &this_class.constant_pool[index as usize];
     match constant_pool_data {
         ConstantPoolInfo::Long(l) => {
@@ -98,4 +99,5 @@ pub fn ldc2_w(vm_stack: &mut Vec<StackFrame>,heap:&mut Heap,metaspace: &mut Meta
         _ => panic!(),
     }
     vm_stack[frame_index].pc += 3;
+    Ok(())
 }

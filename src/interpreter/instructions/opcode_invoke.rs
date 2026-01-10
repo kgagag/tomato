@@ -1,6 +1,7 @@
 use crate::classfile::class;
 use crate::classfile::class::ConstantPoolInfo;
 use crate::classloader::class_loader;
+use crate::common::error::Throwable;
 use crate::common::param::DataType;
 use crate::common::reference::Reference;
 use crate::common::stack_frame::create_stack_frame;
@@ -16,7 +17,7 @@ use crate::utils::u8c::u8s_to_u16;
 use log::info;
 use log::warn;
 
-pub fn invokespecial(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Metaspace) {
+pub fn invokespecial(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Metaspace) ->Result<(),Throwable>{
     let frame_index = vm_stack.len() - 1;
     let (target_class_name, method_name, descriptor) = {
         let this_class = &metaspace.classes[vm_stack[frame_index].class];
@@ -83,9 +84,10 @@ pub fn invokespecial(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace:
     } else {
         run_native(&mut method, &mut vm_stack[frame_index]);
     }
+    Ok(())
 }
 
-pub fn invokeinterface(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Metaspace) {
+pub fn invokeinterface(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Metaspace) ->Result<(),Throwable>{
     let frame_index: usize = vm_stack.len() - 1;
     let mut new_frame = {
         let frame = &mut vm_stack[frame_index];
@@ -149,6 +151,7 @@ pub fn invokeinterface(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspac
     //push_stack_frame(new_frame);
     vm_stack.push(new_frame);
     vm_stack[frame_index].pc += 4;
+    Ok(())
 }
 
 // pub fn invokevirtual(frame: &mut StackFrame) {
@@ -208,7 +211,7 @@ pub fn invokeinterface(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspac
 //     }
 // }
 
-pub fn invokevirtual(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Metaspace) {
+pub fn invokevirtual(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Metaspace) ->Result<(),Throwable>{
     let frame_index = vm_stack.len() - 1;
     let (target_class_name, method_name, descriptor) = {
         let this_class = &metaspace.classes[vm_stack[frame_index].class];
@@ -278,9 +281,10 @@ pub fn invokevirtual(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace:
     } else {
         run_native(&mut method, &mut vm_stack[frame_index]);
     }
+    Ok(())
 }
 
-pub fn invokestatic(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Metaspace) {
+pub fn invokestatic(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Metaspace) ->Result<(),Throwable>{
     let frame_index = vm_stack.len() - 1;
     let (target_class_name, method_name, descriptor) = {
         let this_class = &metaspace.classes[vm_stack[frame_index].class];
@@ -347,4 +351,5 @@ pub fn invokestatic(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: 
     } else {
         run_native(&method, &mut vm_stack[frame_index]);
     }
+    Ok(())
 }

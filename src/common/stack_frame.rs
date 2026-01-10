@@ -201,11 +201,6 @@ impl StackFrame {
 
 }
 
-// fn combine_u32_to_f64(high: u32, low: u32) -> f64 {
-//     let bits = ((high as u64) << 32) | (low as u64); // 将两个u32组合成一个64位整数
-//     f64::from_bits(bits) // 将64位整数转换回f64
-// }
-
 pub fn init_stack_frame(
     frame: &mut StackFrame,
     method_info: &MethodInfo,
@@ -215,13 +210,8 @@ pub fn init_stack_frame(
     let mut new_stack_frame: StackFrame = create_stack_frame(method_info, class).unwrap();
     new_stack_frame.vm_stack_id = frame.vm_stack_id;
     let mut i: usize = start;
-    // let mut param: Vec<StackFrameValue> = Vec::new();
-    // for _j in 0..method_info.param.len() {
-    //     param.push(frame.op_stack.pop().unwrap());
-    // }
     let op_stack_len = frame.op_stack.len();
     let param_len =  method_info.param.len();
-    //param.reverse();
     if !method_info.param.is_empty()  {
         for j in 0..method_info.param.len() {
             let v = frame.op_stack[op_stack_len - param_len + j];
@@ -247,14 +237,10 @@ pub fn init_stack_frame(
                     i += 1;
                 }
                 DataType::Double => {
-                    // info!("{:?}", v);
                     let u32tuple: (u32, u32) = number_to_u32tuple(&v);
                     new_stack_frame.local[i] = StackFrameValue::U32(u32tuple.0);
                     new_stack_frame.local[i + 1] = StackFrameValue::U32(u32tuple.1);
                     i += 2;
-                    // let a = combine_u32_to_f64(u32tuple.1,u32tuple.0);
-                    // info!("{:?}",a);
-                    // info!("{:?}",a);
                 }
                 DataType::Float => {
                     new_stack_frame.local[i] = v;

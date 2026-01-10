@@ -5,8 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="70c6e279-5046-4c44-ba52-f4228d3f6634" name="Changes" comment="&quot;调整目录&quot;">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/classloader/class_loader.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/classloader/class_loader.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/common/mod.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/common/mod.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../src/common/stack_frame.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/common/stack_frame.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_dup.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_dup.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_array.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_array.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_ldc.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_ldc.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_return.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_return.rs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -254,7 +259,8 @@
       <workItem from="1767813166355" duration="499000" />
       <workItem from="1767843940647" duration="7404000" />
       <workItem from="1767894022289" duration="2628000" />
-      <workItem from="1767929906258" duration="1315000" />
+      <workItem from="1767929906258" duration="2514000" />
+      <workItem from="1768021854584" duration="1951000" />
     </task>
     <task id="LOCAL-00001" summary="&quot;add test case&quot;">
       <option name="closed" value="true" />

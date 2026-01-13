@@ -7,13 +7,15 @@ use crate::{
     common::{
         array::array::Array, reference::Reference, stack_frame::StackFrame, value::StackFrameValue,
     },
-    runtime::runtime_data_area::get_reference,
+    runtime::{heap::Heap, metaspace::Metaspace},
 };
 
 extern crate env_logger;
 extern crate log;
 
-pub fn array_copy(method: &MethodInfo, frame: &mut StackFrame) {
+pub fn array_copy(method: &MethodInfo,vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Metaspace) {
+    let frame_index = vm_stack.len() - 1;
+    let frame = &mut vm_stack[frame_index];
     let _ = method;
     let len = frame.op_stack.pop().unwrap();
     // info!("{:?}",len);
@@ -26,23 +28,16 @@ pub fn array_copy(method: &MethodInfo, frame: &mut StackFrame) {
     let src = frame.op_stack.pop().unwrap();
     // info!("{:?}",src);
 
-    let src_array: &mut Array = match src {
+    let src_array_id = match src {
         StackFrameValue::Reference(reference_id) => {
-            let reference = get_reference(&reference_id).unwrap();
-            match reference {
-                Reference::Array(array) => array,
-                _ => panic!(),
-            }
+           reference_id
         }
         _ => panic!(),
     };
-    let des_array: &mut Array = match des {
+
+    let des_array_id = match des {
         StackFrameValue::Reference(reference_id) => {
-            let reference = get_reference(&reference_id).unwrap();
-            match reference {
-                Reference::Array(array) => array,
-                _ => panic!(),
-            }
+           reference_id
         }
         _ => panic!(),
     };
@@ -78,15 +73,19 @@ pub fn array_copy(method: &MethodInfo, frame: &mut StackFrame) {
     };
 
     for i in 0..length {
-        des_array.data[(des_start + i) as usize] = src_array
-            .data
-            .get((src_start + i) as usize)
-            .unwrap()
-            .clone();
+        // des_array.data[(des_start + i) as usize] = src_array
+        //     .data
+        //     .get((src_start + i) as usize)
+        //     .unwrap()
+        //     .clone();
+        let (_atype,value) = heap.get_array_element(src_array_id, (src_start + i) as usize);
+        heap.put_array_element(des_array_id, (des_start + i) as usize, value);
     }
 }
 
-pub fn current_time_millis(frame: &mut StackFrame) {
+pub fn current_time_millis(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Metaspace) {
+    let frame_index = vm_stack.len() - 1;
+    let frame = &mut vm_stack[frame_index];
     match SystemTime::now().duration_since(UNIX_EPOCH) {
         Ok(n) => {
             frame
@@ -97,7 +96,9 @@ pub fn current_time_millis(frame: &mut StackFrame) {
     }
 }
 
-pub fn nano_time(frame: &mut StackFrame) {
+pub fn nano_time(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Metaspace) {
+    let frame_index = vm_stack.len() - 1;
+    let frame = &mut vm_stack[frame_index];
     match SystemTime::now().duration_since(UNIX_EPOCH) {
         Ok(n) => {
             frame

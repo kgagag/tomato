@@ -57,6 +57,7 @@ pub fn as_i32(v: &StackFrameValue) -> i32 {
         StackFrameValue::Int(data) => *data,
         StackFrameValue::Byte(data) => *data as i32,
         StackFrameValue::Short(data) => *data as i32,
+        StackFrameValue::CHARACTER(data) => *data as i32,
         StackFrameValue::Long(data) => {
             if *data < i32::MIN as i64 || *data > i32::MAX as i64 {
                 panic!("Long value {} out of i32 range", data);
@@ -212,6 +213,7 @@ pub fn as_i16(v: &StackFrameValue) -> i16 {
 }
 
 pub fn as_u32(v: &StackFrameValue) -> u32 {
+    //info!("as_u32:{:?}", v);
     match v {
         StackFrameValue::U32(data) => *data,
         StackFrameValue::Byte(data) => {
@@ -240,6 +242,9 @@ pub fn as_u32(v: &StackFrameValue) -> u32 {
         },
         StackFrameValue::Float(_) | StackFrameValue::Double(_) => {
             panic!("Cannot convert floating point {:?} to u32", v)
+        },
+        StackFrameValue::Reference(data) => {
+            *data 
         },
         _ => panic!("Cannot convert {:?} to u32", v),
     }

@@ -3,9 +3,7 @@ use std::{f32::consts::E, io::Read, net::TcpListener};
 use log::{error, info};
 
 use crate::{
-    common::{reference::Reference, stack_frame::StackFrame, value::StackFrameValue},
-    runtime::runtime_data_area::{self, get_reference},
-};
+    common::{reference::Reference, stack_frame::StackFrame, value::StackFrameValue}};
 
 pub fn accept(frame: &mut StackFrame) {
     let sfv = frame.op_stack.pop().unwrap();

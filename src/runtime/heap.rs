@@ -21,7 +21,7 @@ const REFERENCE_ARRAY_MULTI_FLAG: u8 = 0b01000000;
 
 use crate::{
     classfile::class::Class,
-    common::{param::DataType, value},
+    common::{error::Throwable, param::DataType, value},
     memory,
     utils::u8c,
 };
@@ -143,10 +143,13 @@ impl Heap {
                 DataType::Long => {
                     size += 8;
                 }
-                DataType::Reference(id) => {
+                DataType::Reference(_id) => {
                     // 修正：使用正确的格式化语法
                     //info!("Reference id: {}", id);
-                    size += 8;
+                    size += 4;
+                },
+               DataType::Array {depth: _depth, element_type: _element_type } => {
+                    size += 4;
                 }
                 DataType::Short => {
                     size += 2;
@@ -177,6 +180,28 @@ impl Heap {
 
         object_id
     }
+
+
+   /**
+    * 检查一个对象是否是数组
+    */
+    pub fn is_array(&self, object_id: usize) -> bool {
+        let start = self.address_map[object_id] as usize;
+        self.memory[start] & 0b10000000 != 0
+    }
+
+    pub fn get_object_class_id(&self, object_id: usize) -> Result<u32,Throwable> {
+        let start = self.address_map[object_id] as usize;
+        let mut array = [0u8;4];
+        array[0] = self.memory[start + 2];
+        array[1] = self.memory[start + 3];
+        array[2] = self.memory[start + 4];
+        array[3] = self.memory[start + 5];
+        Ok(u8c::combine_u8_to_u32(
+           array
+        ))
+    }
+
 
     /**
      * 创建基本类型数组对象
@@ -429,6 +454,8 @@ impl Heap {
         u32::from_be_bytes(bytes)
     }
 
+    
+
     /**
      * 读取基本类型数组元素
      */
@@ -592,8 +619,8 @@ impl Heap {
         u32::from_be_bytes(bytes)
     }
 
-    pub fn put_field_i64(&mut self, reference_id: u32, offset: u32, value: &i64) {
-        let array = u8c::split_i64_to_u8(*value);
+    pub fn put_field_i64(&mut self, reference_id: u32, offset: u32, value: i64) {
+        let array = u8c::split_i64_to_u8(value);
         let start_index = (self.address_map[reference_id as usize] + 6 + offset) as usize;
         self.memory[start_index] = array[0];
         self.memory[start_index + 1] = array[1];
@@ -605,8 +632,8 @@ impl Heap {
         self.memory[start_index + 7] = array[7];
     }
 
-    pub fn put_field_i32(&mut self, reference_id: u32, offset: u32, value: &i32) {
-        let array = u8c::split_i32_to_u8(*value);
+    pub fn put_field_i32(&mut self, reference_id: u32, offset: u32, value: i32) {
+        let array = u8c::split_i32_to_u8(value);
         let start_index = (self.address_map[reference_id as usize] + 6 + offset) as usize;
         self.memory[start_index] = array[0];
         self.memory[start_index + 1] = array[1];
@@ -614,8 +641,8 @@ impl Heap {
         self.memory[start_index + 3] = array[3];
     }
 
-    pub fn put_field_f32(&mut self, reference_id: u32, offset: u32, value: &f32) {
-        let array = u8c::split_u32_to_u8(*value as u32);
+    pub fn put_field_f32(&mut self, reference_id: u32, offset: u32, value: f32) {
+        let array = u8c::split_u32_to_u8(value as u32);
         let start_index = (self.address_map[reference_id as usize] + 6 + offset) as usize;
         self.memory[start_index] = array[0];
         self.memory[start_index + 1] = array[1];
@@ -623,8 +650,8 @@ impl Heap {
         self.memory[start_index + 3] = array[3];
     }
 
-    pub fn put_field_f64(&mut self, reference_id: u32, offset: u32, value: &f64) {
-        let array = u8c::split_u64_to_u8(*value as u64);
+    pub fn put_field_f64(&mut self, reference_id: u32, offset: u32, value: f64) {
+        let array = u8c::split_u64_to_u8(value as u64);
         let start_index = (self.address_map[reference_id as usize] + 6 + offset) as usize;
         self.memory[start_index] = array[0];
         self.memory[start_index + 1] = array[1];
@@ -636,8 +663,8 @@ impl Heap {
         self.memory[start_index + 7] = array[7];
     }
 
-    pub fn put_field_reference(&mut self, reference_id: u32, offset: u32, value: &u32) {
-        let array = u8c::split_u32_to_u8(*value as u32);
+    pub fn put_field_reference(&mut self, reference_id: u32, offset: u32, value: u32) {
+        let array = u8c::split_u32_to_u8(value as u32);
         let start_index = (self.address_map[reference_id as usize] + 6 + offset) as usize;
         self.memory[start_index] = array[0];
         self.memory[start_index + 1] = array[1];
@@ -645,8 +672,8 @@ impl Heap {
         self.memory[start_index + 3] = array[3];
     }
 
-    pub fn put_field_u32(&mut self, reference_id: u32, offset: u32, value: &u32) {
-        let array = u8c::split_i32_to_u8(*value as i32);
+    pub fn put_field_u32(&mut self, reference_id: u32, offset: u32, value: u32) {
+        let array = u8c::split_i32_to_u8(value as i32);
         let start_index = (self.address_map[reference_id as usize] + 6 + offset) as usize;
         self.memory[start_index] = array[0];
         self.memory[start_index + 1] = array[1];
@@ -654,20 +681,28 @@ impl Heap {
         self.memory[start_index + 3] = array[3];
     }
 
-    pub fn put_field_i16(&mut self, reference_id: u32, offset: u32, value: &i16) {
-        let array = u8c::split_i16_to_u8(*value);
+    pub fn put_field_i16(&mut self, reference_id: u32, offset: u32, value: i16) {
+        let array = u8c::split_i16_to_u8(value);
         let start_index = (self.address_map[reference_id as usize] + 6 + offset) as usize;
         self.memory[start_index] = array[0];
         self.memory[start_index + 1] = array[1];
     }
 
-    pub fn put_field_i8(&mut self, reference_id: u32, offset: u32, value: &i8) {
+    pub fn put_field_i8(&mut self, reference_id: u32, offset: u32, value: i8) {
         let start_index = (self.address_map[reference_id as usize] + 6 + offset) as usize;
-        self.memory[start_index] = *value as u8
+        self.memory[start_index] = value as u8
     }
 
     //get_constant_pool_class
     pub fn get_constant_pool_class(&self, class_id: &u32) -> Option<&u32> {
         self.class_pool.get(class_id)
+    }
+
+    pub fn put_into_class_constant_pool(&mut self, class_id: u32, class_object_id: u32) {
+        self.class_pool.insert(class_id, class_object_id);
+    }
+
+    pub fn get_constant_string_pool(&self, string: &String) -> Option<&u32> {
+        self.str_pool.get(string)
     }
 }

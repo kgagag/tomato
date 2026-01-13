@@ -1,7 +1,7 @@
 use std::num::Wrapping;
 use log::info;
 
-use crate::common::{error::Throwable, stack_frame::StackFrame, value::StackFrameValue};
+use crate::common::{error::{Exception, Throwable}, stack_frame::StackFrame, value::StackFrameValue};
 
 
 
@@ -129,7 +129,9 @@ pub fn idiv(frame: &mut StackFrame) ->Result<(),Throwable>{
         panic!()
     }
     let result = i1 / i2;
-    //warn!("{}", format!("{}{}", "idiv add result:", result));
+    if i2 == 0 {
+        return Err(Throwable::Exception(Exception::Arithmetic("div by zero".to_string())));
+    }
     frame.op_stack.push(StackFrameValue::Int(result));
     frame.pc += 1;
     Ok(())

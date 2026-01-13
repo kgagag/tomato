@@ -8,7 +8,6 @@ use crate::{
     runtime::{
         heap::{self, Heap},
         metaspace::{self, Metaspace},
-        runtime_data_area::{get_class_name, get_or_load_class, get_reference},
     },
 };
 
@@ -73,37 +72,37 @@ pub fn putfield(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut
                 metaspace.get_field_tupple(&class_name, &field_name);
             match DataType::from(data_type) {
                 DataType::Int => {
-                    heap.put_field_i32(object_id, offset, &value::as_i32(&value));
+                    heap.put_field_i32(object_id, offset, value::as_i32(&value));
                 }
                 DataType::Long => {
-                    heap.put_field_i64(object_id, offset, &value::as_i64(&value));
+                    heap.put_field_i64(object_id, offset, value::as_i64(&value));
                 }
                 DataType::Float => {
-                    heap.put_field_f32(object_id, offset, &value::as_f32(&value));
+                    heap.put_field_f32(object_id, offset, value::as_f32(&value));
                 }
                 DataType::Byte => {
-                    heap.put_field_i8(object_id, offset, &value::as_i8(&value));
+                    heap.put_field_i8(object_id, offset, value::as_i8(&value));
                 }
                 DataType::Char => {
-                    heap.put_field_i16(object_id, offset, &value::as_i16(&value));
+                    heap.put_field_i16(object_id, offset, value::as_i16(&value));
                 }
                 DataType::Double => {
-                    heap.put_field_f64(object_id, offset, &value::as_f64(&value));
+                    heap.put_field_f64(object_id, offset, value::as_f64(&value));
                 }
                 DataType::Reference(_) => {
-                    heap.put_field_u32(object_id, offset, &value::as_u32(&value));
+                    heap.put_field_u32(object_id, offset, value::as_u32(&value));
                 }
                 DataType::Short => {
-                    heap.put_field_i16(object_id, offset, &value::as_i16(&value));
+                    heap.put_field_i16(object_id, offset, value::as_i16(&value));
                 }
                 DataType::Boolean => {
-                    heap.put_field_i8(object_id, offset, &value::as_i8(&value));
+                    heap.put_field_i8(object_id, offset, value::as_i8(&value));
                 }
                 DataType::Array {
                     element_type,
                     depth,
                 } => {
-                    heap.put_field_u32(object_id, offset, &value::as_u32(&value));
+                    heap.put_field_u32(object_id, offset, value::as_u32(&value));
                 }
                 DataType::Unknown => todo!(),
             }

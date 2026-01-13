@@ -5,13 +5,43 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="70c6e279-5046-4c44-ba52-f4228d3f6634" name="Changes" comment="&quot;调整目录&quot;">
+      <change afterPath="$PROJECT_DIR$/src/test/TryCatchTest01.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/classloader/class_loader.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/classloader/class_loader.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/common/mod.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/common/mod.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/java/lang/Class$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/java/lang/Class$3.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/java/lang/Class$4.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/java/lang/Class$4.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/java/lang/Class$AnnotationData.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/java/lang/Class$AnnotationData.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/java/lang/Class.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/java/lang/Class.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/Test.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/Test.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/Test106.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/Test106.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/Test49.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/Test49.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/java/lang/Class.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/java/lang/Class.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/Test.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/Test.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/Test106.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/Test106.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/Test49.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/Test49.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../src/common/stack_frame.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/common/stack_frame.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/common/value.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/common/value.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/interpreter/instructions/op_code.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/interpreter/instructions/op_code.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_array.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_array.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_field.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_field.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_instanceof.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_instanceof.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_invoke.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_invoke.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_ldc.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_ldc.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_math.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_math.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_new.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_new.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_return.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_return.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/native/mod.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/native/mod.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/native/native.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/native/native.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/native/native_array.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/native/native_array.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/native/native_class.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/native/native_class.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/native/native_net.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/native/native_net.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/native/native_object.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/native/native_object.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/native/native_system.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/native/native_system.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/runtime/heap.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/runtime/heap.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/runtime/metaspace.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/runtime/metaspace.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/runtime/mod.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/runtime/mod.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/runtime/runtime_data_area.rs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/utils/debug.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/utils/debug.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/utils/java.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/utils/java.rs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -89,20 +119,7 @@
       <recent name="test" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.Test9">
-    <configuration name="LeetCode_33" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="test.LeetCode_33" />
-      <module name="jre" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="test.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
+  <component name="RunManager" selected="Application.Test106">
     <configuration name="Test" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="test.Test" />
       <module name="jre" />
@@ -116,8 +133,8 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="Test1" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="test.Test1" />
+    <configuration name="Test106" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="test.Test106" />
       <module name="jre" />
       <extension name="coverage">
         <pattern>
@@ -129,8 +146,8 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="Test20" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="test.Test20" />
+    <configuration name="Test49" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="test.Test49" />
       <module name="jre" />
       <extension name="coverage">
         <pattern>
@@ -155,13 +172,26 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="TryCatchTest01" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="test.TryCatchTest01" />
+      <module name="jre" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="test.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.Test9" />
-        <item itemvalue="Application.Test20" />
-        <item itemvalue="Application.LeetCode_33" />
-        <item itemvalue="Application.Test1" />
+        <item itemvalue="Application.Test106" />
         <item itemvalue="Application.Test" />
+        <item itemvalue="Application.Test49" />
+        <item itemvalue="Application.TryCatchTest01" />
+        <item itemvalue="Application.Test9" />
       </list>
     </recent_temporary>
   </component>
@@ -260,7 +290,12 @@
       <workItem from="1767843940647" duration="7404000" />
       <workItem from="1767894022289" duration="2628000" />
       <workItem from="1767929906258" duration="2514000" />
-      <workItem from="1768021854584" duration="1951000" />
+      <workItem from="1768021854584" duration="2284000" />
+      <workItem from="1768186909813" duration="43000" />
+      <workItem from="1768186969990" duration="811000" />
+      <workItem from="1768208316551" duration="1428000" />
+      <workItem from="1768302958710" duration="6276000" />
+      <workItem from="1768325173511" duration="1970000" />
     </task>
     <task id="LOCAL-00001" summary="&quot;add test case&quot;">
       <option name="closed" value="true" />

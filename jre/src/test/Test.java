@@ -93,7 +93,7 @@ public class Test {
 
         // 力扣 第31 题
         new LeetCode_31().test();
-/*
+
         //创建String 对象
         new Test37().test();
         new Test39().test();
@@ -149,6 +149,7 @@ public class Test {
 //        // 测试GC
         new TestGc().test();
         new TestGC2().test();
+
 //
 //       // new test.Test71().test();
 //        // 加载Throwable
@@ -208,7 +209,7 @@ public class Test {
         new Test99().test();
         new Test100().test();
 
-        */
+
         //long t1 = System.nanoTime();
         //new Test103().test();
         //long t2 = System.nanoTime();

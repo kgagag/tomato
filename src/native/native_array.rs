@@ -1,19 +1,22 @@
 
 use log::info;
 
-use crate::{classfile::class::MethodInfo, common::{param::DataType, stack_frame::StackFrame, value::StackFrameValue}, runtime::runtime_data_area::create_array};
+use crate::{classfile::class::MethodInfo, common::{param::DataType, stack_frame::StackFrame, value::StackFrameValue}, runtime::{heap::Heap, metaspace::Metaspace}};
 
 
 
 /*
  * 创建一个一维数组
  */
-pub fn new_array(method: &MethodInfo, frame: &mut StackFrame) {
+pub fn new_array(method: &MethodInfo, vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Metaspace) {
+    let frame_index = vm_stack.len() - 1;
+    let frame = &mut vm_stack[frame_index];
     let _ = method;
     let len = frame.popi64();
     let _component_sfv_type_: StackFrameValue = frame.op_stack.pop().unwrap();
-    let array = create_array(len as u32, DataType::Array { element_type: (Box::new(DataType::Int)), depth: (1) });
-    frame.op_stack.push(StackFrameValue::Reference(array));
+    //let array = create_array(len as u32, DataType::Array { element_type: (Box::new(DataType::Int)), depth: (1) });
+    let id = heap.create_basic_array(10, len as u32, 1);
+    frame.op_stack.push(StackFrameValue::Reference(id as u32));
 }
 
 // fn get_rust_string(id: &u64) -> String {

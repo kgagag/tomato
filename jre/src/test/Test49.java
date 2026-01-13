@@ -10,7 +10,7 @@ public class Test49 extends Test48 {
         return Result.FAILED;
     }
     public static void main(String[] args) {
-
+        System.out.println(new Test49().test());
     }
 }
 

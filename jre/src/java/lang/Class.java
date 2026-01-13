@@ -3260,19 +3260,20 @@ public final class Class<T> implements java.io.Serializable,
      * @since  1.4
      */
     public boolean desiredAssertionStatus() {
-        ClassLoader loader = getClassLoader();
-        // If the loader is null this is a system class, so ask the VM
-        if (loader == null)
-            return desiredAssertionStatus0(this);
-
-        // If the classloader has been initialized with the assertion
-        // directives, ask it. Otherwise, ask the VM.
-        synchronized(loader.assertionLock) {
-            if (loader.classAssertionStatus != null) {
-                return loader.desiredAssertionStatus(getName());
-            }
-        }
-        return desiredAssertionStatus0(this);
+//        ClassLoader loader = getClassLoader();
+//        // If the loader is null this is a system class, so ask the VM
+//        if (loader == null)
+//            return desiredAssertionStatus0(this);
+//
+//        // If the classloader has been initialized with the assertion
+//        // directives, ask it. Otherwise, ask the VM.
+//        synchronized(loader.assertionLock) {
+//            if (loader.classAssertionStatus != null) {
+//                return loader.desiredAssertionStatus(getName());
+//            }
+//        }
+//        return desiredAssertionStatus0(this);
+        return true;
     }
 
     // Retrieves the desired assertion status of this class from the VM

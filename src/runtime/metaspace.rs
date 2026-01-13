@@ -26,6 +26,7 @@ impl Metaspace {
      * 不支持查找父类字段
      */
     pub fn get_field_tupple(&mut self, class_name: &String, field_name: &String) -> (u16, u32,DataType) {
+        //info!("get_field_tupple:{},{}", class_name, field_name);
         let class_id = self.class_map.get(class_name).unwrap();
         let class = &self.classes[*class_id];
         let field = class.field_info.get(field_name).unwrap();
@@ -57,7 +58,6 @@ impl Metaspace {
         }
         let mut curr_class_name = class_name.clone();
         while m.is_none() {
-            //info!("==={:?}===",curr_class_name);
             let class_id = self.class_map.get(&curr_class_name).unwrap();
             let class = &self.classes[*class_id];  
             if class.super_class_name.is_empty() {

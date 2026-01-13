@@ -1,4 +1,4 @@
-use std::f32::consts::E;
+use std::{f32::consts::E, string};
 
 use log::info;
 
@@ -9,10 +9,6 @@ use crate::{
     runtime::{
         heap::{self, Heap},
         metaspace::Metaspace,
-        runtime_data_area::{
-            get_class_name, get_constant_pool_class, get_constant_pool_str, get_or_load_class,
-            put_into_class_constant_pool,
-        }, vm,
     },
     utils::{java, u8c::u8s_to_u16},
 };
@@ -22,7 +18,7 @@ extern crate log;
 
 pub fn ldc(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Metaspace) ->Result<(), Throwable> {
     let frame_index = vm_stack.len() - 1;
-    let (float_value, int_value, string_index, class_index) = {
+    let (float_value, int_value, class_index,string_index) = {
         let frame = &mut vm_stack[frame_index];
         let index = frame.code[frame.pc + 1];
         let this_class = &mut metaspace.classes[frame.class];
@@ -58,15 +54,26 @@ pub fn ldc(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Meta
         vm_stack[frame_index]
             .op_stack
             .push(StackFrameValue::Int(int_value));
-    } else if let Some(string_index) = string_index {
-
+    } else if let Some(string) = string_index {
+        //let string_obj = heap::create_string_object(string_index, vm_stack, heap, metaspace)?;
+        let string_obj =heap.get_constant_string_pool(&string);
+        if string_obj.is_some() {
+             vm_stack[frame_index]
+                .op_stack
+                .push(StackFrameValue::Reference(*string_obj.unwrap()));
+        }else{
+            let string_obj = java::create_string_object(string,vm_stack,heap,metaspace)?;
+            vm_stack[frame_index]
+                .op_stack
+                .push(StackFrameValue::Reference(string_obj));
+        }
     } else if let Some(class_name) = class_index {
         //确保这个类已被加载
         let class_id: usize = (class_loader::find_class(&class_name, vm_stack, heap, metaspace)?).id;
         let class_obj = heap.get_constant_pool_class(&(class_id as u32));
         if class_obj.is_none() {
-            let obj_id: u32 = java::create_class_object(&class_name);
-            put_into_class_constant_pool(class_name.clone(), obj_id);
+            let obj_id: u32 = java::create_class_object(&class_name,vm_stack,heap,metaspace)?;
+            heap.put_into_class_constant_pool(class_id as u32, obj_id);
             vm_stack[frame_index].op_stack.push(StackFrameValue::Reference(obj_id));
         } else {
              vm_stack[frame_index]

@@ -9,7 +9,6 @@ use crate::{
     runtime::{
         heap::{self, Heap},
         metaspace::Metaspace,
-        runtime_data_area::{create_object, get_class_name, get_or_load_class},
     },
     utils::u8c::u8s_to_u16,
 };

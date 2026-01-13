@@ -29,12 +29,12 @@ pub mod op_code {
     use opcode_swap::*;
     use opcode_thread::*;
 
+    use crate::classfile::class::{AttributeInfo, ConstantPoolInfo, Exception};
     use crate::common::error::Throwable;
     use crate::common::stack_frame::StackFrame;
     use crate::interpreter::instructions::*;
     use crate::runtime::heap::Heap;
     use crate::runtime::metaspace::Metaspace;
-    use crate::runtime::runtime_data_area::VM_STACKS;
     use crate::runtime::vm;
     use crate::runtime::vm::Vm;
     use opcode_nop::nop;
@@ -60,7 +60,7 @@ pub mod op_code {
 
     pub fn do_opcode(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Metaspace) ->Result<(),Throwable> {
         //let mut map = HashMap::new();
-       let a = while !vm_stack.is_empty()
+        while !vm_stack.is_empty()
         {
             //let start = Instant::now();
 
@@ -69,12 +69,12 @@ pub mod op_code {
             let frame: &mut StackFrame = &mut vm_stack[frame_index];
             let code = frame.code[frame.pc];
 
-            //\info!("{:x}--{}--{:?}--{:?}--{:?}--opstack:{:?}--local:{:?}",code,frame.pc,frame.class_name,frame.method_name,frame.descriptor,frame.op_stack,frame.local);
+            info!("{:x}--{}--{:?}--{:?}--{:?}--opstack:{:?}--local:{:?}",code,frame.pc,frame.class_name,frame.method_name,frame.descriptor,frame.op_stack,frame.local);
             //info!("{:x}--{}--{:?}--{:?}--{:?}",code,frame.pc,frame.class_name,frame.method_name,frame.descriptor);
             // if code == 0xbb || code == 0xbc || code == 0xbd || code == 0xc5 {
             //     full_gc();
             // }
-        let result = match code {
+        let _result = match code {
                 0x00 => nop(frame),
                 0x01 => aconst_null(frame),
                 0x02 => iconst_m1(frame),
@@ -94,7 +94,7 @@ pub mod op_code {
                 0x10 => bipush(frame),
                 0x11 => sipush(frame),
                 0x12 => ldc(vm_stack, heap, metaspace),
-                0x14 =>  ldc2_w(vm_stack, heap, metaspace),
+                0x14 => ldc2_w(vm_stack, heap, metaspace),
                 0x15 => iload(frame),
                 0x16 => lload(frame),
                 0x17 => fload(frame),
@@ -267,7 +267,7 @@ pub mod op_code {
                 0xbe => arraylength(vm_stack, heap),
                 0xbf => athrow(frame),
                 0xc0 => checkcast(frame),
-                0xc1 => instanceof(frame),
+                0xc1 => instanceof(vm_stack, heap, metaspace),
                 0xc2 => monitorenter(frame),
                 0xc3 => monitorexit(frame),
                 // 0xc4 => wide(frame),
@@ -281,6 +281,50 @@ pub mod op_code {
                     panic!("Unknown instruction code: 0x{:02X}", code);
                 }
             };
+
+            // match result {
+            //     Ok(()) => continue,
+            //     Err(error) => {
+            //        match error {
+            //         Throwable::Exception(exception) => {
+            //             if code != 0xbf {
+            //                 //找到当前方法的异常table
+            //                 //let index = frame_index;
+            //                 while true {
+            //                     let frame_index = vm_stack.len() - 1;
+            //                     let frame = &vm_stack[frame_index];
+            //                     let constant_pool: &Vec<crate::classfile::class::ConstantPoolInfo> = &metaspace.classes[frame.class].constant_pool;
+            //                     let method_info = metaspace.get_method_from_pool(&frame.class_name, &frame.method_name, &frame.descriptor);
+            //                     if method_info.is_some() {
+            //                         let method_info = method_info.unwrap();
+            //                         method_info.attributes.iter().for_each(|attribute| { 
+            //                             if let AttributeInfo::Code(code_attribute) = attribute {
+            //                                 for exception_table in &code_attribute.exception_table {
+            //                                     if exception_table.start_pc <= frame.pc as u16 && (frame.pc as u16) < exception_table.end_pc {
+            //                                        let class_constant =  &constant_pool[exception_table.catch_type as usize];
+            //                                        match class_constant {
+            //                                             ConstantPoolInfo::Class(class_info) => {
+            //                                                 let class_name = &class_info.name;
+            //                                                 let class_id = metaspace.class_map.get(class_name).unwrap();
+            //                                                 let class = &metaspace.classes[*class_id];
+            //                                                 let method_info = metaspace.get_method_from_pool(&class.name, "throw", "()V");
+            //                                             }
+            //                                            _=>panic!("unknown constant pool info")
+            //                                        }
+            //                                     }
+            //                                 }
+            //                             }
+            //                         });
+            //                     }
+            //                 }
+            //             }
+            //         },
+            //         Throwable::Error(jvm_error) => {
+            //             return Err(Throwable::Error(jvm_error));
+            //         },
+            //         }
+            //     }
+            // };
 
             //Ok(())
 

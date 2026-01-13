@@ -6,7 +6,6 @@ use crate::common::param::DataType;
 use crate::common::reference::Reference;
 use crate::common::stack_frame::create_stack_frame;
 use crate::common::stack_frame::init_stack_frame;
-use crate::common::stack_frame::push_stack_frame;
 use crate::common::stack_frame::StackFrame;
 use crate::common::value::StackFrameValue;
 use crate::native::native::run_native;
@@ -68,7 +67,7 @@ pub fn invokespecial(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace:
         metaspace.get_method_from_root(&target_class_name, &method_name, &descriptor);
     //先移动
     vm_stack[frame_index].pc += 3;
-    let mut method = method.unwrap();
+    let method = method.unwrap();
     if method.access_flag & 0x0100 == 0 {
         let mut new_frame = init_stack_frame(&mut vm_stack[frame_index], &method, class, 1);
         let v = vm_stack[frame_index].op_stack.pop();
@@ -82,7 +81,7 @@ pub fn invokespecial(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace:
         }
         vm_stack.push(new_frame);
     } else {
-        run_native(&mut method, &mut vm_stack[frame_index]);
+        run_native(&mut method.clone(),vm_stack,heap,metaspace);
     }
     Ok(())
 }
@@ -263,8 +262,6 @@ pub fn invokevirtual(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace:
     let (method, class) =
         metaspace.get_method_from_root(&target_class_name, &method_name, &descriptor);
     let mut method = method.unwrap();
-    //先移动
-    vm_stack[frame_index].pc += 3;
     if method.access_flag & 0x0100 == 0 {
         let mut new_frame = init_stack_frame(&mut vm_stack[frame_index], &method, class, 1);
         let v = vm_stack[frame_index].op_stack.pop();
@@ -279,8 +276,9 @@ pub fn invokevirtual(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace:
         //heappush_stack_frame(new_frame);
         vm_stack.push(new_frame);
     } else {
-        run_native(&mut method, &mut vm_stack[frame_index]);
+        run_native(&mut method.clone(), vm_stack,heap,metaspace);
     }
+    vm_stack[frame_index].pc += 3;
     Ok(())
 }
 
@@ -344,12 +342,12 @@ pub fn invokestatic(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: 
     //我写的辅助调试输出的工具
     if method.method_name == "print20240503" {
         let v = vm_stack[frame_index].op_stack.pop().unwrap();
-        dprint(v);
+        dprint(v,vm_stack,heap,metaspace);
     } else if method.access_flag & 0x0100 == 0 {
         let new_frame = init_stack_frame(&mut vm_stack[frame_index], &method, &class, 0);
         vm_stack.push(new_frame);
     } else {
-        run_native(&method, &mut vm_stack[frame_index]);
+        run_native(&method.clone(),vm_stack,heap,metaspace);
     }
     Ok(())
 }

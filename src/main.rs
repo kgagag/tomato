@@ -12,7 +12,7 @@ fn main() {
         .format_timestamp(Some(env_logger::TimestampPrecision::Millis))
         .format_module_path(true)
         .init();
-    let _ = run(String::from("test/Test"));
+    let _ = run(String::from("test/Test106"));
 }
 
 /***

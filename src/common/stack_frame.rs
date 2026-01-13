@@ -3,7 +3,7 @@ use log::info;
 use std::cell::UnsafeCell;
 use std::collections::HashMap;
 
-use crate::{classfile::class::{AttributeInfo, Class, CodeAttribute, ConstantPoolInfo, MethodInfo}, common::op_stack::OpStack, runtime::runtime_data_area::{VM_STACKS, get_method_from_pool, get_or_load_class}, utils::u8c::u8s_to_u16};
+use crate::{classfile::class::{AttributeInfo, Class, CodeAttribute, ConstantPoolInfo, MethodInfo}, common::op_stack::OpStack, utils::u8c::u8s_to_u16};
 
 use super::{param::DataType, value::{number_to_u32tuple, StackFrameValue}};
 /**
@@ -133,72 +133,6 @@ impl StackFrame {
             }
         }
     }
-
-
-    pub fn get_method_for_invoke(&self) -> Option<MethodInfo> {
-        let this_class = get_or_load_class(&self.class_name).clone();
-        // 使用 match 代替 if let 以减少嵌套，并处理 unwrap 导致的潜在 panic
-        let (class_index, name_and_type_index) = match &this_class
-            .constant_pool[u8s_to_u16(&self.code[(self.pc + 1)..(self.pc + 3)]) as usize]
-        {
-            ConstantPoolInfo::Methodref(class_index, name_and_type_index) => {
-                (class_index, name_and_type_index)
-            }
-            _ => return None,
-        };
-
-        // 通过链式调用减少嵌套
-        let target_class_name =Some(&this_class
-            .constant_pool
-            [*class_index as usize])
-            .and_then(|cp_info| match cp_info {
-                ConstantPoolInfo::Class(name_index) => Some(&this_class.constant_pool[*name_index as usize]),
-                _ => None,
-            })
-            .and_then(|name_info| match name_info {
-                ConstantPoolInfo::Utf8(target_class_name) => Some(target_class_name),
-                _ => None,
-            });
-
-        let target_class = match target_class_name {
-            Some(class_name_target) => get_or_load_class(class_name_target),
-            None => return None,
-        };
-
-        // 继续减少嵌套并简化逻辑
-        let (method_name, descriptor) = match &this_class.constant_pool[*name_and_type_index as usize] {
-            ConstantPoolInfo::NameAndType(name_index, descriptor_index) => {
-                let method_name = match &this_class.constant_pool[*name_index as usize] {
-                    ConstantPoolInfo::Utf8(name) => name,
-                    _ => return None,
-                };
-                let descriptor = match &this_class.constant_pool[*descriptor_index as usize] {
-                    ConstantPoolInfo::Utf8(desc) => desc,
-                    _ => return None,
-                };
-                (method_name, descriptor)
-            }
-            _ => return None,
-        };
-
-        let mut method = get_method_from_pool(
-        & target_class.class_name,
-        & method_name,
-        & descriptor,
-        );
-        let mut curr_class = target_class;
-        while method.is_none() {
-            let super_class = get_or_load_class(&curr_class.super_class_name);
-            method = get_method_from_pool(
-                &super_class.class_name,
-            & method_name,
-                &descriptor,
-            );
-            curr_class = super_class;
-        }
-        method
-    }
-
 }
 
 pub fn init_stack_frame(
@@ -302,31 +236,4 @@ pub fn create_stack_frame_with_class(
     class: &Class,
 ) -> Option<StackFrame> {
     create_stack_frame(method_info, class)
-}
-
-pub fn push_stack_frame(mut stack_frame: StackFrame) -> u32 {
-    let data: std::sync::MutexGuard<'_, UnsafeCell<HashMap<u32, Vec<StackFrame>>>> =
-        VM_STACKS.lock().unwrap();
-    let mut vm_stack_id: u32 = stack_frame.vm_stack_id;
-    unsafe {
-        let map: &mut HashMap<u32, Vec<StackFrame>> = &mut *data.get();
-        if stack_frame.vm_stack_id == 0 {
-            for i in 0x1..0xFFFFFFFF_u32 {
-                if !map.contains_key(&i) {
-                    stack_frame.vm_stack_id = i;
-                    vm_stack_id = i;
-                    let stack_frames: Vec<StackFrame> = vec![stack_frame];
-                    map.insert(i, stack_frames);
-                    break;
-                }
-            }
-        } else {
-            let frames = map.get_mut(&stack_frame.vm_stack_id).unwrap();
-            //info!("before:{:?}", frames);
-            frames.push(stack_frame);
-            //info!("after:{:?}", frames);
-        }
-        drop(data);
-    }
-    vm_stack_id
 }

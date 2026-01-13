@@ -11,7 +11,6 @@ use crate::{
     runtime::{
         heap::{self, Heap},
         metaspace::Metaspace,
-        runtime_data_area::{create_array, get_class_name, get_or_load_class, get_reference},
     },
     utils::u8c::u8s_to_u16,
 };
@@ -299,6 +298,9 @@ fn xastore(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, _metaspace: &mut Met
                 StackFrameValue::Reference(val) =>{
                     heap.put_array_element(reference_id, index, val as u64);
                 }
+                StackFrameValue::Null => {
+                    heap.put_array_element(reference_id, index, 0);
+                }
                 _=> panic!("")
             }
         }
@@ -385,7 +387,7 @@ fn xaload(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Metas
                     frame.op_stack.push(StackFrameValue::Boolean(value != 0));
                 }
                 5 => { // char
-                     //  frame.op_stack.push(StackFrameValue::CHARACTER(value as u16 as char));
+                       frame.op_stack.push(StackFrameValue::CHARACTER(char::from_u32(value as u32).unwrap()));
                 }
                 6 => {
                     // float

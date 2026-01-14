@@ -13,7 +13,7 @@ pub struct OpStack{
 impl OpStack{
     pub fn new(flag:bool)->OpStack{
         OpStack{
-            small_stack:[StackFrameValue::UNSET;128],
+            small_stack:[StackFrameValue::Null;128],
             large_stack:Vec::new(),
             flag:flag,
             small_size: 0,

@@ -4,7 +4,7 @@ pub mod op_code {
     use std::result;
     use std::time::Instant;
 
-    use log::info;
+    use log::{error, info, warn};
     use opcode_array::*;
     use opcode_checkcast::*;
     use opcode_compare::*;
@@ -69,12 +69,12 @@ pub mod op_code {
             let frame: &mut StackFrame = &mut vm_stack[frame_index];
             let code = frame.code[frame.pc];
 
-            info!("{:x}--{}--{:?}--{:?}--{:?}--opstack:{:?}--local:{:?}",code,frame.pc,frame.class_name,frame.method_name,frame.descriptor,frame.op_stack,frame.local);
-            //info!("{:x}--{}--{:?}--{:?}--{:?}",code,frame.pc,frame.class_name,frame.method_name,frame.descriptor);
+            //println!("{:x}--{}--{:?}--{:?}--{:?}--opstack:{:?}--local:{:?}",code,frame.pc,frame.class_name,frame.method_name,frame.descriptor,frame.op_stack,frame.local);
+            //println!("{:x}--{}--{:?}--{:?}--{:?}",code,frame.pc,frame.class_name,frame.method_name,frame.descriptor);
             // if code == 0xbb || code == 0xbc || code == 0xbd || code == 0xc5 {
             //     full_gc();
             // }
-        let _result = match code {
+        let result = match code {
                 0x00 => nop(frame),
                 0x01 => aconst_null(frame),
                 0x02 => iconst_m1(frame),
@@ -281,6 +281,15 @@ pub mod op_code {
                     panic!("Unknown instruction code: 0x{:02X}", code);
                 }
             };
+
+
+            match result {
+                Ok(()) => continue,
+                Err(error) => {
+                  error!("Error executing instruction:{:x}, {:?}",code, error);
+                   panic!("Error executing instruction:{:x}, {:?}",code, error)
+                }
+            }
 
             // match result {
             //     Ok(()) => continue,

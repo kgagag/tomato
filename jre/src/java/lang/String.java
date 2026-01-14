@@ -25,6 +25,8 @@
 
 package java.lang;
 
+import test.StringHelper;
+
 import java.io.ObjectStreamField;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;

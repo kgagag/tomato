@@ -26,6 +26,8 @@
 package java.lang;
 
 
+import test.StringHelper;
+
 /**
  * A mutable sequence of characters.  This class provides an API compatible
  * with {@code StringBuffer}, but with no guarantee of synchronization.
@@ -80,7 +82,6 @@ public final class StringBuilder
 
     /** use serialVersionUID for interoperability */
     static final long serialVersionUID = 4383685877147921099L;
-
     /**
      * Constructs a string builder with no characters in it and an
      * initial capacity of 16 characters.
@@ -163,6 +164,7 @@ public final class StringBuilder
 
     @Override
     public StringBuilder append(CharSequence s) {
+        // Create a copy, don't share the array
         super.append(s);
         return this;
     }
@@ -403,7 +405,6 @@ public final class StringBuilder
 
     @Override
     public String toString() {
-        // Create a copy, don't share the array
         return new String(value, 0, count);
     }
 

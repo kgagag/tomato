@@ -79,7 +79,7 @@ pub fn array_copy(method: &MethodInfo,vm_stack: &mut Vec<StackFrame>, heap: &mut
         //     .unwrap()
         //     .clone();
         let (_atype,value) = heap.get_array_element(src_array_id, (src_start + i) as usize);
-        heap.put_array_element(des_array_id, (des_start + i) as usize, value);
+        heap.put_array_element(des_array_id, (des_start + i) as usize, value.unwrap());
     }
 }
 

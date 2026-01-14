@@ -17,6 +17,7 @@ use crate::runtime::metaspace::Metaspace;
 use crate::utils::u8c::u8s_to_u16;
 use crate::utils::u8c::u8s_to_u32;
 use byteorder::{BigEndian, ReadBytesExt};
+use linked_hash_map::LinkedHashMap;
 use log::info;
 use log::warn;
 use std::collections::HashMap;
@@ -801,8 +802,8 @@ pub fn get_field(
     constant_pool: &Vec<ConstantPoolInfo>,
     cnt: u16,
     cursor: &mut Cursor<Vec<u8>>,
-) -> HashMap<String, FieldInfo> {
-    let mut v: HashMap<String, FieldInfo> = HashMap::new();
+) -> LinkedHashMap<String, FieldInfo> {
+    let mut v: LinkedHashMap<String, FieldInfo> = LinkedHashMap::new();
     for _j in 0..cnt {
         let mut f: FieldInfo = FieldInfo {
             access_flag: cursor.read_u16::<BigEndian>().unwrap(),

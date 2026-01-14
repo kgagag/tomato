@@ -47,7 +47,7 @@ impl Heap {
             //可用内存块列表
             memory_block: vec![(0, 1024 * 1024)],
 
-            address_map_index: 0,
+            address_map_index: 1,
             address_malloc_method: 0,
             str_pool: HashMap::new(),
             class_pool: HashMap::new(),
@@ -187,7 +187,7 @@ impl Heap {
     */
     pub fn is_array(&self, object_id: usize) -> bool {
         let start = self.address_map[object_id] as usize;
-        self.memory[start] & 0b10000000 != 0
+        self.memory[start] & 0b01000000 != 0
     }
 
     pub fn get_object_class_id(&self, object_id: usize) -> Result<u32,Throwable> {
@@ -295,6 +295,7 @@ impl Heap {
         } else {
             self.memory[start] = REFERENCE_ARRAY_MULTI_FLAG;
         }
+       // info!("####{:#b}####", self.memory[start]);
 
         let lena = u8c::split_u32_to_u8(len);
         self.memory[start + 2] = lena[0];
@@ -430,7 +431,7 @@ impl Heap {
     /**
      * 读取数组元素
      */
-    pub fn get_array_element(&self, reference_id: u32, index: usize) -> (u8, u64) {
+    pub fn get_array_element(&self, reference_id: u32, index: usize) -> (u8, Option<u64>) {
         let start_index = self.address_map[reference_id as usize] as usize;
         let flag = self.memory[start_index] & 0b01000000;
         if flag == 0 {
@@ -459,7 +460,7 @@ impl Heap {
     /**
      * 读取基本类型数组元素
      */
-    pub fn get_basic_array_element(&self, reference_id: u32, index: usize) -> (u8, u64) {
+    pub fn get_basic_array_element(&self, reference_id: u32, index: usize) -> (u8, Option<u64>) {
         let start_index = self.address_map[reference_id as usize] as usize;
         let atype = self.memory[start_index + 7];
         let offset = 8;
@@ -467,14 +468,14 @@ impl Heap {
             4 | 8 => {
                 // Boolean or Byte (1 byte)
                 let value = self.memory[start_index + offset + index] as u64;
-                (atype, value)
+                (atype, Some(value))
             }
             5 | 9 => {
                 // Char or Short (2 bytes)
                 let start = start_index + offset + index * 2;
                 let bytes = [self.memory[start], self.memory[start + 1]];
                 let value = u16::from_be_bytes(bytes) as u64;
-                (atype, value)
+                (atype, Some(value))
             }
             6 | 10 => {
                 // Float or Int (4 bytes)
@@ -486,7 +487,7 @@ impl Heap {
                     self.memory[start + 3],
                 ];
                 let value = u32::from_be_bytes(bytes) as u64;
-                (atype, value)
+                (atype, Some(value))
             }
             7 | 11 => {
                 // Double or Long (8 bytes)
@@ -502,7 +503,7 @@ impl Heap {
                     self.memory[start + 7],
                 ];
                 let value = u64::from_be_bytes(bytes);
-                (atype, value)
+                (atype, Some(value))
             }
             _ => {
                 panic!("wrong atype: {}", atype);
@@ -513,7 +514,7 @@ impl Heap {
     /**
      * 获取引用类型数组元素（使用大端字节序）
      */
-    pub fn get_reference_array_element(&self, reference_id: u32, index: usize) -> u64 {
+    pub fn get_reference_array_element(&self, reference_id: u32, index: usize) -> Option<u64> {
         let start_index = self.address_map[reference_id as usize] as usize;
         let offset = 11;
         let base_index = start_index + offset + (index * 4);
@@ -526,8 +527,11 @@ impl Heap {
             self.memory[base_index + 3],
         ];
 
+         if bytes == [0, 0, 0, 0] {
+            return None;
+        }
         // 使用大端字节序转换为u32，再转为u64
-        u32::from_be_bytes(bytes) as u64
+        Some(u32::from_be_bytes(bytes) as u64)
     }
 
     pub fn get_field_i32(&self, reference_id: u32, offset: u32) -> i32 {
@@ -545,7 +549,7 @@ impl Heap {
         i32::from_be_bytes(bytes)
     }
 
-    pub fn get_field_ptr(&self, reference_id: u32, offset: u32) -> u32 {
+    pub fn get_field_ptr(&self, reference_id: u32, offset: u32) -> Option<u32> {
         let start_index = (self.address_map[reference_id as usize] + 6 + offset) as usize;
         let bytes = [
             self.memory[start_index],
@@ -553,7 +557,10 @@ impl Heap {
             self.memory[start_index + 2],
             self.memory[start_index + 3],
         ];
-        u32::from_be_bytes(bytes)
+        if bytes == [0, 0, 0, 0] {
+            return None;
+        }
+        Some(u32::from_be_bytes(bytes))
     }
 
     pub fn get_field_i8(&self, reference_id: u32, offset: u32) -> i8 {

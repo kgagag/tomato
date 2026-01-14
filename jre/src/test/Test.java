@@ -158,6 +158,7 @@ public class Test {
 //
         new Test78().test();
         new Test79().test();
+        new Test106().test();
         new Test80().test();
         new Test81().test();
         //测试 String.valueOf()

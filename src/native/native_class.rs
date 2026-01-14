@@ -50,11 +50,25 @@ pub fn get_primitive_class(
         for (_k, v) in &class.field_info {
             if v.field_name == "value" {
                 let array_id = heap.get_field_ptr(object_id, v.offset);
-                let len = heap.get_array_length(array_id);
+                if array_id.is_none() {
+                    return Err(Throwable::Exception(
+                        crate::common::error::Exception::NullPointer(
+                            "NullPointer exception".to_string(),
+                        ),
+                    ));
+                }
+                let len = heap.get_array_length(array_id.unwrap());
                 for i in 0..len {
-                    let (atype, value) = heap.get_array_element(array_id, i as usize);
+                    let (atype, value) = heap.get_array_element(array_id.unwrap(), i as usize);
+                    if value.is_none() {
+                        return Err(Throwable::Exception(
+                            crate::common::error::Exception::NullPointer(
+                                "NullPointer exception".to_string(),
+                            ),
+                        ));
+                    }
                     if atype == 5 {
-                        string.push(value as u8 as char);
+                        string.push(value.unwrap() as u8 as char);
                     }
                 }
                 break;

@@ -25,11 +25,14 @@ pub fn convert_to_rust_string(msg: StackFrameValue,vm_stack:&mut Vec<StackFrame>
             for (key,field) in &class.field_info {
                 if key == "value" {
                   let str_value_array =  heap.get_field_ptr(id, field.offset);
-                  let len = heap.get_array_length(str_value_array) as usize;
+                  if str_value_array.is_none() {
+                      return Err(Throwable::Exception(crate::common::error::Exception::NullPointer("java.lang.NullPointerException".to_string())));
+                  }
+                  let len = heap.get_array_length(str_value_array.unwrap()) as usize;
                   //info!("===={}.{}.{}.{}=====",id,str_value_array,field.offset,len);
                   for i in 0..len {
-                      let (atype,value) = heap.get_array_element(str_value_array, i);
-                      string.push(char::from_u32(value as u32).unwrap());
+                      let (_atype,value) = heap.get_array_element(str_value_array.unwrap(), i);
+                      string.push(char::from_u32(value.unwrap() as u32).unwrap());
                   } 
                 }
             }

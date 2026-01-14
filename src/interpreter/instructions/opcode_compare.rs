@@ -282,8 +282,8 @@ pub fn if_icmple(frame: &mut StackFrame) ->Result<(),Throwable>{
 
 
 pub fn if_acmpeq(frame: &mut StackFrame) ->Result<(),Throwable>{
-    let value2 = frame.pop_reference();
-    let value1 = frame.pop_reference();
+    let value2 = frame.op_stack.pop().unwrap();
+    let value1 = frame.op_stack.pop().unwrap();
     let branch_offset = u8s_to_u16(&frame.code[frame.pc + 1.. frame.pc + 3]);
     if value1 == value2 {
         frame.pc = (frame.pc as i32 + branch_offset as i32) as usize;
@@ -294,8 +294,8 @@ pub fn if_acmpeq(frame: &mut StackFrame) ->Result<(),Throwable>{
 }
 
 pub fn if_acmpne(frame: &mut StackFrame) ->Result<(),Throwable>{
-    let value2 = frame.pop_reference();
-    let value1 = frame.pop_reference();
+    let value2 = frame.op_stack.pop().unwrap();
+    let value1 = frame.op_stack.pop().unwrap();
     let branch_offset = u8s_to_u16(&frame.code[frame.pc + 1.. frame.pc + 3]);
 
     if value1 != value2 {

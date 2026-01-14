@@ -5,42 +5,32 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="70c6e279-5046-4c44-ba52-f4228d3f6634" name="Changes" comment="&quot;调整目录&quot;">
-      <change afterPath="$PROJECT_DIR$/src/test/TryCatchTest01.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/AbstractTest2.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/Test107.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/java/lang/Class$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/java/lang/Class$3.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/java/lang/Class$4.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/java/lang/Class$4.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/java/lang/Class$AnnotationData.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/java/lang/Class$AnnotationData.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/java/lang/Class.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/java/lang/Class.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/java/lang/AbstractStringBuilder.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/java/lang/AbstractStringBuilder.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/java/lang/String$CaseInsensitiveComparator.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/java/lang/String$CaseInsensitiveComparator.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/java/lang/String.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/java/lang/String.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/java/lang/StringBuilder.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/java/lang/StringBuilder.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/test/Test.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/Test.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/test/Test106.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/Test106.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/test/Test49.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/Test49.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/java/lang/Class.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/java/lang/Class.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/java/lang/AbstractStringBuilder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/java/lang/AbstractStringBuilder.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/java/lang/String.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/java/lang/String.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/java/lang/StringBuilder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/java/lang/StringBuilder.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/Test.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/Test.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/Test106.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/Test106.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/Test49.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/Test49.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/common/op_stack.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/common/op_stack.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../src/common/stack_frame.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/common/stack_frame.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../src/common/value.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/common/value.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../src/interpreter/instructions/op_code.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/interpreter/instructions/op_code.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_array.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_array.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_compare.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_compare.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_field.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_field.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_instanceof.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_instanceof.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_invoke.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_invoke.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_ldc.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_ldc.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_math.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_math.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_new.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_new.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_return.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_return.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/native/mod.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/native/mod.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/native/native.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/native/native.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/native/native_array.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/native/native_array.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../src/native/native_class.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/native/native_class.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/native/native_net.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/native/native_net.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/native/native_object.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/native/native_object.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../src/native/native_system.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/native/native_system.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../src/runtime/heap.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/runtime/heap.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/runtime/metaspace.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/runtime/metaspace.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/runtime/mod.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/runtime/mod.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/runtime/runtime_data_area.rs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/utils/debug.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/utils/debug.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../src/utils/java.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/utils/java.rs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -87,27 +77,28 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;ToolWindowRun.ShowToolbar&quot;: &quot;false&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;last_opened_file_path&quot;: &quot;E:/work6/tomato/jre&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;SDKs&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;editor.preferences.fonts.default&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_ADD_EXTERNAL_FILES": "true",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "ToolWindowRun.ShowToolbar": "false",
+    "WebServerToolWindowFactoryState": "false",
+    "git-widget-placeholder": "main",
+    "last_opened_file_path": "E:/work6/tomato/jre",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "project.structure.last.edited": "Project",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2",
+    "run.code.analysis.last.selected.profile": "pProject Default",
+    "settings.editor.selected.configurable": "reference.settings.project.maven.runner",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="E:\jvm\tomato\jre\src\test" />
@@ -119,7 +110,7 @@
       <recent name="test" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.Test106">
+  <component name="RunManager" selected="Application.Test107">
     <configuration name="Test" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="test.Test" />
       <module name="jre" />
@@ -146,8 +137,8 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="Test49" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="test.Test49" />
+    <configuration name="Test107" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="test.Test107" />
       <module name="jre" />
       <extension name="coverage">
         <pattern>
@@ -159,8 +150,8 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="Test9" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="test.Test9" />
+    <configuration name="Test49" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="test.Test49" />
       <module name="jre" />
       <extension name="coverage">
         <pattern>
@@ -187,11 +178,11 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.Test106" />
+        <item itemvalue="Application.Test107" />
         <item itemvalue="Application.Test" />
+        <item itemvalue="Application.Test106" />
         <item itemvalue="Application.Test49" />
         <item itemvalue="Application.TryCatchTest01" />
-        <item itemvalue="Application.Test9" />
       </list>
     </recent_temporary>
   </component>
@@ -295,7 +286,8 @@
       <workItem from="1768186969990" duration="811000" />
       <workItem from="1768208316551" duration="1428000" />
       <workItem from="1768302958710" duration="6276000" />
-      <workItem from="1768325173511" duration="1970000" />
+      <workItem from="1768325173511" duration="2661000" />
+      <workItem from="1768368786566" duration="22442000" />
     </task>
     <task id="LOCAL-00001" summary="&quot;add test case&quot;">
       <option name="closed" value="true" />
@@ -509,6 +501,11 @@
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
+    <pin-to-top-manager>
+      <pinned-members>
+        <PinnedItemInfo parentTag="java.lang.StringBuilder" memberName="value" />
+      </pinned-members>
+    </pin-to-top-manager>
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

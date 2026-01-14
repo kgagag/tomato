@@ -16,8 +16,7 @@ pub enum StackFrameValue {
     U32(u32),
     U64(u64),
     CHARACTER(char),
-    Null,
-    UNSET
+    Null
 }
 
 pub fn number_to_u32tuple(v: &StackFrameValue) -> (u32, u32) {

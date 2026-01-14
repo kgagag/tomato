@@ -27,26 +27,23 @@ pub fn putfield(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut
     };
     match field_ref {
         ConstantPoolInfo::Fieldref(_class_index, name_and_type_index) => {
-            let class_name = {
-                let class_constant: &ConstantPoolInfo =
-                    &this_class.constant_pool[*_class_index as usize];
-                match class_constant {
-                    ConstantPoolInfo::Class(name_index) => {
-                        let class_name_utf8: &ConstantPoolInfo =
-                            &this_class.constant_pool[*name_index as usize];
-                        match class_name_utf8 {
-                            ConstantPoolInfo::Utf8(class_name) => {
-                                //需要找到对象id , 参数index , offset
-                                // metaspace.get_field_tupple(&class_name, field_name)
-                                //  object.field.insert(field_name.clone(), value);
-                                class_name.clone()
-                            }
-                            _ => panic!(),
-                        }
-                    }
-                    _ => panic!(),
-                }
-            };
+            // let class_name = {
+            //     let class_constant: &ConstantPoolInfo =
+            //         &this_class.constant_pool[*_class_index as usize];
+            //     match class_constant {
+            //         ConstantPoolInfo::Class(name_index) => {
+            //             let class_name_utf8: &ConstantPoolInfo =
+            //                 &this_class.constant_pool[*name_index as usize];
+            //             match class_name_utf8 {
+            //                 ConstantPoolInfo::Utf8(class_name) => {
+            //                     class_name.clone()
+            //                 }
+            //                 _ => panic!(),
+            //             }
+            //         }
+            //         _ => panic!(),
+            //     }
+            // };
             let field_name = {
                 let name_and_type: &ConstantPoolInfo =
                     &this_class.constant_pool[*name_and_type_index as usize];
@@ -56,9 +53,6 @@ pub fn putfield(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut
                             &this_class.constant_pool[*name_index as usize];
                         match field_name_utf8 {
                             ConstantPoolInfo::Utf8(field_name) => {
-                                //需要找到对象id , 参数index , offset
-                                // metaspace.get_field_tupple(&class_name, field_name)
-                                //  object.field.insert(field_name.clone(), value);
                                 field_name.clone()
                             }
                             _ => panic!(),
@@ -67,9 +61,12 @@ pub fn putfield(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut
                     _ => panic!(),
                 }
             };
-
+            
+            let class_id =  heap.get_object_class_id(object_id as usize)?;
+            let target_class = &metaspace.classes[class_id as usize];
             let (_field_index, offset, data_type) =
-                metaspace.get_field_tupple(&class_name, &field_name);
+                metaspace.get_field_tupple(&(target_class.class_name.clone()), &field_name);
+
             match DataType::from(data_type) {
                 DataType::Int => {
                     heap.put_field_i32(object_id, offset, value::as_i32(&value));
@@ -102,7 +99,9 @@ pub fn putfield(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut
                     element_type,
                     depth,
                 } => {
-                    heap.put_field_u32(object_id, offset, value::as_u32(&value));
+                    if value != StackFrameValue::Null {
+                        heap.put_field_u32(object_id, offset, value::as_u32(&value));
+                    }
                 }
                 DataType::Unknown => todo!(),
             }
@@ -122,27 +121,32 @@ pub fn getfield(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut
     let stack_frame_value: StackFrameValue = frame.op_stack.pop().unwrap();
     let object_id = match stack_frame_value {
         StackFrameValue::Reference(id) => id,
-        _ => panic!(),
+        StackFrameValue::Null => {
+            return Err(Throwable::Exception(crate::common::error::Exception::NullPointer("Null pointer exception".to_string())));
+        }
+        _=> {
+            return Err(Throwable::Error(crate::common::error::JvmError::InternalError("Internal error".to_string())));
+        }
     };
-    let (class_name, field_name) = match field_ref {
+    let field_name = match field_ref {
         ConstantPoolInfo::Fieldref(class_index, name_and_type_index) => {
             let class_ref: &ConstantPoolInfo = &this_class.constant_pool[*class_index as usize];
             let name_and_type: &ConstantPoolInfo =
                 &this_class.constant_pool[*name_and_type_index as usize];
 
-            let class_name = {
-                match class_ref {
-                    ConstantPoolInfo::Class(class_name_index) => {
-                        let class_name_utf8: &ConstantPoolInfo =
-                            &this_class.constant_pool[*class_name_index as usize];
-                        match class_name_utf8 {
-                            ConstantPoolInfo::Utf8(class_name) => class_name,
-                            _ => panic!(),
-                        }
-                    }
-                    _ => panic!(),
-                }
-            };
+            // let class_name = {
+            //     match class_ref {
+            //         ConstantPoolInfo::Class(class_name_index) => {
+            //             let class_name_utf8: &ConstantPoolInfo =
+            //                 &this_class.constant_pool[*class_name_index as usize];
+            //             match class_name_utf8 {
+            //                 ConstantPoolInfo::Utf8(class_name) => class_name,
+            //                 _ => panic!(),
+            //             }
+            //         }
+            //         _ => panic!(),
+            //     }
+            // };
 
             let field_name = {
                 match name_and_type {
@@ -158,11 +162,15 @@ pub fn getfield(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut
                 }
             };
 
-            (class_name.clone(), field_name.clone())
+            field_name.clone()
         }
         _ => panic!(),
     };
-    let (_field_index, offset, data_type) = metaspace.get_field_tupple(&class_name, &field_name);
+
+
+      let class_id =  heap.get_object_class_id(object_id as usize)?;
+      let target_class = &metaspace.classes[class_id as usize];
+      let (_field_index, offset, data_type) = metaspace.get_field_tupple(&(target_class.class_name.clone()), &field_name);
 
     match data_type {
         DataType::Int => {
@@ -191,7 +199,12 @@ pub fn getfield(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut
         }
         DataType::Reference(_) => {
             let value = heap.get_field_ptr(object_id, offset);
-            frame.op_stack.push(StackFrameValue::Reference(value));
+            if value.is_none() {
+                frame.op_stack.push(StackFrameValue::Null);
+
+            }else{
+                frame.op_stack.push(StackFrameValue::Reference(value.unwrap()));
+            }
         }
         DataType::Short => {
             let value = heap.get_field_i16(object_id, offset);
@@ -206,7 +219,11 @@ pub fn getfield(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut
             depth,
         } => {
             let value = heap.get_field_ptr(object_id, offset);
-            frame.op_stack.push(StackFrameValue::Reference(value));
+            if value.is_none() {
+                frame.op_stack.push(StackFrameValue::Null);
+            }else {
+                frame.op_stack.push(StackFrameValue::Reference(value.unwrap()));
+            }
         }
         DataType::Unknown => {
             panic!("Unknown data type")

@@ -1,5 +1,7 @@
 use std::collections::HashMap;
 
+use linked_hash_map::LinkedHashMap;
+
 use crate::common::{param::DataType, value::StackFrameValue};
 
 #[derive(Debug, Clone)]
@@ -15,7 +17,7 @@ pub struct Class {
     pub interface_count: u16,
     pub interfaces: Vec<u16>,
     pub fields_count: u16,
-    pub field_info: HashMap<String,FieldInfo>,
+    pub field_info: LinkedHashMap<String,FieldInfo>,
     pub methods_count: u16,
     pub method_info: Vec<MethodInfo>,
     pub attributes_count: u16,
@@ -40,7 +42,7 @@ impl Class {
             interface_count: 0,
             interfaces: Vec::new(),
             fields_count: 0,
-            field_info: HashMap::new(),
+            field_info: LinkedHashMap::new(),
             methods_count: 0,
             method_info: Vec::new(),
             attributes_count: 0,

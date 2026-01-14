@@ -76,24 +76,6 @@ impl StackFrame {
         self.local[index] = stack_value;
     }
 
-    pub fn loadu32(&mut self, index: usize) -> u32 {
-        let value = self.local.get(index).unwrap();
-        match value {
-            StackFrameValue::Int(data) => *data as u32,
-            StackFrameValue::Byte(data) => *data as u32,
-            StackFrameValue::Char(data) => *data as u32,
-            StackFrameValue::Double(data) => *data as u32,
-            StackFrameValue::Float(data) => *data as u32,
-            StackFrameValue::Long(data) => *data as u32,
-            StackFrameValue::Short(data) => *data as u32,
-            StackFrameValue::CHARACTER(data) => *data as u32,
-            StackFrameValue::Boolean(data) => *data as u32,
-            _ => {
-                panic!("wrong value type");
-            }
-        }
-    }
-
     pub fn popi64(&mut self) -> i64 {
         let value = self.op_stack.pop().unwrap();
         match value {
@@ -118,16 +100,6 @@ impl StackFrame {
         match value {
             StackFrameValue::Double(data) => data ,
             StackFrameValue::Float(data) => data as f64,
-            _ => {
-                panic!("wrong value type");
-            }
-        }
-    }
-
-    pub fn pop_reference(&mut self) -> u32 {
-        let value = self.op_stack.pop().unwrap();
-        match value {
-            StackFrameValue::Reference(data) => data,
             _ => {
                 panic!("wrong value type");
             }

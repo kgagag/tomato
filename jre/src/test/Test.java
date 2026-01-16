@@ -8,6 +8,7 @@ public class Test {
     public static void main(String[] args) throws IOException {
 
 
+
         //long t1 = System.currentTimeMillis();
         //  两个int相加
         new Test1().test();
@@ -164,7 +165,7 @@ public class Test {
         //测试 String.valueOf()
         new Test82().test();
         Test83.test();
-
+        new Test110().test();
         new Test85().test();
         new Test86().test();
         //测试 hashMap

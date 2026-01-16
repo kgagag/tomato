@@ -38,7 +38,7 @@ pub fn newarray(
             _ => panic!(),
         }
     };
-    let reference = heap.create_basic_array(*atype, len, 0);
+    let reference = heap.create_basic_array(*atype, len,  1);
     frame
         .op_stack
         .push(StackFrameValue::Reference(reference as u32));
@@ -186,7 +186,13 @@ pub fn multianewarray(
             }
         };
         if queue.len() == 0 {
-            let reference_id: usize = heap.create_reference_array(0, len, dimenssion - i, atype);
+            let reference_id: usize =
+             if class_id.is_none() {
+                heap.create_reference_array(0, len, dimenssion - i, atype)
+            } else {
+                heap.create_reference_array(class_id.unwrap() as u32, len, dimenssion - i, atype)
+            };
+            // heap.create_reference_array(0, len, dimenssion - i, atype);
             //info!("create array reference:{}", reference_id);
             vm_stack[frame_index]
                 .op_stack

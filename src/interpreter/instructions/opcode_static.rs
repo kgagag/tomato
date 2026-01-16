@@ -29,8 +29,6 @@ pub fn putstatic(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mu
                 }
                 _ => panic!(),
             };
-           
-
             let (class_name, field_name) = {
                 if let ConstantPoolInfo::Utf8(class_name) = class_name_utf8 {
                     let name_and_type: &ConstantPoolInfo = &this_class
@@ -57,9 +55,10 @@ pub fn putstatic(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mu
         }
     };
     //找到这个class,，然后给他的static 字段赋值
-    let target_class = class_loader::find_class(&class_name, vm_stack, heap, metaspace)?;
-    let field = target_class.field_info.get_mut(&field_name).unwrap();
-    field.value = vm_stack[frame_index].op_stack.pop().unwrap();
+    // let target_class = class_loader::find_class(&class_name, vm_stack, heap, metaspace)?;
+    // let field = target_class.field_info.get_mut(&field_name).unwrap();
+    // field.value = vm_stack[frame_index].op_stack.pop().unwrap();
+    metaspace.put_field_value_to_root(&class_name, &field_name,  vm_stack[frame_index].op_stack.pop().unwrap())?;
     Ok(())
 }
 
@@ -100,8 +99,8 @@ pub fn getstatic(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mu
             panic!("Unexpected field reference");
         }
     };
-    let target_class = class_loader::find_class(&class_name, vm_stack, heap, metaspace)?;
-    let field_info = target_class.field_info.get_mut(&field_name).unwrap();
-    vm_stack[frame_index].op_stack.push(field_info.value);
+     let _target_class = class_loader::find_class(&class_name, vm_stack, heap, metaspace)?;
+    // let field_info = target_class.field_info.get_mut(&field_name).unwrap();
+    vm_stack[frame_index].op_stack.push(metaspace.get_field_value_from_root(&class_name, &field_name)?);
     Ok(())
 }

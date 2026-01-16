@@ -26,4 +26,8 @@ public class Test86 {
         StringHelper.print20240503(floats.getClass().getComponentType().getComponentType().getComponentType().getName());
 
     }
+
+    public static void main(String[] args) {
+        new Test86().test();
+    }
 }

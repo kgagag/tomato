@@ -7,4 +7,8 @@ public class Test55 {
         Float c = a + f;
         return c == 200 ? Result.SUCCESS : Result.FAILED;
     }
+
+    public static void main(String[] args) {
+        System.out.println(new Test55().test());
+    }
 }

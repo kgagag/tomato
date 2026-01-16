@@ -245,6 +245,7 @@ pub fn as_u32(v: &StackFrameValue) -> u32 {
         StackFrameValue::Reference(data) => {
             *data 
         },
+        StackFrameValue::Null => 0,
         _ => panic!("Cannot convert {:?} to u32", v),
     }
 }

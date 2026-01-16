@@ -187,7 +187,8 @@ impl Heap {
     */
     pub fn is_array(&self, object_id: usize) -> bool {
         let start = self.address_map[object_id] as usize;
-        self.memory[start] & 0b01000000 != 0
+        //info!("==============object flag: {:08b}==========", self.memory[start]);
+        self.memory[start] & 0b10000000 == 0
     }
 
     pub fn get_object_class_id(&self, object_id: usize) -> Result<u32,Throwable> {
@@ -306,12 +307,14 @@ impl Heap {
         self.memory[start + 6] = dimension;
 
         //如果为基本类型的多维数组这里暂时不设置
-        if atype != 12 {
+        if atype == 12 {
             let cid = u8c::split_u32_to_u8(class_id);
             self.memory[start + 7] = cid[0];
             self.memory[start + 8] = cid[1];
             self.memory[start + 9] = cid[2];
             self.memory[start + 10] = cid[3];
+        }else{
+            self.memory[start + 7] = atype;
         }
 
         object_id
@@ -455,7 +458,29 @@ impl Heap {
         u32::from_be_bytes(bytes)
     }
 
-    
+    /**
+     * 读取数组的atype,dimension,class_id
+     */
+    pub fn get_array_info(&self, reference_id: u32) -> (Option<u32>,u8, u8) {
+        let start_index = self.address_map[reference_id as usize] as usize;
+        //0b01100000 为引用类型数组
+        //0b00000000 为基本类型数组
+        //0b01000000 基本类型多维数组
+        //info!("==={:08b}====", self.memory[start_index]);
+       if self.memory[start_index] & 0b00100000 != 0 {
+            let cid = [
+                self.memory[start_index + 7],
+                self.memory[start_index + 8],
+                self.memory[start_index + 9],
+                self.memory[start_index + 10],
+            ];
+            (Some(u32::from_be_bytes(cid)),12,self.memory[start_index + 6])
+         }else if self.memory[start_index] & 0b01000000 != 0 {
+            (None,self.memory[start_index + 7],self.memory[start_index + 6])
+         }else{
+            (None,self.memory[start_index + 7],self.memory[start_index + 6])
+         }
+    }
 
     /**
      * 读取基本类型数组元素
@@ -649,7 +674,7 @@ impl Heap {
     }
 
     pub fn put_field_f32(&mut self, reference_id: u32, offset: u32, value: f32) {
-        let array = u8c::split_u32_to_u8(value as u32);
+        let array = value.to_be_bytes();
         let start_index = (self.address_map[reference_id as usize] + 6 + offset) as usize;
         self.memory[start_index] = array[0];
         self.memory[start_index + 1] = array[1];
@@ -658,7 +683,7 @@ impl Heap {
     }
 
     pub fn put_field_f64(&mut self, reference_id: u32, offset: u32, value: f64) {
-        let array = u8c::split_u64_to_u8(value as u64);
+        let array = value.to_be_bytes();
         let start_index = (self.address_map[reference_id as usize] + 6 + offset) as usize;
         self.memory[start_index] = array[0];
         self.memory[start_index + 1] = array[1];

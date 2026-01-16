@@ -261,7 +261,7 @@ pub fn invokevirtual(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace:
     };
     let (method, class) =
         metaspace.get_method_from_root(&target_class_name, &method_name, &descriptor);
-    let mut method = method.unwrap();
+    let method = method.unwrap();
     if method.access_flag & 0x0100 == 0 {
         let mut new_frame = init_stack_frame(&mut vm_stack[frame_index], &method, class, 1);
         let v = vm_stack[frame_index].op_stack.pop();
@@ -276,7 +276,7 @@ pub fn invokevirtual(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace:
         //heappush_stack_frame(new_frame);
         vm_stack.push(new_frame);
     } else {
-        run_native(&mut method.clone(), vm_stack,heap,metaspace);
+        let _ = run_native(&mut method.clone(), vm_stack,heap,metaspace);
     }
     vm_stack[frame_index].pc += 3;
     Ok(())

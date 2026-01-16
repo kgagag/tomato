@@ -125,7 +125,8 @@ pub struct FieldInfo {
     pub data_type: DataType,
     pub descriptor: String,
     pub field_index:u16,
-    pub offset:u32
+    pub offset:u32,
+    pub class_name:String
 }
 
 #[derive(Debug, Clone)]

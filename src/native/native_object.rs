@@ -1,8 +1,10 @@
+use std::f32::consts::E;
+
 use log::info;
 
 use crate::{
     common::{
-        array::array::Array, error::Throwable, param::DataType, reference::Reference,
+        array::array::Array, error::{JvmError, Throwable}, param::DataType, reference::Reference,
         stack_frame::StackFrame, value::StackFrameValue,
     },
     runtime::{
@@ -29,10 +31,8 @@ pub fn get_class(
     let sfv: StackFrameValue = vm_stack[frame_index].op_stack.pop().unwrap();
     match sfv {
         StackFrameValue::Reference(id) => {
-            // let reference = get_reference(&id).unwrap();
-            // info!("{:?}",reference);
-            let class_id = heap.get_object_class_id(id as usize)?;
             if !heap.is_array(id as usize) {
+                let class_id: u32 = heap.get_object_class_id(id as usize)?;
                 let class_obj = heap.get_constant_pool_class(&class_id);
                 if class_obj.is_some() {
                     vm_stack[frame_index]
@@ -48,9 +48,17 @@ pub fn get_class(
                         .push(StackFrameValue::Reference(class_obj_id))
                 }
             } else {
+                let (class_id, atype, dimension) = heap.get_array_info(id);
+                let class_name = {
+                    if class_id.is_some(){
+                        get_basic_array_class_name(Some( metaspace.classes[class_id.unwrap() as usize].class_name.clone()),atype, dimension)?
+                    }else{
+                        get_basic_array_class_name(None,atype, dimension)?
+                    }
+                };
                 let class_obj_id =
-                    java::create_class_object(&"ARRAY".to_string(), vm_stack, heap, metaspace)?;
-                vm_stack[frame_index]
+                    java::create_class_object(&class_name, vm_stack, heap, metaspace)?;
+                 vm_stack[frame_index]
                     .op_stack
                     .push(StackFrameValue::Reference(class_obj_id))
             }
@@ -60,74 +68,43 @@ pub fn get_class(
     }
 }
 
-fn get_array_class_name(array: &Array) -> String {
-    let _class_name: String = String::from("");
-    let _prefix = String::from("");
-
-    match &array.array_type {
-        DataType::Array {
-            element_type,
-            depth,
-        } => {
-            let mut prefix = String::from("");
-
-            let data_type = *element_type.clone();
-            match data_type {
-                DataType::Byte => {
-                    for _i in 0..*depth {
-                        prefix.push('[');
-                    }
-                    prefix.push('B');
-                }
-                DataType::Char => {
-                    for _i in 0..*depth {
-                        prefix.push('[');
-                    }
-                    prefix.push('C');
-                }
-                DataType::Double => {
-                    for _i in 0..*depth {
-                        prefix.push('[');
-                    }
-                    prefix.push('D');
-                }
-                DataType::Float => {
-                    for _i in 0..*depth {
-                        prefix.push('[');
-                    }
-                    prefix.push('F');
-                }
-                DataType::Int => {
-                    for _i in 0..*depth {
-                        prefix.push('[');
-                    }
-                    prefix.push('I');
-                }
-                DataType::Long => {
-                    for _i in 0..*depth {
-                        prefix.push('[');
-                    }
-                    prefix.push('J');
-                }
-                DataType::Reference(name) => {
-                    prefix.push_str(&name);
-                }
-                DataType::Short => {
-                    for _i in 0..*depth {
-                        prefix.push('[');
-                    }
-                    prefix.push('J');
-                }
-                DataType::Boolean => {
-                    for _i in 0..*depth {
-                        prefix.push('[');
-                    }
-                    prefix.push('B');
-                }
-                _ => panic!(),
-            }
-            prefix
-        }
-        _ => panic!(),
+fn get_basic_array_class_name(string:Option<String>, atype: u8, dimension: u8) -> Result<String,Throwable> {
+    let mut class_name: String = String::from("");
+    for _i in 0..dimension {
+        class_name.push('[');
     }
+    if atype == 4 {
+        // array_type = DataType::Boolean;
+        class_name.push('Z');
+    } else if atype == 5 {
+        // array_type = DataType::Char;
+        class_name.push('C');
+    } else if atype == 6 {
+        // array_type = DataType::Float;
+        class_name.push('F');
+    } else if atype == 7 {
+        //  array_type = DataType::Double;
+        class_name.push('D');
+    } else if atype == 8 {
+        //  array_type = DataType::Byte;
+        class_name.push('B');
+    } else if atype == 9 {
+        // array_type = DataType::Short;
+        class_name.push('S');
+    } else if atype == 10 {
+        // array_type = DataType::Int;
+        class_name.push('I');
+    } else if atype == 11 {
+        // array_type = DataType::Long;
+        class_name.push('J');
+    }else if atype == 12 {
+        // array_type = DataType::Object;
+        class_name.push('L');
+        class_name.push_str(string.unwrap().as_str());
+        class_name.push(';');
+    }
+    else {
+        return Err(Throwable::Error(JvmError::InternalError("Internal error".to_string())));
+    }
+    Ok(class_name)
 }

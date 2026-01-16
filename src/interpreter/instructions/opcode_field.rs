@@ -3,7 +3,12 @@ use log::info;
 use crate::{
     classfile::class::{Class, ConstantPoolInfo, FieldInfo},
     common::{
-        error::Throwable, object::Object, param::DataType, reference::Reference, stack_frame::StackFrame, value::{self, StackFrameValue, number_u64}
+        error::Throwable,
+        object::Object,
+        param::DataType,
+        reference::Reference,
+        stack_frame::StackFrame,
+        value::{self, number_u64, StackFrameValue},
     },
     runtime::{
         heap::{self, Heap},
@@ -11,7 +16,11 @@ use crate::{
     },
 };
 
-pub fn putfield(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Metaspace)->Result<(),Throwable> {
+pub fn putfield(
+    vm_stack: &mut Vec<StackFrame>,
+    heap: &mut Heap,
+    metaspace: &mut Metaspace,
+) -> Result<(), Throwable> {
     let frame_index = vm_stack.len() - 1;
     let frame = &mut vm_stack[frame_index];
     let index: u16 = u16::from_be_bytes([frame.code[frame.pc + 1], frame.code[frame.pc + 2]]);
@@ -52,58 +61,64 @@ pub fn putfield(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut
                         let field_name_utf8: &ConstantPoolInfo =
                             &this_class.constant_pool[*name_index as usize];
                         match field_name_utf8 {
-                            ConstantPoolInfo::Utf8(field_name) => {
-                                field_name.clone()
-                            }
+                            ConstantPoolInfo::Utf8(field_name) => field_name.clone(),
                             _ => panic!(),
                         }
                     }
                     _ => panic!(),
                 }
             };
-            
-            let class_id =  heap.get_object_class_id(object_id as usize)?;
-            let target_class = &metaspace.classes[class_id as usize];
-            let (_field_index, offset, data_type) =
-                metaspace.get_field_tupple(&(target_class.class_name.clone()), &field_name);
 
-            match DataType::from(data_type) {
-                DataType::Int => {
-                    heap.put_field_i32(object_id, offset, value::as_i32(&value));
-                }
-                DataType::Long => {
-                    heap.put_field_i64(object_id, offset, value::as_i64(&value));
-                }
-                DataType::Float => {
-                    heap.put_field_f32(object_id, offset, value::as_f32(&value));
-                }
-                DataType::Byte => {
-                    heap.put_field_i8(object_id, offset, value::as_i8(&value));
-                }
-                DataType::Char => {
-                    heap.put_field_i16(object_id, offset, value::as_i16(&value));
-                }
-                DataType::Double => {
-                    heap.put_field_f64(object_id, offset, value::as_f64(&value));
-                }
-                DataType::Reference(_) => {
-                    heap.put_field_u32(object_id, offset, value::as_u32(&value));
-                }
-                DataType::Short => {
-                    heap.put_field_i16(object_id, offset, value::as_i16(&value));
-                }
-                DataType::Boolean => {
-                    heap.put_field_i8(object_id, offset, value::as_i8(&value));
-                }
-                DataType::Array {
-                    element_type,
-                    depth,
-                } => {
-                    if value != StackFrameValue::Null {
+            let (_field_index, offset, data_type, access_flag, class_name) = {
+                let class_id = heap.get_object_class_id(object_id as usize)?;
+                let target_class = &metaspace.classes[class_id as usize];
+                metaspace.get_field_tupple(&(target_class.class_name.clone()), &field_name)?
+            };
+            if access_flag & 0x0008 == 0 {
+                match DataType::from(data_type) {
+                    DataType::Int => {
+                        heap.put_field_i32(object_id, offset, value::as_i32(&value));
+                    }
+                    DataType::Long => {
+                        heap.put_field_i64(object_id, offset, value::as_i64(&value));
+                    }
+                    DataType::Float => {
+                        heap.put_field_f32(object_id, offset, value::as_f32(&value));
+                    }
+                    DataType::Byte => {
+                        heap.put_field_i8(object_id, offset, value::as_i8(&value));
+                    }
+                    DataType::Char => {
+                        heap.put_field_i16(object_id, offset, value::as_i16(&value));
+                    }
+                    DataType::Double => {
+                        heap.put_field_f64(object_id, offset, value::as_f64(&value));
+                    }
+                    DataType::Reference(_) => {
                         heap.put_field_u32(object_id, offset, value::as_u32(&value));
                     }
+                    DataType::Short => {
+                        heap.put_field_i16(object_id, offset, value::as_i16(&value));
+                    }
+                    DataType::Boolean => {
+                        heap.put_field_i8(object_id, offset, value::as_i8(&value));
+                    }
+                    DataType::Array {
+                        element_type,
+                        depth,
+                    } => {
+                        if value != StackFrameValue::Null {
+                            heap.put_field_u32(object_id, offset, value::as_u32(&value));
+                        }
+                    }
+                    DataType::Unknown => todo!(),
                 }
-                DataType::Unknown => todo!(),
+            } else {
+                metaspace.put_field_value_to_root(
+                    &class_name,
+                    &field_name,
+                    value,
+                )?;
             }
         }
         _ => panic!(),
@@ -112,7 +127,11 @@ pub fn putfield(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut
     Ok(())
 }
 
-pub fn getfield(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Metaspace) ->Result<(),Throwable>{
+pub fn getfield(
+    vm_stack: &mut Vec<StackFrame>,
+    heap: &mut Heap,
+    metaspace: &mut Metaspace,
+) -> Result<(), Throwable> {
     let frame_index = vm_stack.len() - 1;
     let frame = &mut vm_stack[frame_index];
     let index: u16 = u16::from_be_bytes([frame.code[frame.pc + 1], frame.code[frame.pc + 2]]);
@@ -122,10 +141,14 @@ pub fn getfield(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut
     let object_id = match stack_frame_value {
         StackFrameValue::Reference(id) => id,
         StackFrameValue::Null => {
-            return Err(Throwable::Exception(crate::common::error::Exception::NullPointer("Null pointer exception".to_string())));
+            return Err(Throwable::Exception(
+                crate::common::error::Exception::NullPointer("Null pointer exception".to_string()),
+            ));
         }
-        _=> {
-            return Err(Throwable::Error(crate::common::error::JvmError::InternalError("Internal error".to_string())));
+        _ => {
+            return Err(Throwable::Error(
+                crate::common::error::JvmError::InternalError("Internal error".to_string()),
+            ));
         }
     };
     let field_name = match field_ref {
@@ -167,67 +190,76 @@ pub fn getfield(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut
         _ => panic!(),
     };
 
-
-      let class_id =  heap.get_object_class_id(object_id as usize)?;
-      let target_class = &metaspace.classes[class_id as usize];
-      let (_field_index, offset, data_type) = metaspace.get_field_tupple(&(target_class.class_name.clone()), &field_name);
-
-    match data_type {
-        DataType::Int => {
-            let value = heap.get_field_i32(object_id, offset);
-            frame.op_stack.push(StackFrameValue::Int(value));
-        }
-        DataType::Long => {
-            let value = heap.get_field_i64(object_id, offset);
-            frame.op_stack.push(StackFrameValue::Long(value));
-        }
-        DataType::Float => {
-            let value = heap.get_field_f32(object_id, offset);
-            frame.op_stack.push(StackFrameValue::Float(value));
-        }
-        DataType::Byte => {
-            let value = heap.get_field_i8(object_id, offset);
-            frame.op_stack.push(StackFrameValue::Byte(value));
-        }
-        DataType::Char => {
-            let value = heap.get_field_i16(object_id, offset);
-            frame.op_stack.push(StackFrameValue::Char(value));
-        }
-        DataType::Double => {
-            let value = heap.get_field_f64(object_id, offset);
-            frame.op_stack.push(StackFrameValue::Double(value));
-        }
-        DataType::Reference(_) => {
-            let value = heap.get_field_ptr(object_id, offset);
-            if value.is_none() {
-                frame.op_stack.push(StackFrameValue::Null);
-
-            }else{
-                frame.op_stack.push(StackFrameValue::Reference(value.unwrap()));
+    let (_field_index, offset, data_type, access_flag, class_name) = {
+        let class_id = heap.get_object_class_id(object_id as usize)?;
+        let target_class = &metaspace.classes[class_id as usize];
+        metaspace.get_field_tupple(&(target_class.class_name.clone()), &field_name)?
+    };
+    if access_flag & 0x0008 == 0 {
+        match data_type {
+            DataType::Int => {
+                let value = heap.get_field_i32(object_id, offset);
+                frame.op_stack.push(StackFrameValue::Int(value));
+            }
+            DataType::Long => {
+                let value = heap.get_field_i64(object_id, offset);
+                frame.op_stack.push(StackFrameValue::Long(value));
+            }
+            DataType::Float => {
+                let value = heap.get_field_f32(object_id, offset);
+                frame.op_stack.push(StackFrameValue::Float(value));
+            }
+            DataType::Byte => {
+                let value = heap.get_field_i8(object_id, offset);
+                frame.op_stack.push(StackFrameValue::Byte(value));
+            }
+            DataType::Char => {
+                let value = heap.get_field_i16(object_id, offset);
+                frame.op_stack.push(StackFrameValue::Char(value));
+            }
+            DataType::Double => {
+                let value = heap.get_field_f64(object_id, offset);
+                frame.op_stack.push(StackFrameValue::Double(value));
+            }
+            DataType::Reference(_) => {
+                let value = heap.get_field_ptr(object_id, offset);
+                if value.is_none() {
+                    frame.op_stack.push(StackFrameValue::Null);
+                } else {
+                    frame
+                        .op_stack
+                        .push(StackFrameValue::Reference(value.unwrap()));
+                }
+            }
+            DataType::Short => {
+                let value = heap.get_field_i16(object_id, offset);
+                frame.op_stack.push(StackFrameValue::Short(value));
+            }
+            DataType::Boolean => {
+                let value = heap.get_field_i8(object_id, offset);
+                frame.op_stack.push(StackFrameValue::Boolean(value == 1));
+            }
+            DataType::Array {
+                element_type,
+                depth,
+            } => {
+                let value = heap.get_field_ptr(object_id, offset);
+                if value.is_none() {
+                    frame.op_stack.push(StackFrameValue::Null);
+                } else {
+                    frame
+                        .op_stack
+                        .push(StackFrameValue::Reference(value.unwrap()));
+                }
+            }
+            DataType::Unknown => {
+                panic!("Unknown data type")
             }
         }
-        DataType::Short => {
-            let value = heap.get_field_i16(object_id, offset);
-            frame.op_stack.push(StackFrameValue::Short(value));
-        }
-        DataType::Boolean => {
-            let value = heap.get_field_i8(object_id, offset);
-            frame.op_stack.push(StackFrameValue::Boolean(value == 1));
-        }
-        DataType::Array {
-            element_type,
-            depth,
-        } => {
-            let value = heap.get_field_ptr(object_id, offset);
-            if value.is_none() {
-                frame.op_stack.push(StackFrameValue::Null);
-            }else {
-                frame.op_stack.push(StackFrameValue::Reference(value.unwrap()));
-            }
-        }
-        DataType::Unknown => {
-            panic!("Unknown data type")
-        }
+    } else {
+        frame
+            .op_stack
+            .push(metaspace.get_field_value_from_root(&class_name, &field_name)?);
     }
     frame.pc += 3;
     Ok(())

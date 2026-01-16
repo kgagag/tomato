@@ -66,8 +66,12 @@ pub enum Exception {
     /// 当应用程序试图加载类但找不到类定义时抛出
     ClassNotFound {
         class_name: String,
-        class_loader: String,
-        message: String,
+        message: String
+    },
+
+    FieldNotFound {
+        class_name: String,
+        field_name: String
     },
     
     /// 方法未找到异常
@@ -300,15 +304,12 @@ impl Exception {
             | Exception::Interrupted(msg)
             | Exception::Security(msg)
             | Exception::Timeout(msg) => msg.clone(),
-            
             Exception::ArrayIndexOutOfBounds { index, length, message } => {
                 format!("{} (index={}, length={})", message, index, length)
             }
-            
             Exception::ClassCast { from_type, to_type, message } => {
                 format!("{} (from={}, to={})", message, from_type, to_type)
             }
-            
             Exception::IOException { kind, message, path } => {
                 if let Some(p) = path {
                     format!("{}: {} at path: {}", kind, message, p)
@@ -316,14 +317,13 @@ impl Exception {
                     format!("{}: {}", kind, message)
                 }
             }
-            
-            Exception::ClassNotFound { class_name, class_loader, message } => {
-                format!("{} (class={}, loader={})", message, class_name, class_loader)
+            Exception::ClassNotFound { class_name, message } => {
+                format!("{} (class={})", message, class_name)
             }
-            
             Exception::Parse { target, position, message } => {
                 format!("{} at position {} in '{}'", message, position, target)
             }
+            Exception::FieldNotFound { class_name, field_name } => todo!(),
         }
     }
     

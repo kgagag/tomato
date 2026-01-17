@@ -73,6 +73,12 @@ pub enum Exception {
         class_name: String,
         field_name: String
     },
+
+    
+    MethodNotFound {
+        class_name: String,
+        method_name: String
+    },
     
     /// 方法未找到异常
     /// 试图调用不存在的方法时抛出
@@ -324,6 +330,7 @@ impl Exception {
                 format!("{} at position {} in '{}'", message, position, target)
             }
             Exception::FieldNotFound { class_name, field_name } => todo!(),
+            Exception::MethodNotFound { class_name, method_name } => todo!(),
         }
     }
     

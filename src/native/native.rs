@@ -1,6 +1,6 @@
 use log::{error, info, warn};
 
-use crate::{classfile::class::MethodInfo, common::{error::Throwable, stack_frame::StackFrame}, runtime::{heap::Heap, metaspace::Metaspace}};
+use crate::{classfile::class::MethodInfo, common::{error::Throwable, stack_frame::StackFrame}, native::native_stringcoding, runtime::{heap::Heap, metaspace::Metaspace}};
 
 use super::{
     native_array::new_array,
@@ -90,42 +90,42 @@ pub fn run_native(method: &MethodInfo,vm_stack: &mut Vec<StackFrame>, heap: &mut
             new_array(method, vm_stack,heap,metaspace);
         }
         
-        //  else if "accept0" == method.method_name
-        //     && "(Ltomato/net/Socket;)V" == method.descriptor
-        //     && method.class_name == "tomato/net/Socket"
-        // {
-        //     native_net::accept(vm_stack,heap,metaspace);
-        // } else if "accept0" == method.method_name
-        //     && "(Ltomato/net/Socket;)V" == method.descriptor
-        //     && method.class_name == "tomato/net/Socket"
-        // {
-        //     native_net::accept(vm_stack,heap,metaspace);
-        // } else if "encode0" == method.method_name
-        //     && "([CII)[B" == method.descriptor
-        //     && method.class_name == "java/lang/StringCoding"
-        // {
-        //     native_stringcoding::encode0(vm_stack,heap,metaspace);
-        // } else if "decode0" == method.method_name
-        //     && "([BII)[C" == method.descriptor
-        //     && method.class_name == "java/lang/StringCoding"
-        // {
-        //     native_stringcoding::decode0(vm_stack,heap,metaspace);
-        // } else if "write0" == method.method_name
-        //     && "([B)V" == method.descriptor
-        //     && method.class_name == "tomato/net/SocketOutputStream"
-        // {
-        //     native_socket_output_stream::write0(vm_stack,heap,metaspace);
-        // } else if "close0" == method.method_name
-        //     && "()V" == method.descriptor
-        //     && method.class_name == "tomato/net/SocketOutputStream"
-        // {
-        //     native_socket_output_stream::close0(vm_stack,heap,metaspace);
-        // } else if "close0" == method.method_name
-        //     && "()V" == method.descriptor
-        //     && method.class_name == "tomato/net/SocketInputStream"
-        // {
-        //     native_socket_output_stream::close0(vm_stack,heap,metaspace);
-        // }
+         else if "accept0" == method.method_name
+            && "(Ltomato/net/Socket;)V" == method.descriptor
+            && method.class_name == "tomato/net/Socket"
+        {
+           // native_net::accept(vm_stack,heap,metaspace);
+        } else if "accept0" == method.method_name
+            && "(Ltomato/net/Socket;)V" == method.descriptor
+            && method.class_name == "tomato/net/Socket"
+        {
+           // native_net::accept(vm_stack,heap,metaspace);
+        } else if "encode0" == method.method_name
+            && "([CII)[B" == method.descriptor
+            && method.class_name == "java/lang/StringCoding"
+        {
+            native_stringcoding::encode0(vm_stack,heap,metaspace);
+        } else if "decode0" == method.method_name
+            && "([BII)[C" == method.descriptor
+            && method.class_name == "java/lang/StringCoding"
+        {
+            native_stringcoding::decode0(vm_stack,heap,metaspace);
+        } else if "write0" == method.method_name
+            && "([B)V" == method.descriptor
+            && method.class_name == "tomato/net/SocketOutputStream"
+        {
+           // native_socket_output_stream::write0(vm_stack,heap,metaspace);
+        } else if "close0" == method.method_name
+            && "()V" == method.descriptor
+            && method.class_name == "tomato/net/SocketOutputStream"
+        {
+           // native_socket_output_stream::close0(vm_stack,heap,metaspace);
+        } else if "close0" == method.method_name
+            && "()V" == method.descriptor
+            && method.class_name == "tomato/net/SocketInputStream"
+        {
+           // native_socket_output_stream::close0(vm_stack,heap,metaspace);
+        }
         
          else {
             panic!(

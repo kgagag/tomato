@@ -33,7 +33,8 @@ pub fn get_class(
         StackFrameValue::Reference(id) => {
             if !heap.is_array(id as usize) {
                 let class_id: u32 = heap.get_object_class_id(id as usize)?;
-                let class_obj = heap.get_constant_pool_class(&class_id);
+                //metaspace.classes[class_id as usize].class_name.clone();
+                let class_obj = heap.get_constant_pool_class(& metaspace.classes[class_id as usize].class_name);
                 if class_obj.is_some() {
                     vm_stack[frame_index]
                         .op_stack
@@ -42,7 +43,7 @@ pub fn get_class(
                     let class_name = &metaspace.classes[class_id as usize].class_name.clone();
                     let class_obj_id =
                         java::create_class_object(class_name, vm_stack, heap, metaspace)?;
-                    heap.put_into_class_constant_pool(class_id, class_obj_id);
+                    heap.put_into_class_constant_pool(class_name.clone(), class_obj_id);
                     vm_stack[frame_index]
                         .op_stack
                         .push(StackFrameValue::Reference(class_obj_id))

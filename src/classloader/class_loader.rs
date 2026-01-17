@@ -459,7 +459,7 @@ pub fn init(class_name: &String, method_name: String, heap: &mut Heap, metaspace
             ConstantPoolInfo::Utf8(name) => {
                 if name == &method_name {
                     let mut stack_frame =
-                        create_stack_frame_with_class(method_info, class).unwrap();
+                        create_stack_frame(method_info).unwrap();
                     let mut vm_stack = Vec::new();
                     stack_frame.vm_stack_id = 0;
                     vm_stack.push(stack_frame);

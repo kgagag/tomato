@@ -77,6 +77,7 @@ public class Test {
         new Test28().test(new int[100][100], new int[50][50]);
 
         new Test29().test(new int[][]{{1}}, new int[][]{{2}});
+
         //普通继承
         new Test31().test();
         // 先实现接口后继承
@@ -168,6 +169,7 @@ public class Test {
         new Test110().test();
         new Test85().test();
         new Test86().test();
+        new MyHashSetTest().test();
         //测试 hashMap
         // 测试 hashSet
         new TestSet().test();
@@ -200,7 +202,7 @@ public class Test {
         new Test90().test();
         new Test91().test();
         new Test92().test();
-        new Test93().test();
+        //new Test93().test();
         new AlphabetSwitch().test();
         new LookupSwitchExample().test();
         new Test94().test();

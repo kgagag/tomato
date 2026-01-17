@@ -15,10 +15,15 @@ public class Test99 {
     }
 
     public static void main(String[] args) {
-        Test99 test99 = new Test99();
-        System.out.println(test99.test());
-        Charset defaultCharset = Charset.defaultCharset();
-        System.out.println("默认字符集: " + defaultCharset.name());
+//        Test99 test99 = new Test99();
+//        System.out.println(test99.test());
+//        Charset defaultCharset = Charset.defaultCharset();
+//        System.out.println("默认字符集: " + defaultCharset.name());
+
+        String str = "默认字符集";
+        //StringHelper.print20240503(str);
+        byte[] bytes = str.getBytes();
+        //StringHelper.print20240503(new String(bytes));
     }
 
 }

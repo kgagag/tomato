@@ -32,17 +32,17 @@ pub fn ldc(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Meta
                     ConstantPoolInfo::Utf8(class_name) => {
                         (None, None, Some(class_name.clone()), None)
                     }
-                    _ => panic!(),
+                    _ => return Err(Throwable::Error(crate::common::error::JvmError::InternalError("Internal error".to_string())))
                 }
             }
             ConstantPoolInfo::String(index) => {
                 let utf8_constant = &this_class.constant_pool[*index as usize];
                 match utf8_constant {
                     ConstantPoolInfo::Utf8(str) => (None, None, None, Some(str.clone())),
-                    _ => panic!(),
+                 _ => return Err(Throwable::Error(crate::common::error::JvmError::InternalError("Internal error".to_string())))
                 }
             }
-            _ => panic!(),
+             _ => return Err(Throwable::Error(crate::common::error::JvmError::InternalError("Internal error".to_string())))
         }
     };
 
@@ -69,11 +69,11 @@ pub fn ldc(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Meta
         }
     } else if let Some(class_name) = class_index {
         //确保这个类已被加载
-        let class_id: usize = (class_loader::find_class(&class_name, vm_stack, heap, metaspace)?).id;
-        let class_obj = heap.get_constant_pool_class(&(class_id as u32));
+        //let class_id: usize = (class_loader::find_class(&class_name, vm_stack, heap, metaspace)?).id;
+        let class_obj = heap.get_constant_pool_class(&class_name);
         if class_obj.is_none() {
             let obj_id: u32 = java::create_class_object(&class_name,vm_stack,heap,metaspace)?;
-            heap.put_into_class_constant_pool(class_id as u32, obj_id);
+            heap.put_into_class_constant_pool(class_name, obj_id);
             vm_stack[frame_index].op_stack.push(StackFrameValue::Reference(obj_id));
         } else {
              vm_stack[frame_index]

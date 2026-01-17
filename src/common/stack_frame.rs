@@ -110,10 +110,9 @@ impl StackFrame {
 pub fn init_stack_frame(
     frame: &mut StackFrame,
     method_info: &MethodInfo,
-    class: & Class,
     start: usize,
 ) -> StackFrame {
-    let mut new_stack_frame: StackFrame = create_stack_frame(method_info, class).unwrap();
+    let mut new_stack_frame: StackFrame = create_stack_frame(method_info).unwrap();
     new_stack_frame.vm_stack_id = frame.vm_stack_id;
     let mut i: usize = start;
     let op_stack_len = frame.op_stack.len();
@@ -182,19 +181,19 @@ pub fn init_stack_frame(
     new_stack_frame
 }
 
-pub fn create_stack_frame(method_info: &MethodInfo, class: &Class) -> Option<StackFrame> {
+pub fn create_stack_frame(method_info: &MethodInfo) -> Option<StackFrame> {
     for attr in &method_info.attributes {
         match attr {
             AttributeInfo::Code(code_attr) => {
                 return Some(StackFrame::new(
-                    class.id,
+                    method_info.class_id as usize,
                     code_attr.max_stack,
                     code_attr.max_locals,
                     code_attr.code.clone(),
                    // code_attr.clone(),
                     method_info.method_name.clone(),
                     method_info.descriptor.clone(),
-                    class.class_name.clone()
+                    method_info.class_name.clone()
                 ))
             }
         }
@@ -202,10 +201,16 @@ pub fn create_stack_frame(method_info: &MethodInfo, class: &Class) -> Option<Sta
     None
 }
 
-// 移除重复的 create_stack_frame_with_class 函数，或改为调用上面的函数
-pub fn create_stack_frame_with_class(
-    method_info: &MethodInfo,
-    class: &Class,
-) -> Option<StackFrame> {
-    create_stack_frame(method_info, class)
+pub fn update_stack_frame(frame: &mut StackFrame, method_info: &MethodInfo) {
+    for attr in &method_info.attributes {
+        match attr {
+            AttributeInfo::Code(code_attr) => {
+                frame.max_stack = code_attr.max_stack;
+                frame.max_locals = code_attr.max_locals;
+                frame.code = code_attr.code.clone();
+                frame.class_name = method_info.class_name.clone();
+                frame.class = method_info.class_id as usize;
+            }
+        }
+    }
 }

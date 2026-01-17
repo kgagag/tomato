@@ -1,6 +1,6 @@
 use log::{Metadata, info};
 
-use crate::{classfile::class::{self, Class}, classloader::class_loader, common::{error::Throwable, object::Object, param::DataType, reference::Reference, stack_frame::StackFrame, value::{self, StackFrameValue}}, runtime::{heap::{self, Heap}, metaspace::{self, Metaspace}}};
+use crate::{classfile::class::{self, Class}, classloader::class_loader, common::{error::{JvmError, Throwable}, object::Object, param::DataType, reference::Reference, stack_frame::StackFrame, value::{self, StackFrameValue}}, runtime::{heap::{self, Heap}, metaspace::{self, Metaspace}}};
 
 pub fn create_class_object(class_name: &String,vm_stack:&mut Vec<StackFrame>,heap:&mut Heap,metaspace:&mut Metaspace) -> Result<u32,Throwable> {
     let id = create_string_object(class_name.clone(),vm_stack,heap,metaspace)?;
@@ -13,6 +13,7 @@ pub fn create_class_object(class_name: &String,vm_stack:&mut Vec<StackFrame>,hea
            break;
        }
     }
+    heap.put_into_class_constant_pool(class_name.clone(), obj_id as u32);
     Ok(obj_id as u32)
 }
 
@@ -37,11 +38,10 @@ pub fn convert_to_rust_string(msg: StackFrameValue,vm_stack:&mut Vec<StackFrame>
                 }
             }
         }
-        _=> panic!("create_string_object error")
+       // _=> panic!("create_string_object error")
+       _=> return Err(Throwable::Error(JvmError::InternalError("Internal error".to_string()))),
     }
-
     return Ok(string);
-
 }
 
 
@@ -65,5 +65,6 @@ pub fn create_string_object(str_value: String,vm_stack:&mut Vec<StackFrame>,heap
             heap.put_field_reference(obj_id as u32, field.offset, char_array_id as u32 );
         }
     }
+    heap.put_into_string_constant_pool(str_value, obj_id as u32);
     Ok(obj_id as u32)
 }

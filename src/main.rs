@@ -29,7 +29,7 @@ pub fn run(main_class_path: String) -> Result<(), Throwable> {
     )?;
     for method_info in &class.method_info {
         if method_info.method_name == "main" && method_info.descriptor == "([Ljava/lang/String;)V" {
-            let stack_frame = create_stack_frame(&method_info.clone(), class).unwrap();
+            let stack_frame = create_stack_frame(&method_info.clone()).unwrap();
             let vm_stack_id = vm.push_stack_frame(stack_frame);
             let vm_stack: &mut Vec<tomato::common::stack_frame::StackFrame> = vm.vm_stack.get_mut(&vm_stack_id).unwrap();
             let heap = &mut vm.heap;

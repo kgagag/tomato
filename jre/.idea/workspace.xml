@@ -5,34 +5,28 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="70c6e279-5046-4c44-ba52-f4228d3f6634" name="Changes" comment="&quot;调整目录&quot;">
-      <change afterPath="$PROJECT_DIR$/src/test/Test108.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/Test109.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/Test110.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/TestASFASF.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/MyHashSet.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/MyHashSetTest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/IntegerHashCodeTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/IntegerHashCodeTest.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/IntegerHashCodeTest2.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/IntegerHashCodeTest2.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/test/Test.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/Test.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/test/Test107.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/Test107.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/test/Test49.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/Test49.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/test/Test55.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/Test55.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/test/Test85.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/Test85.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/test/Test86.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/Test86.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/IntegerHashCodeTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/IntegerHashCodeTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/IntegerHashCodeTest2.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/IntegerHashCodeTest2.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/Test.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/Test.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/Test107.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/Test107.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/Test49.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/Test49.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/Test55.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/Test55.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/Test85.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/Test85.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/Test86.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/Test86.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/classfile/class.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/classfile/class.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/Test99.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/Test99.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../src/classloader/class_loader.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/classloader/class_loader.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../src/common/error.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/common/error.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_array.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_array.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/common/stack_frame.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/common/stack_frame.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/common/value.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/common/value.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/interpreter/instructions/op_code.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/interpreter/instructions/op_code.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_invoke.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_invoke.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_static.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_static.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_ldc.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/interpreter/instructions/opcode_ldc.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../src/main.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../src/native/native_object.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/native/native_object.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../src/runtime/heap.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/runtime/heap.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/runtime/metaspace.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/runtime/metaspace.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/runtime/runtime_data_area2.rs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/utils/java.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../src/utils/java.rs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -87,7 +81,7 @@
     &quot;ToolWindowRun.ShowToolbar&quot;: &quot;false&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
     &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;last_opened_file_path&quot;: &quot;E:/work6/tomato/jre&quot;,
+    &quot;last_opened_file_path&quot;: &quot;E:/work5&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -111,7 +105,46 @@
       <recent name="test" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.Test86">
+  <component name="RunManager" selected="Application.Test">
+    <configuration name="IntegerHashCodeTest" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="test.IntegerHashCodeTest" />
+      <module name="jre" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="test.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="IntegerHashCodeTest2" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="test.IntegerHashCodeTest2" />
+      <module name="jre" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="test.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="MyHashSet" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="test.MyHashSet" />
+      <module name="jre" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="test.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="Test" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="test.Test" />
       <module name="jre" />
@@ -125,47 +158,8 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="Test107" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="test.Test107" />
-      <module name="jre" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="test.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="Test110" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="test.Test110" />
-      <module name="jre" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="test.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="Test49" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="test.Test49" />
-      <module name="jre" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="test.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="Test86" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="test.Test86" />
+    <configuration name="Test99" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="test.Test99" />
       <module name="jre" />
       <extension name="coverage">
         <pattern>
@@ -179,11 +173,11 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.Test86" />
-        <item itemvalue="Application.Test110" />
         <item itemvalue="Application.Test" />
-        <item itemvalue="Application.Test49" />
-        <item itemvalue="Application.Test107" />
+        <item itemvalue="Application.Test99" />
+        <item itemvalue="Application.IntegerHashCodeTest2" />
+        <item itemvalue="Application.IntegerHashCodeTest" />
+        <item itemvalue="Application.MyHashSet" />
       </list>
     </recent_temporary>
   </component>
@@ -290,7 +284,10 @@
       <workItem from="1768325173511" duration="2661000" />
       <workItem from="1768368786566" duration="22442000" />
       <workItem from="1768440525691" duration="18806000" />
-      <workItem from="1768533586050" duration="6099000" />
+      <workItem from="1768533586050" duration="11181000" />
+      <workItem from="1768561957912" duration="9902000" />
+      <workItem from="1768588732274" duration="779000" />
+      <workItem from="1768626182915" duration="3221000" />
     </task>
     <task id="LOCAL-00001" summary="&quot;add test case&quot;">
       <option name="closed" value="true" />

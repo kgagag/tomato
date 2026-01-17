@@ -33,7 +33,7 @@ pub struct Heap {
     address_map_index: usize,
     address_malloc_method: u8,
     str_pool: HashMap<String, u32>,
-    class_pool: HashMap<u32, u32>,
+    class_pool: HashMap<String, u32>,
 }
 
 impl Heap {
@@ -726,15 +726,18 @@ impl Heap {
     }
 
     //get_constant_pool_class
-    pub fn get_constant_pool_class(&self, class_id: &u32) -> Option<&u32> {
-        self.class_pool.get(class_id)
+    pub fn get_constant_pool_class(&self, class_name: &String) -> Option<&u32> {
+        self.class_pool.get(class_name)
     }
 
-    pub fn put_into_class_constant_pool(&mut self, class_id: u32, class_object_id: u32) {
-        self.class_pool.insert(class_id, class_object_id);
+    pub fn put_into_class_constant_pool(&mut self, class_name: String, class_object_id: u32) {
+        self.class_pool.insert(class_name, class_object_id);
     }
 
     pub fn get_constant_string_pool(&self, string: &String) -> Option<&u32> {
         self.str_pool.get(string)
+    }
+    pub fn put_into_string_constant_pool(&mut self, string: String, string_id: u32) {
+        self.str_pool.insert(string, string_id);
     }
 }

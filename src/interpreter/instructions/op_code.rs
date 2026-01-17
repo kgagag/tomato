@@ -252,8 +252,8 @@ pub mod op_code {
                 0xaf => dreturn(vm_stack),
                 0xb0 => areturn(vm_stack),
                 0xb1 => _return(vm_stack),
-                0xb2 =>getstatic(vm_stack, heap, metaspace),
-                0xb3 =>putstatic(vm_stack, heap, metaspace),
+                0xb2 => getstatic(vm_stack, heap, metaspace),
+                0xb3 => putstatic(vm_stack, heap, metaspace),
                 0xb4 => getfield(vm_stack, heap, metaspace),
                 0xb5 => putfield(vm_stack, heap, metaspace),
                 0xb6 => invokevirtual(vm_stack, heap, metaspace),
@@ -287,7 +287,7 @@ pub mod op_code {
                 Ok(()) => continue,
                 Err(error) => {
                   error!("Error executing instruction:{:x}, {:?}",code, error);
-                   panic!("Error executing instruction:{:x}, {:?}",code, error)
+                  panic!("Error executing instruction:{:x}, {:?}",code, error)
                 }
             }
 

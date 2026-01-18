@@ -134,3 +134,123 @@ pub fn split_u16_to_u8(value: u16) -> [u8; 2] {
         (value & 0xFF) as u8,         // 低字节
     ]
 }
+
+pub fn decode_java_mutf8(bytes: &[u8]) -> String {
+    let mut result = String::new();
+    let mut i = 0;
+    
+    while i < bytes.len() {
+        let b1 = bytes[i];
+        
+        // 1. ASCII 字符 (0x01-0x7F)
+        if b1 < 0x80 && b1 != 0 {
+            result.push(b1 as char);
+            i += 1;
+        }
+        // 2. Java 特殊 null 编码 (0xC0 0x80)
+        else if b1 == 0xC0 && i + 1 < bytes.len() && bytes[i + 1] == 0x80 {
+            result.push('\0');
+            i += 2;
+        }
+        // 3. 非法直接 null (应该用 0xC0 0x80 编码)
+        else if b1 == 0 {
+            result.push('�'); // 非法，替换为替换字符
+            i += 1;
+        }
+        // 4. 双字节 UTF-8 (0xC2-0xDF)
+        else if b1 >= 0xC2 && b1 <= 0xDF {
+            if i + 1 >= bytes.len() {
+                result.push('�');
+                break;
+            }
+            let b2 = bytes[i + 1];
+            if b2 < 0x80 || b2 > 0xBF {
+                result.push('�');
+                i += 1;
+                continue;
+            }
+            let code = ((b1 as u32 & 0x1F) << 6) | (b2 as u32 & 0x3F);
+            result.push(std::char::from_u32(code).unwrap_or('�'));
+            i += 2;
+        }
+        // 5. 三字节 UTF-8 (0xE0-0xEF)
+        else if b1 >= 0xE0 && b1 <= 0xEF {
+            if i + 2 >= bytes.len() {
+                result.push('�');
+                break;
+            }
+            let b2 = bytes[i + 1];
+            let b3 = bytes[i + 2];
+            
+            // 检查后续字节有效性
+            if b2 < 0x80 || b2 > 0xBF || b3 < 0x80 || b3 > 0xBF {
+                result.push('�');
+                i += 1;
+                continue;
+            }
+            
+            let code = ((b1 as u32 & 0x0F) << 12) 
+                     | ((b2 as u32 & 0x3F) << 6) 
+                     | (b3 as u32 & 0x3F);
+            
+            // 检查码点有效性
+            if code < 0x800 || (code >= 0xD800 && code <= 0xDFFF) {
+                result.push('�');
+                i += 3;
+                continue;
+            }
+            
+            result.push(std::char::from_u32(code).unwrap_or('�'));
+            i += 3;
+        }
+        // 6. Java 6字节补充字符 (0xED A0-AF + 0xED B0-BF)
+        else if b1 == 0xED {
+            if i + 5 >= bytes.len() {
+                result.push('�');
+                break;
+            }
+            
+            // 检查是否是合法的补充字符编码
+            let b2 = bytes[i + 1];
+            let b3 = bytes[i + 2];
+            let b4 = bytes[i + 3];
+            let b5 = bytes[i + 4];
+            let b6 = bytes[i + 5];
+            
+            // 格式: ED [A0-AF] [80-BF] ED [B0-BF] [80-BF]
+            if b2 >= 0xA0 && b2 <= 0xAF && b3 >= 0x80 && b3 <= 0xBF
+                && b4 == 0xED && b5 >= 0xB0 && b5 <= 0xBF && b6 >= 0x80 && b6 <= 0xBF {
+                
+                // 计算高位代理和低位代理
+                let high_surrogate = (((b2 as u32 & 0x0F) << 6) | (b3 as u32 & 0x3F)) as u16;
+                let low_surrogate = (((b5 as u32 & 0x0F) << 6) | (b6 as u32 & 0x3F)) as u16;
+                
+                // 计算 Unicode 码点
+                let code_point = 0x10000 + 
+                    ((high_surrogate as u32 - 0xD800) << 10) + 
+                    (low_surrogate as u32 - 0xDC00);
+                
+                result.push(std::char::from_u32(code_point).unwrap_or('�'));
+                i += 6;
+            } else {
+                // 不是合法的补充字符编码
+                result.push('�');
+                i += 1;
+            }
+        }
+        // 7. 其他情况（四字节 UTF-8 在 Java MUTF-8 中应该用6字节编码）
+        else if b1 >= 0xF0 && b1 <= 0xF7 {
+            // 标准 UTF-8 四字节序列，但在 Java MUTF-8 中不应该出现
+            // 安全处理：跳过4字节
+            result.push('�');
+            i += if i + 3 < bytes.len() { 4 } else { 1 };
+        }
+        // 8. 完全无效的字节
+        else {
+            result.push('�');
+            i += 1;
+        }
+    }
+    
+    result
+}

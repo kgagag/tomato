@@ -14,6 +14,7 @@ use crate::common::value::StackFrameValue;
 use crate::interpreter::instructions::op_code::op_code::do_opcode;
 use crate::runtime::heap::Heap;
 use crate::runtime::metaspace::Metaspace;
+use crate::utils::u8c;
 use crate::utils::u8c::u8s_to_u16;
 use crate::utils::u8c::u8s_to_u32;
 use byteorder::{BigEndian, ReadBytesExt};
@@ -27,6 +28,7 @@ use std::io;
 use std::io::Cursor;
 use std::io::Read;
 use std::path::Path;
+use std::str::Utf8Error;
 use zip::read::ZipArchive;
 fn parse_descriptor(descriptor: &Vec<u8>) -> Result<Option<Vec<DataType>>, String> {
     let mut index = 0;
@@ -942,6 +944,8 @@ pub fn get_attribute(
     ans
 }
 
+
+
 fn read_constant_pool_info<R: Read>(
     constant_pool_count: u16,
     reader: &mut R,
@@ -960,14 +964,16 @@ fn read_constant_pool_info<R: Read>(
                 reader
                     .read_exact(&mut data)
                     .expect("Failed to read UTF-8 data");
-                let result = String::from_utf8(data);
-                match result {
-                    Ok(s) =>  constant_pool.push(ConstantPoolInfo::Utf8(s)),
-                    Err(e) => {
-                        warn!("Invalid UTF-8 string:{}", e);
-                        constant_pool.push(ConstantPoolInfo::Utf8(String::from("..")));
-                    },
-                };
+                // let result = String::from_utf8_lossy(&data);
+                // match result {
+                //     Err(e) => {
+                //         warn!("Invalid UTF-8 string:{}", e);
+                //         constant_pool.push(ConstantPoolInfo::Utf8(String::from("..")));
+                //     },
+                // };
+
+                let s = u8c::decode_java_mutf8(&data);
+                constant_pool.push(ConstantPoolInfo::Utf8(s));
                 index += 1;
             }
             3 => {

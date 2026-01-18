@@ -1,9 +1,8 @@
 package test;
 
 import java.io.IOException;
-import tomato.net.ServerSocket;
-import tomato.net.Socket;
-import java.nio.charset.StandardCharsets;
+import test.net.ServerSocket;
+import test.net.Socket;
 
 public class SimpleHttpServer {
 

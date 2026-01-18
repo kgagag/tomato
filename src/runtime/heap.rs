@@ -58,7 +58,7 @@ impl Heap {
      * 分配内存,如果内存块足够，则分配成功,更新内存块信息
      * 返回对象id
      */
-    pub fn malloc(&mut self, size: u32) -> usize {
+    fn malloc(&mut self, size: u32) -> usize {
         // 查找合适的内存块
         let mut delete_index = None;
         for (i, (address, block_size)) in self.memory_block.iter().enumerate() {

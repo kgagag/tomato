@@ -72,10 +72,6 @@ impl StackFrame {
         stake_frame
     }
 
-    pub fn store(&mut self, index: usize, stack_value: StackFrameValue) {
-        self.local[index] = stack_value;
-    }
-
     pub fn popi64(&mut self) -> i64 {
         let value = self.op_stack.pop().unwrap();
         match value {
@@ -101,7 +97,7 @@ impl StackFrame {
             StackFrameValue::Double(data) => data ,
             StackFrameValue::Float(data) => data as f64,
             _ => {
-                panic!("wrong value type");
+                panic!("wrong value type:{:?}",value);
             }
         }
     }

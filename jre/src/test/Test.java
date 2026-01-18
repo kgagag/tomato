@@ -208,7 +208,7 @@ public class Test {
         new Test94().test();
         new Test95().test();
         new Test97().test();
-
+        new SimpleBasicTypeTestRunner().test();
         //new SimpleHttpServer().test();
         new Test99().test();
         new Test100().test();

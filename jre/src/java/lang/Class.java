@@ -3273,7 +3273,7 @@ public final class Class<T> implements java.io.Serializable,
 //            }
 //        }
 //        return desiredAssertionStatus0(this);
-        return true;
+        return false;
     }
 
     // Retrieves the desired assertion status of this class from the VM

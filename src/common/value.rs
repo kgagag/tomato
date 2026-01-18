@@ -73,6 +73,13 @@ pub fn as_i32(v: &StackFrameValue) -> i32 {
             panic!("Cannot convert floating point {:?} to i32", v)
         },
         StackFrameValue::Char(data) => *data as i32,
+        StackFrameValue::Boolean(data) => {
+            if *data {
+                1
+            } else {
+                0
+            }
+        }
         _ => panic!("Cannot convert {:?} to i32", v),
     }
 }
@@ -107,6 +114,13 @@ pub fn as_i8(v: &StackFrameValue) -> i8 {
         StackFrameValue::Float(_) | StackFrameValue::Double(_) => {
             panic!("Cannot convert floating point {:?} to i8", v)
         },
+        StackFrameValue::Boolean(data) => {
+            if *data {
+                1
+            } else {
+                0
+            }
+        }
         _ => panic!("Cannot convert {:?} to i8", v),
     }
 }

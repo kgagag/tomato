@@ -42,7 +42,7 @@ pub fn run_native(method: &MethodInfo,vm_stack: &mut Vec<StackFrame>, heap: &mut
             && "(Ljava/lang/String;)Ljava/lang/Class;" == method.descriptor
             && method.class_name == "java/lang/Class"
         {
-            for_name(vm_stack,heap,metaspace);
+            for_name(vm_stack,heap,metaspace)?;
         } else if "floatToRawIntBits" == method.method_name
             && "(F)I" == method.descriptor
             && method.class_name == "java/lang/Float"
@@ -57,7 +57,7 @@ pub fn run_native(method: &MethodInfo,vm_stack: &mut Vec<StackFrame>, heap: &mut
             && "(Ljava/lang/String;)Ljava/lang/Class;" == method.descriptor
             && method.class_name == "java/lang/Class"
         {
-            get_primitive_class(vm_stack,heap,metaspace);
+            get_primitive_class(vm_stack,heap,metaspace)?;
         } else if "longBitsToDouble" == method.method_name
             && "(J)D" == method.descriptor
             && method.class_name == "java/lang/Double"
@@ -82,7 +82,7 @@ pub fn run_native(method: &MethodInfo,vm_stack: &mut Vec<StackFrame>, heap: &mut
             && "()Ljava/lang/Class;" == method.descriptor
             && method.class_name == "java/lang/Object"
         {
-            get_class(vm_stack,heap,metaspace);
+            get_class(vm_stack,heap,metaspace)?;
         } else if "newArray" == method.method_name
             && "(Ljava/lang/Class;I)Ljava/lang/Object;" == method.descriptor
             && method.class_name == "java/lang/reflect/Array"
@@ -104,12 +104,12 @@ pub fn run_native(method: &MethodInfo,vm_stack: &mut Vec<StackFrame>, heap: &mut
             && "([CII)[B" == method.descriptor
             && method.class_name == "java/lang/StringCoding"
         {
-            native_stringcoding::encode0(vm_stack,heap,metaspace);
+            native_stringcoding::encode0(vm_stack,heap,metaspace)?;
         } else if "decode0" == method.method_name
             && "([BII)[C" == method.descriptor
             && method.class_name == "java/lang/StringCoding"
         {
-            native_stringcoding::decode0(vm_stack,heap,metaspace);
+            native_stringcoding::decode0(vm_stack,heap,metaspace)?;
         } else if "write0" == method.method_name
             && "([B)V" == method.descriptor
             && method.class_name == "tomato/net/SocketOutputStream"

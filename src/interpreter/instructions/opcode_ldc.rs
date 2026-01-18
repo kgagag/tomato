@@ -80,6 +80,8 @@ pub fn ldc(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Meta
                 .op_stack
                 .push(StackFrameValue::Reference(*class_obj.unwrap()));
         }
+    }else{
+        return Err(Throwable::Error(crate::common::error::JvmError::InternalError("Internal error".to_string())))
     }
      vm_stack[frame_index].pc += 2;
      Ok(())

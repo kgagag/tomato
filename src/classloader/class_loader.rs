@@ -951,8 +951,6 @@ fn read_constant_pool_info<R: Read>(
     let mut index = 1;
     while index <= constant_pool_count - 1 {
         let tag = reader.read_u8().expect("Failed to read constant tag");
-        // info!("constant_pool_tag:{:?}", tag);
-        //info!("====={},{}====",index,tag);
         match tag {
             1 => {
                 let length = reader
@@ -962,8 +960,14 @@ fn read_constant_pool_info<R: Read>(
                 reader
                     .read_exact(&mut data)
                     .expect("Failed to read UTF-8 data");
-                let utf8_string = String::from_utf8(data).expect("Invalid UTF-8 string");
-                constant_pool.push(ConstantPoolInfo::Utf8(utf8_string));
+                let result = String::from_utf8(data);
+                match result {
+                    Ok(s) =>  constant_pool.push(ConstantPoolInfo::Utf8(s)),
+                    Err(e) => {
+                        warn!("Invalid UTF-8 string:{}", e);
+                        constant_pool.push(ConstantPoolInfo::Utf8(String::from("..")));
+                    },
+                };
                 index += 1;
             }
             3 => {

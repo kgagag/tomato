@@ -5,36 +5,27 @@ use crate::{common::{error::Throwable, stack_frame::StackFrame, value::StackFram
 
 
 
-pub fn fcmpg(frame: &mut StackFrame) ->Result<(),Throwable> {
+pub fn fcmpg(frame: &mut StackFrame) -> Result<(), Throwable> {
     let f2 = frame.popf64();
     let f1 = frame.popf64();
-
-    let result = match f1.partial_cmp(&f2) {
-        Some(std::cmp::Ordering::Less) => -1,
-        Some(std::cmp::Ordering::Equal) => 0,
-        Some(std::cmp::Ordering::Greater) => 1,
-        None => {
-            // Handle NaN case, which is unordered
-            // In Java, if either operand is NaN, the result is 1
-            if f1.is_nan() || f2.is_nan() {
-                1
-            } else {
-                // If neither operand is NaN and one is positive infinity,
-                // the result is 1; otherwise, the result is -1.
-                if f1.is_infinite() || f2.is_infinite() {
-                    1
-                } else {
-                    -1
-                }
-            }
-        }
+    
+    // 注意：你的虚拟机可能用f32，但原理相同
+    // 关键是进行精确比较
+    
+    let result = if f1.is_nan() || f2.is_nan() {
+        1  // fcmpg规则
+    } else if f1 > f2 {  // 这是精确比较！
+        1
+    } else if f1 < f2 {  // 这是精确比较！
+        -1
+    } else {
+        0  // 只有二进制完全相等才为0
     };
-
+    
     frame.op_stack.push(StackFrameValue::Int(result));
     frame.pc += 1;
     Ok(())
 }
-
 
 
 
@@ -53,17 +44,39 @@ pub fn lcmp(frame: &mut StackFrame) ->Result<(),Throwable>{
     Ok(())
 }
 
-pub fn fcmpl(frame: &mut StackFrame) ->Result<(),Throwable>{
+pub fn fcmpl(frame: &mut StackFrame) -> Result<(), Throwable> {
     let f2 = frame.popf64();
     let f1 = frame.popf64();
+    
+    // 简化版：只特殊处理 NaN
+    let result = if f1.is_nan() || f2.is_nan() {
+        -1  // fcmpl 规则
+    } else if f1 > f2 {
+        1
+    } else if f1 < f2 {
+        -1
+    } else {
+        0
+    };
+    
+    frame.op_stack.push(StackFrameValue::Int(result));
+    frame.pc += 1;
+    Ok(())
+}
 
-    let result = match f1.partial_cmp(&f2) {
-        Some(std::cmp::Ordering::Less) => -1,
-        Some(std::cmp::Ordering::Equal) => 0,
-        Some(std::cmp::Ordering::Greater) => 1,
-        None => {
-            1
-        }
+
+pub fn dcmpg(frame: &mut StackFrame) -> Result<(), Throwable> {
+    let d2 = frame.popf64();
+    let d1 = frame.popf64();
+
+    let result = if d1.is_nan() || d2.is_nan() {
+        1  // dcmpg 规则：NaN 时返回 1
+    } else if d1 > d2 {
+        1
+    } else if d1 < d2 {
+        -1
+    } else {
+        0
     };
 
     frame.op_stack.push(StackFrameValue::Int(result));
@@ -72,61 +85,21 @@ pub fn fcmpl(frame: &mut StackFrame) ->Result<(),Throwable>{
 }
 
 
-pub fn dcmpg(frame: &mut StackFrame) ->Result<(),Throwable>{
+
+pub fn dcmpl(frame: &mut StackFrame) -> Result<(), Throwable> {
     let d2 = frame.popf64();
     let d1 = frame.popf64();
 
-    let result = match d1.partial_cmp(&d2) {
-        Some(std::cmp::Ordering::Less) => -1,
-        Some(std::cmp::Ordering::Equal) => 0,
-        Some(std::cmp::Ordering::Greater) => 1,
-        None => {
-            // Handle NaN case, which is unordered
-            // In Java, if either operand is NaN, the result is 1
-            if d1.is_nan() || d2.is_nan() {
-                1
-            } else {
-                // If neither operand is NaN and one is positive infinity,
-                // the result is 1; otherwise, the result is -1.
-                if d1.is_infinite() || d2.is_infinite() {
-                    1
-                } else {
-                    -1
-                }
-            }
-        }
+    let result = if d1.is_nan() || d2.is_nan() {
+        -1  // dcmpl 规则：NaN 时返回 -1
+    } else if d1 > d2 {
+        1
+    } else if d1 < d2 {
+        -1
+    } else {
+        0
     };
-    frame.op_stack.push(StackFrameValue::Int(result));
-    frame.pc += 1;
-    Ok(())
-}
 
-
-
-pub fn dcmpl(frame: &mut StackFrame) ->Result<(),Throwable>{
-    let d2 = frame.popf64();
-    let d1 = frame.popf64();
-
-    let result = match d1.partial_cmp(&d2) {
-        Some(std::cmp::Ordering::Less) => -1,
-        Some(std::cmp::Ordering::Equal) => 0,
-        Some(std::cmp::Ordering::Greater) => 1,
-        None => {
-            // Handle NaN case, which is unordered
-            // In Java, if either operand is NaN, the result is -1
-            if d1.is_nan() || d2.is_nan() {
-                -1
-            } else {
-                // If neither operand is NaN and one is positive infinity,
-                // the result is 1; otherwise, the result is -1.
-                if d1.is_infinite() || d2.is_infinite() {
-                    1
-                } else {
-                    -1
-                }
-            }
-        }
-    };
     frame.op_stack.push(StackFrameValue::Int(result));
     frame.pc += 1;
     Ok(())

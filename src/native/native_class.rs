@@ -1,3 +1,5 @@
+use std::f32::consts::E;
+
 use log::info;
 
 use crate::{
@@ -100,7 +102,13 @@ pub fn get_primitive_class(
             )?)
         } else if string == "short" {
             Ok(java::create_class_object(&String::from("java/lang/Short"), vm_stack, heap, metaspace)?)
-        } else {
+        }else if  string == "boolean"  {
+            Ok(java::create_class_object(&String::from("java/lang/Boolean"), vm_stack, heap, metaspace)?)
+        } 
+        else if  string == "byte"  {
+            Ok(java::create_class_object(&String::from("java/lang/Byte"), vm_stack, heap, metaspace)?)
+        } 
+        else {
             Err(Throwable::Error(crate::common::error::JvmError::UnknownError("Unknown primitive class".to_string())))
         }
     }?;

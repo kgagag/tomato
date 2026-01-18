@@ -140,9 +140,6 @@ pub fn idiv(frame: &mut StackFrame) ->Result<(),Throwable>{
 pub fn fdiv(frame: &mut StackFrame) ->Result<(),Throwable>{
     let f2 = frame.popf64() as f32;
     let f1 = frame.popf64() as f32;
-    if f2 == 0.0 {
-        panic!()
-    }
     let result = f1 / f2;
     //warn!("{}", format!("{}{}", "fdiv add result:", result));
     frame.op_stack.push(StackFrameValue::Float(result));
@@ -153,9 +150,6 @@ pub fn fdiv(frame: &mut StackFrame) ->Result<(),Throwable>{
 pub fn ddiv(frame: &mut StackFrame) ->Result<(),Throwable>{
     let d2 = frame.popf64() ;
     let d1 = frame.popf64() ;
-    if d2 == 0.0 {
-        panic!()
-    }
     let result = d1 - d2;
     //warn!("{}", format!("{}{}", "ddiv add result:", result));
     frame.op_stack.push(StackFrameValue::Double(result));
@@ -167,10 +161,9 @@ pub fn ldiv(frame: &mut StackFrame) ->Result<(),Throwable>{
     let l2 = frame.popi64() ;
     let l1 = frame.popi64() ;
     if l2 == 0 {
-        panic!()
+        return Err(Throwable::Exception(Exception::Arithmetic("div by zero".to_string())));
     }
     let result = l1 / l2;
-    //warn!("{}", format!("{}{}", "ldiv add result:", result));
     frame.op_stack.push(StackFrameValue::Long(result));
     frame.pc += 1;
     Ok(())

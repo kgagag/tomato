@@ -1,31 +1,29 @@
 @echo off
 chcp 65001 >nul
-title RT-MOD 构建工具
+title RT-MOD Build Tool
 echo ========================================
-echo    RT-MOD 项目构建工具
+echo    RT-MOD Project Build Tool
 echo ========================================
 echo.
 
-echo 1. 清理并构建项目...
+echo 1. Cleaning and building the project...
 call mvn clean package
 
 echo.
-echo 2. 处理依赖库...
+echo 2. Processing dependency libraries...
 if exist "lib" (
     if not exist "target\lib" mkdir target\lib
-    echo 正在复制 lib 目录到 target...
+    echo Copying lib directory to target...
     xcopy /E /Y lib target\lib\
-    echo lib 目录复制完成！
+    echo lib directory copied successfully!
 ) else (
-    echo 警告：未找到 lib 目录，跳过依赖库复制
+    echo Warning: lib directory not found, skipping dependency copy.
 )
 
 echo.
 echo ========================================
-echo 构建成功完成！
+echo Build completed successfully!
 echo.
-echo 输出文件：target\rt-mod.jar
-echo 依赖目录：target\lib\
+echo Output file: target\rt-mod.jar
+echo Dependencies directory: target\lib\
 echo.
-echo 按任意键退出...
-pause >nul

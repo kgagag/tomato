@@ -1,3 +1,7 @@
 /target
 /.vscode
 /jre/.idea
+/jre/.idea/misc.xml
+/jre/.idea/workspace.xml
+/jre/target/rt-mod.jar
+/bin

@@ -3,7 +3,6 @@ use log::warn;
 
 use crate::classfile::class::ConstantPoolInfo;
 use crate::common::error::Throwable;
-use crate::common::reference::Reference;
 use crate::common::stack_frame::StackFrame;
 use crate::common::value::StackFrameValue;
 use crate::runtime::heap::Heap;

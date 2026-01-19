@@ -5,7 +5,7 @@ use log::info;
 use crate::{
     classfile::class::MethodInfo,
     common::{
-        array::array::Array, reference::Reference, stack_frame::StackFrame, value::StackFrameValue,
+         stack_frame::StackFrame, value::StackFrameValue,
     },
     runtime::{heap::Heap, metaspace::Metaspace},
 };

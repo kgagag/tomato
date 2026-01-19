@@ -4,9 +4,7 @@ use crate::{
     classfile::class::{Class, ConstantPoolInfo, FieldInfo},
     common::{
         error::Throwable,
-        object::Object,
         param::DataType,
-        reference::Reference,
         stack_frame::StackFrame,
         value::{self, number_u64, StackFrameValue},
     },

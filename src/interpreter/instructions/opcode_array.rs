@@ -8,7 +8,6 @@ use crate::{
     common::{
         error::Throwable,
         param::DataType,
-        reference::{self, Reference},
         stack_frame::StackFrame,
         value::StackFrameValue,
     },

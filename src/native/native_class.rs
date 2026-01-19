@@ -5,7 +5,7 @@ use log::info;
 use crate::{
     classloader,
     common::{
-        error::Throwable, param::DataType, reference::Reference, stack_frame::StackFrame,
+        error::Throwable, param::DataType, stack_frame::StackFrame,
         value::StackFrameValue,
     },
     runtime::{heap::Heap, metaspace::Metaspace},

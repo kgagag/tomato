@@ -1,6 +1,6 @@
 use log::{Metadata, info};
 
-use crate::{classfile::class::{self, Class}, classloader::class_loader, common::{error::{JvmError, Throwable}, object::Object, param::DataType, reference::Reference, stack_frame::StackFrame, value::{self, StackFrameValue}}, runtime::{heap::{self, Heap}, metaspace::{self, Metaspace}}};
+use crate::{classfile::class::{self, Class}, classloader::class_loader, common::{error::{JvmError, Throwable}, param::DataType, stack_frame::StackFrame, value::{self, StackFrameValue}}, runtime::{heap::{self, Heap}, metaspace::{self, Metaspace}}};
 
 pub fn create_class_object(class_name: &String,vm_stack:&mut Vec<StackFrame>,heap:&mut Heap,metaspace:&mut Metaspace) -> Result<u32,Throwable> {
     let id = create_string_object(class_name.clone(),vm_stack,heap,metaspace)?;

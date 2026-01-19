@@ -7,7 +7,6 @@ use crate::classfile::class::MethodInfo;
 use crate::classloader::class_loader;
 use crate::common::error::Throwable;
 use crate::common::param::DataType;
-use crate::common::reference::Reference;
 use crate::common::stack_frame;
 use crate::common::stack_frame::create_stack_frame;
 use crate::common::stack_frame::init_stack_frame;

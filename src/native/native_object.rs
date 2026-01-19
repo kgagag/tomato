@@ -4,7 +4,7 @@ use log::info;
 
 use crate::{
     common::{
-        array::array::Array, error::{JvmError, Throwable}, param::DataType, reference::Reference,
+        error::{JvmError, Throwable}, param::DataType,
         stack_frame::StackFrame, value::StackFrameValue,
     },
     runtime::{

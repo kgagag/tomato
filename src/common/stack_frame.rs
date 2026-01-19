@@ -3,7 +3,7 @@ use log::info;
 use std::cell::UnsafeCell;
 use std::collections::HashMap;
 
-use crate::{classfile::class::{AttributeInfo, Class, CodeAttribute, ConstantPoolInfo, MethodInfo}, common::op_stack::OpStack, utils::u8c::u8s_to_u16};
+use crate::{classfile::class::{AttributeInfo, Class, CodeAttribute, ConstantPoolInfo, MethodInfo}, utils::u8c::u8s_to_u16};
 
 use super::{param::DataType, value::{number_to_u32tuple, StackFrameValue}};
 /**
@@ -186,12 +186,12 @@ pub fn create_stack_frame(method_info: &MethodInfo) -> Option<StackFrame> {
                     code_attr.max_stack,
                     code_attr.max_locals,
                     code_attr.code.clone(),
-                   // code_attr.clone(),
                     method_info.method_name.clone(),
                     method_info.descriptor.clone(),
                     method_info.class_name.clone()
-                ))
+                ));
             }
+            _ => continue, // Explicitly handle other variants
         }
     }
     None

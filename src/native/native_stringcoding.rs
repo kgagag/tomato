@@ -66,8 +66,8 @@ pub fn encode0(
                 
                 //创建byte数组
                let new_array_id =  heap.create_basic_array(8, bytes.len() as u32, 1);
-               for i in 0..bytes.len() {
-                   heap.put_basic_array_element(new_array_id as u32, i as usize, bytes[i] as u64);
+                for (i, ch) in bytes.iter().enumerate() {
+                   heap.put_basic_array_element(new_array_id as u32, i as usize, *ch as u64);
                }
                frame.op_stack.push(StackFrameValue::Reference(new_array_id as  u32));
             }
@@ -83,106 +83,8 @@ pub fn encode0(
             ))
         }
     }
-
-
-    return Ok(());
-
-    // let mut new_len = 0;
-    // match reference {
-    //     Reference::Array(array) => {
-    //         //  info!("{:?}", array);
-    //         let mut bytes: Vec<StackFrameValue> = Vec::new();
-    //         for i in 0..array.data.len() {
-    //             let sfv = array.data.get(i).unwrap();
-    //             //info!("{:?}", sfv);
-    //             match sfv {
-    //                 StackFrameValue::CHARACTER(ch) => {
-    //                     let items = u8c::char_to_bytes(*ch);
-    //                     new_len += items.len();
-    //                     for j in 0..items.len() {
-    //                         bytes.push(StackFrameValue::Byte(*items.get(j).unwrap() as i8))
-    //                     }
-    //                 }
-    //                 StackFrameValue::Byte(b) => {
-    //                     bytes.push(StackFrameValue::Byte(*b as i8));
-    //                 }
-    //                 _ => panic!(),
-    //             }
-    //         }
-    //         let new_array_id: u32 = runtime_data_area::create_array(
-    //             new_len as u32,
-    //             DataType::Array {
-    //                 element_type: Box::new(DataType::Byte),
-    //                 depth: (1),
-    //             },
-    //         );
-    //         let reference = get_reference(&new_array_id).unwrap();
-    //         //info!("{:?}", bytes);
-    //         match reference {
-    //             Reference::Array(array) => {
-    //                 array.data = bytes;
-    //             }
-    //             _ => panic!(),
-    //         }
-    //         frame
-    //             .op_stack
-    //             .push(StackFrameValue::Reference(new_array_id))
-    //     }
-    //     _ => panic!(),
+     Ok(())
     }
-
-
-/**
- * char数组转换成byte数组
- */
-// pub fn decode0(frame: &mut StackFrame) {
-//     let _len = frame.popi64();
-//     let _off = frame.popi64();
-//     let reference_id = frame.pop_reference();
-//     let reference = get_reference(&reference_id).unwrap();
-//     match reference {
-//         Reference::Array(array) => {
-//             // info!("{:?}", array);
-//             let mut chars: Vec<StackFrameValue> = Vec::new();
-//             let mut tmp: Vec<u8> = Vec::new();
-//             for i in 0..array.data.len() {
-//                 let sfv = array.data.get(i).unwrap();
-//                 //info!("{:?}",sfv);
-//                 match sfv {
-//                     StackFrameValue::Byte(b) => {
-//                         tmp.push(*b as u8);
-//                     }
-//                     StackFrameValue::Int(b) => {
-//                         tmp.push(*b as u8);
-//                     }
-//                     _ => panic!(),
-//                 }
-//             }
-//             let char_vec = u8c::bytes_to_chars(tmp);
-//             for i in 0..char_vec.len() {
-//                 chars.push(StackFrameValue::CHARACTER(*char_vec.get(i).unwrap()))
-//             }
-//             let new_array_id: u32 = runtime_data_area::create_array(
-//                 char_vec.len() as u32,
-//                 DataType::Array {
-//                     element_type: Box::new(DataType::Char),
-//                     depth: (1),
-//                 },
-//             );
-//             let reference = get_reference(&new_array_id).unwrap();
-//             match reference {
-//                 Reference::Array(array) => {
-//                     array.data = chars;
-//                 }
-//                 _ => panic!(),
-//             }
-//             frame
-//                 .op_stack
-//                 .push(StackFrameValue::Reference(new_array_id))
-//         }
-//         _ => panic!(),
-//     }
-// }
 
 
 pub fn decode0(
@@ -229,8 +131,8 @@ pub fn decode0(
                 let chars =  u8c::bytes_to_chars(bytes);
                 //创建char数组
                let new_array_id =  heap.create_basic_array(5, chars.len() as u32, 1);
-               for i in 0..chars.len() {
-                   heap.put_basic_array_element(new_array_id as u32, i as usize, chars[i] as u64);
+                for (i, ch) in chars.iter().enumerate() {
+                   heap.put_basic_array_element(new_array_id as u32, i as usize, *ch as u64);
                }
                frame.op_stack.push(StackFrameValue::Reference(new_array_id as u32));
             }

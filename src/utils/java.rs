@@ -41,7 +41,7 @@ pub fn convert_to_rust_string(msg: StackFrameValue,vm_stack:&mut Vec<StackFrame>
        // _=> panic!("create_string_object error")
        _=> return Err(Throwable::Error(JvmError::InternalError("Internal error".to_string()))),
     }
-    return Ok(string);
+     Ok(string)
 }
 
 

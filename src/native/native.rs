@@ -89,13 +89,7 @@ pub fn run_native(method: &MethodInfo,vm_stack: &mut Vec<StackFrame>, heap: &mut
         {
             new_array(method, vm_stack,heap,metaspace);
         }
-        
-         else if "accept0" == method.method_name
-            && "(Ltomato/net/Socket;)V" == method.descriptor
-            && method.class_name == "tomato/net/Socket"
-        {
-           // native_net::accept(vm_stack,heap,metaspace);
-        } else if "accept0" == method.method_name
+        else if "accept0" == method.method_name
             && "(Ltomato/net/Socket;)V" == method.descriptor
             && method.class_name == "tomato/net/Socket"
         {

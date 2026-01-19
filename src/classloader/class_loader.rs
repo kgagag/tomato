@@ -25,10 +25,12 @@ use std::collections::HashMap;
 use std::env;
 use std::fs::{self, File};
 use std::io;
+use std::io::BufReader;
 use std::io::Cursor;
 use std::io::Read;
 use std::path::Path;
 use std::str::Utf8Error;
+use std::sync::Mutex;
 use std::time::Instant;
 use zip::read::ZipArchive;
 fn parse_descriptor(descriptor: &Vec<u8>) -> Result<Option<Vec<DataType>>, String> {
@@ -183,231 +185,33 @@ fn parse_field_descriptor(descriptor: Vec<u8>) -> DataType {
     }
 }
 
-// fn parse_descriptor(descriptor: &[u8]) -> Result<Option<Vec<DataType>>, String> {
-//     let mut index = 0;
-//     let descriptor_length = descriptor.len();
-//     let mut parameters: Vec<DataType> = Vec::new();
-
-//     // 将字节转换为字符一次
-//     let descriptor_chars: Vec<char> = descriptor.iter().map(|&b| b as char).collect();
-
-//     while index < descriptor_length {
-//         let ch = descriptor_chars[index];
-
-//         match ch {
-//             '(' => {
-//                 index += 1;
-//                 continue;
-//             }
-//             ')' => break,
-//             '[' => {
-//                 // 处理数组类型
-//                 let start_idx = index;
-//                 while index < descriptor_length && descriptor_chars[index] == '[' {
-//                     index += 1;
-//                 }
-
-//                 if index >= descriptor_length {
-//                     return Err("Unexpected end of descriptor".to_string());
-//                 }
-
-//                 let array_depth = index - start_idx;
-//                 let ch = descriptor_chars[index];
-
-//                 let element_type = match ch {
-//                     'L' => {
-//                         // 查找分号
-//                         if let Some(semicolon_idx) =
-//                             descriptor_chars[index..].iter().position(|&c| c == ';')
-//                         {
-//                             let class_start = index + 1;
-//                             let class_end = index + semicolon_idx;
-
-//                             // 直接从字节构建字符串，避免字符转换
-//                             let class_name = String::from_utf8_lossy(
-//                                 &descriptor[class_start..class_end]
-//                             ).into_owned();
-
-//                             index = index + semicolon_idx;
-//                             DataType::Reference(class_name)
-//                         } else {
-//                             return Err("Missing semicolon in reference type".to_string());
-//                         }
-//                     }
-//                     'B' => DataType::Byte,
-//                     'C' => DataType::Char,
-//                     'D' => DataType::Double,
-//                     'F' => DataType::Float,
-//                     'I' => DataType::Int,
-//                     'J' => DataType::Long,
-//                     'S' => DataType::Short,
-//                     'Z' => DataType::Boolean,
-//                     _ => return Err(format!("Unknown array element type: {}", ch)),
-//                 };
-
-//                 parameters.push(DataType::Array {
-//                     element_type: Box::new(element_type),
-//                     depth: array_depth as u8,
-//                 });
-//             }
-//             'L' => {
-//                 // 处理引用类型
-//                 if let Some(semicolon_idx) =
-//                     descriptor_chars[index..].iter().position(|&c| c == ';')
-//                 {
-//                     let class_start = index + 1;
-//                     let class_end = index + semicolon_idx;
-
-//                     let class_name = String::from_utf8_lossy(
-//                         &descriptor[class_start..class_end]
-//                     ).into_owned();
-
-//                     parameters.push(DataType::Reference(class_name));
-//                     index = index + semicolon_idx;
-//                 } else {
-//                     return Err("Missing semicolon in reference type".to_string());
-//                 }
-//             }
-//             'B' => parameters.push(DataType::Byte),
-//             'C' => parameters.push(DataType::Char),
-//             'D' => parameters.push(DataType::Double),
-//             'F' => parameters.push(DataType::Float),
-//             'I' => parameters.push(DataType::Int),
-//             'J' => parameters.push(DataType::Long),
-//             'S' => parameters.push(DataType::Short),
-//             'Z' => parameters.push(DataType::Boolean),
-//             _ => {
-//                 // 忽略其他字符或返回错误
-//             }
-//         }
-
-//         index += 1;
-//     }
-
-//     Ok(if parameters.is_empty() { None } else { Some(parameters) })
-// }
-
-// fn read_class_from_jar(jar_path: &str, class_name: &str) -> Result<Vec<u8>, String> {
-//     let file: File =
-//         File::open(jar_path).map_err(|e| format!("Error opening JAR file: {}", e))?;
-//     let mut archive: ZipArchive<File> =
-//         ZipArchive::new(file).map_err(|e| format!("Error reading ZIP archive: {}", e))?;
-//     for i in 0..archive.len() {
-//         let mut entry = archive
-//             .by_index(i)
-//             .map_err(|e| format!("Error reading entry {}: {}", i, e))?;
-//         if entry.name().eq(class_name) {
-//             let mut buffer = Vec::new();
-//             entry
-//                 .read_to_end(&mut buffer)
-//                 .map_err(|e| format!("Error reading class file: {}", e))?;
-//             return Ok(buffer);
-//         }
-//     }
-//     Err(format!("Class '{}' not found in the JAR file", class_name))
-// }
-
-// fn read_class_from_jar(jar_path: &str, class_name: &str) -> Option<Vec<u8>> {
-//     let file = File::open(jar_path).ok()?;
-//     let mut archive = ZipArchive::new(file).ok()?;
-//     for i in 0..archive.len() {
-//         let mut entry = archive.by_index(i).ok()?;
-//         if entry.name().eq(class_name) {
-//             let mut buffer = Vec::new();
-//             if entry.read_to_end(&mut buffer).is_ok() {
-//                 return Some(buffer);
-//             }
-//         }
-//     }
-//     None
-// }
-
-fn read_class_from_jar(jar_path: &str, class_name: &str) -> Option<Vec<u8>> {
-    let file = std::fs::File::open(jar_path).ok()?;
-    let mut archive = ZipArchive::new(file).ok()?;
-    // 直接获取，不遍历
-    let mut entry = archive.by_name(class_name).ok()?;
-    let mut buffer = Vec::new();
-    entry.read_to_end(&mut buffer).ok()?;
-    Some(buffer)
+thread_local! {
+    static ARCHIVE_CACHE: Mutex<HashMap<String, ZipArchive<BufReader<std::fs::File>>>> = Mutex::new(HashMap::new());
 }
 
-// fn get_rt_class(name: &String) -> Option<Vec<u8>> {
-//     match env::current_dir() {
-//         Ok(path) => {
-//             let mut user_class_path = path.as_path().to_str().unwrap().to_string();
-//             user_class_path.push_str("/jre/out/");
-//             user_class_path.push_str(name);
-//             user_class_path.push_str(".class");
-//             info!("user class path:{}", user_class_path);
-//             let mut file = fs::File::open(user_class_path).unwrap();
-//             let mut buffer = Vec::new();
-//             let _ = file.read_to_end(&mut buffer);
-//             Some(buffer)
-//         }
-//         Err(_e) =>panic!()
-//     }
-// }
+fn read_class_from_jar(jar_path: &str, class_name: &str) -> Option<Vec<u8>> {
+    ARCHIVE_CACHE.with(|cache| {
+        let mut cache_lock = cache.lock().unwrap();
+        
+        // 获取或创建 ZipArchive
+        let archive = match cache_lock.entry(jar_path.to_string()) {
+            std::collections::hash_map::Entry::Occupied(entry) => entry.into_mut(),
+            std::collections::hash_map::Entry::Vacant(entry) => {
+                let file = std::fs::File::open(jar_path).ok()?;
+                let reader = BufReader::new(file);
+                let zip_archive = ZipArchive::new(reader).ok()?;
+                entry.insert(zip_archive)
+            }
+        };
+        
+        // 读取类文件
+        let mut entry = archive.by_name(class_name).ok()?;
+        let mut buffer = Vec::new();
+        entry.read_to_end(&mut buffer).ok()?;
+        Some(buffer)
+    })
+}
 
-// fn get_rt_class_jar(name: &String) -> Result<Vec<u8>, String> {
-//     match env::var("JAVA_HOME") {
-//         Ok(mut home_path) => {
-//             let path: String = name.clone() + ".class";
-//             info!("{:?}", path);
-//             home_path.push_str(&String::from("/jre/lib/rt.jar"));
-//             read_class_from_jar(&home_path, &path)
-//         }
-//         Err(_) => Err(format!("Class '{}' not found in the JAR file", name)),
-//     }
-// }
-
-// fn get_class_from_disk(name: &String) -> Result<Vec<u8>, Throwable> {
-//     let mut name = name.to_string();
-//     name.push_str(".class");
-//     match env::current_dir() {
-//         Ok(path) => {
-//             //先从rt-mod.jar中查找
-//             let base_path_str = path.as_path().to_str().unwrap().to_string();
-//             let mut mod_jre_jar_path = base_path_str.clone();
-//             mod_jre_jar_path.push_str("/rt-mod.jar");
-
-//             let mut rt_jar_path = base_path_str.clone();
-//             rt_jar_path.push_str("/rt.jar");
-//             if !Path::new(&mod_jre_jar_path).exists() {
-//                 mod_jre_jar_path = base_path_str.clone();
-//                 mod_jre_jar_path.push_str("/bin/rt-mod.jar");
-//             }
-
-//             if !Path::new(&rt_jar_path).exists() {
-//                 rt_jar_path = base_path_str.clone();
-//                 rt_jar_path.push_str("/bin/rt.jar");
-//             } 
-
-//             let result = read_class_from_jar(&mod_jre_jar_path, &name);
-//             match result {
-//                 Some(code) =>{
-//                     return Ok(code);
-//                 } ,
-//                 None => {
-//                     // 从rt.jar中查找
-//                     let result = read_class_from_jar(&rt_jar_path, &name);
-//                     match result {
-//                         Some(code) => return Ok(code),
-//                         None => {
-//                             println!("从rt.jar中未找到{}", name);
-//                             todo!("从用户目录查找")
-//                         }
-//                     }
-//                 }
-//             }
-//         }
-//         Err(_e) => Err(Throwable::Error(JvmError::NoClassDefFound {
-//             class_name: (name.clone()),
-//             cause: (Some(format!("Class {} not found", name))),
-//             message: (format!("Class {} not found", name)),
-//         })),
-//     }
-// }
 
 fn get_class_from_disk(name: &String) -> Result<Vec<u8>, Throwable> {
     let mut name_with_ext = name.to_string();

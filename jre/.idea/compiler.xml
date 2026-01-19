@@ -11,4 +11,9 @@
       </profile>
     </annotationProcessing>
   </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="rt-mod" options="-bootclasspath $PROJECT_DIR$/../../../soft/jdk1.8.0_131/jre/lib/rt.jar" />
+    </option>
+  </component>
 </project>

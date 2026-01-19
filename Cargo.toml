@@ -2,6 +2,7 @@
 name = "tomato"
 version = "0.1.0"
 edition = "2021"
+authors = ["kgagag@163.com"]  # 添加这一行
 
 [dependencies]
 lazy_static = "1.4"

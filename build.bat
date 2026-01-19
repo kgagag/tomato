@@ -23,7 +23,7 @@ if exist "jre\build.bat" (
     call build.bat
     if not errorlevel 1 (
         if exist "target\rt-mod.jar" copy /Y "target\rt-mod.jar" "..\bin\"
-        if exist "target\lib\rt.jar" copy /Y "target\lib\rt.jar" "..\bin\"
+        if exist "lib\rt.jar" copy /Y "lib\rt.jar" "..\bin\"
     )
     popd
 ) else (

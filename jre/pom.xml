@@ -5,23 +5,56 @@
          http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.example</groupId>
+    <groupId>java.lang</groupId>
     <artifactId>rt-mod</artifactId>
     <version>1.0.0</version>
     <packaging>jar</packaging>
 
+    <!-- 添加属性配置 -->
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+    </properties>
+
     <build>
         <finalName>rt-mod</finalName>
+        <sourceDirectory>${basedir}/src/</sourceDirectory>
 
         <plugins>
+            <!-- 必须添加编译器插件 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.11.0</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                    <encoding>UTF-8</encoding>
+                    <!-- 如果需要覆盖Java标准库 -->
+                    <compilerArguments>
+                        <bootclasspath>${java.home}/lib/rt.jar</bootclasspath>
+                    </compilerArguments>
+                </configuration>
+            </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>3.2.0</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <!-- 如果这是可执行JAR，添加主类 -->
+                            <!-- <mainClass>your.main.Class</mainClass> -->
+                        </manifest>
+                    </archive>
+                </configuration>
             </plugin>
         </plugins>
     </build>
 
     <dependencies>
+        <!-- 如果有依赖，在这里添加 -->
     </dependencies>
 </project>

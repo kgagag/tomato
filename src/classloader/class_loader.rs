@@ -29,6 +29,7 @@ use std::io::Cursor;
 use std::io::Read;
 use std::path::Path;
 use std::str::Utf8Error;
+use std::time::Instant;
 use zip::read::ZipArchive;
 fn parse_descriptor(descriptor: &Vec<u8>) -> Result<Option<Vec<DataType>>, String> {
     let mut index = 0;
@@ -306,6 +307,31 @@ fn parse_field_descriptor(descriptor: Vec<u8>) -> DataType {
 //     Err(format!("Class '{}' not found in the JAR file", class_name))
 // }
 
+// fn read_class_from_jar(jar_path: &str, class_name: &str) -> Option<Vec<u8>> {
+//     let file = File::open(jar_path).ok()?;
+//     let mut archive = ZipArchive::new(file).ok()?;
+//     for i in 0..archive.len() {
+//         let mut entry = archive.by_index(i).ok()?;
+//         if entry.name().eq(class_name) {
+//             let mut buffer = Vec::new();
+//             if entry.read_to_end(&mut buffer).is_ok() {
+//                 return Some(buffer);
+//             }
+//         }
+//     }
+//     None
+// }
+
+fn read_class_from_jar(jar_path: &str, class_name: &str) -> Option<Vec<u8>> {
+    let file = std::fs::File::open(jar_path).ok()?;
+    let mut archive = ZipArchive::new(file).ok()?;
+    // 直接获取，不遍历
+    let mut entry = archive.by_name(class_name).ok()?;
+    let mut buffer = Vec::new();
+    entry.read_to_end(&mut buffer).ok()?;
+    Some(buffer)
+}
+
 // fn get_rt_class(name: &String) -> Option<Vec<u8>> {
 //     match env::current_dir() {
 //         Ok(path) => {
@@ -335,41 +361,117 @@ fn parse_field_descriptor(descriptor: Vec<u8>) -> DataType {
 //     }
 // }
 
+// fn get_class_from_disk(name: &String) -> Result<Vec<u8>, Throwable> {
+//     let mut name = name.to_string();
+//     name.push_str(".class");
+//     match env::current_dir() {
+//         Ok(path) => {
+//             //先从rt-mod.jar中查找
+//             let base_path_str = path.as_path().to_str().unwrap().to_string();
+//             let mut mod_jre_jar_path = base_path_str.clone();
+//             mod_jre_jar_path.push_str("/rt-mod.jar");
+
+//             let mut rt_jar_path = base_path_str.clone();
+//             rt_jar_path.push_str("/rt.jar");
+//             if !Path::new(&mod_jre_jar_path).exists() {
+//                 mod_jre_jar_path = base_path_str.clone();
+//                 mod_jre_jar_path.push_str("/bin/rt-mod.jar");
+//             }
+
+//             if !Path::new(&rt_jar_path).exists() {
+//                 rt_jar_path = base_path_str.clone();
+//                 rt_jar_path.push_str("/bin/rt.jar");
+//             } 
+
+//             let result = read_class_from_jar(&mod_jre_jar_path, &name);
+//             match result {
+//                 Some(code) =>{
+//                     return Ok(code);
+//                 } ,
+//                 None => {
+//                     // 从rt.jar中查找
+//                     let result = read_class_from_jar(&rt_jar_path, &name);
+//                     match result {
+//                         Some(code) => return Ok(code),
+//                         None => {
+//                             println!("从rt.jar中未找到{}", name);
+//                             todo!("从用户目录查找")
+//                         }
+//                     }
+//                 }
+//             }
+//         }
+//         Err(_e) => Err(Throwable::Error(JvmError::NoClassDefFound {
+//             class_name: (name.clone()),
+//             cause: (Some(format!("Class {} not found", name))),
+//             message: (format!("Class {} not found", name)),
+//         })),
+//     }
+// }
+
 fn get_class_from_disk(name: &String) -> Result<Vec<u8>, Throwable> {
+    let mut name_with_ext = name.to_string();
+    name_with_ext.push_str(".class");
+    
     match env::current_dir() {
         Ok(path) => {
-            let mut jre_class_path = path.as_path().to_str().unwrap().to_string();
-            jre_class_path.push_str("/jre/out/");
-            jre_class_path.push_str(name);
-            jre_class_path.push_str(".class");
-            let class_path = Path::new(&jre_class_path);
-            if class_path.exists() {
-                let mut file = fs::File::open(jre_class_path).unwrap();
-                let mut buffer = Vec::new();
-                let _ = file.read_to_end(&mut buffer);
-                Ok(buffer)
-            } else {
-                let mut user_class_path = path.as_path().to_str().unwrap().to_string();
-                user_class_path.push_str("/test/out/");
-                user_class_path.push_str(name);
-                user_class_path.push_str(".class");
-                let class_path = Path::new(&user_class_path);
-                if class_path.exists() {
-                    let mut file = fs::File::open(user_class_path).unwrap();
-                    let mut buffer = Vec::new();
-                    let _ = file.read_to_end(&mut buffer);
-                    Ok(buffer)
-                } else {
-                    //Err(ClassLoadingError::ClassNotFound(format!("Class {} not found", name)))
-                    Err(Throwable::Error(JvmError::NoClassDefFound {
-                        class_name: (name.clone()),
-                        cause: (Some(format!("Class {} not found", name))),
-                        message: (format!("Class {} not found", name)),
-                    }))
+            // 构建路径（默认）
+            let mut mod_jre_jar_path = path.join("rt-mod.jar");
+            let mut rt_jar_path = path.join("rt.jar");
+            
+            //为了兼容在vscode中运行
+            if !mod_jre_jar_path.exists() {
+                mod_jre_jar_path = path.join("bin/rt-mod.jar");
+            }
+            
+            if !rt_jar_path.exists() {
+                rt_jar_path = path.join("bin/rt.jar");
+            }
+            
+            // 先从rt-mod.jar中查找
+            if mod_jre_jar_path.exists() {
+                let result = read_class_from_jar(&mod_jre_jar_path.to_string_lossy(), &name_with_ext);
+                match result {
+                    Some(code) => return Ok(code),
+                    None => {
+                        // 从rt.jar中查找
+                        if rt_jar_path.exists() {
+                            let result = read_class_from_jar(&rt_jar_path.to_string_lossy(), &name_with_ext);
+                            match result {
+                                Some(code) => return Ok(code),
+                                None => {
+                                    println!("从rt.jar中未找到{}", name_with_ext);
+                                    return Err(Throwable::Error(JvmError::NoClassDefFound {
+                                        class_name: (name.clone()),
+                                        cause: (Some(format!("Class {} not found", name))),
+                                        message: (format!("Class {} not found", name)),
+                                    }));
+                                }
+                            }
+                        } else {
+                            return Err(Throwable::Error(JvmError::NoClassDefFound {
+                                class_name: (name.clone()),
+                                cause: (Some(format!("rt.jar not found"))),
+                                message: (format!("Class {} not found", name)),
+                            }));
+                        }
+                    }
                 }
+            } else {
+                return Err(Throwable::Error(JvmError::NoClassDefFound {
+                    class_name: (name.clone()),
+                    cause: (Some(format!("rt-mod.jar not found"))),
+                    message: (format!("Class {} not found", name)),
+                }));
             }
         }
-        Err(_e) => panic!(),
+        Err(_e) => {
+            return Err(Throwable::Error(JvmError::NoClassDefFound {
+                class_name: (name.clone()),
+                cause: (Some(format!("Class {} not found", name))),
+                message: (format!("Class {} not found", name)),
+            }))
+        }
     }
 }
 
@@ -460,8 +562,7 @@ pub fn init(class_name: &String, method_name: String, heap: &mut Heap, metaspace
         match u8_vec {
             ConstantPoolInfo::Utf8(name) => {
                 if name == &method_name {
-                    let mut stack_frame =
-                        create_stack_frame(method_info).unwrap();
+                    let mut stack_frame = create_stack_frame(method_info).unwrap();
                     let mut vm_stack = Vec::new();
                     stack_frame.vm_stack_id = 0;
                     vm_stack.push(stack_frame);
@@ -943,8 +1044,6 @@ pub fn get_attribute(
     }
     ans
 }
-
-
 
 fn read_constant_pool_info<R: Read>(
     constant_pool_count: u16,

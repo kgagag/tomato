@@ -4,7 +4,7 @@ use tomato::{
     classloader::class_loader,
     common::{error::Throwable, stack_frame::create_stack_frame},
     interpreter::instructions::op_code::op_code::do_opcode,
-    runtime::{heap, metaspace, vm::Vm},
+    runtime::{heap, metaspace, vm::Vm}, utils::java_cmd::JavaCommand,
 };
 fn main() {
     unsafe { env::set_var("RUST_LOG", "DEBUG") };
@@ -12,8 +12,13 @@ fn main() {
         .format_timestamp(Some(env_logger::TimestampPrecision::Millis))
         .format_module_path(true)
         .init();
-    let _ = run(String::from("test/Test"));
-
+    let cmd = JavaCommand::parse();
+    if cmd.main_class.is_none() && cmd.jar_path.is_none() {
+       // panic!("请指定要执行的类名或jar包路径");ca
+       let _ = run(String::from("tomato/test/Test"));
+    }else if  cmd.main_class.is_some(){
+        let _ = run(cmd.main_class.unwrap());
+    }
 }
 
 /***

@@ -5,3 +5,8 @@
 /jre/.idea/workspace.xml
 /jre/target/rt-mod.jar
 /bin
+jre/rt-mod.iml
+jre/target/classes/
+jre/src/tomato/
+jre/target/classes/
+jre/target/maven-status/

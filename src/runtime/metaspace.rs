@@ -107,10 +107,6 @@ impl Metaspace {
             return (m, &self.classes[*self.class_map.get(class_name).unwrap()]);
         }
         let mut curr_class_name = class_name.clone();
-        info!(
-            "get_method_from_root:{},{},{}",
-            class_name, method_name, descriptor
-        );
         while m.is_none() {
             let class_id = self.class_map.get(&curr_class_name).unwrap();
             let class = &self.classes[*class_id];

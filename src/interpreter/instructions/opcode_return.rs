@@ -25,7 +25,7 @@ pub fn ireturn(vm_stack:&mut Vec<StackFrame>) ->Result<(),Throwable>{
     vm_stack[frame_index].pc += 1;
     let v: StackFrameValue = vm_stack[frame_index].op_stack.pop().unwrap();
     //日志埋点
-    debug(&mut vm_stack[frame_index],value::as_i32(&v));
+    debug(&mut vm_stack[frame_index],value::as_i32(&v)?);
     vm_stack.pop();
     let frame_index: usize = vm_stack.len() - 1;
     vm_stack[frame_index].op_stack.push(v);

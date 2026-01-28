@@ -1,8 +1,7 @@
 use log::info;
+use crate::{common::error::{Exception, Throwable}, utils::u8c::*};
 
-use crate::utils::u8c::*;
-
-#[derive(Debug, Clone, Copy,PartialEq)]
+#[derive(Debug, Clone, Copy, PartialEq)]
 pub enum StackFrameValue {
     Byte(i8),
     Char(i16),
@@ -51,217 +50,217 @@ pub fn number_u64(v: &StackFrameValue) -> u64 {
     }
 }
 
-pub fn as_i32(v: &StackFrameValue) -> i32 {
+pub fn as_i32(v: &StackFrameValue) -> Result<i32, Throwable> {
     match v {
-        StackFrameValue::Int(data) => *data,
-        StackFrameValue::Byte(data) => *data as i32,
-        StackFrameValue::Short(data) => *data as i32,
-        StackFrameValue::CHARACTER(data) => *data as i32,
+        StackFrameValue::Int(data) => Ok(*data),
+        StackFrameValue::Byte(data) => Ok(*data as i32),
+        StackFrameValue::Short(data) => Ok(*data as i32),
+        StackFrameValue::CHARACTER(data) => Ok(*data as i32),
         StackFrameValue::Long(data) => {
             if *data < i32::MIN as i64 || *data > i32::MAX as i64 {
-                panic!("Long value {} out of i32 range", data);
+                return Err(Throwable::Exception(Exception::Arithmetic(format!("Long value {} out of i32 range", data))));
             }
-            *data as i32
+            Ok(*data as i32)
         },
         StackFrameValue::U32(data) => {
             if *data > i32::MAX as u32 {
-                panic!("U32 value {} out of i32 range", data);
+                return Err(Throwable::Exception(Exception::Arithmetic(format!("U32 value {} out of i32 range", data))));
             }
-            *data as i32
+            Ok(*data as i32)
         },
         StackFrameValue::Float(_) | StackFrameValue::Double(_) => {
-            panic!("Cannot convert floating point {:?} to i32", v)
+            Err(Throwable::Exception(Exception::IllegalArgument("Cannot convert floating point to i32".to_string())))
         },
-        StackFrameValue::Char(data) => *data as i32,
+        StackFrameValue::Char(data) => Ok(*data as i32),
         StackFrameValue::Boolean(data) => {
             if *data {
-                1
+                Ok(1)
             } else {
-                0
+                Ok(0)
             }
         }
-        _ => panic!("Cannot convert {:?} to i32", v),
+        _ => Err(Throwable::Exception(Exception::IllegalArgument(format!("Cannot convert {:?} to i32", v)))),
     }
 }
 
-pub fn as_i8(v: &StackFrameValue) -> i8 {
+pub fn as_i8(v: &StackFrameValue) -> Result<i8, Throwable> {
     match v {
-        StackFrameValue::Byte(data) => *data,
+        StackFrameValue::Byte(data) => Ok(*data),
         StackFrameValue::Int(data) => {
             if *data < i8::MIN as i32 || *data > i8::MAX as i32 {
-                panic!("Int value {} out of i8 range", data);
+                return Err(Throwable::Exception(Exception::Arithmetic(format!("Int value {} out of i8 range", data))));
             }
-            *data as i8
+            Ok(*data as i8)
         },
         StackFrameValue::Short(data) => {
             if *data < i8::MIN as i16 || *data > i8::MAX as i16 {
-                panic!("Short value {} out of i8 range", data);
+                return Err(Throwable::Exception(Exception::Arithmetic(format!("Short value {} out of i8 range", data))));
             }
-            *data as i8
+            Ok(*data as i8)
         },
         StackFrameValue::Long(data) => {
             if *data < i8::MIN as i64 || *data > i8::MAX as i64 {
-                panic!("Long value {} out of i8 range", data);
+                return Err(Throwable::Exception(Exception::Arithmetic(format!("Long value {} out of i8 range", data))));
             }
-            *data as i8
+            Ok(*data as i8)
         },
         StackFrameValue::U32(data) => {
             if *data > i8::MAX as u32 {
-                panic!("U32 value {} out of i8 range", data);
+                return Err(Throwable::Exception(Exception::Arithmetic(format!("U32 value {} out of i8 range", data))));
             }
-            *data as i8
+            Ok(*data as i8)
         },
         StackFrameValue::Float(_) | StackFrameValue::Double(_) => {
-            panic!("Cannot convert floating point {:?} to i8", v)
+            Err(Throwable::Exception(Exception::IllegalArgument("Cannot convert floating point to i8".to_string())))
         },
         StackFrameValue::Boolean(data) => {
             if *data {
-                1
+                Ok(1)
             } else {
-                0
+                Ok(0)
             }
         }
-        _ => panic!("Cannot convert {:?} to i8", v),
+        _ => Err(Throwable::Exception(Exception::IllegalArgument(format!("Cannot convert {:?} to i8", v)))),
     }
 }
 
-pub fn as_char(v: &StackFrameValue) -> u16 {
+pub fn as_char(v: &StackFrameValue) -> Result<u16, Throwable> {
     match v {
-        StackFrameValue::Char(data) => *data as u16,
-        StackFrameValue::CHARACTER(data) => *data as u16,
+        StackFrameValue::Char(data) => Ok(*data as u16),
+        StackFrameValue::CHARACTER(data) => Ok(*data as u16),
         StackFrameValue::Byte(data) => {
-            *data as u8 as u16
+            Ok(*data as u8 as u16)
         },
         StackFrameValue::Short(data) => {
             if *data < 0 || *data > u16::MAX as i16 {
-                panic!("Short value {} out of char range (0-65535)", data);
+                return Err(Throwable::Exception(Exception::Arithmetic(format!("Short value {} out of char range (0-65535)", data))));
             }
-            *data as u16
+            Ok(*data as u16)
         },
         StackFrameValue::Int(data) => {
             if *data < 0 || *data > u16::MAX as i32 {
-                panic!("Int value {} out of char range (0-65535)", data);
+                return Err(Throwable::Exception(Exception::Arithmetic(format!("Int value {} out of char range (0-65535)", data))));
             }
-            *data as u16
+            Ok(*data as u16)
         },
         StackFrameValue::U32(data) => {
             if *data > u16::MAX as u32 {
-                panic!("U32 value {} out of char range (0-65535)", data);
+                return Err(Throwable::Exception(Exception::Arithmetic(format!("U32 value {} out of char range (0-65535)", data))));
             }
-            *data as u16
+            Ok(*data as u16)
         },
         StackFrameValue::Float(_) | StackFrameValue::Double(_) => {
-            panic!("Cannot convert floating point {:?} to char", v)
+            Err(Throwable::Exception(Exception::IllegalArgument("Cannot convert floating point to char".to_string())))
         },
-        _ => panic!("Cannot convert {:?} to char", v),
+        _ => Err(Throwable::Exception(Exception::IllegalArgument(format!("Cannot convert {:?} to char", v)))),
     }
 }
 
-pub fn as_f64(v: &StackFrameValue) -> f64 {
+pub fn as_f64(v: &StackFrameValue) -> Result<f64, Throwable> {
     match v {
-        StackFrameValue::Double(data) => *data,
-        StackFrameValue::Float(data) => *data as f64,
-        StackFrameValue::Int(data) => *data as f64,
-        StackFrameValue::Byte(data) => *data as f64,
-        StackFrameValue::Short(data) => *data as f64,
-        StackFrameValue::Long(data) => *data as f64,
-        StackFrameValue::U32(data) => *data as f64,
-        _ => panic!("Cannot convert {:?} to f64", v),
+        StackFrameValue::Double(data) => Ok(*data),
+        StackFrameValue::Float(data) => Ok(*data as f64),
+        StackFrameValue::Int(data) => Ok(*data as f64),
+        StackFrameValue::Byte(data) => Ok(*data as f64),
+        StackFrameValue::Short(data) => Ok(*data as f64),
+        StackFrameValue::Long(data) => Ok(*data as f64),
+        StackFrameValue::U32(data) => Ok(*data as f64),
+        _ => Err(Throwable::Exception(Exception::IllegalArgument(format!("Cannot convert {:?} to f64", v)))),
     }
 }
 
-pub fn as_f32(v: &StackFrameValue) -> f32 {
+pub fn as_f32(v: &StackFrameValue) -> Result<f32, Throwable> {
     match v {
-        StackFrameValue::Float(data) => *data,
-        StackFrameValue::Double(data) => *data as f32,
-        StackFrameValue::Int(data) => *data as f32,
-        StackFrameValue::Byte(data) => *data as f32,
-        StackFrameValue::Short(data) => *data as f32,
-        StackFrameValue::Long(data) => *data as f32,
-        StackFrameValue::U32(data) => *data as f32,
-        _ => panic!("Cannot convert {:?} to f32", v),
+        StackFrameValue::Float(data) => Ok(*data),
+        StackFrameValue::Double(data) => Ok(*data as f32),
+        StackFrameValue::Int(data) => Ok(*data as f32),
+        StackFrameValue::Byte(data) => Ok(*data as f32),
+        StackFrameValue::Short(data) => Ok(*data as f32),
+        StackFrameValue::Long(data) => Ok(*data as f32),
+        StackFrameValue::U32(data) => Ok(*data as f32),
+        _ => Err(Throwable::Exception(Exception::IllegalArgument(format!("Cannot convert {:?} to f32", v)))),
     }
 }
 
-pub fn as_i64(v: &StackFrameValue) -> i64 {
+pub fn as_i64(v: &StackFrameValue) -> Result<i64, Throwable> {
     match v {
-        StackFrameValue::Long(data) => *data,
-        StackFrameValue::Int(data) => *data as i64,
-        StackFrameValue::Byte(data) => *data as i64,
-        StackFrameValue::Short(data) => *data as i64,
-        StackFrameValue::U32(data) => *data as i64,
+        StackFrameValue::Long(data) => Ok(*data),
+        StackFrameValue::Int(data) => Ok(*data as i64),
+        StackFrameValue::Byte(data) => Ok(*data as i64),
+        StackFrameValue::Short(data) => Ok(*data as i64),
+        StackFrameValue::U32(data) => Ok(*data as i64),
         StackFrameValue::Float(_) | StackFrameValue::Double(_) => {
-            panic!("Cannot convert floating point {:?} to i64", v)
+            Err(Throwable::Exception(Exception::IllegalArgument("Cannot convert floating point to i64".to_string())))
         },
-        _ => panic!("Cannot convert {:?} to i64", v),
+        _ => Err(Throwable::Exception(Exception::IllegalArgument(format!("Cannot convert {:?} to i64", v)))),
     }
 }
 
-pub fn as_i16(v: &StackFrameValue) -> i16 {
+pub fn as_i16(v: &StackFrameValue) -> Result<i16, Throwable> {
     match v {
-        StackFrameValue::Short(data) => *data,
-        StackFrameValue::Byte(data) => *data as i16,
+        StackFrameValue::Short(data) => Ok(*data),
+        StackFrameValue::Byte(data) => Ok(*data as i16),
         StackFrameValue::Int(data) => {
             if *data < i16::MIN as i32 || *data > i16::MAX as i32 {
-                panic!("Int value {} out of i16 range", data);
+                return Err(Throwable::Exception(Exception::Arithmetic(format!("Int value {} out of i16 range", data))));
             }
-            *data as i16
+            Ok(*data as i16)
         },
         StackFrameValue::Long(data) => {
             if *data < i16::MIN as i64 || *data > i16::MAX as i64 {
-                panic!("Long value {} out of i16 range", data);
+                return Err(Throwable::Exception(Exception::Arithmetic(format!("Long value {} out of i16 range", data))));
             }
-            *data as i16
+            Ok(*data as i16)
         },
         StackFrameValue::U32(data) => {
             if *data > i16::MAX as u32 {
-                panic!("U32 value {} out of i16 range", data);
+                return Err(Throwable::Exception(Exception::Arithmetic(format!("U32 value {} out of i16 range", data))));
             }
-            *data as i16
+            Ok(*data as i16)
         },
         StackFrameValue::Float(_) | StackFrameValue::Double(_) => {
-            panic!("Cannot convert floating point {:?} to i16", v)
+            Err(Throwable::Exception(Exception::IllegalArgument("Cannot convert floating point to i16".to_string())))
         },
-        StackFrameValue::Char(data) => *data as i16,
-        _ => panic!("Cannot convert {:?} to i16", v),
+        StackFrameValue::Char(data) => Ok(*data as i16),
+        _ => Err(Throwable::Exception(Exception::IllegalArgument(format!("Cannot convert {:?} to i16", v)))),
     }
 }
 
-pub fn as_u32(v: &StackFrameValue) -> u32 {
+pub fn as_u32(v: &StackFrameValue) -> Result<u32, Throwable> {
     //info!("as_u32:{:?}", v);
     match v {
-        StackFrameValue::U32(data) => *data,
+        StackFrameValue::U32(data) => Ok(*data),
         StackFrameValue::Byte(data) => {
             if *data < 0 {
-                panic!("Byte value {} negative for u32", data);
+                return Err(Throwable::Exception(Exception::Arithmetic(format!("Byte value {} negative for u32", data))));
             }
-            *data as u8 as u32
+            Ok(*data as u8 as u32)
         },
         StackFrameValue::Short(data) => {
             if *data < 0 {
-                panic!("Short value {} negative for u32", data);
+                return Err(Throwable::Exception(Exception::Arithmetic(format!("Short value {} negative for u32", data))));
             }
-            *data as u16 as u32
+            Ok(*data as u16 as u32)
         },
         StackFrameValue::Int(data) => {
             if *data < 0 {
-                panic!("Int value {} negative for u32", data);
+                return Err(Throwable::Exception(Exception::Arithmetic(format!("Int value {} negative for u32", data))));
             }
-            *data as u32
+            Ok(*data as u32)
         },
         StackFrameValue::Long(data) => {
             if *data < 0 || *data > u32::MAX as i64 {
-                panic!("Long value {} out of u32 range", data);
+                return Err(Throwable::Exception(Exception::Arithmetic(format!("Long value {} out of u32 range", data))));
             }
-            *data as u32
+            Ok(*data as u32)
         },
         StackFrameValue::Float(_) | StackFrameValue::Double(_) => {
-            panic!("Cannot convert floating point {:?} to u32", v)
+            Err(Throwable::Exception(Exception::IllegalArgument("Cannot convert floating point to u32".to_string())))
         },
         StackFrameValue::Reference(data) => {
-            *data 
+            Ok(*data) 
         },
-        StackFrameValue::Null => 0,
-        _ => panic!("Cannot convert {:?} to u32", v),
+        StackFrameValue::Null => Ok(0),
+        _ => Err(Throwable::Exception(Exception::IllegalArgument(format!("Cannot convert {:?} to u32", v)))),
     }
 }

@@ -8,6 +8,6 @@
 /bin/rt-mod.jar
 jre/rt-mod.iml
 jre/target/classes/
-jre/src/tomato/
+jre/src/
 jre/target/classes/
 jre/target/maven-status/

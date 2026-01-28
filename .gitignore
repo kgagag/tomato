@@ -4,9 +4,9 @@
 /jre/.idea/misc.xml
 /jre/.idea/workspace.xml
 /jre/target/rt-mod.jar
-/bin
+/bin/rt.jar
+/bin/rt-mod.jar
 jre/rt-mod.iml
 jre/target/classes/
-jre/src/tomato/
 jre/target/classes/
 jre/target/maven-status/

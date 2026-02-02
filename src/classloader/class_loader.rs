@@ -338,10 +338,10 @@ pub fn load_class(
                             class.super_class_name = super_class.class_name.clone();
                         }
                     }
-                    _ => panic!("wrong class data"),
+                    _ => return Err(Throwable::Exception(crate::common::error::Exception::ClassFormat { class_name: (name.clone()), message: ("class format error".to_string()) })),
                 }
             }
-            _ => panic!("wrong class data"),
+            _ => return Err(Throwable::Exception(crate::common::error::Exception::ClassFormat { class_name: (name.clone()), message: ("class format error".to_string()) })),
         }
         // load_class(name)
     }
@@ -381,23 +381,7 @@ pub fn init(class_name: &String, method_name: String, heap: &mut Heap, metaspace
     }
 }
 
-pub fn parse_method_field(class: &mut Class, method_info_map: &mut HashMap<String, MethodInfo>) {
-    let this_class = &class.constant_pool[class.this_class as usize];
-    // 设置 class_name
-    // match this_class {
-    //     ConstantPoolInfo::Class(name_index) => {
-    //         //info!("name_index:{:?}", name_index);
-    //         let class_name =&class.constant_pool[*name_index as usize];
-    //         //info!("class_name:{:?}", class_name);
-    //         match class_name {
-    //             ConstantPoolInfo::Utf8(name) => {
-    //                 class.class_name = name.clone();
-    //             }
-    //             _ => panic!("wrong constant data type"),
-    //         }
-    //     }
-    //     _ => panic!("wrong constant data type"),
-    // }
+pub fn parse_method_field(class: &mut Class, method_info_map: &mut HashMap<String, MethodInfo>) -> Result<(), Throwable> {
     //补充方法方法参数解析后信息
     for i in 0..class.methods_count {
         let method_info = &mut class.method_info[i as usize];
@@ -410,7 +394,7 @@ pub fn parse_method_field(class: &mut Class, method_info_map: &mut HashMap<Strin
                     ConstantPoolInfo::Utf8(name) => {
                         method_info.method_name = name.clone();
                     }
-                    _ => panic!("wrong constant data type"),
+                    _ => return Err(Throwable::Exception(crate::common::error::Exception::ClassFormat { class_name: (class.class_name.clone()), message: ("class format error".to_string()) })),
                 }
                 method_info.descriptor = str.clone();
                 //info!("method_info.descripto:{:?}", &method_info.descriptor);
@@ -440,7 +424,7 @@ pub fn parse_method_field(class: &mut Class, method_info_map: &mut HashMap<Strin
                 method_info.class_id = class.id as u32;
                 method_info_map.insert(key, method_info.clone());
             }
-            _ => panic!("wrong constant data type"),
+            _ => return Err(Throwable::Exception(crate::common::error::Exception::ClassFormat { class_name: (class.class_name.clone()), message: ("class format error".to_string()) })),
         }
     }
 
@@ -496,9 +480,10 @@ pub fn parse_method_field(class: &mut Class, method_info_map: &mut HashMap<Strin
                 field_info.value = StackFrameValue::Boolean(false);
                 field_offset += 1;
             }
-            DataType::Unknown => panic!(),
+            DataType::Unknown =>  return Err(Throwable::Exception(crate::common::error::Exception::ClassFormat { class_name: (class.class_name.clone()), message: ("class format error".to_string()) })),
         }
     }
+    Ok(())
 }
 
 /**

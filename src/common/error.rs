@@ -51,6 +51,21 @@ pub enum Exception {
     /// 非法状态异常
     /// 在非法或不适当的时间调用方法时抛出
     IllegalState(String),
+
+    /// 类格式错误
+    /// 当类文件的格式不符合规范时抛出
+    ClassFormat {
+        class_name: String,
+        message: String
+    },
+
+    /// 不支持的类版本错误
+    /// 当类文件版本高于JVM支持的版本时抛出
+    UnsupportedClassVersion {
+        class_name: String,
+        version: String,
+        message: String
+    },
     
     // ========== CheckedException（检查异常）==========
     
@@ -62,7 +77,7 @@ pub enum Exception {
         path: Option<String>,
     },
     
-    /// 类未找到异常
+    /// 类未找异常
     /// 当应用程序试图加载类但找不到类定义时抛出
     ClassNotFound {
         class_name: String,
@@ -326,6 +341,12 @@ impl Exception {
             Exception::ClassNotFound { class_name, message } => {
                 format!("{} (class={})", message, class_name)
             }
+            Exception::ClassFormat { class_name, message } => {
+                format!("{} (class={})", message, class_name)
+            }
+            Exception::UnsupportedClassVersion { class_name, version, message } => {
+                format!("{} (class={}, version={})", message, class_name, version)
+            }
             Exception::Parse { target, position, message } => {
                 format!("{} at position {} in '{}'", message, position, target)
             }
@@ -344,6 +365,8 @@ impl Exception {
                 | Exception::Arithmetic(_)
                 | Exception::IllegalArgument(_)
                 | Exception::IllegalState(_)
+                | Exception::ClassFormat { .. }
+                | Exception::UnsupportedClassVersion { .. }
         )
     }
     

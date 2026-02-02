@@ -302,11 +302,11 @@ pub fn load_class(
     class.interface_count = get_interface_count(&mut cursor);
     class.interfaces = get_interface(class.interface_count, &mut cursor);
     class.fields_count = get_field_count(&mut cursor);
-    class.field_info = get_field(&class.constant_pool, class.fields_count, &mut cursor, name);
+    class.field_info = get_field(&class.constant_pool, class.fields_count, &mut cursor, name)?;
     class.methods_count = get_method_count(&mut cursor);
-    class.method_info = get_method(&class.constant_pool, class.methods_count, &mut cursor);
+    class.method_info = get_method(&class.constant_pool, class.methods_count, &mut cursor)?;
     class.attributes_count = get_attribute_count(&mut cursor);
-    class.attribute_info = get_attribute(&class.constant_pool, class.attributes_count, &mut cursor);
+    class.attribute_info = get_attribute(&class.constant_pool, class.attributes_count, &mut cursor)?;
     class.class_name = name.clone();
     if class.super_class != 0x00 {
         let class_constant = &class.constant_pool[class.super_class as usize];
@@ -354,7 +354,7 @@ pub fn load_class(
 /**
  * 类加载完成之后执行初始化静态方法
  */
-pub fn init(class_name: &String, method_name: String, heap: &mut Heap, metaspace: &mut Metaspace) {
+pub fn init(class_name: &String, method_name: String, heap: &mut Heap, metaspace: &mut Metaspace) ->Result<(),Throwable> {
     let class_id = *metaspace.class_map.get(class_name).unwrap();
     let class = &metaspace.classes[class_id];
     //创建VM
@@ -371,14 +371,15 @@ pub fn init(class_name: &String, method_name: String, heap: &mut Heap, metaspace
                     stack_frame.vm_stack_id = 0;
                     vm_stack.push(stack_frame);
                     // 转换为可变引用（需要 unsafe）
-                    do_opcode(&mut vm_stack, heap, metaspace);
+                    let _ = do_opcode(&mut vm_stack, heap, metaspace);
                     //execute(vm_stack_id,&mut vm);
                     break;
                 }
             }
-            _ => panic!("wrong class data"),
+            _ => return Err(Throwable::Exception(crate::common::error::Exception::ClassFormat { class_name: (class.class_name.clone()), message: ("class format error".to_string()) })),
         }
     }
+    return Ok(());
 }
 
 pub fn parse_method_field(class: &mut Class, method_info_map: &mut HashMap<String, MethodInfo>) -> Result<(), Throwable> {
@@ -703,7 +704,7 @@ pub fn get_field(
     cnt: u16,
     cursor: &mut Cursor<Vec<u8>>,
     class_name: &String,
-) -> LinkedHashMap<String, FieldInfo> {
+) -> Result<LinkedHashMap<String, FieldInfo>,Throwable> {
     let mut v: LinkedHashMap<String, FieldInfo> = LinkedHashMap::new();
     for _j in 0..cnt {
         let mut f: FieldInfo = FieldInfo {
@@ -723,7 +724,8 @@ pub fn get_field(
         let name_utf8 = &constant_pool[f.name_index as usize];
         let field_name = match name_utf8 {
             ConstantPoolInfo::Utf8(name) => name.clone(),
-            _ => panic!(),
+         _ => return Err(Throwable::Exception(crate::common::error::Exception::ClassFormat { class_name: (class_name.clone()), message: ("class format error".to_string()) })),
+
         };
         f.field_name = field_name;
 
@@ -737,10 +739,10 @@ pub fn get_field(
             _ => panic!(""),
         }
 
-        f.atrributes = get_attribute(constant_pool, f.attribute_count, cursor);
+        f.atrributes = get_attribute(constant_pool, f.attribute_count, cursor)?;
         v.insert(f.field_name.clone(), f);
     }
-    v
+    Ok(v)
 }
 
 pub fn get_method_count(cursor: &mut Cursor<Vec<u8>>) -> u16 {
@@ -751,7 +753,7 @@ pub fn get_method(
     constant_pool: &Vec<ConstantPoolInfo>,
     cnt: u16,
     cursor: &mut Cursor<Vec<u8>>,
-) -> Vec<MethodInfo> {
+) -> Result<Vec<MethodInfo>,Throwable> {
     let mut v: Vec<MethodInfo> = Vec::new();
     for _j in 0..cnt {
         let mut m: MethodInfo = MethodInfo {
@@ -766,10 +768,10 @@ pub fn get_method(
             descriptor: String::new(),
             class_id: 0,
         };
-        m.attributes = get_attribute(constant_pool, m.attributes_count, cursor);
+        m.attributes = get_attribute(constant_pool, m.attributes_count, cursor)?;
         v.push(m);
     }
-    v
+    Ok(v)
 }
 
 pub fn get_attribute_count(cursor: &mut Cursor<Vec<u8>>) -> u16 {
@@ -780,7 +782,7 @@ pub fn get_attribute(
     constant_pool: &Vec<ConstantPoolInfo>,
     cnt: u16,
     cursor: &mut Cursor<Vec<u8>>,
-) -> Vec<AttributeInfo> {
+) -> Result<Vec<AttributeInfo>,Throwable> {
     let mut ans: Vec<AttributeInfo> = Vec::new();
     for _i in 0..cnt {
         let attribute_name_index = cursor.read_u16::<BigEndian>().unwrap();
@@ -828,10 +830,10 @@ pub fn get_attribute(
                     )));
                 }
             }
-            _ => panic!(),
+            _ => return Err(Throwable::Exception(crate::common::error::Exception::ClassFormat { class_name: ("class".to_string()), message: ("class format error".to_string()) })),
         }
     }
-    ans
+    Ok(ans)
 }
 
 fn read_constant_pool_info<R: Read>(

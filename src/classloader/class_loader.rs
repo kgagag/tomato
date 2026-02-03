@@ -117,18 +117,18 @@ fn parse_descriptor(descriptor: &Vec<u8>) -> Result<Option<Vec<DataType>>, Strin
     }
 }
 
-fn parse_field_descriptor(descriptor: Vec<u8>) -> DataType {
+fn parse_field_descriptor(descriptor: Vec<u8>) -> Result<DataType, Throwable> {
     let mut index: usize = 0;
     let descriptor_length = descriptor.len();
     let descriptor_char = descriptor[index] as char;
     //info!("descriptor_char:{:?}", &descriptor_char);
     match descriptor_char {
-        'B' => DataType::Byte,
-        'C' => DataType::Char,
-        'D' => DataType::Double,
-        'F' => DataType::Float,
-        'I' => DataType::Int,
-        'J' => DataType::Long,
+        'B' => Ok(DataType::Byte),
+        'C' => Ok(DataType::Char),
+        'D' => Ok(DataType::Double),
+        'F' => Ok(DataType::Float),
+        'I' => Ok(DataType::Int),
+        'J' => Ok(DataType::Long),
         'L' => {
             // Handle reference type parameters
             let mut class_name = String::new();
@@ -139,10 +139,10 @@ fn parse_field_descriptor(descriptor: Vec<u8>) -> DataType {
                 }
                 class_name.push(descriptor[index] as char);
             }
-            DataType::Reference(class_name)
+            Ok(DataType::Reference(class_name))
         }
-        'S' => DataType::Short,
-        'Z' => DataType::Boolean,
+        'S' => Ok(DataType::Short),
+        'Z' => Ok(DataType::Boolean),
         '[' => {
             // Handle array type parameters
             let mut array_depth = 1;
@@ -172,16 +172,15 @@ fn parse_field_descriptor(descriptor: Vec<u8>) -> DataType {
                 'S' => DataType::Short,
                 'Z' => DataType::Boolean,
                 _ => {
-                    warn!("Unknown array element type:{:?}", descriptor_char);
-                    panic!()
+                    return Err(Throwable::Error(JvmError::InternalError("internal error".to_string())))
                 }
             };
-            DataType::Array {
+            Ok(DataType::Array {
                 element_type: Box::new(element_type),
                 depth: array_depth,
-            }
+            })
         }
-        _ => panic!(""),
+        _=> return Err(Throwable::Error(JvmError::InternalError("internal error".to_string())))
     }
 }
 
@@ -295,7 +294,7 @@ pub fn load_class(
     class.minor_version = get_minor_version(&mut cursor);
     class.major_version = get_major_version(&mut cursor);
     class.constant_pool_count = get_constant_pool_count(&mut cursor);
-    class.constant_pool = read_constant_pool_info(class.constant_pool_count, &mut cursor);
+    class.constant_pool = read_constant_pool_info(class.constant_pool_count, &mut cursor,name)?;
     class.access_flags = get_access_flag(&mut cursor);
     class.this_class = get_this_class(&mut cursor);
     class.super_class = get_super_class(&mut cursor);
@@ -724,7 +723,7 @@ pub fn get_field(
         let name_utf8 = &constant_pool[f.name_index as usize];
         let field_name = match name_utf8 {
             ConstantPoolInfo::Utf8(name) => name.clone(),
-         _ => return Err(Throwable::Exception(crate::common::error::Exception::ClassFormat { class_name: (class_name.clone()), message: ("class format error".to_string()) })),
+            _ => return Err(Throwable::Exception(crate::common::error::Exception::ClassFormat { class_name: (class_name.clone()), message: ("class format error".to_string()) })),
 
         };
         f.field_name = field_name;
@@ -734,9 +733,9 @@ pub fn get_field(
         match descriptor {
             ConstantPoolInfo::Utf8(str) => {
                 f.descriptor = str.clone();
-                f.data_type = parse_field_descriptor(f.descriptor.clone().into_bytes());
+                f.data_type = parse_field_descriptor(f.descriptor.clone().into_bytes())?;
             }
-            _ => panic!(""),
+            _ => return Err(Throwable::Exception(crate::common::error::Exception::ClassFormat { class_name: (class_name.clone()), message: ("class format error".to_string()) })),
         }
 
         f.atrributes = get_attribute(constant_pool, f.attribute_count, cursor)?;
@@ -839,7 +838,8 @@ pub fn get_attribute(
 fn read_constant_pool_info<R: Read>(
     constant_pool_count: u16,
     reader: &mut R,
-) -> Vec<ConstantPoolInfo> {
+    class_name: &String
+) -> Result<Vec<ConstantPoolInfo>,Throwable> {
     let mut constant_pool = Vec::new();
     constant_pool.push(ConstantPoolInfo::Utf8(String::from("")));
     let mut index = 1;
@@ -1060,13 +1060,14 @@ fn read_constant_pool_info<R: Read>(
                 index += 1;
             }
             // 添加更多常量类型的处理
-            _ => panic!("Invalid constant pool tag: {}", tag),
+            _ => return Err(Throwable::Exception(crate::common::error::Exception::ClassFormat { class_name: (class_name.clone()), message: ("class format error".to_string()) })),
+
         }
         //index += 1;
         // constant_pool_count -= 1;
     }
 
-    constant_pool
+    Ok(constant_pool)
 }
 
 pub fn find_class<'a, 'b>(

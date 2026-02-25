@@ -46,7 +46,7 @@ impl Heap {
             address_map: vec![0u32; DEFAULT_HEAP_SIZE / 8],
             //可用内存块列表
             memory_block: vec![(0, 1024 * 1024)],
-
+            //省略0这个位置
             address_map_index: 1,
             address_malloc_method: 0,
             str_pool: HashMap::new(),

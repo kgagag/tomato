@@ -29,7 +29,8 @@ pub mod op_code {
     use opcode_swap::*;
     use opcode_thread::*;
 
-    use crate::classfile::class::{AttributeInfo, ConstantPoolInfo, Exception};
+    use crate::classfile::class::{AttributeInfo, ConstantPoolInfo, Exception, MethodInfo};
+    use crate::classloader;
     use crate::common::error::Throwable;
     use crate::common::stack_frame::StackFrame;
     use crate::interpreter::instructions::*;
@@ -41,85 +42,86 @@ pub mod op_code {
     extern crate env_logger;
     extern crate log;
 
-    pub fn execute(vm_stack_id: u8,vm:&mut Vm) {
-        //let mut vm = GLOBAL_VM.lock().unwrap();
-        // 使用指针获取多个可变引用
-        let vm_stack = vm.vm_stack.get_mut(&vm_stack_id).unwrap() as *mut _;
-        let heap = &mut vm.heap as *mut _;
-        let metaspace = &mut vm.metaspace as *mut _;
-        //drop(vm);
-        // 转换为可变引用（需要 unsafe）
-        unsafe {
-            let vm_stack = &mut *vm_stack; 
-            let heap = &mut *heap;
-            let metaspace = &mut *metaspace;
-            do_opcode(vm_stack, heap, metaspace);
-        }
-    }
+    // pub fn execute(vm_stack_id: u8,vm:&mut Vm) {
+    //     //let mut vm = GLOBAL_VM.lock().unwrap();
+    //     // 使用指针获取多个可变引用
+    //     let vm_stack = vm.vm_stack.get_mut(&vm_stack_id).unwrap() as *mut _;
+    //     let heap = &mut vm.heap as *mut _;
+    //     let metaspace = &mut vm.metaspace as *mut _;
+    //     //drop(vm);
+    //     // 转换为可变引用（需要 unsafe）
+    //     unsafe {
+    //         let vm_stack = &mut *vm_stack;
+    //         let heap = &mut *heap;
+    //         let metaspace = &mut *metaspace;
+    //         do_opcode(vm_stack, heap, metaspace);
+    //     }
+    // }
 
-
-    pub fn do_opcode(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Metaspace) ->Result<(),Throwable> {
+    pub fn do_opcode(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Metaspace) {
         //let mut map = HashMap::new();
-        while !vm_stack.is_empty()
-        {
+        while !vm_stack.is_empty() {
             //let start = Instant::now();
 
             //let code = vm_stack.last().unwrap().code[vm_stack.last().unwrap().pc];
             let frame_index = vm_stack.len() - 1;
+            let code = vm_stack[frame_index].code[vm_stack[frame_index].pc];
             let frame: &mut StackFrame = &mut vm_stack[frame_index];
-            let code = frame.code[frame.pc];
 
             //println!("{:x}--{}--{:?}--{:?}--{:?}--opstack:{:?}--local:{:?}",code,frame.pc,frame.class_name,frame.method_name,frame.descriptor,frame.op_stack,frame.local);
-            //println!("{:x}--{}--{:?}--{:?}--{:?}",code,frame.pc,frame.class_name,frame.method_name,frame.descriptor);
+            println!(
+                "{:x}--{}--{:?}--{:?}--{:?}",
+                code, frame.pc, frame.class_name, frame.method_name, frame.descriptor
+            );
             // if code == 0xbb || code == 0xbc || code == 0xbd || code == 0xc5 {
             //     full_gc();
             // }
-        let result = match code {
-                0x00 => nop(frame),
-                0x01 => aconst_null(frame),
-                0x02 => iconst_m1(frame),
-                0x03 => iconst_0(frame),
-                0x04 => iconst_1(frame),
-                0x05 => iconst_2(frame),
-                0x06 => iconst_3(frame),
-                0x07 => iconst_4(frame),
-                0x08 => iconst_5(frame),
-                0x09 => lconst_0(frame),
-                0x0a => lconst_1(frame),
-                0x0b => fconst_0(frame),
-                0x0c => fconst_1(frame),
-                0x0d => fconst_2(frame),
-                0x0e => dconst_0(frame),
-                0x0f => dconst_1(frame),
-                0x10 => bipush(frame),
-                0x11 => sipush(frame),
+            let result = match code {
+                0x00 => nop(&mut vm_stack[frame_index]),
+                0x01 => aconst_null(&mut vm_stack[frame_index]),
+                0x02 => iconst_m1(&mut vm_stack[frame_index]),
+                0x03 => iconst_0(&mut vm_stack[frame_index]),
+                0x04 => iconst_1(&mut vm_stack[frame_index]),
+                0x05 => iconst_2(&mut vm_stack[frame_index]),
+                0x06 => iconst_3(&mut vm_stack[frame_index]),
+                0x07 => iconst_4(&mut vm_stack[frame_index]),
+                0x08 => iconst_5(&mut vm_stack[frame_index]),
+                0x09 => lconst_0(&mut vm_stack[frame_index]),
+                0x0a => lconst_1(&mut vm_stack[frame_index]),
+                0x0b => fconst_0(&mut vm_stack[frame_index]),
+                0x0c => fconst_1(&mut vm_stack[frame_index]),
+                0x0d => fconst_2(&mut vm_stack[frame_index]),
+                0x0e => dconst_0(&mut vm_stack[frame_index]),
+                0x0f => dconst_1(&mut vm_stack[frame_index]),
+                0x10 => bipush(&mut vm_stack[frame_index]),
+                0x11 => sipush(&mut vm_stack[frame_index]),
                 0x12 => ldc(vm_stack, heap, metaspace),
                 0x14 => ldc2_w(vm_stack, heap, metaspace),
-                0x15 => iload(frame),
-                0x16 => lload(frame),
-                0x17 => fload(frame),
-                0x18 => dload(frame),
-                0x19 => aload(frame),
-                0x1a => iload_0(frame),
-                0x1b => iload_1(frame),
-                0x1c => iload_2(frame),
-                0x1d => iload_3(frame),
-                0x1e => lload_0(frame),
-                0x1f => lload_1(frame),
-                0x20 => lload_2(frame),
-                0x21 => lload_3(frame),
-                0x22 => fload_0(frame),
-                0x23 => fload_1(frame),
-                0x24 => fload_2(frame),
-                0x25 => fload_3(frame),
-                0x26 => dload_0(frame),
-                0x27 => dload_1(frame),
-                0x28 => dload_2(frame),
-                0x29 => dload_3(frame),
-                0x2a => aload_0(frame),
-                0x2b => aload_1(frame),
-                0x2c => aload_2(frame),
-                0x2d => aload_3(frame),
+                0x15 => iload(&mut vm_stack[frame_index]),
+                0x16 => lload(&mut vm_stack[frame_index]),
+                0x17 => fload(&mut vm_stack[frame_index]),
+                0x18 => dload(&mut vm_stack[frame_index]),
+                0x19 => aload(&mut vm_stack[frame_index]),
+                0x1a => iload_0(&mut vm_stack[frame_index]),
+                0x1b => iload_1(&mut vm_stack[frame_index]),
+                0x1c => iload_2(&mut vm_stack[frame_index]),
+                0x1d => iload_3(&mut vm_stack[frame_index]),
+                0x1e => lload_0(&mut vm_stack[frame_index]),
+                0x1f => lload_1(&mut vm_stack[frame_index]),
+                0x20 => lload_2(&mut vm_stack[frame_index]),
+                0x21 => lload_3(&mut vm_stack[frame_index]),
+                0x22 => fload_0(&mut vm_stack[frame_index]),
+                0x23 => fload_1(&mut vm_stack[frame_index]),
+                0x24 => fload_2(&mut vm_stack[frame_index]),
+                0x25 => fload_3(&mut vm_stack[frame_index]),
+                0x26 => dload_0(&mut vm_stack[frame_index]),
+                0x27 => dload_1(&mut vm_stack[frame_index]),
+                0x28 => dload_2(&mut vm_stack[frame_index]),
+                0x29 => dload_3(&mut vm_stack[frame_index]),
+                0x2a => aload_0(&mut vm_stack[frame_index]),
+                0x2b => aload_1(&mut vm_stack[frame_index]),
+                0x2c => aload_2(&mut vm_stack[frame_index]),
+                0x2d => aload_3(&mut vm_stack[frame_index]),
                 0x2e => iaload(vm_stack, heap, metaspace),
                 0x2f => laload(vm_stack, heap, metaspace),
                 0x30 => faload(vm_stack, heap, metaspace),
@@ -128,31 +130,31 @@ pub mod op_code {
                 0x33 => baload(vm_stack, heap, metaspace),
                 0x34 => caload(vm_stack, heap, metaspace),
                 0x35 => saload(vm_stack, heap, metaspace),
-                0x36 => istore(frame),
-                0x37 => lstore(frame),
-                0x38 => fstore(frame),
-                0x39 => dstore(frame),
-                0x3a => astore(frame),
-                0x3b => istore_0(frame),
-                0x3c => istore_1(frame),
-                0x3d => istore_2(frame),
-                0x3e => istore_3(frame),
-                0x3f => lstore_0(frame),
-                0x40 => lstore_1(frame),
-                0x41 => lstore_2(frame),
-                0x42 => lstore_3(frame),
-                0x43 => fstore_0(frame),
-                0x44 => fstore_1(frame),
-                0x45 => fstore_2(frame),
-                0x46 => fstore_3(frame),
-                0x47 => dstore_0(frame),
-                0x48 => dstore_1(frame),
-                0x49 => dstore_2(frame),
-                0x4a => dstore_3(frame),
-                0x4b => astore_0(frame),
-                0x4c => astore_1(frame),
-                0x4d => astore_2(frame),
-                0x4e => astore_3(frame),
+                0x36 => istore(&mut vm_stack[frame_index]),
+                0x37 => lstore(&mut vm_stack[frame_index]),
+                0x38 => fstore(&mut vm_stack[frame_index]),
+                0x39 => dstore(&mut vm_stack[frame_index]),
+                0x3a => astore(&mut vm_stack[frame_index]),
+                0x3b => istore_0(&mut vm_stack[frame_index]),
+                0x3c => istore_1(&mut vm_stack[frame_index]),
+                0x3d => istore_2(&mut vm_stack[frame_index]),
+                0x3e => istore_3(&mut vm_stack[frame_index]),
+                0x3f => lstore_0(&mut vm_stack[frame_index]),
+                0x40 => lstore_1(&mut vm_stack[frame_index]),
+                0x41 => lstore_2(&mut vm_stack[frame_index]),
+                0x42 => lstore_3(&mut vm_stack[frame_index]),
+                0x43 => fstore_0(&mut vm_stack[frame_index]),
+                0x44 => fstore_1(&mut vm_stack[frame_index]),
+                0x45 => fstore_2(&mut vm_stack[frame_index]),
+                0x46 => fstore_3(&mut vm_stack[frame_index]),
+                0x47 => dstore_0(&mut vm_stack[frame_index]),
+                0x48 => dstore_1(&mut vm_stack[frame_index]),
+                0x49 => dstore_2(&mut vm_stack[frame_index]),
+                0x4a => dstore_3(&mut vm_stack[frame_index]),
+                0x4b => astore_0(&mut vm_stack[frame_index]),
+                0x4c => astore_1(&mut vm_stack[frame_index]),
+                0x4d => astore_2(&mut vm_stack[frame_index]),
+                0x4e => astore_3(&mut vm_stack[frame_index]),
                 0x4f => iastore(vm_stack, heap, metaspace),
                 0x50 => lastore(vm_stack, heap, metaspace),
                 0x51 => fastore(vm_stack, heap, metaspace),
@@ -161,91 +163,91 @@ pub mod op_code {
                 0x54 => bastore(vm_stack, heap, metaspace),
                 0x55 => castore(vm_stack, heap, metaspace),
                 0x56 => sastore(vm_stack, heap, metaspace),
-                0x57 => pop(frame),
-                0x58 => pop2(frame),
-                0x59 => dup(frame),
-                0x5a => dup_x1(frame),
-                0x5b => dup_x2(frame),
-                0x5c => dup2(frame),
-                0x5d => dup2_x1(frame),
-                0x5e => dup2_x2(frame),
-                0x5f => swap(frame),
-                0x60 => iadd(frame),
-                0x61 => ladd(frame),
-                0x62 => fadd(frame),
-                0x63 => dadd(frame),
-                0x64 => isub(frame),
-                0x65 => lsub(frame),
-                0x66 => fsub(frame),
-                0x67 => dsub(frame),
-                0x68 => imul(frame),
-                0x69 => lmul(frame),
-                0x6a => fmul(frame),
-                0x6b => dmul(frame),
-                0x6c => idiv(frame),
-                0x6d => ldiv(frame),
-                0x6e => fdiv(frame),
-                0x6f => ddiv(frame),
-                0x70 => irem(frame),
-                0x71 => lrem(frame),
-                0x72 => frem(frame),
-                0x73 => drem(frame),
-                0x74 => ineg(frame),
-                0x75 => lneg(frame),
-                0x76 => fneg(frame),
-                0x77 => dneg(frame),
-                0x78 => ishl(frame),
-                0x79 => lshl(frame),
-                0x7a => ishr(frame),
-                0x7b => lshr(frame),
-                0x7c => iushr(frame),
-                0x7d => lushr(frame),
-                0x7e => iand(frame),
-                0x7f => land(frame),
-                0x80 => ior(frame),
-                0x81 => lor(frame),
-                0x82 => ixor(frame),
-                0x83 => lxor(frame),
-                0x84 => iinc(frame),
-                0x85 => i2l(frame),
-                0x86 => i2f(frame),
-                0x87 => i2d(frame),
-                0x88 => l2i(frame),
-                0x89 => l2f(frame),
-                0x8a => l2d(frame),
-                0x8b => f2i(frame),
-                0x8c => f2l(frame),
-                0x8d => f2d(frame),
-                0x8e => d2i(frame),
-                0x8f => d2l(frame),
-                0x90 => d2f(frame),
-                0x91 => i2b(frame),
-                0x92 => i2c(frame),
-                0x93 => i2s(frame),
-                0x94 => lcmp(frame),
-                0x95 => fcmpl(frame),
-                0x96 => fcmpg(frame),
-                0x97 => dcmpl(frame),
-                0x98 => dcmpg(frame),
-                0x99 => ifeq(frame),
-                0x9a => ifne(frame),
-                0x9b => iflt(frame),
-                0x9c => ifge(frame),
-                0x9d => ifgt(frame),
-                0x9e => ifle(frame),
-                0x9f => if_icmpeq(frame),
-                0xa0 => if_icmpne(frame),
-                0xa1 => if_icmplt(frame),
-                0xa2 => if_icmpge(frame),
-                0xa3 => if_icmpgt(frame),
-                0xa4 => if_icmple(frame),
-                0xa5 => if_acmpeq(frame),
-                0xa6 => if_acmpne(frame),
-                0xa7 => goto(frame),
-                // 0xa8 => jsr(frame),
-                // 0xa9 => ret(frame),
-                0xaa => tableswitch(frame),
-                0xab => lookupswitch(frame),
+                0x57 => pop(&mut vm_stack[frame_index]),
+                0x58 => pop2(&mut vm_stack[frame_index]),
+                0x59 => dup(&mut vm_stack[frame_index]),
+                0x5a => dup_x1(&mut vm_stack[frame_index]),
+                0x5b => dup_x2(&mut vm_stack[frame_index]),
+                0x5c => dup2(&mut vm_stack[frame_index]),
+                0x5d => dup2_x1(&mut vm_stack[frame_index]),
+                0x5e => dup2_x2(&mut vm_stack[frame_index]),
+                0x5f => swap(&mut vm_stack[frame_index]),
+                0x60 => iadd(&mut vm_stack[frame_index]),
+                0x61 => ladd(&mut vm_stack[frame_index]),
+                0x62 => fadd(&mut vm_stack[frame_index]),
+                0x63 => dadd(&mut vm_stack[frame_index]),
+                0x64 => isub(&mut vm_stack[frame_index]),
+                0x65 => lsub(&mut vm_stack[frame_index]),
+                0x66 => fsub(&mut vm_stack[frame_index]),
+                0x67 => dsub(&mut vm_stack[frame_index]),
+                0x68 => imul(&mut vm_stack[frame_index]),
+                0x69 => lmul(&mut vm_stack[frame_index]),
+                0x6a => fmul(&mut vm_stack[frame_index]),
+                0x6b => dmul(&mut vm_stack[frame_index]),
+                0x6c => idiv(&mut vm_stack[frame_index]),
+                0x6d => ldiv(&mut vm_stack[frame_index]),
+                0x6e => fdiv(&mut vm_stack[frame_index]),
+                0x6f => ddiv(&mut vm_stack[frame_index]),
+                0x70 => irem(&mut vm_stack[frame_index]),
+                0x71 => lrem(&mut vm_stack[frame_index]),
+                0x72 => frem(&mut vm_stack[frame_index]),
+                0x73 => drem(&mut vm_stack[frame_index]),
+                0x74 => ineg(&mut vm_stack[frame_index]),
+                0x75 => lneg(&mut vm_stack[frame_index]),
+                0x76 => fneg(&mut vm_stack[frame_index]),
+                0x77 => dneg(&mut vm_stack[frame_index]),
+                0x78 => ishl(&mut vm_stack[frame_index]),
+                0x79 => lshl(&mut vm_stack[frame_index]),
+                0x7a => ishr(&mut vm_stack[frame_index]),
+                0x7b => lshr(&mut vm_stack[frame_index]),
+                0x7c => iushr(&mut vm_stack[frame_index]),
+                0x7d => lushr(&mut vm_stack[frame_index]),
+                0x7e => iand(&mut vm_stack[frame_index]),
+                0x7f => land(&mut vm_stack[frame_index]),
+                0x80 => ior(&mut vm_stack[frame_index]),
+                0x81 => lor(&mut vm_stack[frame_index]),
+                0x82 => ixor(&mut vm_stack[frame_index]),
+                0x83 => lxor(&mut vm_stack[frame_index]),
+                0x84 => iinc(&mut vm_stack[frame_index]),
+                0x85 => i2l(&mut vm_stack[frame_index]),
+                0x86 => i2f(&mut vm_stack[frame_index]),
+                0x87 => i2d(&mut vm_stack[frame_index]),
+                0x88 => l2i(&mut vm_stack[frame_index]),
+                0x89 => l2f(&mut vm_stack[frame_index]),
+                0x8a => l2d(&mut vm_stack[frame_index]),
+                0x8b => f2i(&mut vm_stack[frame_index]),
+                0x8c => f2l(&mut vm_stack[frame_index]),
+                0x8d => f2d(&mut vm_stack[frame_index]),
+                0x8e => d2i(&mut vm_stack[frame_index]),
+                0x8f => d2l(&mut vm_stack[frame_index]),
+                0x90 => d2f(&mut vm_stack[frame_index]),
+                0x91 => i2b(&mut vm_stack[frame_index]),
+                0x92 => i2c(&mut vm_stack[frame_index]),
+                0x93 => i2s(&mut vm_stack[frame_index]),
+                0x94 => lcmp(&mut vm_stack[frame_index]),
+                0x95 => fcmpl(&mut vm_stack[frame_index]),
+                0x96 => fcmpg(&mut vm_stack[frame_index]),
+                0x97 => dcmpl(&mut vm_stack[frame_index]),
+                0x98 => dcmpg(&mut vm_stack[frame_index]),
+                0x99 => ifeq(&mut vm_stack[frame_index]),
+                0x9a => ifne(&mut vm_stack[frame_index]),
+                0x9b => iflt(&mut vm_stack[frame_index]),
+                0x9c => ifge(&mut vm_stack[frame_index]),
+                0x9d => ifgt(&mut vm_stack[frame_index]),
+                0x9e => ifle(&mut vm_stack[frame_index]),
+                0x9f => if_icmpeq(&mut vm_stack[frame_index]),
+                0xa0 => if_icmpne(&mut vm_stack[frame_index]),
+                0xa1 => if_icmplt(&mut vm_stack[frame_index]),
+                0xa2 => if_icmpge(&mut vm_stack[frame_index]),
+                0xa3 => if_icmpgt(&mut vm_stack[frame_index]),
+                0xa4 => if_icmple(&mut vm_stack[frame_index]),
+                0xa5 => if_acmpeq(&mut vm_stack[frame_index]),
+                0xa6 => if_acmpne(&mut vm_stack[frame_index]),
+                0xa7 => goto(&mut vm_stack[frame_index]),
+                // 0xa8 => jsr(&mut vm_stack[frame_index]),
+                // 0xa9 => ret(&mut vm_stack[frame_index]),
+                0xaa => tableswitch(&mut vm_stack[frame_index]),
+                0xab => lookupswitch(&mut vm_stack[frame_index]),
                 0xac => ireturn(vm_stack),
                 0xad => lreturn(vm_stack),
                 0xae => freturn(vm_stack),
@@ -260,99 +262,203 @@ pub mod op_code {
                 0xb7 => invokespecial(vm_stack, heap, metaspace),
                 0xb8 => invokestatic(vm_stack, heap, metaspace),
                 0xb9 => invokeinterface(vm_stack, heap, metaspace),
-                // 0xba => invokedynamic(frame),
-                0xbb =>_new(vm_stack, heap, metaspace),
+                // 0xba => invokedynamic(&mut vm_stack[frame_index]),
+                0xbb => _new(vm_stack, heap, metaspace),
                 0xbc => newarray(vm_stack, heap, metaspace),
                 0xbd => anewarray(vm_stack, heap, metaspace),
                 0xbe => arraylength(vm_stack, heap),
-                0xbf => athrow(frame),
-                0xc0 => checkcast(frame),
+                0xbf => athrow(&mut vm_stack[frame_index]),
+                0xc0 => checkcast(&mut vm_stack[frame_index]),
                 0xc1 => instanceof(vm_stack, heap, metaspace),
-                0xc2 => monitorenter(frame),
-                0xc3 => monitorexit(frame),
-                // 0xc4 => wide(frame),
+                0xc2 => monitorenter(&mut vm_stack[frame_index]),
+                0xc3 => monitorexit(&mut vm_stack[frame_index]),
+                // 0xc4 => wide(&mut vm_stack[frame_index]),
                 0xc5 => multianewarray(vm_stack, heap, metaspace),
-                0xc6 => ifnull(frame),
-                0xc7 => ifnonnull(frame),
-                // 0xc8 => goto_w(frame),
-                // 0xc9 => jsr_w(frame),
+                0xc6 => ifnull(&mut vm_stack[frame_index]),
+                0xc7 => ifnonnull(&mut vm_stack[frame_index]),
+                // 0xc8 => goto_w(&mut vm_stack[frame_index]),
+                // 0xc9 => jsr_w(&mut vm_stack[frame_index]),
                 _ => {
                     // 处理未知指令的情况，可以抛出错误或执行默认操作
                     panic!("Unknown instruction code: 0x{:02X}", code);
                 }
             };
+            if vm_stack.len() > frame_index {
+                handle_result(&mut vm_stack[frame_index], heap, metaspace, result);
+            }
+        }
+    }
 
-
-            match result {
-                Ok(()) => continue,
-                Err(error) => {
-                  error!("Error executing instruction:{:x}, {:?}",code, error);
-                  panic!("Error executing instruction:{:x}, {:?}",code, error)
+    pub fn handle_result(
+    stack_frame: &mut StackFrame,
+    heap: &mut Heap,
+    metaspace: &mut Metaspace,
+    result: Result<(), Throwable>,
+) {
+    match result {
+        Ok(()) => return,
+        Err(error) => {
+           let (method, class) = { let (method, class) = metaspace.get_method_from_root(
+                &stack_frame.class_name,
+                &stack_frame.method_name,
+                &stack_frame.descriptor,
+            );
+            (method.cloned(),class.clone())
+        };
+            if let Some(method) = method {
+                for i in 0..method.attributes.len() {
+                    let attribute: &AttributeInfo = &method.attributes[i];
+                    // 判断是否为Code
+                    if let AttributeInfo::Code(code_attr) = attribute {
+                        for entry in &code_attr.exception_table {
+                            let start_pc = entry.start_pc;
+                            let end_pc = entry.end_pc;
+                            let handler_pc = entry.handler_pc;
+                            let catch_type = entry.catch_type;
+                            // 如果当前PC在异常处理范围内
+                            if stack_frame.pc >= start_pc as usize
+                                && stack_frame.pc <= end_pc as usize
+                            {
+                                let constant_class =
+                                    &class.constant_pool[catch_type as usize];
+                                let class_name = match constant_class {
+                                    ConstantPoolInfo::Class(name_index) => {
+                                        let class_name_utf8 =
+                                            &class.constant_pool[*name_index as usize];
+                                        match class_name_utf8 {
+                                            ConstantPoolInfo::Utf8(name_string) => {
+                                                name_string
+                                            }
+                                            _ => panic!("error"),
+                                        }
+                                    }
+                                    _ => panic!("error"),
+                                };
+                                match &error {
+                                    Throwable::Exception(exception) => match exception {
+                                        crate::common::error::Exception::NullPointer(msg) => {
+                                            // 创建异常对象？如何创建，new 指令，然后invoke <init> ?
+                                        }
+                                        crate::common::error::Exception::ArrayIndexOutOfBounds {
+                                            index,
+                                            length,
+                                            message,
+                                        } => todo!(),
+                                        crate::common::error::Exception::ClassCast {
+                                            from_type,
+                                            to_type,
+                                            message,
+                                        } => todo!(),
+                                        crate::common::error::Exception::Arithmetic(msg) => {
+                                            let is_subclass = metaspace.is_subclass(&"java/lang/ArithmeticException".to_string(), &class_name);
+                                            if is_subclass {
+                                                
+                                            }
+                                            // let a = classloader::class_loader::find_class(
+                                            //     &"java/lang/ArithmeticException".to_string(),
+                                            //     &mut Vec::new(),
+                                            //     heap,
+                                            //     metaspace,
+                                            // );
+                                            //heap.create_object()
+                                        }
+                                        crate::common::error::Exception::IllegalArgument(_) => todo!(),
+                                        crate::common::error::Exception::IllegalState(_) => todo!(),
+                                        crate::common::error::Exception::ClassFormat {
+                                            class_name,
+                                            message,
+                                        } => todo!(),
+                                        crate::common::error::Exception::UnsupportedClassVersion {
+                                            class_name,
+                                            version,
+                                            message,
+                                        } => todo!(),
+                                        crate::common::error::Exception::IOException {
+                                            kind,
+                                            message,
+                                            path,
+                                        } => todo!(),
+                                        crate::common::error::Exception::ClassNotFound {
+                                            class_name,
+                                            message,
+                                        } => todo!(),
+                                        crate::common::error::Exception::FieldNotFound {
+                                            class_name,
+                                            field_name,
+                                        } => todo!(),
+                                        crate::common::error::Exception::MethodNotFound {
+                                            class_name,
+                                            method_name,
+                                        } => todo!(),
+                                        crate::common::error::Exception::NoSuchMethod(_) => todo!(),
+                                        crate::common::error::Exception::FileNotFound(_) => todo!(),
+                                        crate::common::error::Exception::Interrupted(_) => todo!(),
+                                        crate::common::error::Exception::Security(_) => todo!(),
+                                        crate::common::error::Exception::Timeout(_) => todo!(),
+                                        crate::common::error::Exception::Parse {
+                                            target,
+                                            position,
+                                            message,
+                                        } => todo!(),
+                                    },
+                                    Throwable::Error(jvm_error) => match jvm_error {
+                                        crate::common::error::JvmError::OutOfMemory {
+                                            heap_size,
+                                            requested,
+                                            message,
+                                        } => todo!(),
+                                        crate::common::error::JvmError::StackOverflow {
+                                            thread_name,
+                                            stack_depth,
+                                            message,
+                                        } => todo!(),
+                                        crate::common::error::JvmError::InternalError {
+                                            message,
+                                            line_number,
+                                            file_name,
+                                        } => todo!(),
+                                        crate::common::error::JvmError::UnknownError(_) => todo!(),
+                                        crate::common::error::JvmError::NoClassDefFound {
+                                            class_name,
+                                            cause,
+                                            message,
+                                        } => todo!(),
+                                        crate::common::error::JvmError::IncompatibleClassChange {
+                                            class_name,
+                                            change_type,
+                                            message,
+                                        } => todo!(),
+                                        crate::common::error::JvmError::AbstractMethod(_) => todo!(),
+                                        crate::common::error::JvmError::UnsatisfiedLink {
+                                            library_name,
+                                            os_error,
+                                            message,
+                                        } => todo!(),
+                                        crate::common::error::JvmError::Verify {
+                                            class_name,
+                                            bytecode_offset,
+                                            message,
+                                        } => todo!(),
+                                        crate::common::error::JvmError::ThreadDeath(_) => todo!(),
+                                        crate::common::error::JvmError::Assertion {
+                                            condition,
+                                            file,
+                                            line,
+                                            message,
+                                        } => todo!(),
+                                    },
+                                }
+                                // 处理异常：跳转到 handler_pc，并将异常对象引用推入操作数栈（此处先用 Null 占位）
+                                stack_frame.pc = handler_pc as usize;
+                                stack_frame
+                                    .op_stack
+                                    .push(crate::common::value::StackFrameValue::Null);
+                            }
+                        }
+                    }
                 }
             }
-
-            // match result {
-            //     Ok(()) => continue,
-            //     Err(error) => {
-            //        match error {
-            //         Throwable::Exception(exception) => {
-            //             if code != 0xbf {
-            //                 //找到当前方法的异常table
-            //                 //let index = frame_index;
-            //                 while true {
-            //                     let frame_index = vm_stack.len() - 1;
-            //                     let frame = &vm_stack[frame_index];
-            //                     let constant_pool: &Vec<crate::classfile::class::ConstantPoolInfo> = &metaspace.classes[frame.class].constant_pool;
-            //                     let method_info = metaspace.get_method_from_pool(&frame.class_name, &frame.method_name, &frame.descriptor);
-            //                     if method_info.is_some() {
-            //                         let method_info = method_info.unwrap();
-            //                         method_info.attributes.iter().for_each(|attribute| { 
-            //                             if let AttributeInfo::Code(code_attribute) = attribute {
-            //                                 for exception_table in &code_attribute.exception_table {
-            //                                     if exception_table.start_pc <= frame.pc as u16 && (frame.pc as u16) < exception_table.end_pc {
-            //                                        let class_constant =  &constant_pool[exception_table.catch_type as usize];
-            //                                        match class_constant {
-            //                                             ConstantPoolInfo::Class(class_info) => {
-            //                                                 let class_name = &class_info.name;
-            //                                                 let class_id = metaspace.class_map.get(class_name).unwrap();
-            //                                                 let class = &metaspace.classes[*class_id];
-            //                                                 let method_info = metaspace.get_method_from_pool(&class.name, "throw", "()V");
-            //                                             }
-            //                                            _=>panic!("unknown constant pool info")
-            //                                        }
-            //                                     }
-            //                                 }
-            //                             }
-            //                         });
-            //                     }
-            //                 }
-            //             }
-            //         },
-            //         Throwable::Error(jvm_error) => {
-            //             return Err(Throwable::Error(jvm_error));
-            //         },
-            //         }
-            //     }
-            // };
-
-            //Ok(())
-
-            // if(!vm_stack.is_empty()){
-            //     frame = frame
-            // }else {
-            //     break;
-            // }
-
-             //let duration = start.elapsed();
-            //转换为纳秒
-             //let nanos = duration.as_nanos();
-             //map.insert(code, nanos);
-             //info!("{:x}--{}",code,nanos);
-        };
-        // for (k,v) in &map{
-        //     info!("{:x}--{}",k,v);
-        // }
-        Ok(())
-    }
-    
+        }
+    };
+}
 }

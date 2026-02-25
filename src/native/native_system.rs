@@ -13,10 +13,9 @@ use crate::{
 extern crate env_logger;
 extern crate log;
 
-pub fn array_copy(method: &MethodInfo,vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Metaspace) {
+pub fn array_copy(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Metaspace) {
     let frame_index = vm_stack.len() - 1;
     let frame = &mut vm_stack[frame_index];
-    let _ = method;
     let len = frame.op_stack.pop().unwrap();
     // info!("{:?}",len);
     let des_ops = frame.op_stack.pop().unwrap();

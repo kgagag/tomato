@@ -145,7 +145,10 @@ pub fn getfield(
         }
         _ => {
             return Err(Throwable::Error(
-                crate::common::error::JvmError::InternalError("Internal error".to_string()),
+                crate::common::error::JvmError::InternalError{message:"Internal error".to_string(),
+                    line_number: line!(),
+                    file_name: file!().to_string(),
+            },
             ));
         }
     };

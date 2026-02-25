@@ -37,7 +37,9 @@ pub struct StackFrame {
 
     pub descriptor:String,
 
-    pub class_name:String
+    pub class_name:String,
+
+    pub throwable_id: u32
 }
 
 impl StackFrame {
@@ -63,7 +65,8 @@ impl StackFrame {
             vm_stack_id: 0,
             method_name,
             descriptor,
-            class_name
+            class_name,
+            throwable_id: 0
         };
         for _i in 0..stake_frame.max_locals as usize {
             stake_frame.local.push(StackFrameValue::Byte(0));
@@ -73,8 +76,11 @@ impl StackFrame {
     }
 
     pub fn popi64(&mut self) -> i64 {
-        let value = self.op_stack.pop().unwrap();
-        match value {
+        let value = self.op_stack.pop();
+        if value.is_none() {
+            return 0;
+        }
+        match value.unwrap() {
             StackFrameValue::Int(data) => data as i64,
             StackFrameValue::Byte(data) => data as i64,
             StackFrameValue::Char(data) => data as i64,
@@ -85,10 +91,10 @@ impl StackFrame {
             StackFrameValue::Boolean(data) => data as i64,
             StackFrameValue::Double(data) => data as i64,
             StackFrameValue::Float(data) => data as i64,
-            _ => {
-                panic!("wrong value type:{:?}",value);
-            }
-        }
+            StackFrameValue::Reference(data) => data as i64,
+            StackFrameValue::U64(data) => data as i64,
+            StackFrameValue::Null => 0,
+         }
     }
 
     pub fn popf64(&mut self) -> f64 {

@@ -116,6 +116,11 @@ public class Throwable implements Serializable {
     private static final long serialVersionUID = -3042686055658047285L;
 
     /**
+     * Native code saves some indication of the stack backtrace in this slot.
+     */
+     // private transient Object backtrace;
+
+    /**
      * Specific details about the Throwable.  For example, for
      * {@code FileNotFoundException}, this contains the name of
      * the file that could not be found.
@@ -772,9 +777,17 @@ public class Throwable implements Serializable {
      * @return  a reference to this {@code Throwable} instance.
      * @see     java.lang.Throwable#printStackTrace()
      */
+//    public synchronized Throwable fillInStackTrace() {
+//        if (stackTrace != null ||
+//            backtrace != null /* Out of protocol state */ ) {
+//            fillInStackTrace(0);
+//            stackTrace = UNASSIGNED_STACK;
+//        }
+//        return this;
+//    }
+
     public synchronized Throwable fillInStackTrace() {
-        if (stackTrace != null ||
-            backtrace != null /* Out of protocol state */ ) {
+        if (stackTrace != null ) {
             fillInStackTrace(0);
             stackTrace = UNASSIGNED_STACK;
         }
@@ -811,11 +824,26 @@ public class Throwable implements Serializable {
         return getOurStackTrace().clone();
     }
 
+//    private synchronized StackTraceElement[] getOurStackTrace() {
+//        // Initialize stack trace field with information from
+//        // backtrace if this is the first call to this method
+//        if (stackTrace == UNASSIGNED_STACK ||
+//            (stackTrace == null && backtrace != null) /* Out of protocol state */) {
+//            int depth = getStackTraceDepth();
+//            stackTrace = new StackTraceElement[depth];
+//            for (int i=0; i < depth; i++)
+//                stackTrace[i] = getStackTraceElement(i);
+//        } else if (stackTrace == null) {
+//            return UNASSIGNED_STACK;
+//        }
+//        return stackTrace;
+//    }
+
     private synchronized StackTraceElement[] getOurStackTrace() {
         // Initialize stack trace field with information from
         // backtrace if this is the first call to this method
         if (stackTrace == UNASSIGNED_STACK ||
-            (stackTrace == null && backtrace != null) /* Out of protocol state */) {
+                (stackTrace == null) /* Out of protocol state */) {
             int depth = getStackTraceDepth();
             stackTrace = new StackTraceElement[depth];
             for (int i=0; i < depth; i++)
@@ -854,6 +882,22 @@ public class Throwable implements Serializable {
      *
      * @since  1.4
      */
+//    public void setStackTrace(StackTraceElement[] stackTrace) {
+//        // Validate argument
+//        StackTraceElement[] defensiveCopy = stackTrace.clone();
+//        for (int i = 0; i < defensiveCopy.length; i++) {
+//            if (defensiveCopy[i] == null)
+//                throw new NullPointerException("stackTrace[" + i + "]");
+//        }
+//
+//        synchronized (this) {
+//            if (this.stackTrace == null && // Immutable stack
+//                backtrace == null) // Test for out of protocol state
+//                return;
+//            this.stackTrace = defensiveCopy;
+//        }
+//    }
+
     public void setStackTrace(StackTraceElement[] stackTrace) {
         // Validate argument
         StackTraceElement[] defensiveCopy = stackTrace.clone();
@@ -863,8 +907,7 @@ public class Throwable implements Serializable {
         }
 
         synchronized (this) {
-            if (this.stackTrace == null && // Immutable stack
-                backtrace == null) // Test for out of protocol state
+            if (this.stackTrace == null) // Test for out of protocol state
                 return;
             this.stackTrace = defensiveCopy;
         }
@@ -876,7 +919,10 @@ public class Throwable implements Serializable {
      *
      * package-protection for use by SharedSecrets.
      */
-    native int getStackTraceDepth();
+    //native int getStackTraceDepth();
+    int getStackTraceDepth(){
+        return stackTrace.length;
+    }
 
     /**
      * Returns the specified element of the stack trace.
@@ -887,7 +933,10 @@ public class Throwable implements Serializable {
      * @throws IndexOutOfBoundsException if {@code index < 0 ||
      *         index >= getStackTraceDepth() }
      */
-    native StackTraceElement getStackTraceElement(int index);
+    //native StackTraceElement getStackTraceElement(int index);
+    StackTraceElement getStackTraceElement(int index){
+        return stackTrace[index];
+    }
 
     /**
      * Reads a {@code Throwable} from a stream, enforcing

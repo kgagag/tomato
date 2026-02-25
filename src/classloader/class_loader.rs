@@ -14,6 +14,7 @@ use crate::common::value::StackFrameValue;
 use crate::interpreter::instructions::op_code::op_code::do_opcode;
 use crate::runtime::heap::Heap;
 use crate::runtime::metaspace::Metaspace;
+use crate::utils::invoke;
 use crate::utils::u8c;
 use crate::utils::u8c::u8s_to_u16;
 use crate::utils::u8c::u8s_to_u32;
@@ -172,7 +173,13 @@ fn parse_field_descriptor(descriptor: Vec<u8>) -> Result<DataType, Throwable> {
                 'S' => DataType::Short,
                 'Z' => DataType::Boolean,
                 _ => {
-                    return Err(Throwable::Error(JvmError::InternalError("internal error".to_string())))
+                    return Err(Throwable::Error(
+                        crate::common::error::JvmError::InternalError {
+                            message: "Internal error".to_string(),
+                            line_number: line!(),
+                            file_name: file!().to_string(),
+                        },
+                    ));
                 }
             };
             Ok(DataType::Array {
@@ -180,7 +187,15 @@ fn parse_field_descriptor(descriptor: Vec<u8>) -> Result<DataType, Throwable> {
                 depth: array_depth,
             })
         }
-        _=> return Err(Throwable::Error(JvmError::InternalError("internal error".to_string())))
+        _ => {
+            return Err(Throwable::Error(
+                crate::common::error::JvmError::InternalError {
+                    message: "Internal error".to_string(),
+                    line_number: line!(),
+                    file_name: file!().to_string(),
+                },
+            ));
+        }
     }
 }
 
@@ -191,7 +206,7 @@ thread_local! {
 fn read_class_from_jar(jar_path: &str, class_name: &str) -> Option<Vec<u8>> {
     ARCHIVE_CACHE.with(|cache| {
         let mut cache_lock = cache.lock().unwrap();
-        
+
         // 获取或创建 ZipArchive
         let archive = match cache_lock.entry(jar_path.to_string()) {
             std::collections::hash_map::Entry::Occupied(entry) => entry.into_mut(),
@@ -202,7 +217,7 @@ fn read_class_from_jar(jar_path: &str, class_name: &str) -> Option<Vec<u8>> {
                 entry.insert(zip_archive)
             }
         };
-        
+
         // 读取类文件
         let mut entry = archive.by_name(class_name).ok()?;
         let mut buffer = Vec::new();
@@ -211,35 +226,36 @@ fn read_class_from_jar(jar_path: &str, class_name: &str) -> Option<Vec<u8>> {
     })
 }
 
-
 fn get_class_from_disk(name: &String) -> Result<Vec<u8>, Throwable> {
     let mut name_with_ext = name.to_string();
     name_with_ext.push_str(".class");
-    
+
     match env::current_dir() {
         Ok(path) => {
             // 构建路径（默认）
             let mut mod_jre_jar_path = path.join("rt-mod.jar");
             let mut rt_jar_path = path.join("rt.jar");
-            
+
             //为了兼容在vscode中运行
             if !mod_jre_jar_path.exists() {
                 mod_jre_jar_path = path.join("bin/rt-mod.jar");
             }
-            
+
             if !rt_jar_path.exists() {
                 rt_jar_path = path.join("bin/rt.jar");
             }
-            
+
             // 先从rt-mod.jar中查找
             if mod_jre_jar_path.exists() {
-                let result = read_class_from_jar(&mod_jre_jar_path.to_string_lossy(), &name_with_ext);
+                let result =
+                    read_class_from_jar(&mod_jre_jar_path.to_string_lossy(), &name_with_ext);
                 match result {
                     Some(code) => return Ok(code),
                     None => {
                         // 从rt.jar中查找
                         if rt_jar_path.exists() {
-                            let result = read_class_from_jar(&rt_jar_path.to_string_lossy(), &name_with_ext);
+                            let result =
+                                read_class_from_jar(&rt_jar_path.to_string_lossy(), &name_with_ext);
                             match result {
                                 Some(code) => return Ok(code),
                                 None => {
@@ -294,7 +310,7 @@ pub fn load_class(
     class.minor_version = get_minor_version(&mut cursor);
     class.major_version = get_major_version(&mut cursor);
     class.constant_pool_count = get_constant_pool_count(&mut cursor);
-    class.constant_pool = read_constant_pool_info(class.constant_pool_count, &mut cursor,name)?;
+    class.constant_pool = read_constant_pool_info(class.constant_pool_count, &mut cursor, name)?;
     class.access_flags = get_access_flag(&mut cursor);
     class.this_class = get_this_class(&mut cursor);
     class.super_class = get_super_class(&mut cursor);
@@ -305,7 +321,8 @@ pub fn load_class(
     class.methods_count = get_method_count(&mut cursor);
     class.method_info = get_method(&class.constant_pool, class.methods_count, &mut cursor)?;
     class.attributes_count = get_attribute_count(&mut cursor);
-    class.attribute_info = get_attribute(&class.constant_pool, class.attributes_count, &mut cursor)?;
+    class.attribute_info =
+        get_attribute(&class.constant_pool, class.attributes_count, &mut cursor)?;
     class.class_name = name.clone();
     if class.super_class != 0x00 {
         let class_constant = &class.constant_pool[class.super_class as usize];
@@ -337,10 +354,24 @@ pub fn load_class(
                             class.super_class_name = super_class.class_name.clone();
                         }
                     }
-                    _ => return Err(Throwable::Exception(crate::common::error::Exception::ClassFormat { class_name: (name.clone()), message: ("class format error".to_string()) })),
+                    _ => {
+                        return Err(Throwable::Exception(
+                            crate::common::error::Exception::ClassFormat {
+                                class_name: (name.clone()),
+                                message: ("class format error".to_string()),
+                            },
+                        ))
+                    }
                 }
             }
-            _ => return Err(Throwable::Exception(crate::common::error::Exception::ClassFormat { class_name: (name.clone()), message: ("class format error".to_string()) })),
+            _ => {
+                return Err(Throwable::Exception(
+                    crate::common::error::Exception::ClassFormat {
+                        class_name: (name.clone()),
+                        message: ("class format error".to_string()),
+                    },
+                ))
+            }
         }
         // load_class(name)
     }
@@ -350,38 +381,11 @@ pub fn load_class(
     Ok(class)
 }
 
-/**
- * 类加载完成之后执行初始化静态方法
- */
-pub fn init(class_name: &String, method_name: String, heap: &mut Heap, metaspace: &mut Metaspace) ->Result<(),Throwable> {
-    let class_id = *metaspace.class_map.get(class_name).unwrap();
-    let class = &metaspace.classes[class_id];
-    //创建VM
-    //找到main方法
-    for i in 0..*&class.method_info.len() {
-        let method_info = &class.method_info[i];
-        //let methond_index = (method_info.name_index as usize) - 1;
-        let u8_vec = &class.constant_pool[method_info.name_index as usize];
-        match u8_vec {
-            ConstantPoolInfo::Utf8(name) => {
-                if name == &method_name {
-                    let mut stack_frame = create_stack_frame(method_info).unwrap();
-                    let mut vm_stack = Vec::new();
-                    stack_frame.vm_stack_id = 0;
-                    vm_stack.push(stack_frame);
-                    // 转换为可变引用（需要 unsafe）
-                    let _ = do_opcode(&mut vm_stack, heap, metaspace);
-                    //execute(vm_stack_id,&mut vm);
-                    break;
-                }
-            }
-            _ => return Err(Throwable::Exception(crate::common::error::Exception::ClassFormat { class_name: (class.class_name.clone()), message: ("class format error".to_string()) })),
-        }
-    }
-    return Ok(());
-}
 
-pub fn parse_method_field(class: &mut Class, method_info_map: &mut HashMap<String, MethodInfo>) -> Result<(), Throwable> {
+pub fn parse_method_field(
+    class: &mut Class,
+    method_info_map: &mut HashMap<String, MethodInfo>,
+) -> Result<(), Throwable> {
     //补充方法方法参数解析后信息
     for i in 0..class.methods_count {
         let method_info = &mut class.method_info[i as usize];
@@ -394,7 +398,14 @@ pub fn parse_method_field(class: &mut Class, method_info_map: &mut HashMap<Strin
                     ConstantPoolInfo::Utf8(name) => {
                         method_info.method_name = name.clone();
                     }
-                    _ => return Err(Throwable::Exception(crate::common::error::Exception::ClassFormat { class_name: (class.class_name.clone()), message: ("class format error".to_string()) })),
+                    _ => {
+                        return Err(Throwable::Exception(
+                            crate::common::error::Exception::ClassFormat {
+                                class_name: (class.class_name.clone()),
+                                message: ("class format error".to_string()),
+                            },
+                        ))
+                    }
                 }
                 method_info.descriptor = str.clone();
                 //info!("method_info.descripto:{:?}", &method_info.descriptor);
@@ -424,7 +435,14 @@ pub fn parse_method_field(class: &mut Class, method_info_map: &mut HashMap<Strin
                 method_info.class_id = class.id as u32;
                 method_info_map.insert(key, method_info.clone());
             }
-            _ => return Err(Throwable::Exception(crate::common::error::Exception::ClassFormat { class_name: (class.class_name.clone()), message: ("class format error".to_string()) })),
+            _ => {
+                return Err(Throwable::Exception(
+                    crate::common::error::Exception::ClassFormat {
+                        class_name: (class.class_name.clone()),
+                        message: ("class format error".to_string()),
+                    },
+                ))
+            }
         }
     }
 
@@ -480,7 +498,14 @@ pub fn parse_method_field(class: &mut Class, method_info_map: &mut HashMap<Strin
                 field_info.value = StackFrameValue::Boolean(false);
                 field_offset += 1;
             }
-            DataType::Unknown =>  return Err(Throwable::Exception(crate::common::error::Exception::ClassFormat { class_name: (class.class_name.clone()), message: ("class format error".to_string()) })),
+            DataType::Unknown => {
+                return Err(Throwable::Exception(
+                    crate::common::error::Exception::ClassFormat {
+                        class_name: (class.class_name.clone()),
+                        message: ("class format error".to_string()),
+                    },
+                ))
+            }
         }
     }
     Ok(())
@@ -703,7 +728,7 @@ pub fn get_field(
     cnt: u16,
     cursor: &mut Cursor<Vec<u8>>,
     class_name: &String,
-) -> Result<LinkedHashMap<String, FieldInfo>,Throwable> {
+) -> Result<LinkedHashMap<String, FieldInfo>, Throwable> {
     let mut v: LinkedHashMap<String, FieldInfo> = LinkedHashMap::new();
     for _j in 0..cnt {
         let mut f: FieldInfo = FieldInfo {
@@ -723,8 +748,14 @@ pub fn get_field(
         let name_utf8 = &constant_pool[f.name_index as usize];
         let field_name = match name_utf8 {
             ConstantPoolInfo::Utf8(name) => name.clone(),
-            _ => return Err(Throwable::Exception(crate::common::error::Exception::ClassFormat { class_name: (class_name.clone()), message: ("class format error".to_string()) })),
-
+            _ => {
+                return Err(Throwable::Exception(
+                    crate::common::error::Exception::ClassFormat {
+                        class_name: (class_name.clone()),
+                        message: ("class format error".to_string()),
+                    },
+                ))
+            }
         };
         f.field_name = field_name;
 
@@ -735,7 +766,14 @@ pub fn get_field(
                 f.descriptor = str.clone();
                 f.data_type = parse_field_descriptor(f.descriptor.clone().into_bytes())?;
             }
-            _ => return Err(Throwable::Exception(crate::common::error::Exception::ClassFormat { class_name: (class_name.clone()), message: ("class format error".to_string()) })),
+            _ => {
+                return Err(Throwable::Exception(
+                    crate::common::error::Exception::ClassFormat {
+                        class_name: (class_name.clone()),
+                        message: ("class format error".to_string()),
+                    },
+                ))
+            }
         }
 
         f.atrributes = get_attribute(constant_pool, f.attribute_count, cursor)?;
@@ -752,7 +790,7 @@ pub fn get_method(
     constant_pool: &Vec<ConstantPoolInfo>,
     cnt: u16,
     cursor: &mut Cursor<Vec<u8>>,
-) -> Result<Vec<MethodInfo>,Throwable> {
+) -> Result<Vec<MethodInfo>, Throwable> {
     let mut v: Vec<MethodInfo> = Vec::new();
     for _j in 0..cnt {
         let mut m: MethodInfo = MethodInfo {
@@ -781,7 +819,7 @@ pub fn get_attribute(
     constant_pool: &Vec<ConstantPoolInfo>,
     cnt: u16,
     cursor: &mut Cursor<Vec<u8>>,
-) -> Result<Vec<AttributeInfo>,Throwable> {
+) -> Result<Vec<AttributeInfo>, Throwable> {
     let mut ans: Vec<AttributeInfo> = Vec::new();
     for _i in 0..cnt {
         let attribute_name_index = cursor.read_u16::<BigEndian>().unwrap();
@@ -829,7 +867,14 @@ pub fn get_attribute(
                     )));
                 }
             }
-            _ => return Err(Throwable::Exception(crate::common::error::Exception::ClassFormat { class_name: ("class".to_string()), message: ("class format error".to_string()) })),
+            _ => {
+                return Err(Throwable::Exception(
+                    crate::common::error::Exception::ClassFormat {
+                        class_name: ("class".to_string()),
+                        message: ("class format error".to_string()),
+                    },
+                ))
+            }
         }
     }
     Ok(ans)
@@ -838,8 +883,8 @@ pub fn get_attribute(
 fn read_constant_pool_info<R: Read>(
     constant_pool_count: u16,
     reader: &mut R,
-    class_name: &String
-) -> Result<Vec<ConstantPoolInfo>,Throwable> {
+    class_name: &String,
+) -> Result<Vec<ConstantPoolInfo>, Throwable> {
     let mut constant_pool = Vec::new();
     constant_pool.push(ConstantPoolInfo::Utf8(String::from("")));
     let mut index = 1;
@@ -1060,8 +1105,14 @@ fn read_constant_pool_info<R: Read>(
                 index += 1;
             }
             // 添加更多常量类型的处理
-            _ => return Err(Throwable::Exception(crate::common::error::Exception::ClassFormat { class_name: (class_name.clone()), message: ("class format error".to_string()) })),
-
+            _ => {
+                return Err(Throwable::Exception(
+                    crate::common::error::Exception::ClassFormat {
+                        class_name: (class_name.clone()),
+                        message: ("class format error".to_string()),
+                    },
+                ))
+            }
         }
         //index += 1;
         // constant_pool_count -= 1;
@@ -1084,9 +1135,9 @@ pub fn find_class<'a, 'b>(
             class.id = id;
             //class.class_name = class_name.clone();
             metaspace.classes.push(class);
-            parse_method_field(&mut metaspace.classes[id], &mut metaspace.method_area);
+            let _ = parse_method_field(&mut metaspace.classes[id], &mut metaspace.method_area);
             metaspace.class_map.insert(class_name.clone(), id);
-            init(class_name, "<clinit>".to_string(), heap, metaspace);
+            let _ = invoke::invoke(class_name, "<clinit>".to_string(), heap, metaspace);
             (&mut metaspace.classes[id], true)
         } else {
             (&mut metaspace.classes[class_op.unwrap().clone()], false)

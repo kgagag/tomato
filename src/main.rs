@@ -8,6 +8,7 @@ use tomato::{
 };
 fn main() {
     unsafe { env::set_var("RUST_LOG", "DEBUG") };
+    unsafe { std::env::set_var("RUST_BACKTRACE", "1") }
     env_logger::Builder::from_default_env()
         .format_timestamp(Some(env_logger::TimestampPrecision::Millis))
         .format_module_path(true)
@@ -15,9 +16,9 @@ fn main() {
     let cmd = JavaCommand::parse();
     if cmd.main_class.is_none() && cmd.jar_path.is_none() {
        // panic!("请指定要执行的类名或jar包路径");ca
-       let _ = run(String::from("tomato/test/Test"));
+       let _ = run(String::from("tomato/test/TryCatchTest01"));
     }else if  cmd.main_class.is_some(){
-        let _ = run(cmd.main_class.unwrap());
+       let _ = run(cmd.main_class.unwrap());
     }
 }
 
@@ -40,11 +41,11 @@ pub fn run(main_class_path: String) -> Result<(), Throwable> {
             let heap = &mut vm.heap;
             let metaspace: &mut metaspace::Metaspace = &mut vm.metaspace;
             let start = Instant::now();
-            do_opcode(vm_stack, heap, metaspace)?;
+            do_opcode(vm_stack, heap, metaspace);
             let duration = start.elapsed();
             info!("执行时间: {:?}", duration.as_nanos());
             break;
         }
     }
-    Ok(())
+    return Ok(());
 }

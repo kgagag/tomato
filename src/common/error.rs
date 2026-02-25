@@ -199,7 +199,11 @@ pub enum JvmError {
     
     /// 内部错误
     /// 发生 JVM 内部错误或资源限制时抛出
-    InternalError(String),
+    InternalError{
+        message: String,
+        line_number: u32,
+        file_name: String
+    },
     
     /// 未知错误
     /// 发生未知但严重的异常时抛出
@@ -388,10 +392,12 @@ impl JvmError {
                 format!("{} (thread={}, depth={})", message, thread_name, stack_depth)
             }
             
-            JvmError::InternalError(msg)
-            | JvmError::UnknownError(msg)
-            | JvmError::AbstractMethod(msg)
-            | JvmError::ThreadDeath(msg) => msg.clone(),
+            JvmError::InternalError { message, line_number, file_name } => {
+                format!("{} (file={}, line={})", message, file_name, line_number)
+            }
+            | JvmError::UnknownError(message)
+            | JvmError::AbstractMethod(message)
+            | JvmError::ThreadDeath(message) => message.clone(),
             
             JvmError::NoClassDefFound { class_name, cause, message } => {
                 if let Some(c) = cause {
@@ -447,7 +453,7 @@ impl JvmError {
             self,
             JvmError::OutOfMemory { .. }
                 | JvmError::StackOverflow { .. }
-                | JvmError::InternalError(_)
+                | JvmError::InternalError{ .. }
                 | JvmError::UnknownError(_)
         )
     }

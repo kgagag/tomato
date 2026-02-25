@@ -202,4 +202,22 @@ impl Metaspace {
             },
         ));
     }
+
+
+    /**
+     * 判断一个类是否是另一个类的子类，需要考虑多级集成的问题
+     */
+    pub fn is_subclass(&self,class_name:&str,sub_class_name:&str) ->bool{
+        let class_id = self.class_map.get(class_name);
+        if class_id.is_some(){
+            let class_id = class_id.unwrap();
+            while self.classes[*class_id].super_class_name != "" {
+                if self.classes[*class_id].super_class_name == sub_class_name{
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    
 }

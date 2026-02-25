@@ -105,7 +105,13 @@ fn get_basic_array_class_name(string:Option<String>, atype: u8, dimension: u8) -
         class_name.push(';');
     }
     else {
-        return Err(Throwable::Error(JvmError::InternalError("Internal error".to_string())));
+         return Err(Throwable::Error(
+            crate::common::error::JvmError::InternalError {
+                message: "Internal error".to_string(),
+                line_number: line!(),
+                file_name: file!().to_string(),
+            },
+        ));
     }
     Ok(class_name)
 }

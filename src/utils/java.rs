@@ -39,7 +39,15 @@ pub fn convert_to_rust_string(msg: StackFrameValue,vm_stack:&mut Vec<StackFrame>
             }
         }
        // _=> panic!("create_string_object error")
-       _=> return Err(Throwable::Error(JvmError::InternalError("Internal error".to_string()))),
+       _=> {
+          return Err(Throwable::Error(
+            crate::common::error::JvmError::InternalError {
+                message: "Internal error".to_string(),
+                line_number: line!(),
+                file_name: file!().to_string(),
+            },
+        ));
+       }
     }
      Ok(string)
 }

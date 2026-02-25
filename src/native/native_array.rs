@@ -8,10 +8,9 @@ use crate::{classfile::class::MethodInfo, common::{param::DataType, stack_frame:
 /*
  * 创建一个一维数组
  */
-pub fn new_array(method: &MethodInfo, vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Metaspace) {
+pub fn new_array(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &mut Metaspace) {
     let frame_index = vm_stack.len() - 1;
     let frame = &mut vm_stack[frame_index];
-    let _ = method;
     let len = frame.popi64();
     let _component_sfv_type_: StackFrameValue = frame.op_stack.pop().unwrap();
     //let array = create_array(len as u32, DataType::Array { element_type: (Box::new(DataType::Int)), depth: (1) });

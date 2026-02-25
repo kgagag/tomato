@@ -126,12 +126,10 @@ pub fn idiv(frame: &mut StackFrame) ->Result<(),Throwable>{
     let i2 = frame.popi64() as i32;
     let i1 = frame.popi64() as i32;
     if i2 == 0 {
-        panic!()
-    }
-    let result = i1 / i2;
-    if i2 == 0 {
         return Err(Throwable::Exception(Exception::Arithmetic("div by zero".to_string())));
     }
+    let result = i1 / i2;
+    
     frame.op_stack.push(StackFrameValue::Int(result));
     frame.pc += 1;
     Ok(())

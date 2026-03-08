@@ -37,7 +37,7 @@ pub fn newarray(
             _ => panic!(),
         }
     };
-    let reference = heap.create_basic_array(*atype, len,  1);
+    let reference = heap.create_basic_array(*atype, len,  1)?;
     frame
         .op_stack
         .push(StackFrameValue::Reference(reference as u32));
@@ -120,7 +120,7 @@ pub fn anewarray(
     };
     //let class_id = class_loader::find_class(&class_name, vm_stack, heap, metaspace).id;
     //12 = 引用类型数组
-    let reference = heap.create_reference_array(class_id as u32, len, 0, 12);
+    let reference = heap.create_reference_array(class_id as u32, len, 0, 12)?;
     vm_stack[frame_index]
         .op_stack
         .push(StackFrameValue::Reference(reference as u32));
@@ -187,9 +187,9 @@ pub fn multianewarray(
         if queue.len() == 0 {
             let reference_id: usize =
              if class_id.is_none() {
-                heap.create_reference_array(0, len, dimenssion - i, atype)
+                heap.create_reference_array(0, len, dimenssion - i, atype)?
             } else {
-                heap.create_reference_array(class_id.unwrap() as u32, len, dimenssion - i, atype)
+                heap.create_reference_array(class_id.unwrap() as u32, len, dimenssion - i, atype)?
             };
             // heap.create_reference_array(0, len, dimenssion - i, atype);
             //info!("create array reference:{}", reference_id);
@@ -206,12 +206,12 @@ pub fn multianewarray(
                     //不是引用类型
                     if atype != 12 {
                         if i == dimenssion - 1 {
-                            let id = heap.create_basic_array(atype, len, dimenssion - i);
+                            let id = heap.create_basic_array(atype, len, dimenssion - i)?;
                             heap.put_array_element(reference as u32, index as usize, id as u64);
                             queue.push_back((len, id));
                         } else {
                             let id: usize =
-                                heap.create_reference_array(0, len, dimenssion - i, atype);
+                                heap.create_reference_array(0, len, dimenssion - i, atype)?;
                             heap.put_array_element(reference as u32, index as usize, id as u64);
                             queue.push_back((len, id));
                         }
@@ -221,7 +221,7 @@ pub fn multianewarray(
                             len,
                             dimenssion - i,
                             atype,
-                        );
+                        )?;
                         heap.put_array_element(reference as u32, index as usize, id as u64);
                         queue.push_back((len, id));
                     }
@@ -448,8 +448,8 @@ pub fn saload(
 }
 
 pub fn arraylength(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap) -> Result<(), Throwable> {
-    let frame_index = vm_stack.len() - 1;
-    let frame = &mut vm_stack[frame_index];
+    let frame_index: usize = vm_stack.len() - 1;
+    let frame: &mut StackFrame = &mut vm_stack[frame_index];
     let v = frame.op_stack.pop().unwrap();
     //info!("v = {:?}",v);
     match v {
@@ -458,7 +458,7 @@ pub fn arraylength(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap) -> Result<()
             .push(StackFrameValue::U32(heap.get_array_length(reference))),
         StackFrameValue::Null=>{
             return Err(Throwable::Exception(
-               crate::common::error::Exception::NullPointer("java/lang/NullPointerException".to_string())
+               crate::common::error::Exception::NullPointerException("java/lang/NullPointerException".to_string())
             ));
         }
         _ => {
@@ -494,7 +494,7 @@ fn xaload(
                 4 => {
                     if value.is_none() {
                        return  Err(Throwable::Exception(
-                            crate::common::error::Exception::NullPointer(
+                            crate::common::error::Exception::NullPointerException(
                                 "null pointer exception".to_owned(),
                             ),
                         ))
@@ -507,7 +507,7 @@ fn xaload(
                 5 => {
                     if value.is_none() {
                       return  Err(Throwable::Exception(
-                            crate::common::error::Exception::NullPointer(
+                            crate::common::error::Exception::NullPointerException(
                                 "null pointer exception".to_owned(),
                             ),
                         ))
@@ -520,7 +520,7 @@ fn xaload(
                 6 => {
                     if value.is_none() {
                     return    Err(Throwable::Exception(
-                            crate::common::error::Exception::NullPointer(
+                            crate::common::error::Exception::NullPointerException(
                                 "null pointer exception".to_owned(),
                             ),
                         ))
@@ -533,7 +533,7 @@ fn xaload(
                 7 => {
                     if value.is_none() {
                      return   Err(Throwable::Exception(
-                            crate::common::error::Exception::NullPointer(
+                            crate::common::error::Exception::NullPointerException(
                                 "null pointer exception".to_owned(),
                             ),
                         ))
@@ -546,7 +546,7 @@ fn xaload(
                 8 => {
                     if value.is_none() {
                       return  Err(Throwable::Exception(
-                            crate::common::error::Exception::NullPointer(
+                            crate::common::error::Exception::NullPointerException(
                                 "null pointer exception".to_owned(),
                             ),
                         ))
@@ -557,7 +557,7 @@ fn xaload(
                 9 => {
                     if value.is_none() {
                        return Err(Throwable::Exception(
-                            crate::common::error::Exception::NullPointer(
+                            crate::common::error::Exception::NullPointerException(
                                 "null pointer exception".to_owned(),
                             ),
                         ))
@@ -568,7 +568,7 @@ fn xaload(
                 10 => {
                     if value.is_none() {
                        return Err(Throwable::Exception(
-                            crate::common::error::Exception::NullPointer(
+                            crate::common::error::Exception::NullPointerException(
                                 "null pointer exception".to_owned(),
                             ),
                         ))
@@ -579,7 +579,7 @@ fn xaload(
                 11 => {
                     if value.is_none() {
                        return Err(Throwable::Exception(
-                            crate::common::error::Exception::NullPointer(
+                            crate::common::error::Exception::NullPointerException(
                                 "null pointer exception".to_owned(),
                             ),
                         ))

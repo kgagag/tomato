@@ -118,7 +118,7 @@ public class Throwable implements Serializable {
     /**
      * Native code saves some indication of the stack backtrace in this slot.
      */
-     // private transient Object backtrace;
+    private transient Object backtrace;
 
     /**
      * Specific details about the Throwable.  For example, for
@@ -143,14 +143,14 @@ public class Throwable implements Serializable {
          * {@code new StackTraceElement("", "", null, Integer.MIN_VALUE)}
          */
         public static final StackTraceElement STACK_TRACE_ELEMENT_SENTINEL =
-            new StackTraceElement("", "", null, Integer.MIN_VALUE);
+                new StackTraceElement("", "", null, Integer.MIN_VALUE);
 
         /**
          * Sentinel value used in the serial form to indicate an immutable
          * stack trace.
          */
         public static final StackTraceElement[] STACK_TRACE_SENTINEL =
-            new StackTraceElement[] {STACK_TRACE_ELEMENT_SENTINEL};
+                new StackTraceElement[] {STACK_TRACE_ELEMENT_SENTINEL};
     }
 
     /**
@@ -212,7 +212,7 @@ public class Throwable implements Serializable {
     // Setting this static field introduces an acceptable
     // initialization dependency on a few java.util classes.
     private static final List<Throwable> SUPPRESSED_SENTINEL =
-        Collections.unmodifiableList(new ArrayList<Throwable>(0));
+            Collections.unmodifiableList(new ArrayList<Throwable>(0));
 
     /**
      * The list of suppressed exceptions, as returned by {@link
@@ -454,7 +454,7 @@ public class Throwable implements Serializable {
     public synchronized Throwable initCause(Throwable cause) {
         if (this.cause != this)
             throw new IllegalStateException("Can't overwrite cause with " +
-                                            Objects.toString(cause, "a null"), this);
+                    Objects.toString(cause, "a null"), this);
         if (cause == this)
             throw new IllegalArgumentException("Self-causation not permitted", this);
         this.cause = cause;
@@ -647,7 +647,7 @@ public class Throwable implements Serializable {
         // Guard against malicious overrides of Throwable.equals by
         // using a Set with identity equality semantics.
         Set<Throwable> dejaVu =
-            Collections.newSetFromMap(new IdentityHashMap<Throwable, Boolean>());
+                Collections.newSetFromMap(new IdentityHashMap<Throwable, Boolean>());
         dejaVu.add(this);
 
         synchronized (s.lock()) {
@@ -701,7 +701,7 @@ public class Throwable implements Serializable {
             // Print suppressed exceptions, if any
             for (Throwable se : getSuppressed())
                 se.printEnclosedStackTrace(s, trace, SUPPRESSED_CAPTION,
-                                           prefix +"\t", dejaVu);
+                        prefix +"\t", dejaVu);
 
             // Print cause, if any
             Throwable ourCause = getCause();
@@ -777,17 +777,9 @@ public class Throwable implements Serializable {
      * @return  a reference to this {@code Throwable} instance.
      * @see     java.lang.Throwable#printStackTrace()
      */
-//    public synchronized Throwable fillInStackTrace() {
-//        if (stackTrace != null ||
-//            backtrace != null /* Out of protocol state */ ) {
-//            fillInStackTrace(0);
-//            stackTrace = UNASSIGNED_STACK;
-//        }
-//        return this;
-//    }
-
     public synchronized Throwable fillInStackTrace() {
-        if (stackTrace != null ) {
+        if (stackTrace != null ||
+                backtrace != null /* Out of protocol state */ ) {
             fillInStackTrace(0);
             stackTrace = UNASSIGNED_STACK;
         }
@@ -824,26 +816,11 @@ public class Throwable implements Serializable {
         return getOurStackTrace().clone();
     }
 
-//    private synchronized StackTraceElement[] getOurStackTrace() {
-//        // Initialize stack trace field with information from
-//        // backtrace if this is the first call to this method
-//        if (stackTrace == UNASSIGNED_STACK ||
-//            (stackTrace == null && backtrace != null) /* Out of protocol state */) {
-//            int depth = getStackTraceDepth();
-//            stackTrace = new StackTraceElement[depth];
-//            for (int i=0; i < depth; i++)
-//                stackTrace[i] = getStackTraceElement(i);
-//        } else if (stackTrace == null) {
-//            return UNASSIGNED_STACK;
-//        }
-//        return stackTrace;
-//    }
-
     private synchronized StackTraceElement[] getOurStackTrace() {
         // Initialize stack trace field with information from
         // backtrace if this is the first call to this method
         if (stackTrace == UNASSIGNED_STACK ||
-                (stackTrace == null) /* Out of protocol state */) {
+                (stackTrace == null && backtrace != null) /* Out of protocol state */) {
             int depth = getStackTraceDepth();
             stackTrace = new StackTraceElement[depth];
             for (int i=0; i < depth; i++)
@@ -882,22 +859,6 @@ public class Throwable implements Serializable {
      *
      * @since  1.4
      */
-//    public void setStackTrace(StackTraceElement[] stackTrace) {
-//        // Validate argument
-//        StackTraceElement[] defensiveCopy = stackTrace.clone();
-//        for (int i = 0; i < defensiveCopy.length; i++) {
-//            if (defensiveCopy[i] == null)
-//                throw new NullPointerException("stackTrace[" + i + "]");
-//        }
-//
-//        synchronized (this) {
-//            if (this.stackTrace == null && // Immutable stack
-//                backtrace == null) // Test for out of protocol state
-//                return;
-//            this.stackTrace = defensiveCopy;
-//        }
-//    }
-
     public void setStackTrace(StackTraceElement[] stackTrace) {
         // Validate argument
         StackTraceElement[] defensiveCopy = stackTrace.clone();
@@ -907,7 +868,8 @@ public class Throwable implements Serializable {
         }
 
         synchronized (this) {
-            if (this.stackTrace == null) // Test for out of protocol state
+            if (this.stackTrace == null && // Immutable stack
+                    backtrace == null) // Test for out of protocol state
                 return;
             this.stackTrace = defensiveCopy;
         }
@@ -919,10 +881,7 @@ public class Throwable implements Serializable {
      *
      * package-protection for use by SharedSecrets.
      */
-    //native int getStackTraceDepth();
-    int getStackTraceDepth(){
-        return stackTrace.length;
-    }
+    native int getStackTraceDepth();
 
     /**
      * Returns the specified element of the stack trace.
@@ -933,10 +892,7 @@ public class Throwable implements Serializable {
      * @throws IndexOutOfBoundsException if {@code index < 0 ||
      *         index >= getStackTraceDepth() }
      */
-    //native StackTraceElement getStackTraceElement(int index);
-    StackTraceElement getStackTraceElement(int index){
-        return stackTrace[index];
-    }
+    native StackTraceElement getStackTraceElement(int index);
 
     /**
      * Reads a {@code Throwable} from a stream, enforcing
@@ -954,7 +910,7 @@ public class Throwable implements Serializable {
      * valid values for the field.
      */
     private void readObject(ObjectInputStream s)
-        throws IOException, ClassNotFoundException {
+            throws IOException, ClassNotFoundException {
         s.defaultReadObject();     // read in all fields
         if (suppressedExceptions != null) {
             List<Throwable> suppressed = null;
@@ -989,8 +945,8 @@ public class Throwable implements Serializable {
             if (stackTrace.length == 0) {
                 stackTrace = UNASSIGNED_STACK.clone();
             }  else if (stackTrace.length == 1 &&
-                        // Check for the marker of an immutable stack trace
-                        SentinelHolder.STACK_TRACE_ELEMENT_SENTINEL.equals(stackTrace[0])) {
+                    // Check for the marker of an immutable stack trace
+                    SentinelHolder.STACK_TRACE_ELEMENT_SENTINEL.equals(stackTrace[0])) {
                 stackTrace = null;
             } else { // Verify stack trace elements are non-null.
                 for(StackTraceElement ste : stackTrace) {
@@ -1015,7 +971,7 @@ public class Throwable implements Serializable {
      * new StackTraceElement("", "", null, Integer.MIN_VALUE)}.
      */
     private synchronized void writeObject(ObjectOutputStream s)
-        throws IOException {
+            throws IOException {
         // Ensure that the stackTrace field is initialized to a
         // non-null value, if appropriate.  As of JDK 7, a null stack
         // trace field is a valid value indicating the stack trace
@@ -1117,7 +1073,7 @@ public class Throwable implements Serializable {
      */
     public final synchronized Throwable[] getSuppressed() {
         if (suppressedExceptions == SUPPRESSED_SENTINEL ||
-            suppressedExceptions == null)
+                suppressedExceptions == null)
             return EMPTY_THROWABLE_ARRAY;
         else
             return suppressedExceptions.toArray(EMPTY_THROWABLE_ARRAY);

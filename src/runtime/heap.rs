@@ -2,7 +2,11 @@ use std::{collections::HashMap, f32::consts::E};
 
 use dashmap::DashMap;
 use log::info;
-
+use crate::{
+    classfile::class::Class,
+    common::{error::Throwable, param::DataType, value},
+    utils::u8c,
+};
 // 常量定义
 const DEFAULT_HEAP_SIZE: usize = 1024 * 1024;
 //对象头（2个字节，第1位 1）+ class_id（4个字节） = 6字节
@@ -19,12 +23,7 @@ const REFERENCE_ARRAY_FLAG: u8 = 0b01100000;
 //基本类型多维数组
 const REFERENCE_ARRAY_MULTI_FLAG: u8 = 0b01000000;
 
-use crate::{
-    classfile::class::Class,
-    common::{error::Throwable, param::DataType, value},
-    memory,
-    utils::u8c,
-};
+
 
 pub struct Heap {
     memory: Vec<u8>,
@@ -58,7 +57,7 @@ impl Heap {
      * 分配内存,如果内存块足够，则分配成功,更新内存块信息
      * 返回对象id
      */
-    fn malloc(&mut self, size: u32) -> usize {
+    fn malloc(&mut self, size: u32) -> Result<usize,Throwable> {
         // 查找合适的内存块
         let mut delete_index = None;
         for (i, (address, block_size)) in self.memory_block.iter().enumerate() {
@@ -85,7 +84,7 @@ impl Heap {
         self.address_map[index] = address;
         // 更新address_map_index
         self.update_address_map_index();
-        index
+        Ok(index)
     }
 
     // 更新address_map_index
@@ -121,7 +120,7 @@ impl Heap {
 
     //非数组
     // 对象头（2个字节，第1位 1） class_id（4个字节）+ 对象数据 + 对齐
-    pub fn create_object(&mut self, class: &mut Class) -> usize {
+    pub fn create_object(&mut self, class: & Class) -> Result<usize,Throwable> {
         let mut size: u32 = OBJECT_HEADER_SIZE;
         for (_key, value) in &class.field_info {
             match &value.data_type {
@@ -167,7 +166,7 @@ impl Heap {
         } else {
             size = ((size + 7) / 8) * 8;
         }
-        let object_id = self.malloc(size);
+        let object_id = self.malloc(size)?;
         let start = self.address_map[object_id] as usize;
 
         self.memory[start] = OBJECT_FLAG;
@@ -178,7 +177,7 @@ impl Heap {
         self.memory[start + 4] = cid[2];
         self.memory[start + 5] = cid[3];
 
-        object_id
+        Ok(object_id)
     }
 
 
@@ -208,7 +207,7 @@ impl Heap {
      * 创建基本类型数组对象
      * 对象头（2个字节，第1位 0,第 2 位 0）+ 数组长度 4 +维度 1个字 + data_type 1个字节 + 数组数据 + 对齐
      */
-    pub fn create_basic_array(&mut self, atype: u8, len: u32, dimension: u8) -> usize {
+    pub fn create_basic_array(&mut self, atype: u8, len: u32, dimension: u8) -> Result<usize,Throwable> {
         //let start_size = ARRAY_HEADER_SIZE_BASIC;
         let size = {
             if atype == 4 {
@@ -245,7 +244,7 @@ impl Heap {
         } else {
             size = ((size + 7) / 8) * 8;
         }
-        let object_id = self.malloc(size);
+        let object_id = self.malloc(size)?;
         let start = self.address_map[object_id] as usize;
 
         //设置数组长度
@@ -262,7 +261,7 @@ impl Heap {
         //设置数组类型
         self.memory[start + 7] = atype;
 
-        object_id
+        Ok(object_id)
     }
 
     /**
@@ -275,7 +274,7 @@ impl Heap {
         len: u32,
         dimension: u8,
         atype: u8,
-    ) -> usize {
+    ) -> Result<usize, Throwable> {
         let start_size = ARRAY_HEADER_SIZE_REFERENCE;
         let mut size = start_size + 4 * len;
 
@@ -286,7 +285,7 @@ impl Heap {
             size = ((size + 7) / 8) * 8;
         }
 
-        let object_id = self.malloc(size);
+        let object_id = self.malloc(size)?;
         let start = self.address_map[object_id] as usize;
 
         //第二位必须是1 ，用于区分基本类型数组和引用类型数组
@@ -317,7 +316,7 @@ impl Heap {
             self.memory[start + 7] = atype;
         }
 
-        object_id
+        Ok(object_id)
     }
 
     /**

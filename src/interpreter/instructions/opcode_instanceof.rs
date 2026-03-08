@@ -20,7 +20,7 @@ pub fn instanceof(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap, metaspace: &m
          let id =   heap.get_object_class_id(id as usize)?;
          Ok(metaspace.classes[id as usize].class_name.clone())
         }
-        _ =>Err(Throwable::Exception(crate::common::error::Exception::NullPointer("Attempt to invoke method on null object".to_string()))),
+        _ =>Err(Throwable::Exception(crate::common::error::Exception::NullPointerException("Attempt to invoke method on null object".to_string()))),
     }?;
     let oprand = u8s_to_u16(&frame.code[(frame.pc + 1)..(frame.pc + 3)]);
     let this_class = &metaspace.classes[frame.class].clone();

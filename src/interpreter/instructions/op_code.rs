@@ -1,8 +1,8 @@
 pub mod op_code {
     use std::cell::UnsafeCell;
     use std::collections::HashMap;
-    use std::result;
     use std::time::Instant;
+    use std::{mem, result};
 
     use log::{error, info, warn};
     use opcode_array::*;
@@ -29,10 +29,11 @@ pub mod op_code {
     use opcode_swap::*;
     use opcode_thread::*;
 
-    use crate::classfile::class::{AttributeInfo, ConstantPoolInfo, Exception, MethodInfo};
+    use crate::classfile::class::{AttributeInfo, Class, ConstantPoolInfo, Exception, MethodInfo};
     use crate::classloader;
     use crate::common::error::Throwable;
-    use crate::common::stack_frame::StackFrame;
+    use crate::common::stack_frame::{self, StackFrame};
+    use crate::common::value::StackFrameValue;
     use crate::interpreter::instructions::*;
     use crate::runtime::heap::Heap;
     use crate::runtime::metaspace::Metaspace;
@@ -284,181 +285,410 @@ pub mod op_code {
                 }
             };
             if vm_stack.len() > frame_index {
-                handle_result(&mut vm_stack[frame_index], heap, metaspace, result);
+                let _ = handle_result(vm_stack, heap, metaspace, code == 0xbf, result);
             }
         }
     }
 
     pub fn handle_result(
-    stack_frame: &mut StackFrame,
-    heap: &mut Heap,
-    metaspace: &mut Metaspace,
-    result: Result<(), Throwable>,
-) {
-    match result {
-        Ok(()) => return,
-        Err(error) => {
-           let (method, class) = { let (method, class) = metaspace.get_method_from_root(
-                &stack_frame.class_name,
-                &stack_frame.method_name,
-                &stack_frame.descriptor,
-            );
-            (method.cloned(),class.clone())
-        };
-            if let Some(method) = method {
-                for i in 0..method.attributes.len() {
-                    let attribute: &AttributeInfo = &method.attributes[i];
-                    // 判断是否为Code
-                    if let AttributeInfo::Code(code_attr) = attribute {
-                        for entry in &code_attr.exception_table {
-                            let start_pc = entry.start_pc;
-                            let end_pc = entry.end_pc;
-                            let handler_pc = entry.handler_pc;
-                            let catch_type = entry.catch_type;
-                            // 如果当前PC在异常处理范围内
-                            if stack_frame.pc >= start_pc as usize
-                                && stack_frame.pc <= end_pc as usize
-                            {
-                                let constant_class =
-                                    &class.constant_pool[catch_type as usize];
-                                let class_name = match constant_class {
-                                    ConstantPoolInfo::Class(name_index) => {
-                                        let class_name_utf8 =
-                                            &class.constant_pool[*name_index as usize];
-                                        match class_name_utf8 {
-                                            ConstantPoolInfo::Utf8(name_string) => {
-                                                name_string
-                                            }
-                                            _ => panic!("error"),
+        vm_stack: &mut Vec<StackFrame>,
+        heap: &mut Heap,
+        metaspace: &mut Metaspace,
+        athrow_flag: bool,
+        result: Result<(), Throwable>,
+    ) -> Result<(), Throwable> {
+        match result {
+            Ok(()) => {
+                return Ok(());
+            }
+            Err(error) => {
+                while !vm_stack.is_empty() {
+                    let mut stack_frame = vm_stack.pop().unwrap();
+                    let mut exception_object_id: Option<u32> = None;
+                    let mut exception_class_name: Option<String> = None;
+                    let mut solved_flag = false;
+                    if athrow_flag {
+                        let e: Option<&StackFrameValue> = stack_frame.op_stack.last();
+                        match e {
+                            Some(e) => {
+                                match e {
+                                    StackFrameValue::Reference(id) => {
+                                        let class_id = heap.get_class(*id);
+                                        let class = &metaspace.classes[class_id as usize];
+                                        exception_object_id = Some(*id);
+                                        exception_class_name = Some(class.class_name.clone());
+                                    }
+                                    StackFrameValue::Null => {
+                                        if e == &StackFrameValue::Null {
+                                            return Err(Throwable::Exception(crate::common::error::Exception::NullPointerException("Null Pointer Exception".to_string())));
                                         }
                                     }
-                                    _ => panic!("error"),
-                                };
-                                match &error {
-                                    Throwable::Exception(exception) => match exception {
-                                        crate::common::error::Exception::NullPointer(msg) => {
-                                            // 创建异常对象？如何创建，new 指令，然后invoke <init> ?
-                                        }
-                                        crate::common::error::Exception::ArrayIndexOutOfBounds {
-                                            index,
-                                            length,
-                                            message,
-                                        } => todo!(),
-                                        crate::common::error::Exception::ClassCast {
-                                            from_type,
-                                            to_type,
-                                            message,
-                                        } => todo!(),
-                                        crate::common::error::Exception::Arithmetic(msg) => {
-                                            let is_subclass = metaspace.is_subclass(&"java/lang/ArithmeticException".to_string(), &class_name);
-                                            if is_subclass {
-                                                
-                                            }
-                                            // let a = classloader::class_loader::find_class(
-                                            //     &"java/lang/ArithmeticException".to_string(),
-                                            //     &mut Vec::new(),
-                                            //     heap,
-                                            //     metaspace,
-                                            // );
-                                            //heap.create_object()
-                                        }
-                                        crate::common::error::Exception::IllegalArgument(_) => todo!(),
-                                        crate::common::error::Exception::IllegalState(_) => todo!(),
-                                        crate::common::error::Exception::ClassFormat {
-                                            class_name,
-                                            message,
-                                        } => todo!(),
-                                        crate::common::error::Exception::UnsupportedClassVersion {
-                                            class_name,
-                                            version,
-                                            message,
-                                        } => todo!(),
-                                        crate::common::error::Exception::IOException {
-                                            kind,
-                                            message,
-                                            path,
-                                        } => todo!(),
-                                        crate::common::error::Exception::ClassNotFound {
-                                            class_name,
-                                            message,
-                                        } => todo!(),
-                                        crate::common::error::Exception::FieldNotFound {
-                                            class_name,
-                                            field_name,
-                                        } => todo!(),
-                                        crate::common::error::Exception::MethodNotFound {
-                                            class_name,
-                                            method_name,
-                                        } => todo!(),
-                                        crate::common::error::Exception::NoSuchMethod(_) => todo!(),
-                                        crate::common::error::Exception::FileNotFound(_) => todo!(),
-                                        crate::common::error::Exception::Interrupted(_) => todo!(),
-                                        crate::common::error::Exception::Security(_) => todo!(),
-                                        crate::common::error::Exception::Timeout(_) => todo!(),
-                                        crate::common::error::Exception::Parse {
-                                            target,
-                                            position,
-                                            message,
-                                        } => todo!(),
-                                    },
-                                    Throwable::Error(jvm_error) => match jvm_error {
-                                        crate::common::error::JvmError::OutOfMemory {
-                                            heap_size,
-                                            requested,
-                                            message,
-                                        } => todo!(),
-                                        crate::common::error::JvmError::StackOverflow {
-                                            thread_name,
-                                            stack_depth,
-                                            message,
-                                        } => todo!(),
-                                        crate::common::error::JvmError::InternalError {
-                                            message,
-                                            line_number,
-                                            file_name,
-                                        } => todo!(),
-                                        crate::common::error::JvmError::UnknownError(_) => todo!(),
-                                        crate::common::error::JvmError::NoClassDefFound {
-                                            class_name,
-                                            cause,
-                                            message,
-                                        } => todo!(),
-                                        crate::common::error::JvmError::IncompatibleClassChange {
-                                            class_name,
-                                            change_type,
-                                            message,
-                                        } => todo!(),
-                                        crate::common::error::JvmError::AbstractMethod(_) => todo!(),
-                                        crate::common::error::JvmError::UnsatisfiedLink {
-                                            library_name,
-                                            os_error,
-                                            message,
-                                        } => todo!(),
-                                        crate::common::error::JvmError::Verify {
-                                            class_name,
-                                            bytecode_offset,
-                                            message,
-                                        } => todo!(),
-                                        crate::common::error::JvmError::ThreadDeath(_) => todo!(),
-                                        crate::common::error::JvmError::Assertion {
-                                            condition,
-                                            file,
-                                            line,
-                                            message,
-                                        } => todo!(),
-                                    },
+                                    _ => {
+                                        return Err(Throwable::Error(
+                                            crate::common::error::JvmError::UnknownError(
+                                                "Unknown Error".to_string(),
+                                            ),
+                                        ))
+                                    }
                                 }
-                                // 处理异常：跳转到 handler_pc，并将异常对象引用推入操作数栈（此处先用 Null 占位）
-                                stack_frame.pc = handler_pc as usize;
-                                stack_frame
-                                    .op_stack
-                                    .push(crate::common::value::StackFrameValue::Null);
+                            }
+                            None => {
+                                return Err(Throwable::Error(
+                                    crate::common::error::JvmError::UnknownError(
+                                        "Unknown Error".to_string(),
+                                    ),
+                                ))
+                            }
+                        }
+                    } else {
+                        //let mut exception_class_name :Option<&String> = None;
+                        match &error {
+                            Throwable::Exception(exception) => match exception {
+                                crate::common::error::Exception::NullPointerException(_msg) => {
+                                    exception_class_name = Some("java/lang/NullPointerException".to_string());
+                                    
+                                    // 创建异常对象的逻辑...
+                                }
+                                crate::common::error::Exception::ArrayIndexOutOfBoundsException {
+                                    index,
+                                    length,
+                                    message,
+                                } => {
+                                    exception_class_name = Some("java/lang/ArrayIndexOutOfBoundsException".to_string());
+                                    // 创建异常对象的逻辑...
+                                }
+                                crate::common::error::Exception::ClassCastException {
+                                    from_type,
+                                    to_type,
+                                    message,
+                                } => {
+                                    exception_class_name = Some("java/lang/ClassCastException".to_string());
+                                    // 创建异常对象的逻辑...
+                                }
+                                crate::common::error::Exception::ArithmeticException(msg) => {
+                                    exception_class_name = Some("java/lang/ArithmeticException".to_string());
+                                    // 创建异常对象的逻辑...
+                                }
+                                crate::common::error::Exception::IllegalArgumentException(arg) => {
+                                    exception_class_name = Some("java/lang/IllegalArgumentException".to_string());
+                                    // 创建异常对象的逻辑...
+                                }
+                                crate::common::error::Exception::IllegalStateException(arg) => {
+                                    exception_class_name = Some("java/lang/IllegalStateException".to_string());
+                                    // 创建异常对象的逻辑...
+                                }
+                                crate::common::error::Exception::IOException {
+                                    kind,
+                                    message,
+                                    path,
+                                } => {
+                                    exception_class_name = Some("java/io/IOException".to_string());
+                                    // 创建异常对象的逻辑...
+                                }
+                                crate::common::error::Exception::IndexOutOfBoundsException(arg) => {
+                                    exception_class_name = Some("java/lang/IndexOutOfBoundsException".to_string());
+                                    // 创建异常对象的逻辑...
+                                }
+                                crate::common::error::Exception::NegativeArraySizeException(arg) => {
+                                    exception_class_name = Some("java/lang/NegativeArraySizeException".to_string());
+                                    // 创建异常对象的逻辑...
+                                }
+                                crate::common::error::Exception::NumberFormatException(arg) => {
+                                    exception_class_name = Some("java/lang/NumberFormatException".to_string());
+                                    // 创建异常对象的逻辑...
+                                }
+                                crate::common::error::Exception::ConcurrentModificationException(arg) => {
+                                    exception_class_name = Some("java/util/ConcurrentModificationException".to_string());
+                                    // 创建异常对象的逻辑...
+                                }
+                                crate::common::error::Exception::UnsupportedOperationException(arg) => {
+                                    exception_class_name = Some("java/lang/UnsupportedOperationException".to_string());
+                                    // 创建异常对象的逻辑...
+                                }
+                                crate::common::error::Exception::ClassNotFoundException {
+                                    class_name,
+                                    cause,
+                                    message,
+                                } => {
+                                    exception_class_name = Some("java/lang/ClassNotFoundException".to_string());
+                                    // 创建异常对象的逻辑...
+                                }
+                                crate::common::error::Exception::FileNotFoundException {
+                                    path,
+                                    message,
+                                } => {
+                                    exception_class_name = Some("java/io/FileNotFoundException".to_string());
+                                    // 创建异常对象的逻辑...
+                                }
+                                crate::common::error::Exception::InterruptedException(arg) => {
+                                    exception_class_name = Some("java/lang/InterruptedException".to_string());
+                                    // 创建异常对象的逻辑...
+                                }
+                                crate::common::error::Exception::SecurityException(arg) => {
+                                    exception_class_name = Some("java/lang/SecurityException".to_string());
+                                    // 创建异常对象的逻辑...
+                                }
+                                crate::common::error::Exception::TimeoutException(arg) => {
+                                    exception_class_name = Some("java/util/concurrent/TimeoutException".to_string());
+                                    // 创建异常对象的逻辑...
+                                }
+                                crate::common::error::Exception::ParseException {
+                                    target,
+                                    position,
+                                    message,
+                                } => {
+                                    exception_class_name = Some("java/text/ParseException".to_string());
+                                    // 创建异常对象的逻辑...
+                                }
+                                crate::common::error::Exception::SQLException {
+                                    sql_state,
+                                    error_code,
+                                    message,
+                                } => {
+                                    exception_class_name = Some("java/sql/SQLException".to_string());
+                                    // 创建异常对象的逻辑...
+                                }
+                                crate::common::error::Exception::ReflectiveOperationException(arg) => {
+                                    exception_class_name = Some("java/lang/ReflectiveOperationException".to_string());
+                                    // 创建异常对象的逻辑...
+                                }
+                            },
+                            Throwable::Error(jvm_error) => match jvm_error {
+                                crate::common::error::JvmError::OutOfMemoryError {
+                                    heap_size,
+                                    requested,
+                                    message,
+                                } => {
+                                    exception_class_name = Some("java/lang/OutOfMemoryError".to_string());
+                                    // 创建异常对象的逻辑...
+                                }
+                                crate::common::error::JvmError::StackOverflowError {
+                                    thread_name,
+                                    stack_depth,
+                                    message,
+                                } => {
+                                    exception_class_name = Some("java/lang/StackOverflowError".to_string());
+                                    // 创建异常对象的逻辑...
+                                }
+                                crate::common::error::JvmError::InternalError {
+                                    message,
+                                    line_number,
+                                    file_name,
+                                } => {
+                                    exception_class_name = Some("java/lang/InternalError".to_string());
+                                    // 创建异常对象的逻辑...
+                                }
+                                crate::common::error::JvmError::UnknownError(arg) => {
+                                    exception_class_name = Some("java/lang/UnknownError".to_string());
+                                    // 创建异常对象的逻辑...
+                                }
+                                crate::common::error::JvmError::NoClassDefFoundError {
+                                    class_name,
+                                    cause,
+                                    message,
+                                } => {
+                                    exception_class_name = Some("java/lang/NoClassDefFoundError".to_string());
+                                    // 创建异常对象的逻辑...
+                                }
+                                crate::common::error::JvmError::ClassFormatError {
+                                    class_name,
+                                    message,
+                                } => {
+                                    exception_class_name = Some("java/lang/ClassFormatError".to_string());
+                                    // 创建异常对象的逻辑...
+                                }
+                                crate::common::error::JvmError::UnsupportedClassVersionError {
+                                    class_name,
+                                    version,
+                                    supported_versions,
+                                    message,
+                                } => {
+                                    exception_class_name = Some("java/lang/UnsupportedClassVersionError".to_string());
+                                    // 创建异常对象的逻辑...
+                                }
+                                crate::common::error::JvmError::NoSuchFieldError {
+                                    class_name,
+                                    field_name,
+                                    field_descriptor,
+                                    message,
+                                } => {
+                                    exception_class_name = Some("java/lang/NoSuchFieldError".to_string());
+                                    // 创建异常对象的逻辑...
+                                }
+                                crate::common::error::JvmError::NoSuchMethodError {
+                                    class_name,
+                                    method_name,
+                                    method_descriptor,
+                                    message,
+                                } => {
+                                    exception_class_name = Some("java/lang/NoSuchMethodError".to_string());
+                                    // 创建异常对象的逻辑...
+                                }
+                                crate::common::error::JvmError::AbstractMethodError {
+                                    class_name,
+                                    method_name,
+                                    message,
+                                } => {
+                                    exception_class_name = Some("java/lang/AbstractMethodError".to_string());
+                                    // 创建异常对象的逻辑...
+                                }
+                                crate::common::error::JvmError::IllegalAccessError {
+                                    class_name,
+                                    member_name,
+                                    member_type,
+                                    message,
+                                } => {
+                                    exception_class_name = Some("java/lang/IllegalAccessError".to_string());
+                                    // 创建异常对象的逻辑...
+                                }
+                                crate::common::error::JvmError::InstantiationError {
+                                    class_name,
+                                    reason,
+                                    message,
+                                } => {
+                                    exception_class_name = Some("java/lang/InstantiationError".to_string());
+                                    // 创建异常对象的逻辑...
+                                }
+                                crate::common::error::JvmError::IncompatibleClassChangeError {
+                                    class_name,
+                                    change_type,
+                                    message,
+                                } => {
+                                    exception_class_name = Some("java/lang/IncompatibleClassChangeError".to_string());
+                                    // 创建异常对象的逻辑...
+                                }
+                                crate::common::error::JvmError::UnsatisfiedLinkError {
+                                    library_name,
+                                    function_name,
+                                    os_error,
+                                    message,
+                                } => {
+                                    exception_class_name = Some("java/lang/UnsatisfiedLinkError".to_string());
+                                    // 创建异常对象的逻辑...
+                                }
+                                crate::common::error::JvmError::VerifyError {
+                                    class_name,
+                                    bytecode_offset,
+                                    verification_error,
+                                    message,
+                                } => {
+                                    exception_class_name = Some("java/lang/VerifyError".to_string());
+                                    // 创建异常对象的逻辑...
+                                }
+                                crate::common::error::JvmError::BootstrapMethodError {
+                                    method_name,
+                                    cause,
+                                    message,
+                                } => {
+                                    exception_class_name = Some("java/lang/BootstrapMethodError".to_string());
+                                    // 创建异常对象的逻辑...
+                                }
+                                crate::common::error::JvmError::ThreadDeath(arg) => {
+                                    exception_class_name = Some("java/lang/ThreadDeath".to_string());
+                                    // 创建异常对象的逻辑...
+                                }
+                                crate::common::error::JvmError::AssertionError {
+                                    condition,
+                                    file,
+                                    line,
+                                    message,
+                                } => {
+                                    exception_class_name = Some("java/lang/AssertionError".to_string());
+                                    // 创建异常对象的逻辑...
+                                }
+                                crate::common::error::JvmError::IOError {
+                                    kind,
+                                    message,
+                                    path,
+                                } => {
+                                    exception_class_name = Some("java/io/IOError".to_string());
+                                    // 创建异常对象的逻辑...
+                                }
+                                crate::common::error::JvmError::ExceptionInInitializerError {
+                                    class_name,
+                                    cause,
+                                    message,
+                                } => {
+                                    exception_class_name = Some("java/lang/ExceptionInInitializerError".to_string());
+                                    // 创建异常对象的逻辑...
+                                }
+                            },
+                        }
+                    }
+
+                    let exception_class = classloader::class_loader::find_class(
+                        &exception_class_name.unwrap().clone(),
+                        &mut Vec::new(),
+                        heap,
+                        metaspace,
+                    )?
+                    .clone();
+
+                    if exception_object_id.is_none(){
+                        exception_object_id = Some( heap.create_object(&exception_class)? as u32)
+                    }
+                    let (method, constant_pool) = {
+                        let (method, class) = metaspace.get_method_from_root(
+                            &stack_frame.class_name,
+                            &stack_frame.method_name,
+                            &stack_frame.descriptor,
+                        );
+                        (method.cloned(), class.constant_pool.clone())
+                    };
+
+
+                    if let Some(method) = method {
+                        for i in 0..method.attributes.len() {
+                            let attribute: &AttributeInfo = &method.attributes[i];
+                            // 判断是否为Code
+                            if let AttributeInfo::Code(code_attr) = attribute {
+                                for entry in &code_attr.exception_table {
+                                    let start_pc = entry.start_pc;
+                                    let end_pc = entry.end_pc;
+                                    let handler_pc = entry.handler_pc;
+                                    let catch_type = entry.catch_type;
+                                    // 如果当前PC在异常处理范围内
+                                    if stack_frame.pc >= start_pc as usize
+                                        && stack_frame.pc <= end_pc as usize
+                                    {
+                                        let constant_class = &constant_pool[catch_type as usize];
+                                        let class_name = match constant_class {
+                                            ConstantPoolInfo::Class(name_index) => {
+                                                let class_name_utf8 =
+                                                    &constant_pool[*name_index as usize];
+                                                match class_name_utf8 {
+                                                    ConstantPoolInfo::Utf8(name_string) => {
+                                                        name_string
+                                                    }
+                                                    _ => panic!("error"),
+                                                }
+                                            }
+                                            _ => panic!("error"),
+                                        };
+
+                                        //异常被捕获
+                                        if metaspace.is_subclass(&exception_class.class_name, class_name) || &exception_class.class_name == class_name {
+                                            stack_frame.pc = handler_pc as usize;
+                                            stack_frame
+                                            .op_stack
+                                            .push(StackFrameValue::Reference(exception_object_id.unwrap()));
+                                            solved_flag = true;
+                                            break;
+                                        }
+                                        
+                                    }
+                                }
                             }
                         }
                     }
+
+                    if solved_flag {
+                        vm_stack.push(stack_frame);
+                    }
+
                 }
             }
-        }
-    };
-}
+        };
+        Ok(())
+    }
 }

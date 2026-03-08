@@ -76,7 +76,7 @@ pub fn encode0(
             }
             
             // Create byte array
-            let new_array_id = heap.create_basic_array(ARRAY_TYPE_BYTE, bytes.len() as u32, 1);
+            let new_array_id = heap.create_basic_array(ARRAY_TYPE_BYTE, bytes.len() as u32, 1)?;
             
             for (i, &byte_val) in bytes.iter().enumerate() {
                 heap.put_basic_array_element(new_array_id as u32, i, byte_val as u64);
@@ -141,7 +141,7 @@ pub fn decode0(
             let chars = u8c::bytes_to_chars(bytes);
             
             // Create char array
-            let new_array_id = heap.create_basic_array(ARRAY_TYPE_CHAR, chars.len() as u32, 1);
+            let new_array_id = heap.create_basic_array(ARRAY_TYPE_CHAR, chars.len() as u32, 1)?;
             
             for (i, &ch_val) in chars.iter().enumerate() {
                 heap.put_basic_array_element(new_array_id as u32, i, ch_val as u64);

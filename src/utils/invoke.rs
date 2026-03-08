@@ -32,11 +32,14 @@ pub fn invoke(
                 }
             }
             _ => {
-                return Err(Throwable::Exception(
-                    crate::common::error::Exception::ClassFormat {
-                        class_name: (class.class_name.clone()),
-                        message: ("class format error".to_string()),
-                    },
+                // return Err(Throwable::Exception(
+                //     crate::common::error::j::ClassFormat {
+                //         class_name: (class.class_name.clone()),
+                //         message: ("class format error".to_string()),
+                //     },
+                // ))
+                return Err(Throwable::Error(
+                    crate::common::error::JvmError::ClassFormatError { class_name: class.class_name.clone(), message: "class format error".to_string() } 
                 ))
             }
         }

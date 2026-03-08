@@ -25,17 +25,21 @@ pub fn fill_in_stack_trace( vm_stack: &mut Vec<StackFrame>,
     // 会负责设置 stackTrace 和 backtrace 字段
     
 
-    let frame_index = vm_stack.len() - 1;
-    let stfv = vm_stack[frame_index].op_stack.pop().unwrap();
-    match stfv {
-        StackFrameValue::Reference(id) => {
-            let class_name = "java/lang/StackTraceElement".to_string();
-            let class = class_loader::find_class(&class_name, vm_stack, heap, metaspace)?;
-            let object_id = heap.create_reference_array(class.super_class_id as u32, 0 , 0, 12);
-            // heap.create_object(class)
-            // heap.put_field_reference(reference_id, offset, value);
-        }
-        _ => panic!(),
-    }
+    // let frame_index = vm_stack.len() - 1;
+    // let stfv = vm_stack[frame_index].op_stack.pop().unwrap();
+    // match stfv {
+    //     StackFrameValue::Reference(id) => {
+    //         let class_name = "java/lang/StackTraceElement".to_string();
+    //         let class = class_loader::find_class(&class_name, vm_stack, heap, metaspace)?;
+    //         let object_id = heap.create_reference_array(class.super_class_id as u32, 0 , 0, 12);
+    //         for(key,v) in &class0.field_info {
+    //             if key == "name" {
+    //              heap.put_field_reference(obj_id,  v.offset, id);
+    //                 break;
+    //         }
+    // }
+    //     }
+    //     _ => panic!(),
+    // }
     Ok(())
 }

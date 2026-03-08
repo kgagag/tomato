@@ -260,7 +260,7 @@ fn get_class_from_disk(name: &String) -> Result<Vec<u8>, Throwable> {
                                 Some(code) => return Ok(code),
                                 None => {
                                     println!("从rt.jar中未找到{}", name_with_ext);
-                                    return Err(Throwable::Error(JvmError::NoClassDefFound {
+                                    return Err(Throwable::Error(JvmError::NoClassDefFoundError  {
                                         class_name: (name.clone()),
                                         cause: (Some(format!("Class {} not found", name))),
                                         message: (format!("Class {} not found", name)),
@@ -268,7 +268,7 @@ fn get_class_from_disk(name: &String) -> Result<Vec<u8>, Throwable> {
                                 }
                             }
                         } else {
-                            return Err(Throwable::Error(JvmError::NoClassDefFound {
+                            return Err(Throwable::Error(JvmError::NoClassDefFoundError {
                                 class_name: (name.clone()),
                                 cause: (Some(format!("rt.jar not found"))),
                                 message: (format!("Class {} not found", name)),
@@ -277,7 +277,7 @@ fn get_class_from_disk(name: &String) -> Result<Vec<u8>, Throwable> {
                     }
                 }
             } else {
-                return Err(Throwable::Error(JvmError::NoClassDefFound {
+                return Err(Throwable::Error(JvmError::NoClassDefFoundError {
                     class_name: (name.clone()),
                     cause: (Some(format!("rt-mod.jar not found"))),
                     message: (format!("Class {} not found", name)),
@@ -285,7 +285,7 @@ fn get_class_from_disk(name: &String) -> Result<Vec<u8>, Throwable> {
             }
         }
         Err(_e) => {
-            return Err(Throwable::Error(JvmError::NoClassDefFound {
+            return Err(Throwable::Error(JvmError::NoClassDefFoundError {
                 class_name: (name.clone()),
                 cause: (Some(format!("Class {} not found", name))),
                 message: (format!("Class {} not found", name)),
@@ -355,8 +355,8 @@ pub fn load_class(
                         }
                     }
                     _ => {
-                        return Err(Throwable::Exception(
-                            crate::common::error::Exception::ClassFormat {
+                        return Err(Throwable::Error(
+                            crate::common::error::JvmError::ClassFormatError {
                                 class_name: (name.clone()),
                                 message: ("class format error".to_string()),
                             },
@@ -365,12 +365,12 @@ pub fn load_class(
                 }
             }
             _ => {
-                return Err(Throwable::Exception(
-                    crate::common::error::Exception::ClassFormat {
-                        class_name: (name.clone()),
-                        message: ("class format error".to_string()),
-                    },
-                ))
+                 return Err(Throwable::Error(
+                            crate::common::error::JvmError::ClassFormatError {
+                                class_name: (name.clone()),
+                                message: ("class format error".to_string()),
+                            },
+                        ))
             }
         }
         // load_class(name)
@@ -399,8 +399,8 @@ pub fn parse_method_field(
                         method_info.method_name = name.clone();
                     }
                     _ => {
-                        return Err(Throwable::Exception(
-                            crate::common::error::Exception::ClassFormat {
+                        return Err(Throwable::Error(
+                            crate::common::error::JvmError::ClassFormatError {
                                 class_name: (class.class_name.clone()),
                                 message: ("class format error".to_string()),
                             },
@@ -436,12 +436,12 @@ pub fn parse_method_field(
                 method_info_map.insert(key, method_info.clone());
             }
             _ => {
-                return Err(Throwable::Exception(
-                    crate::common::error::Exception::ClassFormat {
-                        class_name: (class.class_name.clone()),
-                        message: ("class format error".to_string()),
-                    },
-                ))
+                 return Err(Throwable::Error(
+                            crate::common::error::JvmError::ClassFormatError {
+                                class_name: (class.class_name.clone()),
+                                message: ("class format error".to_string()),
+                            },
+                        ))
             }
         }
     }
@@ -499,12 +499,12 @@ pub fn parse_method_field(
                 field_offset += 1;
             }
             DataType::Unknown => {
-                return Err(Throwable::Exception(
-                    crate::common::error::Exception::ClassFormat {
-                        class_name: (class.class_name.clone()),
-                        message: ("class format error".to_string()),
-                    },
-                ))
+                 return Err(Throwable::Error(
+                            crate::common::error::JvmError::ClassFormatError {
+                                class_name: (class.class_name.clone()),
+                                message: ("class format error".to_string()),
+                            },
+                        ))
             }
         }
     }
@@ -749,12 +749,12 @@ pub fn get_field(
         let field_name = match name_utf8 {
             ConstantPoolInfo::Utf8(name) => name.clone(),
             _ => {
-                return Err(Throwable::Exception(
-                    crate::common::error::Exception::ClassFormat {
-                        class_name: (class_name.clone()),
-                        message: ("class format error".to_string()),
-                    },
-                ))
+                return Err(Throwable::Error(
+                            crate::common::error::JvmError::ClassFormatError {
+                                class_name: (class_name.clone()),
+                                message: ("class format error".to_string()),
+                            },
+                        ))
             }
         };
         f.field_name = field_name;
@@ -767,12 +767,12 @@ pub fn get_field(
                 f.data_type = parse_field_descriptor(f.descriptor.clone().into_bytes())?;
             }
             _ => {
-                return Err(Throwable::Exception(
-                    crate::common::error::Exception::ClassFormat {
-                        class_name: (class_name.clone()),
-                        message: ("class format error".to_string()),
-                    },
-                ))
+                return Err(Throwable::Error(
+                            crate::common::error::JvmError::ClassFormatError {
+                                class_name: (class_name.clone()),
+                                message: ("class format error".to_string()),
+                            },
+                        ))
             }
         }
 
@@ -868,12 +868,12 @@ pub fn get_attribute(
                 }
             }
             _ => {
-                return Err(Throwable::Exception(
-                    crate::common::error::Exception::ClassFormat {
-                        class_name: ("class".to_string()),
-                        message: ("class format error".to_string()),
-                    },
-                ))
+                 return Err(Throwable::Error(
+                            crate::common::error::JvmError::ClassFormatError {
+                                class_name: ("class".to_string()),
+                                message: ("class format error".to_string()),
+                            },
+                        ))
             }
         }
     }
@@ -1106,12 +1106,12 @@ fn read_constant_pool_info<R: Read>(
             }
             // 添加更多常量类型的处理
             _ => {
-                return Err(Throwable::Exception(
-                    crate::common::error::Exception::ClassFormat {
-                        class_name: (class_name.clone()),
-                        message: ("class format error".to_string()),
-                    },
-                ))
+                return Err(Throwable::Error(
+                            crate::common::error::JvmError::ClassFormatError {
+                                class_name: (class_name.clone()),
+                                message: ("class format error".to_string()),
+                            },
+                        ))
             }
         }
         //index += 1;

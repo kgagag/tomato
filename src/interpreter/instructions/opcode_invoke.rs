@@ -168,63 +168,6 @@ pub fn invokeinterface(
     Ok(())
 }
 
-// pub fn invokevirtual(frame: &mut StackFrame) {
-//     let method = frame.get_method_for_invoke().unwrap();
-//     frame.pc += 3;
-//     let param_len = method.param.len();
-//     let sfv = frame
-//         .op_stack
-//         .get(frame.op_stack.len() - param_len - 1)
-//         .unwrap();
-//     let target_method = match sfv {
-//         StackFrameValue::Reference(id) => {
-//             let reference = get_reference(id).unwrap();
-//             match reference {
-//                 Reference::Object(object) => {
-//                     let class_name = get_class_name(&object.class);
-//                     let mut curr_class_name = class_name.clone();
-//                     let mut target_method = get_method_from_pool(
-//                         &curr_class_name,
-//                         &method.method_name,
-//                         &method.descriptor,
-//                     );
-//                     while target_method.is_none() {
-//                         let clazz = get_or_load_class(&(curr_class_name.clone()));
-//                         curr_class_name = clazz.super_class_name.clone();
-//                         target_method = get_method_from_pool(
-//                             &curr_class_name,
-//                             &method.method_name,
-//                             &method.descriptor,
-//                         )
-//                     }
-//                     target_method
-//                 }
-//                 Reference::Array(_array) =>{
-//                     Some(method)
-//                 }
-//             }
-//         }
-//         _ => panic!(),
-//     };
-
-//     let m= target_method.unwrap();
-//     if m.access_flag & 0x0100 == 0 {
-//         let mut new_frame = init_stack_frame(frame, &m, 1);
-//         let v = frame.op_stack.pop();
-//         match v {
-//             Some(obj) => {
-//                 new_frame.local[0] = obj;
-//             }
-//             None => {
-//                 panic!("error");
-//             }
-//         }
-//         push_stack_frame(new_frame);
-//     } else {
-//         run_native(&m, frame);
-//     }
-// }
-
 pub fn invokevirtual(
     vm_stack: &mut Vec<StackFrame>,
     heap: &mut Heap,
@@ -282,28 +225,32 @@ pub fn invokevirtual(
         let mut method: Option<&MethodInfo> = None;
         match sfv {
             StackFrameValue::Reference(id) => {
-               let class_id = heap.get_object_class_id(id as usize)?;
-               let (m,c) =  metaspace.get_method_from_root(&metaspace.classes[class_id as usize].class_name.clone(), &method_name, &descriptor);
-               method = m;
+                let class_id = heap.get_object_class_id(id as usize)?;
+                let (m, c) = metaspace.get_method_from_root(
+                    &metaspace.classes[class_id as usize].class_name.clone(),
+                    &method_name,
+                    &descriptor,
+                );
+                if m.is_none() {
+                    return Err(Throwable::Error(
+                        crate::common::error::JvmError::NoSuchMethodError {
+                            class_name: metaspace.classes[class_id as usize].class_name.clone(),
+                            method_name: method_name.clone(),
+                            method_descriptor: Some(descriptor.clone()),
+                            message: "method not fund error".to_string(),
+                        },
+                    ));
+                }
+                method = m;
             }
             _ => {
                 return Err(Throwable::Exception(
-                    crate::common::error::Exception::NullPointer(
+                    crate::common::error::Exception::NullPointerException(
                         "Null pointer exception".to_string(),
                     ),
                 ))
             }
         }
-
-        if method.is_none() {
-            return Err(Throwable::Exception(
-                crate::common::error::Exception::NoSuchMethod(format!(
-                    "no such method:{}",
-                    method_name
-                )),
-            ));
-        }
-
         method
     };
     let method = method.unwrap();

@@ -43,7 +43,7 @@ pub fn get_primitive_class(
         let object_id = match vm_stack[frame_index].op_stack.pop().unwrap() {
             StackFrameValue::Reference(id) => Ok(id),
             _ => Err(Throwable::Exception(
-                crate::common::error::Exception::NullPointer("NullPointer exception".to_string()),
+                crate::common::error::Exception::NullPointerException("NullPointer exception".to_string()),
             )), //控制你异常
         }?;
         let class_id = heap.get_object_class_id(object_id as usize)?;
@@ -54,7 +54,7 @@ pub fn get_primitive_class(
                 let array_id = heap.get_field_ptr(object_id, v.offset);
                 if array_id.is_none() {
                     return Err(Throwable::Exception(
-                        crate::common::error::Exception::NullPointer(
+                        crate::common::error::Exception::NullPointerException(
                             "NullPointer exception".to_string(),
                         ),
                     ));
@@ -64,7 +64,7 @@ pub fn get_primitive_class(
                     let (atype, value) = heap.get_array_element(array_id.unwrap(), i as usize);
                     if value.is_none() {
                         return Err(Throwable::Exception(
-                            crate::common::error::Exception::NullPointer(
+                            crate::common::error::Exception::NullPointerException(
                                 "NullPointer exception".to_string(),
                             ),
                         ));

@@ -16,7 +16,5 @@ public class TryCatchTest01 {
     public static void main(String[] args) {
         TryCatchTest01 t = new TryCatchTest01();
         t.test();
-        Exception e = new NullPointerException();
-        throw new NullPointerException();
     }
 }

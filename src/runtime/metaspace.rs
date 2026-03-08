@@ -73,10 +73,12 @@ impl Metaspace {
                 ));
             }
         }
-        return Err(Throwable::Exception(
-            crate::common::error::Exception::FieldNotFound {
+        return Err(Throwable::Error(
+            crate::common::error::JvmError::NoSuchFieldError {
                 class_name: class_name.clone(),
                 field_name: field_name.clone(),
+                field_descriptor: None,
+                message:"NoSuchFieldError".to_string(),
             },
         ));
     }
@@ -153,10 +155,12 @@ impl Metaspace {
                 break;
             }
         }
-        return Err(Throwable::Exception(
-            crate::common::error::Exception::FieldNotFound {
+        return Err(Throwable::Error(
+            crate::common::error::JvmError::NoSuchFieldError {
                 class_name: class_name.clone(),
                 field_name: field_name.clone(),
+                field_descriptor: None,
+                message:"NoSuchFieldError".to_string(),
             },
         ));
     }
@@ -195,10 +199,12 @@ impl Metaspace {
                 .value = value;
             return Ok(());
         }
-        return Err(Throwable::Exception(
-            crate::common::error::Exception::FieldNotFound {
+       return Err(Throwable::Error(
+            crate::common::error::JvmError::NoSuchFieldError {
                 class_name: class_name.clone(),
                 field_name: field_name.clone(),
+                field_descriptor: None,
+                message:"NoSuchFieldError".to_string(),
             },
         ));
     }
@@ -210,11 +216,13 @@ impl Metaspace {
     pub fn is_subclass(&self,class_name:&str,sub_class_name:&str) ->bool{
         let class_id = self.class_map.get(class_name);
         if class_id.is_some(){
-            let class_id = class_id.unwrap();
+            let mut class_id = class_id.unwrap();
             while self.classes[*class_id].super_class_name != "" {
+                println!("{:?}",self.classes[*class_id].super_class_name);
                 if self.classes[*class_id].super_class_name == sub_class_name{
                     return true;
                 }
+                class_id = &self.classes[*class_id].super_class_id;
             }
         }
         return false;

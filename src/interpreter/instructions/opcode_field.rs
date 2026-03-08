@@ -140,7 +140,7 @@ pub fn getfield(
         StackFrameValue::Reference(id) => id,
         StackFrameValue::Null => {
             return Err(Throwable::Exception(
-                crate::common::error::Exception::NullPointer("Null pointer exception".to_string()),
+                crate::common::error::Exception::NullPointerException("Null pointer exception".to_string()),
             ));
         }
         _ => {

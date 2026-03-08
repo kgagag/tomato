@@ -126,7 +126,7 @@ pub fn idiv(frame: &mut StackFrame) ->Result<(),Throwable>{
     let i2 = frame.popi64() as i32;
     let i1 = frame.popi64() as i32;
     if i2 == 0 {
-        return Err(Throwable::Exception(Exception::Arithmetic("div by zero".to_string())));
+        return Err(Throwable::Exception(Exception::ArithmeticException("div by zero".to_string())));
     }
     let result = i1 / i2;
     
@@ -159,7 +159,7 @@ pub fn ldiv(frame: &mut StackFrame) ->Result<(),Throwable>{
     let l2 = frame.popi64() ;
     let l1 = frame.popi64() ;
     if l2 == 0 {
-        return Err(Throwable::Exception(Exception::Arithmetic("div by zero".to_string())));
+        return Err(Throwable::Exception(Exception::ArithmeticException("div by zero".to_string())));
     }
     let result = l1 / l2;
     frame.op_stack.push(StackFrameValue::Long(result));

@@ -116,8 +116,6 @@ impl Heap {
         // 暂时保持当前索引不变
     }
 
-    // 设计对象
-
     //非数组
     // 对象头（2个字节，第1位 1） class_id（4个字节）+ 对象数据 + 对齐
     pub fn create_object(&mut self, class: & Class) -> Result<usize,Throwable> {

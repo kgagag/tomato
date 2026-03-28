@@ -72,11 +72,10 @@ pub fn ldc(
             .push(StackFrameValue::Int(int_value));
     } else if let Some(string) = string_index {
         //let string_obj = heap::create_string_object(string_index, vm_stack, heap, metaspace)?;
-        let string_obj = heap.get_constant_string_pool(&string);
-        if string_obj.is_some() {
+        if let Some(string_obj) = heap.get_constant_string_pool(&string) {
             vm_stack[frame_index]
                 .op_stack
-                .push(StackFrameValue::Reference(*string_obj.unwrap()));
+                .push(StackFrameValue::Reference(string_obj));
         } else {
             let string_obj = java::create_string_object(string, vm_stack, heap, metaspace)?;
             vm_stack[frame_index]
@@ -86,17 +85,16 @@ pub fn ldc(
     } else if let Some(class_name) = class_index {
         //确保这个类已被加载
         //let class_id: usize = (class_loader::find_class(&class_name, vm_stack, heap, metaspace)?).id;
-        let class_obj = heap.get_constant_pool_class(&class_name);
-        if class_obj.is_none() {
+        if let Some(class_obj) = heap.get_constant_pool_class(&class_name) {
+            vm_stack[frame_index]
+                .op_stack
+                .push(StackFrameValue::Reference(class_obj));
+        } else {
             let obj_id: u32 = java::create_class_object(&class_name, vm_stack, heap, metaspace)?;
             heap.put_into_class_constant_pool(class_name, obj_id);
             vm_stack[frame_index]
                 .op_stack
                 .push(StackFrameValue::Reference(obj_id));
-        } else {
-            vm_stack[frame_index]
-                .op_stack
-                .push(StackFrameValue::Reference(*class_obj.unwrap()));
         }
     } else {
         return Err(Throwable::Error(

@@ -34,11 +34,10 @@ pub fn get_class(
             if !heap.is_array(id as usize) {
                 let class_id: u32 = heap.get_object_class_id(id as usize)?;
                 //metaspace.classes[class_id as usize].class_name.clone();
-                let class_obj = heap.get_constant_pool_class(& metaspace.classes[class_id as usize].class_name);
-                if class_obj.is_some() {
+                if let Some(class_obj) = heap.get_constant_pool_class(&metaspace.classes[class_id as usize].class_name) {
                     vm_stack[frame_index]
                         .op_stack
-                        .push(StackFrameValue::Reference(*class_obj.unwrap()));
+                        .push(StackFrameValue::Reference(class_obj));
                 } else {
                     let class_name = &metaspace.classes[class_id as usize].class_name.clone();
                     let class_obj_id =

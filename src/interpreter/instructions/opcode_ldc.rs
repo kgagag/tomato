@@ -38,11 +38,7 @@ pub fn ldc(
                     }
                     _ => {
                         return Err(Throwable::Error(
-                            crate::common::error::JvmError::InternalError {
-                                message: "Internal error".to_string(),
-                                line_number: line!(),
-                                file_name: file!().to_string(),
-                            },
+                            crate::common::error::JvmError::InternalError,
                         ));
                     }
                 }
@@ -53,22 +49,14 @@ pub fn ldc(
                     ConstantPoolInfo::Utf8(str) => (None, None, None, Some(str.clone())),
                     _ => {
                         return Err(Throwable::Error(
-                            crate::common::error::JvmError::InternalError {
-                                message: "Internal error".to_string(),
-                                line_number: line!(),
-                                file_name: file!().to_string(),
-                            },
+                            crate::common::error::JvmError::InternalError,
                         ));
                     }
                 }
             }
             _ => {
                 return Err(Throwable::Error(
-                    crate::common::error::JvmError::InternalError {
-                        message: "Internal error".to_string(),
-                        line_number: line!(),
-                        file_name: file!().to_string(),
-                    },
+                    crate::common::error::JvmError::InternalError,
                 ));
             }
         }
@@ -112,11 +100,7 @@ pub fn ldc(
         }
     } else {
         return Err(Throwable::Error(
-            crate::common::error::JvmError::InternalError {
-                message: "Internal error".to_string(),
-                line_number: line!(),
-                file_name: file!().to_string(),
-            },
+            crate::common::error::JvmError::InternalError,
         ));
     }
     vm_stack[frame_index].pc += 2;

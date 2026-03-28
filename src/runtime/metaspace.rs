@@ -74,12 +74,7 @@ impl Metaspace {
             }
         }
         return Err(Throwable::Error(
-            crate::common::error::JvmError::NoSuchFieldError {
-                class_name: class_name.clone(),
-                field_name: field_name.clone(),
-                field_descriptor: None,
-                message:"NoSuchFieldError".to_string(),
-            },
+            crate::common::error::JvmError::NoSuchFieldError,
         ));
     }
 
@@ -156,12 +151,7 @@ impl Metaspace {
             }
         }
         return Err(Throwable::Error(
-            crate::common::error::JvmError::NoSuchFieldError {
-                class_name: class_name.clone(),
-                field_name: field_name.clone(),
-                field_descriptor: None,
-                message:"NoSuchFieldError".to_string(),
-            },
+            crate::common::error::JvmError::NoSuchFieldError,
         ));
     }
 
@@ -200,12 +190,7 @@ impl Metaspace {
             return Ok(());
         }
        return Err(Throwable::Error(
-            crate::common::error::JvmError::NoSuchFieldError {
-                class_name: class_name.clone(),
-                field_name: field_name.clone(),
-                field_descriptor: None,
-                message:"NoSuchFieldError".to_string(),
-            },
+            crate::common::error::JvmError::NoSuchFieldError,
         ));
     }
 

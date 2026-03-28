@@ -32,13 +32,13 @@ pub fn encode0(
     let _off = frame.popi64();
     
     let sfv = frame.op_stack.pop()
-        .ok_or_else(|| Throwable::Error(crate::common::error::JvmError::UnknownError("Stack underflow".to_string())))?;
+        .ok_or_else(|| Throwable::Error(crate::common::error::JvmError::UnknownError))?;
     
     match sfv {
         StackFrameValue::Reference(reference_id) => {
             if !heap.is_array(reference_id as usize) {
                 return Err(Throwable::Error(
-                    crate::common::error::JvmError::UnknownError("Expected array reference".to_string()),
+                    crate::common::error::JvmError::UnknownError,
                 ));
             }
             
@@ -49,13 +49,13 @@ pub fn encode0(
                 let (atype, element) = heap.get_basic_array_element(reference_id, i as usize);
                 
                 let element_val = element.ok_or_else(|| 
-                    Throwable::Error(crate::common::error::JvmError::UnknownError("Array element is None".to_string()))
+                    Throwable::Error(crate::common::error::JvmError::UnknownError)
                 )? as u32;
                 
                 match atype {
                     ARRAY_TYPE_CHAR => {
                         let ch = char::from_u32(element_val)
-                            .ok_or_else(|| Throwable::Error(crate::common::error::JvmError::UnknownError("Invalid character".to_string())))?;
+                            .ok_or_else(|| Throwable::Error(crate::common::error::JvmError::UnknownError))?;
                         
                         let char_bytes = u8c::char_to_bytes(ch);
                         for b in char_bytes {
@@ -67,9 +67,7 @@ pub fn encode0(
                     },
                     _ => {
                         return Err(Throwable::Error(
-                            crate::common::error::JvmError::UnknownError(
-                                format!("Unsupported array type: {}", atype),
-                            ),
+                            crate::common::error::JvmError::UnknownError,
                         ));
                     }
                 }
@@ -86,7 +84,7 @@ pub fn encode0(
         }
         _ => {
             return Err(Throwable::Error(
-                crate::common::error::JvmError::UnknownError("Expected reference type".to_string()),
+                crate::common::error::JvmError::UnknownError,
             ));
         }
     }
@@ -107,13 +105,13 @@ pub fn decode0(
     let _off = frame.popi64();
     
     let sfv = frame.op_stack.pop()
-        .ok_or_else(|| Throwable::Error(crate::common::error::JvmError::UnknownError("Stack underflow".to_string())))?;
+        .ok_or_else(|| Throwable::Error(crate::common::error::JvmError::UnknownError))?;
     
     match sfv {
         StackFrameValue::Reference(reference_id) => {
             if !heap.is_array(reference_id as usize) {
                 return Err(Throwable::Error(
-                    crate::common::error::JvmError::UnknownError("Expected array reference".to_string()),
+                    crate::common::error::JvmError::UnknownError,
                 ));
             }
             
@@ -124,15 +122,13 @@ pub fn decode0(
                 let (atype, element) = heap.get_basic_array_element(reference_id, i as usize);
                 
                 if atype != ARRAY_TYPE_BYTE {
-                    return Err(Throwable::Error(
-                        crate::common::error::JvmError::UnknownError(
-                            format!("Expected byte array, got type: {}", atype),
-                        ),
-                    ));
-                }
+                return Err(Throwable::Error(
+                    crate::common::error::JvmError::UnknownError,
+                ));
+            }
                 
                 let element_val = element.ok_or_else(|| 
-                    Throwable::Error(crate::common::error::JvmError::UnknownError("Array element is None".to_string()))
+                    Throwable::Error(crate::common::error::JvmError::UnknownError)
                 )? as u8;
                 
                 bytes.push(element_val);
@@ -151,7 +147,7 @@ pub fn decode0(
         }
         _ => {
             return Err(Throwable::Error(
-                crate::common::error::JvmError::UnknownError("Expected reference type".to_string()),
+                crate::common::error::JvmError::UnknownError,
             ));
         }
     }

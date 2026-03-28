@@ -458,11 +458,11 @@ pub fn arraylength(vm_stack: &mut Vec<StackFrame>, heap: &mut Heap) -> Result<()
             .push(StackFrameValue::U32(heap.get_array_length(reference))),
         StackFrameValue::Null=>{
             return Err(Throwable::Exception(
-               crate::common::error::Exception::NullPointerException("java/lang/NullPointerException".to_string())
+               crate::common::error::Exception::NullPointerException
             ));
         }
         _ => {
-            return Err(Throwable::Error(crate::common::error::JvmError::UnknownError("unknown error".to_string())));
+            return Err(Throwable::Error(crate::common::error::JvmError::UnknownError));
         }
     }
     frame.pc += 1;
@@ -494,9 +494,7 @@ fn xaload(
                 4 => {
                     if value.is_none() {
                        return  Err(Throwable::Exception(
-                            crate::common::error::Exception::NullPointerException(
-                                "null pointer exception".to_owned(),
-                            ),
+                            crate::common::error::Exception::NullPointerException,
                         ))
                     };
                     // boolean
@@ -507,9 +505,7 @@ fn xaload(
                 5 => {
                     if value.is_none() {
                       return  Err(Throwable::Exception(
-                            crate::common::error::Exception::NullPointerException(
-                                "null pointer exception".to_owned(),
-                            ),
+                            crate::common::error::Exception::NullPointerException,
                         ))
                     }
                     // char
@@ -520,9 +516,7 @@ fn xaload(
                 6 => {
                     if value.is_none() {
                     return    Err(Throwable::Exception(
-                            crate::common::error::Exception::NullPointerException(
-                                "null pointer exception".to_owned(),
-                            ),
+                            crate::common::error::Exception::NullPointerException,
                         ))
                     }
                     // float
@@ -533,9 +527,7 @@ fn xaload(
                 7 => {
                     if value.is_none() {
                      return   Err(Throwable::Exception(
-                            crate::common::error::Exception::NullPointerException(
-                                "null pointer exception".to_owned(),
-                            ),
+                            crate::common::error::Exception::NullPointerException,
                         ))
                     }
                     // double
@@ -546,9 +538,7 @@ fn xaload(
                 8 => {
                     if value.is_none() {
                       return  Err(Throwable::Exception(
-                            crate::common::error::Exception::NullPointerException(
-                                "null pointer exception".to_owned(),
-                            ),
+                            crate::common::error::Exception::NullPointerException,
                         ))
                     }
                     // byte
@@ -557,9 +547,7 @@ fn xaload(
                 9 => {
                     if value.is_none() {
                        return Err(Throwable::Exception(
-                            crate::common::error::Exception::NullPointerException(
-                                "null pointer exception".to_owned(),
-                            ),
+                            crate::common::error::Exception::NullPointerException,
                         ))
                     }
                     // short
@@ -568,9 +556,7 @@ fn xaload(
                 10 => {
                     if value.is_none() {
                        return Err(Throwable::Exception(
-                            crate::common::error::Exception::NullPointerException(
-                                "null pointer exception".to_owned(),
-                            ),
+                            crate::common::error::Exception::NullPointerException,
                         ))
                     }
                     // int
@@ -579,9 +565,7 @@ fn xaload(
                 11 => {
                     if value.is_none() {
                        return Err(Throwable::Exception(
-                            crate::common::error::Exception::NullPointerException(
-                                "null pointer exception".to_owned(),
-                            ),
+                            crate::common::error::Exception::NullPointerException,
                         ))
                     }
                     // long

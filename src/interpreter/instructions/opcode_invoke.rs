@@ -233,21 +233,14 @@ pub fn invokevirtual(
                 );
                 if m.is_none() {
                     return Err(Throwable::Error(
-                        crate::common::error::JvmError::NoSuchMethodError {
-                            class_name: metaspace.classes[class_id as usize].class_name.clone(),
-                            method_name: method_name.clone(),
-                            method_descriptor: Some(descriptor.clone()),
-                            message: "method not fund error".to_string(),
-                        },
+                        crate::common::error::JvmError::NoSuchMethodError,
                     ));
                 }
                 method = m;
             }
             _ => {
                 return Err(Throwable::Exception(
-                    crate::common::error::Exception::NullPointerException(
-                        "Null pointer exception".to_string(),
-                    ),
+                    crate::common::error::Exception::NullPointerException,
                 ))
             }
         }

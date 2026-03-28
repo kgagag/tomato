@@ -36,20 +36,14 @@ pub fn _new(
                     ConstantPoolInfo::Utf8(class_name) => class_name.clone(),
                     _ => {
                         return Err(Throwable::Error(
-                            crate::common::error::JvmError::InternalError {
-                                message: "Internal error".to_string(),
-                                line_number: line!(),
-                                file_name: file!().to_string(),
-                            },
+                            crate::common::error::JvmError::InternalError,
                         ));
                     }
                 }
             }
             _ => {
                 return Err(Throwable::Error(
-                    crate::common::error::JvmError::ClassFormatError {
-                         class_name: this_class.class_name.clone(), message: "ClassFormatError".to_string() 
-                        }
+                    crate::common::error::JvmError::ClassFormatError,
                 ));
             }
         }

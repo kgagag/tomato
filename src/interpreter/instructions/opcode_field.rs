@@ -140,15 +140,12 @@ pub fn getfield(
         StackFrameValue::Reference(id) => id,
         StackFrameValue::Null => {
             return Err(Throwable::Exception(
-                crate::common::error::Exception::NullPointerException("Null pointer exception".to_string()),
+                crate::common::error::Exception::NullPointerException,
             ));
         }
         _ => {
             return Err(Throwable::Error(
-                crate::common::error::JvmError::InternalError{message:"Internal error".to_string(),
-                    line_number: line!(),
-                    file_name: file!().to_string(),
-            },
+                crate::common::error::JvmError::InternalError,
             ));
         }
     };

@@ -27,7 +27,7 @@ pub fn convert_to_rust_string(msg: StackFrameValue,vm_stack:&mut Vec<StackFrame>
                 if key == "value" {
                   let str_value_array =  heap.get_field_ptr(id, field.offset);
                   if str_value_array.is_none() {
-                      return Err(Throwable::Exception(crate::common::error::Exception::NullPointerException("java.lang.NullPointerException".to_string())));
+                      return Err(Throwable::Exception(crate::common::error::Exception::NullPointerException));
                   }
                   let len = heap.get_array_length(str_value_array.unwrap()) as usize;
                   //info!("===={}.{}.{}.{}=====",id,str_value_array,field.offset,len);
@@ -41,11 +41,7 @@ pub fn convert_to_rust_string(msg: StackFrameValue,vm_stack:&mut Vec<StackFrame>
        // _=> panic!("create_string_object error")
        _=> {
           return Err(Throwable::Error(
-            crate::common::error::JvmError::InternalError {
-                message: "Internal error".to_string(),
-                line_number: line!(),
-                file_name: file!().to_string(),
-            },
+            crate::common::error::JvmError::InternalError,
         ));
        }
     }

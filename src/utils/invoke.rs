@@ -39,7 +39,7 @@ pub fn invoke(
                 //     },
                 // ))
                 return Err(Throwable::Error(
-                    crate::common::error::JvmError::ClassFormatError { class_name: class.class_name.clone(), message: "class format error".to_string() } 
+                    crate::common::error::JvmError::ClassFormatError
                 ))
             }
         }

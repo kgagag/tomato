@@ -43,7 +43,7 @@ pub fn get_primitive_class(
         let object_id = match vm_stack[frame_index].op_stack.pop().unwrap() {
             StackFrameValue::Reference(id) => Ok(id),
             _ => Err(Throwable::Exception(
-                crate::common::error::Exception::NullPointerException("NullPointer exception".to_string()),
+                crate::common::error::Exception::NullPointerException,
             )), //控制你异常
         }?;
         let class_id = heap.get_object_class_id(object_id as usize)?;
@@ -54,9 +54,7 @@ pub fn get_primitive_class(
                 let array_id = heap.get_field_ptr(object_id, v.offset);
                 if array_id.is_none() {
                     return Err(Throwable::Exception(
-                        crate::common::error::Exception::NullPointerException(
-                            "NullPointer exception".to_string(),
-                        ),
+                        crate::common::error::Exception::NullPointerException,
                     ));
                 }
                 let len = heap.get_array_length(array_id.unwrap());
@@ -64,9 +62,7 @@ pub fn get_primitive_class(
                     let (atype, value) = heap.get_array_element(array_id.unwrap(), i as usize);
                     if value.is_none() {
                         return Err(Throwable::Exception(
-                            crate::common::error::Exception::NullPointerException(
-                                "NullPointer exception".to_string(),
-                            ),
+                            crate::common::error::Exception::NullPointerException,
                         ));
                     }
                     if atype == 5 {
@@ -109,7 +105,7 @@ pub fn get_primitive_class(
             Ok(java::create_class_object(&String::from("java/lang/Byte"), vm_stack, heap, metaspace)?)
         } 
         else {
-            Err(Throwable::Error(crate::common::error::JvmError::UnknownError("Unknown primitive class".to_string())))
+            Err(Throwable::Error(crate::common::error::JvmError::UnknownError))
         }
     }?;
 
